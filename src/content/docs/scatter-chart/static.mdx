@@ -1,0 +1,319 @@
+---
+title: Scatter Chart
+description: Beautiful scatter charts for exploring correlations between two variables
+image: /og/scatter-chart.png
+links:
+  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/scatter-chart.tsx
+  doc: https://echarts.apache.org/en/option.html#series-scatter
+  api: https://echarts.apache.org/en/option.html#series-scatter
+---
+
+<ComponentPreview title="Basic Chart" name="ex-scatter-chart"  />
+
+## Installation
+
+<CodeTabs>
+  <TabsList variant="underline">
+    <TabsTab value="cli">CLI</TabsTab>
+    <TabsTab value="manual">Manual</TabsTab>
+  </TabsList>
+  <TabsPanel value="cli">
+    <CliBlock commands={["@beecharts/scatter-chart"]} />
+  </TabsPanel>
+  <TabsPanel value="manual">
+    <Steps>
+      <Step>
+        <StepTitle>Install the following dependencies:</StepTitle>
+        <StepContent>
+          <CommandBlock commands={["echarts", "motion"]} />
+        </StepContent>
+      </Step>
+      <Step>
+        <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
+         <StepDescription>
+          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          Then, copy the following base scatter-chart code into a new file in that folder.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="scatter-chart"
+            title="components/beecharts/charts/scatter-chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
+        <StepDescription>
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+
+          Below is main chart component.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart"
+            title="components/beecharts/ui/chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, We need to add sub components.</StepTitle>
+        <StepDescription>
+          Create a file called `tooltip.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="tooltip"
+            title="components/beecharts/ui/tooltip.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Now, create another file called `legend.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="legend"
+            title="components/beecharts/ui/legend.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Finally, create last file called `dot.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="dot"
+            title="components/beecharts/ui/dot.tsx"
+          />
+        </StepContent>
+      </Step>
+    </Steps>
+  </TabsPanel>
+</CodeTabs>
+
+## Usage
+
+The scatter chart is composible. `<BeeScatterChart>` is the container, and you compose only the parts you need — `<Grid>`, `<XAxis>`, `<YAxis>`, `<Legend>`, `<Tooltip>`, and one or more `<Scatter>` — as its children. Each `<Scatter>` carries its own `data` array of `{ x, y }` points and can be styled independently with `isGlowing` and `isClickable`.
+
+```tsx
+import {
+  BeeScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  Grid,
+  Tooltip,
+  Legend,
+  Dot,
+  ActiveDot,
+} from "@/components/beecharts/charts/scatter-chart";
+```
+
+```tsx
+<BeeScatterChart config={chartConfig}>
+  <Grid />
+  <XAxis dataKey="x" />
+  <YAxis dataKey="y" />
+  <Legend isClickable />
+  <Tooltip />
+  <Scatter dataKey="desktop" data={desktopData} isClickable>
+    <Dot variant="border" />
+    <ActiveDot variant="colored-border" />
+  </Scatter>
+  <Scatter dataKey="mobile" data={mobileData} isClickable>
+    <Dot variant="border" />
+    <ActiveDot variant="colored-border" />
+  </Scatter>
+</BeeScatterChart>
+```
+
+### Interactive Selection
+
+Add `isClickable` to any `<Scatter>` (and to `<Legend>`) to make those series selectable. Use the `onSelectionChange` callback on `<BeeScatterChart>` to handle selection events:
+
+```tsx
+<BeeScatterChart
+  config={chartConfig}
+  onSelectionChange={(selectedDataKey) => {
+    if (selectedDataKey) {
+      console.log("Selected:", selectedDataKey);
+    } else {
+      console.log("Deselected");
+    }
+  }}
+>
+  <XAxis dataKey="x" />
+  <YAxis dataKey="y" />
+  <Legend isClickable />
+  <Tooltip />
+  <Scatter dataKey="desktop" data={desktopData} isClickable />
+  <Scatter dataKey="mobile" data={mobileData} isClickable />
+</BeeScatterChart>
+```
+
+### Loading State
+
+<ComponentPreview className="mb-0" title="isLoading='true'" name="ex-loading-state-scatter-chart"  />
+<Alert > 
+  <AlertContent >
+    The scatter chart supports loading state. Pass `isLoading` to show an animated skeleton while data is being fetched.
+  </AlertContent>
+</Alert>
+
+## Examples
+
+### Gradient Colors
+
+<ComponentPreview title="gradient colors" name="ex-gradient-colors-scatter-chart"  />
+
+### Glowing Points
+
+<ComponentPreview title="glowing" name="ex-glowing-scatter-chart"  />
+
+### Spend vs revenue (bubble-style)
+
+Two metrics per point on `<BeeScatterChart />` — see `ex-bubble-chart`.
+
+<ComponentPreview title="bubble" name="ex-bubble-chart"  />
+
+<ComponentPreview title="size by third metric" name="ex-bubble-sized-chart"  />
+
+<ComponentPreview title="glowing" name="ex-glowing-bubble-chart"  />
+
+<ComponentPreview className="mb-0" title="loading" name="ex-loading-state-bubble-chart"  />
+
+### Heatmap
+
+For categorical row × column matrices, use the dedicated [`BeeHeatmapChart`](/docs/heatmap-chart/static) primitive with `prepareHeatmapCells()` instead of scatter cell hacks.
+
+## API Reference
+
+The chart is composed of several parts. The props below are grouped by the component they belong to.
+
+<ApiHeading>BeeScatterChart</ApiHeading>
+
+The root container. It owns the shared selection state and the loading skeleton. Everything visual is composed as its children.
+
+<ApiTable>
+  <ApiRow name="config" type="Record<string, ChartConfig[string]>" required>
+    Configuration object that defines the chart's series. Each key should match a `<Scatter dataKey="…" />`, with a corresponding color or color array.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode" required>
+    The composed chart parts — `<Grid />`, `<XAxis />`, `<YAxis />`, `<Legend />`, `<Tooltip />`, and one or more `<Scatter />`.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Additional CSS classes to apply to the chart container.
+  </ApiRow>
+  <ApiRow name="defaultSelectedDataKey" type="string | null" default="null">
+    The data key that should be selected by default.
+  </ApiRow>
+  <ApiRow name="onSelectionChange" type="(selectedDataKey: string | null) => void">
+    Callback fired when a series is selected or deselected — by clicking a clickable `<Scatter />` or `<Legend />` entry.
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean" default="false">
+    Shows a loading skeleton animation when data is being fetched.
+  </ApiRow>
+  <ApiRow name="loadingPoints" type="number" default="12">
+    Number of points to display in the loading skeleton.
+  </ApiRow>
+  <ApiRow name="backgroundVariant" type="BackgroundVariant">
+    Optional background pattern drawn behind the chart.
+  </ApiRow>
+  <ApiRow name="chartProps" type="ComponentProps<typeof ScatterChart>">
+    Additional ECharts options merged into the compiled `option` by BeeCharts. Read the <Link href="https://echarts.apache.org/en/option.html#series-scatter" _blank>ECharts ScatterChart documentation</Link> for available props.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Scatter</ApiHeading>
+
+A single scatter series. Each `<Scatter />` is self-contained with its own point data and style definitions.
+
+<ApiTable>
+  <ApiRow name="dataKey" type="string" required>
+    The series key. Must exist in the chart `config`.
+  </ApiRow>
+  <ApiRow name="data" type="TPoint[]" required>
+    Array of point objects. Each point should include the keys referenced by `<XAxis dataKey="…" />` and `<YAxis dataKey="…" />` — typically `{ x, y }`.
+  </ApiRow>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Lets this series be selected by clicking it. When any series is selected, unselected series become semi-transparent.
+  </ApiRow>
+  <ApiRow name="isGlowing" type="boolean" default="false">
+    Applies a soft outer glow to this series' points.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode">
+    Optional `<Dot />` and `<ActiveDot />` composition that styles point markers.
+  </ApiRow>
+  <ApiRow name="scatterProps" type="ComponentProps<typeof Scatter>">
+    Escape hatch for raw ECharts series options compiled by BeeCharts.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Dot and ActiveDot</ApiHeading>
+
+Point markers composed inside a `<Scatter />`. `<Dot />` is the resting marker; `<ActiveDot />` is the hovered marker.
+
+<ApiTable>
+  <ApiRow name="variant" type='"default" | "border" | "colored-border"'>
+    The visual style of the point marker.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>XAxis and YAxis</ApiHeading>
+
+The value axes. Both default to `type="number"` and map BeeCharts axis props to ECharts axis options. They are hidden automatically while the chart is loading.
+
+<ApiTable>
+  <ApiRow name="dataKey" type="string">
+    The data key for the axis values — typically `"x"` or `"y"`.
+  </ApiRow>
+  <ApiRow name="…axisProps">
+    Additional axis options are merged into the compiled ECharts option. Read the <Link href="https://echarts.apache.org/en/option.html#xAxis" _blank>ECharts xAxis</Link> and <Link href="https://echarts.apache.org/en/option.html#yAxis" _blank>ECharts yAxis</Link> documentation for available props.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Grid</ApiHeading>
+
+The background grid lines. Defaults to horizontal-only dashed lines and maps to ECharts grid options.
+
+<ApiTable>
+  <ApiRow name="…gridProps">
+    Additional grid options are merged into the compiled ECharts option. Read the <Link href="https://echarts.apache.org/en/option.html#grid" _blank>ECharts grid documentation</Link> for available props.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tooltip</ApiHeading>
+
+The hover tooltip. It reads the chart's selection state so its content dims unselected series.
+
+<ApiTable>
+  <ApiRow name="variant" type='"default" | "frosted-glass"' default='"default"'>
+    The visual style of the tooltip surface.
+  </ApiRow>
+  <ApiRow name="roundness" type='"sm" | "md" | "lg" | "xl"' default='"lg"'>
+    Controls the border-radius of the tooltip.
+  </ApiRow>
+  <ApiRow name="defaultIndex" type="number">
+    When set, the tooltip is visible by default at the specified data point index.
+  </ApiRow>
+  <ApiRow name="cursor" type="boolean" default="true">
+    Whether the crosshair cursor follows the pointer on hover.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Legend</ApiHeading>
+
+The series legend. When the chart is clickable, each entry toggles selection of its series.
+
+<ApiTable>
+  <ApiRow name="variant" type='"square" | "circle" | "circle-outline" | "rounded-square" | "rounded-square-outline" | "vertical-bar" | "horizontal-bar"'>
+    The visual style of the legend indicators.
+  </ApiRow>
+  <ApiRow name="align" type='"left" | "center" | "right"' default='"right"'>
+    Horizontal placement of the legend.
+  </ApiRow>
+  <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"top"'>
+    Vertical placement of the legend.
+  </ApiRow>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Lets each legend entry toggle selection of its series.
+  </ApiRow>
+</ApiTable>

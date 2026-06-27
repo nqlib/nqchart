@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "beecharts",
+      "type": "skill-md",
+      "description": "Build dashboards with composable BeeCharts — install @beecharts/* via shadcn, compose Bee*Chart children, theme colors, BI recipes. Use when the user asks for charts, graphs, KPIs, sparklines, funnels, waterfalls, sankey, heatmaps, histograms, pareto, gauges, or @beecharts / BeeCharts components. NOT for contributing to the beecharts repo.",
+      "url": "/.well-known/agent-skills/beecharts/SKILL.md"
+    },
+    {
+      "name": "beecharts-dev",
+      "type": "skill-md",
+      "description": "Contribute to the BeeCharts repository — engine, registry, examples, chart-recipes, and compilers. Use when adding charts, registry items, or examples in beecharts. Covers primitives only, no duplicate BI chart modules. NOT for integrating @beecharts/* in external consumer apps.",
+      "url": "/.well-known/agent-skills/beecharts-dev/SKILL.md"
+    },
+    {
+      "name": "beecharts-docs",
+      "type": "skill-md",
+      "description": "Builds and extends the BeeCharts documentation site (Fumadocs + Next.js). Covers MDX pages, ComponentPreview wiring, landing, agent HTTP routes, and llms.txt. Use when adding docs, installation pages, or agent surfaces in this repo. Pair with beecharts-dev for registry/engine work; do not use the consumer skill in this repo.",
+      "url": "/.well-known/agent-skills/beecharts-docs/SKILL.md"
+    }
+  ]
+}

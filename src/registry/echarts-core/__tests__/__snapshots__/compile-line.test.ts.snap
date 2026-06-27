@@ -1,0 +1,125 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compileLineOption > matches snapshot for a representative context 1`] = `
+{
+  "angleAxis": undefined,
+  "animation": true,
+  "animationDuration": 1200,
+  "animationDurationUpdate": 600,
+  "animationEasing": "cubicOut",
+  "animationEasingUpdate": "cubicOut",
+  "animationThreshold": 4000,
+  "backgroundColor": "transparent",
+  "calendar": undefined,
+  "dataZoom": undefined,
+  "grid": {
+    "bottom": 48,
+    "containLabel": true,
+    "left": 48,
+    "right": 24,
+    "top": 24,
+  },
+  "legend": undefined,
+  "radar": undefined,
+  "radiusAxis": undefined,
+  "series": [
+    {
+      "animation": true,
+      "animationDelay": 0,
+      "animationDuration": 1200,
+      "animationEasing": "cubicInOut",
+      "data": [
+        100,
+        150,
+      ],
+      "emphasis": {
+        "focus": "series",
+      },
+      "itemStyle": {
+        "color": "color(sales,0)",
+      },
+      "lineStyle": {
+        "color": "color(sales,0)",
+      },
+      "name": "sales",
+      "showSymbol": true,
+      "smooth": false,
+      "step": undefined,
+      "symbol": "circle",
+      "symbolSize": 5,
+      "type": "line",
+    },
+  ],
+  "textStyle": {
+    "color": "#171717",
+  },
+  "tooltip": {
+    "backgroundColor": "#ffffff",
+    "borderColor": "#e5e5e5",
+    "textStyle": {
+      "color": "#171717",
+    },
+    "trigger": "axis",
+  },
+  "visualMap": undefined,
+  "xAxis": {
+    "axisLabel": {
+      "color": "#737373",
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#e5e5e5",
+      },
+    },
+    "axisTick": {
+      "lineStyle": {
+        "color": "#e5e5e5",
+      },
+    },
+    "data": [
+      "Q1",
+      "Q2",
+    ],
+    "nameTextStyle": {
+      "color": "#737373",
+    },
+    "splitArea": {},
+    "splitLine": {
+      "lineStyle": {
+        "color": "#e5e5e5",
+        "opacity": 0.45,
+        "type": "dashed",
+      },
+    },
+    "type": "category",
+  },
+  "yAxis": {
+    "axisLabel": {
+      "color": "#737373",
+    },
+    "axisLine": {
+      "lineStyle": {
+        "color": "#e5e5e5",
+      },
+    },
+    "axisTick": {
+      "lineStyle": {
+        "color": "#e5e5e5",
+      },
+    },
+    "nameTextStyle": {
+      "color": "#737373",
+    },
+    "splitArea": {},
+    "splitLine": {
+      "lineStyle": {
+        "color": "#e5e5e5",
+        "opacity": 0.35,
+        "type": "dashed",
+      },
+      "show": false,
+    },
+    "type": "value",
+  },
+}
+`;

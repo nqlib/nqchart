@@ -1,0 +1,92 @@
+---
+title: Background
+description: Customize the background of your charts with various styles and patterns
+image: /og/backgrounds.png
+---
+
+## Usage
+
+Compose `ChartBackground` inside any `Bee*Chart` that uses the plot shell (line, bar, composed):
+
+```tsx
+import { BeeLineChart, Line, XAxis, Legend, Tooltip } from "@beecharts/line-chart";
+import { ChartBackground } from "@beecharts/background";
+
+<BeeLineChart data={data} config={chartConfig} className="h-full w-full p-4" xDataKey="month">
+  <ChartBackground variant="dots" />
+  <XAxis dataKey="month" />
+  <Legend />
+  <Tooltip />
+  <Line dataKey="desktop" />
+  <Line dataKey="mobile" />
+</BeeLineChart>
+```
+
+### Background pattern vs chart grid
+
+| API | What it is |
+|-----|------------|
+| `<ChartBackground variant="graph-paper" />` | Decorative SVG wallpaper (small repeating squares) |
+| `<Grid />` | Optional **y-axis split lines** at value ticks (wide spacing) |
+
+Background previews omit `<Grid />` so split lines do not stack on the pattern. Add `<Grid />` when you want those value guides.
+
+## Variants
+
+### Dots
+
+<ComponentPreview title="variant='dots'" name="ex-bg-dots-line-chart" />
+
+### Graph paper
+
+<ComponentPreview title="variant='graph-paper'" name="ex-bg-graph-paper-line-chart" />
+
+### Cross Hatch
+
+<ComponentPreview title="variant='cross-hatch'" name="ex-bg-cross-hatch-line-chart" />
+
+### Diagonal Lines
+
+<ComponentPreview title="variant='diagonal-lines'" name="ex-bg-diagonal-lines-line-chart" />
+
+### Plus
+
+<ComponentPreview title="variant='plus'" name="ex-bg-plus-line-chart" />
+
+### Falling Triangles
+
+<ComponentPreview title="variant='falling-triangles'" name="ex-bg-falling-triangles-line-chart" />
+
+### 4-Pointed Star
+
+<ComponentPreview title="variant='4-pointed-star'" name="ex-bg-4-pointed-star-line-chart" />
+
+### Tiny Checkers
+
+<ComponentPreview title="variant='tiny-checkers'" name="ex-bg-tiny-checkers-line-chart" />
+
+### Overlapping Circles
+
+<ComponentPreview title="variant='overlapping-circles'" name="ex-bg-overlapping-circles-line-chart" />
+
+### Wiggle Lines
+
+<ComponentPreview title="variant='wiggle-lines'" name="ex-bg-wiggle-lines-line-chart" />
+
+### Bubbles
+
+<ComponentPreview title="variant='bubbles'" name="ex-bg-bubbles-line-chart" />
+
+## Custom Variant
+
+You can add your own background style by defining an SVG `<pattern>` and registering it in `PATTERN_MAP` inside `src/registry/ui/background.tsx`.
+
+1. Add the new name to the `BackgroundVariant` union.
+2. Create a pattern component that returns a `<pattern>` with your SVG shapes.
+3. Register the pattern component in `PATTERN_MAP`.
+
+Then use your variant:
+
+```tsx
+<ChartBackground variant="custom-pattern" />
+```

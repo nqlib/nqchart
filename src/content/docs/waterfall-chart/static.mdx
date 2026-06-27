@@ -1,0 +1,327 @@
+---
+title: Waterfall Chart
+description: Bridges, deltas, and totals stacked as one composable BeeChart
+image: /og/waterfall-chart.png
+links:
+  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/waterfall-chart.tsx
+  doc: https://echarts.apache.org/en/option.html#series-bar
+  api: https://echarts.apache.org/en/option.html#series-bar
+---
+
+<ComponentPreview title="Basic Chart" name="ex-waterfall-chart"  />
+
+## Installation
+
+<CodeTabs>
+  <TabsList variant="underline">
+    <TabsTab value="cli">CLI</TabsTab>
+    <TabsTab value="manual">Manual</TabsTab>
+  </TabsList>
+  <TabsPanel value="cli">
+    <CliBlock commands={["@beecharts/waterfall-chart"]} />
+  </TabsPanel>
+  <TabsPanel value="manual">
+    <Steps>
+      <Step>
+        <StepTitle>Install the following dependencies:</StepTitle>
+        <StepContent>
+          <CommandBlock commands={["echarts", "motion"]} />
+        </StepContent>
+      </Step>
+      <Step>
+        <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
+         <StepDescription>
+          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          Then, copy the following base waterfall-chart code into a new file in that folder.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="waterfall-chart"
+            title="components/beecharts/charts/waterfall-chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
+        <StepDescription>
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+
+          Below is main chart component.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart"
+            title="components/beecharts/ui/chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, We need to add sub components.</StepTitle>
+        <StepDescription>
+          Create a file called `tooltip.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="tooltip"
+            title="components/beecharts/ui/tooltip.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Now, create another file called `legend.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="legend"
+            title="components/beecharts/ui/legend.tsx"
+          />
+        </StepContent>
+      </Step>
+    </Steps>
+  </TabsPanel>
+</CodeTabs>
+
+## Usage
+
+The waterfall chart is composible on top of stacked `<Bar />` geometries (transparent “base” + visible segment). Provide rows with semantic `WaterfallType` (`start`, `increase`, `decrease`, `total`) encoded at `typeKey` (defaults to `"type"`), display names (`nameKey`), deltas (`valueKey`), gradients via `chartConfig`. Compose `<Grid />`, `<XAxis />`, `<YAxis />`, `<Bars />`, `<Tooltip />`, `<Legend />` as needed plus optional `backgroundVariant` on the root — remaining behavior is compiled into ECharts bar series options by BeeCharts; see <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>bar series docs</Link> when extending through `chartProps`.
+
+```tsx
+import {
+  BeeWaterfallChart,
+  Bars,
+  Grid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from "@/components/beecharts/charts/waterfall-chart";
+```
+
+```tsx
+<BeeWaterfallChart
+  config={chartConfig}
+  data={rows}
+  nameKey="name"
+  valueKey="amount"
+  typeKey="type"
+  backgroundVariant="dots"
+>
+  <Grid vertical={false} />
+  <XAxis />
+  <YAxis />
+  <Bars isClickable glowingBars={["product-a"]} />
+  <Tooltip />
+  <Legend isClickable />
+</BeeWaterfallChart>
+```
+
+### Interactive Selection
+
+Set `isClickable` on `<Bars />` and `<Legend />` as needed — `onSelectionChange` carries `{ dataKey, value } | null`, where `dataKey` aligns with names from `nameKey` and values reflect stacking math (`start` resets running totals, totals span full magnitude, deltas offset previous balance):
+
+```tsx
+<BeeWaterfallChart
+  config={chartConfig}
+  data={rows}
+  nameKey="name"
+  valueKey="amount"
+  onSelectionChange={(selection) => {
+    if (selection) {
+      console.log("Selected:", selection.dataKey, selection.value);
+    } else {
+      console.log("Deselected");
+    }
+  }}
+>
+  <Grid />
+  <XAxis />
+  <YAxis />
+  <Bars isClickable />
+  <Legend isClickable />
+  <Tooltip />
+</BeeWaterfallChart>
+```
+
+### Loading State
+
+<ComponentPreview className="mb-0" title="isLoading='true'" name="ex-loading-state-waterfall-chart"  />
+<Alert > 
+  <AlertContent >
+    The waterfall chart supports loading state. Pass `isLoading` to shimmer placeholder bars synthesized from seeded loading rows (`loadingBars`) while real deltas resolve.
+  </AlertContent>
+</Alert>
+
+## Examples
+
+### Intro animation
+
+Bars grow in on first paint with a staggered motion.dev reveal (ECharts’ built-in bar animation is disabled, same as other Bee charts). Control order with `animationType` on the root — `"left-to-right"` (default), `"right-to-left"`, `"center-out"`, `"edges-in"`, or `"none"`. Respects the OS reduce-motion preference.
+
+```tsx
+<BeeWaterfallChart animationType="center-out" ...>
+```
+
+### Glowing Bars
+
+<ComponentPreview title="glowing" name="ex-glowing-waterfall-chart"  />
+
+## API Reference
+
+The chart is composed of several parts. The props below are grouped by the component they belong to.
+
+<ApiHeading>BeeWaterfallChart</ApiHeading>
+
+The root container bridging raw financial rows → cumulative stack-friendly records (`base` + `barValue`). Tracks selection highlighting, translucent reference line (`y={0}`), rounded rect edges, gradients, legends, glowing filters, shimmer skeleton overlays when `isLoading`.
+
+<ApiTable>
+  <ApiRow name="config" type="Record<string, ChartConfig[string]>" required>
+    Keys correspond to categorical `nameKey` values powering gradients + legends.
+  </ApiRow>
+  <ApiRow name="data" type="TData[]" required>
+    Rows with `nameKey`, numeric `valueKey`, typed `WaterfallType` semantics at `typeKey`.
+  </ApiRow>
+  <ApiRow name="nameKey" type='keyof TData & string' required>
+    Display + identity column also fed to stacked `<defs />` gradient ids.
+  </ApiRow>
+  <ApiRow name="valueKey" type='keyof TData & string' required>
+    Contribution magnitudes interpreted per `WaterfallType`.
+  </ApiRow>
+  <ApiRow name="typeKey" type='keyof TData & string' default='"type"'>
+    Selects categorical driver for bridging logic (`start`, `increase`, `decrease`, `total`).
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode" required>
+    Compose `<Bars />`, `<Grid />`, `<XAxis />`, `<YAxis />`, `<Legend />`, `<Tooltip />`, optional root `backgroundVariant`, and escapes through `chartProps`.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Extra classes forwarded to `<ChartContainer />`.
+  </ApiRow>
+  <ApiRow name="barRadius" type="number" default="4">
+    Corner rounding for waterfall rectangles.
+  </ApiRow>
+  <ApiRow name="backgroundVariant" type="BackgroundVariant">
+    Draws `<ChartBackground />` underneath the chart (same pattern as bar and scatter charts).
+  </ApiRow>
+  <ApiRow name="defaultSelectedBar" type="string | null" default="null">
+    Pre-select waterfall slice by `nameKey` string (`null` clears).
+  </ApiRow>
+  <ApiRow name="onSelectionChange" type="(selection: { dataKey: string; value: number } | null) => void">
+    Mirrors clicks on stacked segments + legend parity with `<Bars />`.
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean" default="false">
+    Applies motion shimmering placeholders while withholding final geometry transitions.
+  </ApiRow>
+  <ApiRow name="loadingBars" type="number" default="6">
+    Number of placeholder categories during loading sequences.
+  </ApiRow>
+  <ApiRow name="animationType" type='"none" | "left-to-right" | "right-to-left" | "center-out" | "edges-in"' default='"left-to-right"'>
+    Staggered grow-in order on first render (motion.dev, not ECharts).
+  </ApiRow>
+  <ApiRow name="chartProps" type="ComponentProps<typeof BarChart>">
+    Additional ECharts options merged into the compiled `option` by BeeCharts; refer to <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>ECharts bar series</Link>.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Bars</ApiHeading>
+
+Configuration slot translating user intent (`isClickable`, `glowingBars`) into per-rect handlers + defs.
+
+<ApiTable>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Enables pointer toggling. Dimming applies whenever a bar is selected (legend, default, or click).
+  </ApiRow>
+  <ApiRow name="glowingBars" type="string[]" default="[]">
+    Subset of `nameKey` values receiving glow `<filter />`.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Grid</ApiHeading>
+
+Cartesian scaffolding with sane defaults balancing dense financial labeling.
+
+<ApiTable>
+  <ApiRow name="vertical" type="boolean" default="false">
+    Defaults to horizonal-only separators unless explicitly enabled for dual-axis overlays.
+  </ApiRow>
+  <ApiRow name="strokeDasharray" type="string" default='"3 3"'>
+    Dash forwarded to `<CartesianGrid />`.
+  </ApiRow>
+  <ApiRow name="…gridProps">
+    Additional grid options merged into the compiled ECharts option; see <Link href="https://echarts.apache.org/en/option.html#grid" _blank>ECharts grid</Link>.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>XAxis</ApiHeading>
+
+Category axis keyed to `nameKey`, hidden during loading shimmer.
+
+<ApiTable>
+  <ApiRow name="type" type='"category" | ...' default='"category"'>
+    Forwarded `<XAxis type />` while automatically binding `dataKey={nameKey}`.
+  </ApiRow>
+  <ApiRow name="tickMargin" type="number" default="8">
+    Comfortable breathing room for rotated tick labels without colliding stacking math.
+  </ApiRow>
+  <ApiRow name="…axisProps">
+    Additional xAxis options merged into the compiled ECharts option; see <Link href="https://echarts.apache.org/en/option.html#xAxis" _blank>ECharts xAxis</Link>.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>YAxis</ApiHeading>
+
+Numeric axis bridging positive / negative deltas with zero reference line synergy.
+
+<ApiTable>
+  <ApiRow name="type" type='"number" | ...' default='"number"'>
+    Forwarded verbatim when not loading (`width` resolves to `'auto'` by default inside component).
+  </ApiRow>
+  <ApiRow name="tickMargin" type="number" default="8">
+    Space between ticks + labels.
+  </ApiRow>
+  <ApiRow name="…axisProps">
+    Additional yAxis options merged into the compiled ECharts option; consult <Link href="https://echarts.apache.org/en/option.html#yAxis" _blank>ECharts yAxis</Link>.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tooltip</ApiHeading>
+
+Selection-aware formatter with subdued crosshair fill (`muted` translucent band).
+
+<ApiTable>
+  <ApiRow name="variant" type='"default" | "frosted-glass"' default='"default"'>
+    Tooltip motif.
+  </ApiRow>
+  <ApiRow name="roundness" type='"sm" | "md" | "lg" | "xl"' default='"lg"'>
+    Tooltip radius presets.
+  </ApiRow>
+  <ApiRow name="defaultIndex" type="number">
+    Forces tooltip spotlight on categorical index zero while idle pointers.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Legend</ApiHeading>
+
+Per-bridge legends mirroring clickable selection state.
+
+<ApiTable>
+  <ApiRow name="variant" type='"square" | "circle" | "circle-outline" | "rounded-square" | "rounded-square-outline" | "vertical-bar" | "horizontal-bar"'>
+    Legend marker motifs.
+  </ApiRow>
+  <ApiRow name="align" type='"left" | "center" | "right"' default='"right"'>
+    Horizontal alignment (Bee waterfall defaults tighter to chart gutter).
+  </ApiRow>
+  <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"top"'>
+    Vertical stacking.
+  </ApiRow>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Legend entries toggle shared selection; dimming follows `selectedBar` even when `<Bars />` is not clickable.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Waterfall data semantics</ApiHeading>
+
+`WaterfallType` strings drive preprocessing before bars render (`start`, `increase`, `decrease`, `total`).
+
+<ApiTable>
+  <ApiRow name="WaterfallType" type='"start" | "increase" | "decrease" | "total"'>
+    Determines how `<BeeWaterfallChart />` maps each row onto transparent base offsets vs visible segments — `total` resets running sums to anchored bars, decreases invert direction while preserving stacked geometry, increases extend running totals, `start` seeds initial balances from absolute magnitudes.
+  </ApiRow>
+</ApiTable>

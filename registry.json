@@ -1,0 +1,2237 @@
+{
+  "homepage": "https://beecharts.vercel.app",
+  "name": "BeeCharts",
+  "items": [
+    {
+      "name": "chart",
+      "type": "registry:component",
+      "dependencies": [
+        "echarts"
+      ],
+      "files": [
+        {
+          "path": "src/registry/ui/chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/ui/chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:component",
+      "dependencies": [
+        "echarts"
+      ],
+      "files": [
+        {
+          "path": "src/registry/ui/tooltip.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/ui/tooltip.tsx"
+        }
+      ]
+    },
+    {
+      "name": "legend",
+      "type": "registry:component",
+      "dependencies": [
+        "echarts"
+      ],
+      "files": [
+        {
+          "path": "src/registry/ui/legend.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/ui/legend.tsx"
+        }
+      ]
+    },
+    {
+      "name": "dot",
+      "type": "registry:component",
+      "dependencies": [
+        "echarts"
+      ],
+      "files": [
+        {
+          "path": "src/registry/ui/dot.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/ui/dot.tsx"
+        }
+      ]
+    },
+    {
+      "name": "bee-brush",
+      "type": "registry:component",
+      "registryDependencies": [
+        "@beecharts/chart"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "files": [
+        {
+          "path": "src/registry/ui/bee-brush.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/ui/bee-brush.tsx"
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "type": "registry:component",
+      "dependencies": [
+        "echarts"
+      ],
+      "files": [
+        {
+          "path": "src/registry/ui/background.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/ui/background.tsx"
+        }
+      ]
+    },
+    {
+      "name": "bar-chart",
+      "description": "Bar chart (ECharts engine, compound API)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/bar-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/bar-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "line-chart",
+      "description": "Line chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/line-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/line-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "composed-chart",
+      "description": "Composed bar + line chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/composed-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/composed-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pie-chart",
+      "description": "Pie / donut chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/pie-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/pie-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "heatmap-chart",
+      "description": "Heatmap chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/heatmap-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/heatmap-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "calendar-chart",
+      "description": "Calendar heatmap chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/calendar-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/calendar-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "radial-chart",
+      "description": "Radial / gauge chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/radial-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/radial-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "area-chart",
+      "description": "Area chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/area-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/area-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "scatter-chart",
+      "description": "Scatter / bubble chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/scatter-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/scatter-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "radar-chart",
+      "description": "Radar chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/radar-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/radar-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sankey-chart",
+      "description": "Sankey flow chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/sankey-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/sankey-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "funnel-chart",
+      "description": "Funnel chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/funnel-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/funnel-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "waterfall-chart",
+      "description": "Waterfall chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/waterfall-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/waterfall-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "treemap-chart",
+      "description": "Treemap chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/treemap-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/treemap-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sparkline-chart",
+      "description": "Sparkline chart (ECharts engine)",
+      "registryDependencies": [
+        "@beecharts/chart",
+        "@beecharts/tooltip",
+        "@beecharts/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/sparkline-chart.tsx",
+          "type": "registry:component",
+          "target": "components/beecharts/charts/sparkline-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "chart-recipes",
+      "description": "Data helpers for histogram, Pareto, heatmap, bullet, gauge, and box plot shapes",
+      "type": "registry:lib",
+      "files": [
+        {
+          "path": "src/registry/lib/chart-recipes.ts",
+          "type": "registry:lib",
+          "target": "lib/chart-recipes.ts"
+        }
+      ]
+    },
+    {
+      "name": "ex-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-loading-state-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-loading-state-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-stacked-type-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-stacked-type-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-percent-type-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-percent-type-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-horizontal-layout-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-horizontal-layout-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-hatched-variant-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-hatched-variant-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-stripped-variant-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-stripped-variant-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-line-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-loading-state-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-loading-state-line-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-composed-chart",
+      "registryDependencies": [
+        "@beecharts/composed-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-composed-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-loading-state-composed-chart",
+      "registryDependencies": [
+        "@beecharts/composed-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-loading-state-composed-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-pareto-chart",
+      "registryDependencies": [
+        "@beecharts/composed-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-pareto-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-pie-chart",
+      "registryDependencies": [
+        "@beecharts/pie-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-pie-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-gauge-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-gauge-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-gauge-with-target-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-gauge-with-target-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-histogram-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-histogram-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-loading-state-histogram-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-loading-state-histogram-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-bullet-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-bullet-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-loading-state-pareto-chart",
+      "registryDependencies": [
+        "@beecharts/composed-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-loading-state-pareto-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-boxplot-chart",
+      "registryDependencies": [
+        "@beecharts/composed-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-boxplot-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-heatmap-chart",
+      "registryDependencies": [
+        "@beecharts/heatmap-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-heatmap-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-heatmap-weekly-chart",
+      "registryDependencies": [
+        "@beecharts/heatmap-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-heatmap-weekly-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-heatmap-correlation-chart",
+      "registryDependencies": [
+        "@beecharts/heatmap-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-heatmap-correlation-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-workload-dashboard-chart",
+      "registryDependencies": [
+        "@beecharts/calendar-chart",
+        "@beecharts/heatmap-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-workload-dashboard-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-calendar-workload-chart",
+      "registryDependencies": [
+        "@beecharts/calendar-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-calendar-workload-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-heatmap-team-workload-chart",
+      "registryDependencies": [
+        "@beecharts/heatmap-chart",
+        "@beecharts/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-heatmap-team-workload-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-bg-dots-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgDotsLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-graph-paper-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgGraphPaperLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-cross-hatch-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgCrossHatchLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-diagonal-lines-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgDiagonalLinesLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-plus-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgPlusLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-falling-triangles-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgFallingTrianglesLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-4-pointed-star-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBg4PointedStarLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-tiny-checkers-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgTinyCheckersLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-overlapping-circles-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgOverlappingCirclesLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-wiggle-lines-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgWiggleLinesLineChart"
+      }
+    },
+    {
+      "name": "ex-bg-bubbles-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgBubblesLineChart"
+      }
+    },
+    {
+      "name": "ex-legend-square-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLegendSquareLineChart"
+      }
+    },
+    {
+      "name": "ex-legend-circle-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLegendCircleLineChart"
+      }
+    },
+    {
+      "name": "ex-legend-circle-outline-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLegendCircleOutlineLineChart"
+      }
+    },
+    {
+      "name": "ex-legend-rounded-square-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLegendRoundedSquareLineChart"
+      }
+    },
+    {
+      "name": "ex-legend-rounded-square-outline-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLegendRoundedSquareOutlineLineChart"
+      }
+    },
+    {
+      "name": "ex-legend-vertical-bar-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLegendVerticalBarLineChart"
+      }
+    },
+    {
+      "name": "ex-legend-horizontal-bar-line-chart",
+      "registryDependencies": [
+        "@beecharts/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLegendHorizontalBarLineChart"
+      }
+    },
+    {
+      "name": "ex-tooltip-default-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleTooltipDefaultBarChart"
+      }
+    },
+    {
+      "name": "ex-tooltip-frosted-glass-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-ui-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleTooltipFrostedGlassBarChart"
+      }
+    },
+    {
+      "name": "ex-animated-dashed-stroke-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleAnimatedDashedStrokeAreaChart"
+      }
+    },
+    {
+      "name": "ex-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleAreaChart"
+      }
+    },
+    {
+      "name": "ex-bg-bubbles-sparkline-chart",
+      "registryDependencies": [
+        "@beecharts/sparkline-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBgBubblesSparklineChart"
+      }
+    },
+    {
+      "name": "ex-bubble-chart",
+      "registryDependencies": [
+        "@beecharts/scatter-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBubbleChart"
+      }
+    },
+    {
+      "name": "ex-bubble-sized-chart",
+      "registryDependencies": [
+        "@beecharts/scatter-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBubbleSizedChart"
+      }
+    },
+    {
+      "name": "ex-bump-curve-type-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleBumpCurveTypeAreaChart"
+      }
+    },
+    {
+      "name": "ex-chart-config-default-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleChartConfigDefaultBarChart"
+      }
+    },
+    {
+      "name": "ex-chart-config-icons-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleChartConfigIconsBarChart"
+      }
+    },
+    {
+      "name": "ex-circle-grid-radar-chart",
+      "registryDependencies": [
+        "@beecharts/radar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleCircleGridRadarChart"
+      }
+    },
+    {
+      "name": "ex-dashed-stroke-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleDashedStrokeAreaChart"
+      }
+    },
+    {
+      "name": "ex-default-type-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleDefaultTypeAreaChart"
+      }
+    },
+    {
+      "name": "ex-dotted-area-variant-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleDottedAreaVariantAreaChart"
+      }
+    },
+    {
+      "name": "ex-expanded-type-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleExpandedTypeAreaChart"
+      }
+    },
+    {
+      "name": "ex-funnel-chart",
+      "registryDependencies": [
+        "@beecharts/funnel-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleFunnelChart"
+      }
+    },
+    {
+      "name": "ex-glowing-bubble-chart",
+      "registryDependencies": [
+        "@beecharts/scatter-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingBubbleChart"
+      }
+    },
+    {
+      "name": "ex-glowing-funnel-chart",
+      "registryDependencies": [
+        "@beecharts/funnel-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingFunnelChart"
+      }
+    },
+    {
+      "name": "ex-glowing-radar-chart",
+      "registryDependencies": [
+        "@beecharts/radar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingRadarChart"
+      }
+    },
+    {
+      "name": "ex-glowing-radial-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingRadialChart"
+      }
+    },
+    {
+      "name": "ex-glowing-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingSankeyChart"
+      }
+    },
+    {
+      "name": "ex-glowing-scatter-chart",
+      "registryDependencies": [
+        "@beecharts/scatter-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingScatterChart"
+      }
+    },
+    {
+      "name": "ex-glowing-sparkline-chart",
+      "registryDependencies": [
+        "@beecharts/sparkline-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingSparklineChart"
+      }
+    },
+    {
+      "name": "ex-glowing-treemap-chart",
+      "registryDependencies": [
+        "@beecharts/treemap-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingTreemapChart"
+      }
+    },
+    {
+      "name": "ex-glowing-waterfall-chart",
+      "registryDependencies": [
+        "@beecharts/waterfall-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGlowingWaterfallChart"
+      }
+    },
+    {
+      "name": "ex-gradient-area-variant-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientAreaVariantAreaChart"
+      }
+    },
+    {
+      "name": "ex-gradient-colors-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientColorsAreaChart"
+      }
+    },
+    {
+      "name": "ex-gradient-colors-bar-chart",
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientColorsBarChart"
+      }
+    },
+    {
+      "name": "ex-gradient-colors-bump-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientColorsBumpAreaChart"
+      }
+    },
+    {
+      "name": "ex-gradient-colors-radar-chart",
+      "registryDependencies": [
+        "@beecharts/radar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientColorsRadarChart"
+      }
+    },
+    {
+      "name": "ex-gradient-colors-radial-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientColorsRadialChart"
+      }
+    },
+    {
+      "name": "ex-gradient-colors-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientColorsSankeyChart"
+      }
+    },
+    {
+      "name": "ex-gradient-colors-scatter-chart",
+      "registryDependencies": [
+        "@beecharts/scatter-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientColorsScatterChart"
+      }
+    },
+    {
+      "name": "ex-gradient-reverse-area-variant-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleGradientReverseAreaVariantAreaChart"
+      }
+    },
+    {
+      "name": "ex-hatched-area-variant-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleHatchedAreaVariantAreaChart"
+      }
+    },
+    {
+      "name": "ex-labeled-nodes-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLabeledNodesSankeyChart"
+      }
+    },
+    {
+      "name": "ex-lines-area-variant-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLinesAreaVariantAreaChart"
+      }
+    },
+    {
+      "name": "ex-lines-variant-radar-chart",
+      "registryDependencies": [
+        "@beecharts/radar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLinesVariantRadarChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateAreaChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-bubble-chart",
+      "registryDependencies": [
+        "@beecharts/scatter-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateBubbleChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-funnel-chart",
+      "registryDependencies": [
+        "@beecharts/funnel-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateFunnelChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-gauge-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateGaugeChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-radar-chart",
+      "registryDependencies": [
+        "@beecharts/radar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateRadarChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-radial-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateRadialChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateSankeyChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-scatter-chart",
+      "registryDependencies": [
+        "@beecharts/scatter-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateScatterChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-sparkline-chart",
+      "registryDependencies": [
+        "@beecharts/sparkline-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateSparklineChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-treemap-chart",
+      "registryDependencies": [
+        "@beecharts/treemap-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateTreemapChart"
+      }
+    },
+    {
+      "name": "ex-loading-state-waterfall-chart",
+      "registryDependencies": [
+        "@beecharts/waterfall-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleLoadingStateWaterfallChart"
+      }
+    },
+    {
+      "name": "ex-monotoney-curve-type-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleMonotoneyCurveTypeAreaChart"
+      }
+    },
+    {
+      "name": "ex-outside-labels-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleOutsideLabelsSankeyChart"
+      }
+    },
+    {
+      "name": "ex-radar-chart",
+      "registryDependencies": [
+        "@beecharts/radar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleRadarChart"
+      }
+    },
+    {
+      "name": "ex-radial-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleRadialChart"
+      }
+    },
+    {
+      "name": "ex-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSankeyChart"
+      }
+    },
+    {
+      "name": "ex-scatter-chart",
+      "registryDependencies": [
+        "@beecharts/scatter-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleScatterChart"
+      }
+    },
+    {
+      "name": "ex-semi-variant-radial-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSemiVariantRadialChart"
+      }
+    },
+    {
+      "name": "ex-rose-radial-chart",
+      "registryDependencies": [
+        "@beecharts/radial-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleRoseRadialChart"
+      }
+    },
+    {
+      "name": "ex-solid-area-variant-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSolidAreaVariantAreaChart"
+      }
+    },
+    {
+      "name": "ex-solid-labeled-nodes-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSolidLabeledNodesSankeyChart"
+      }
+    },
+    {
+      "name": "ex-solid-link-variant-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSolidLinkVariantSankeyChart"
+      }
+    },
+    {
+      "name": "ex-solid-stroke-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSolidStrokeAreaChart"
+      }
+    },
+    {
+      "name": "ex-source-link-variant-sankey-chart",
+      "registryDependencies": [
+        "@beecharts/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSourceLinkVariantSankeyChart"
+      }
+    },
+    {
+      "name": "ex-sparkline-area-chart",
+      "registryDependencies": [
+        "@beecharts/sparkline-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSparklineAreaChart"
+      }
+    },
+    {
+      "name": "ex-sparkline-chart",
+      "registryDependencies": [
+        "@beecharts/sparkline-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSparklineChart"
+      }
+    },
+    {
+      "name": "ex-stacked-type-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleStackedTypeAreaChart"
+      }
+    },
+    {
+      "name": "ex-step-curve-type-area-chart",
+      "registryDependencies": [
+        "@beecharts/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleStepCurveTypeAreaChart"
+      }
+    },
+    {
+      "name": "ex-treemap-chart",
+      "registryDependencies": [
+        "@beecharts/treemap-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleTreemapChart"
+      }
+    },
+    {
+      "name": "ex-waterfall-chart",
+      "registryDependencies": [
+        "@beecharts/waterfall-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleWaterfallChart"
+      }
+    },
+    {
+      "name": "ex-sparkline-end-dot-chart",
+      "registryDependencies": [
+        "@beecharts/sparkline-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSparklineEndDotChart"
+      }
+    },
+    {
+      "name": "ex-sparkline-reference-band-chart",
+      "registryDependencies": [
+        "@beecharts/sparkline-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "BeeExampleSparklineReferenceBandChart"
+      }
+    },
+    {
+      "name": "monospace-bar-chart",
+      "description": "Terminal-style bar chart with monospace KPI chrome (ECharts)",
+      "dependencies": [
+        "echarts",
+        "motion"
+      ],
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/blocks/b-monospace-bar-chart.tsx",
+          "type": "registry:block",
+          "target": "components/beecharts/blocks/monospace-bar-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "hover-trace-bar-chart",
+      "description": "Bar chart with KPI header trace (ECharts)",
+      "dependencies": [
+        "echarts"
+      ],
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/blocks/b-hover-trace-bar-chart.tsx",
+          "type": "registry:block",
+          "target": "components/beecharts/blocks/hover-trace-bar-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "grid-bar-chart",
+      "description": "Stacked ghost grid bar chart (ECharts)",
+      "dependencies": [
+        "echarts"
+      ],
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/blocks/b-grid-bar-chart.tsx",
+          "type": "registry:block",
+          "target": "components/beecharts/blocks/grid-bar-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "isometric-bar-chart",
+      "description": "Rounded bar chart block (ECharts)",
+      "dependencies": [
+        "echarts"
+      ],
+      "registryDependencies": [
+        "@beecharts/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/blocks/b-isometric-bar-chart.tsx",
+          "type": "registry:block",
+          "target": "components/beecharts/blocks/isometric-bar-chart.tsx"
+        }
+      ]
+    }
+  ]
+}

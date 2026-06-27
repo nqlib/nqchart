@@ -1,0 +1,51 @@
+---
+title: Chart recipes
+description: Data helpers for histogram, Pareto, heatmap, bullet, gauge, and box plot patterns
+image: /og/chart-config.png
+---
+
+BI-style charts are built from **primitives** plus small data helpers in `chart-recipes`. Install the helpers once via the shadcn registry, then compose the matching `Bee*Chart` as documented on each chart page.
+
+## Installation
+
+<CliBlock commands={["@beecharts/chart-recipes"]} />
+
+This runs `shadcn add` and copies `lib/chart-recipes.ts` into your project. Chart components are installed separately (e.g. `@beecharts/bar-chart`).
+
+## Helpers
+
+| Helper | Use with | Doc examples |
+|--------|----------|----------------|
+| `binForHistogram(values, binCount?)` | `BeeBarChart` | [Bar chart](/docs/bar-chart/static) → Histogram |
+| `prepareBulletRow(label, { actual, target, max? })` | `BeeBarChart` `layout="horizontal"` | [Bar chart](/docs/bar-chart/static) → Bullet chart |
+| `prepareParetoData(rows, nameKey, valueKey)` | `BeeComposedChart` | [Composed chart](/docs/composed-chart/static) → Pareto |
+| `prepareBoxPlotRow(category, samples)` | `BeeComposedChart` stacked bars + line | [Composed chart](/docs/composed-chart/static) → Box plot |
+| `prepareHeatmapCells(rowLabels, colLabels, matrix)` | `BeeHeatmapChart` | [Heatmap chart](/docs/heatmap-chart/static) |
+| `workloadUtilization(assigned, available)` | any workload view | Returns utilization % |
+| `prepareCalendarWorkloadCells(days)` | `BeeCalendarChart` | [Calendar chart](/docs/calendar-chart/static) → Employee workload |
+| `prepareTeamWorkloadMatrix(dates, rows)` | `BeeHeatmapChart` | [Calendar chart](/docs/calendar-chart/static) → Team workload |
+| `normalizeGaugeValue(value, min?, max?)` | `BeeRadialChart` `variant="semi"` | [Radial chart](/docs/radial-chart/static) → Gauge with target |
+| `prepareGaugeRows({ score, target?, … })` | `BeeRadialChart` `nameKey="series"` | Same — `series` keys must match `chartConfig` |
+
+## Import
+
+```tsx
+import {
+  binForHistogram,
+  prepareBulletRow,
+  prepareParetoData,
+  prepareBoxPlotRow,
+  prepareHeatmapCells,
+  workloadUtilization,
+  prepareCalendarWorkloadCells,
+  prepareTeamWorkloadMatrix,
+  normalizeGaugeValue,
+  prepareGaugeRows,
+} from "@/lib/chart-recipes";
+```
+
+Inside this repo, examples use `@/registry/lib/chart-recipes`.
+
+## When not to add a new chart file
+
+If the visualization only changes **data shape** or **props** on an existing primitive, extend `chart-recipes` and add an `ex-*` example on the primitive doc page — do not create a separate `BeeHistogramChart` package.

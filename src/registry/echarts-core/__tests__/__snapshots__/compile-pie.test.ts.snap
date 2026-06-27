@@ -1,0 +1,81 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compilePieOption > matches snapshot for a representative context 1`] = `
+{
+  "angleAxis": undefined,
+  "animation": true,
+  "animationDuration": 1200,
+  "animationDurationUpdate": 600,
+  "animationEasing": "cubicOut",
+  "animationEasingUpdate": "cubicOut",
+  "animationThreshold": 4000,
+  "backgroundColor": "transparent",
+  "calendar": undefined,
+  "dataZoom": undefined,
+  "legend": undefined,
+  "radar": undefined,
+  "radiusAxis": undefined,
+  "series": [
+    {
+      "animation": true,
+      "animationDelay": [Function],
+      "animationDuration": 1200,
+      "animationEasing": "cubicOut",
+      "data": [
+        {
+          "itemStyle": {
+            "color": "color(a,0)",
+          },
+          "name": "Slice A",
+          "value": 1,
+        },
+        {
+          "itemStyle": {
+            "color": "color(b,0)",
+          },
+          "name": "b",
+          "value": 2,
+        },
+      ],
+      "emphasis": {
+        "itemStyle": {
+          "shadowBlur": 10,
+        },
+      },
+      "label": {
+        "color": "#737373",
+        "fontSize": 12,
+        "formatter": "{b}",
+        "show": true,
+      },
+      "labelLine": {
+        "length": 10,
+        "length2": 8,
+        "lineStyle": {
+          "color": "#e5e5e5",
+        },
+        "show": true,
+      },
+      "radius": [
+        0,
+        "70%",
+      ],
+      "type": "pie",
+    },
+  ],
+  "textStyle": {
+    "color": "#171717",
+  },
+  "tooltip": {
+    "backgroundColor": "#ffffff",
+    "borderColor": "#e5e5e5",
+    "textStyle": {
+      "color": "#171717",
+    },
+    "trigger": "item",
+  },
+  "visualMap": undefined,
+  "xAxis": undefined,
+  "yAxis": undefined,
+}
+`;

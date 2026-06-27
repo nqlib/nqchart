@@ -1,0 +1,280 @@
+---
+title: Sparkline Chart
+description: Compact inline sparklines for KPIs, tables, and dense dashboards
+image: /og/sparkline-chart.png
+links:
+  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/sparkline-chart.tsx
+  doc: https://echarts.apache.org/en/option.html#series-line
+  api: https://echarts.apache.org/en/option.html#series-line
+---
+
+<ComponentPreview title="Basic Chart" name="ex-sparkline-chart"  />
+
+## Installation
+
+<CodeTabs>
+  <TabsList variant="underline">
+    <TabsTab value="cli">CLI</TabsTab>
+    <TabsTab value="manual">Manual</TabsTab>
+  </TabsList>
+  <TabsPanel value="cli">
+    <CliBlock commands={["@beecharts/sparkline-chart"]} />
+  </TabsPanel>
+  <TabsPanel value="manual">
+    <Steps>
+      <Step>
+        <StepTitle>Install the following dependencies:</StepTitle>
+        <StepContent>
+          <CommandBlock commands={["echarts", "motion"]} />
+        </StepContent>
+      </Step>
+      <Step>
+        <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
+         <StepDescription>
+          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          Then, copy the following base sparkline-chart code into a new file in that folder.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="sparkline-chart"
+            title="components/beecharts/charts/sparkline-chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
+        <StepDescription>
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+
+          Below is main chart component.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart"
+            title="components/beecharts/ui/chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, We need to add sub components.</StepTitle>
+        <StepDescription>
+          Create a file called `tooltip.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="tooltip"
+            title="components/beecharts/ui/tooltip.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Create `dot.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="dot"
+            title="components/beecharts/ui/dot.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          For background patterns, create `background.tsx` in `beecharts/ui` as well.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="background"
+            title="components/beecharts/ui/background.tsx"
+          />
+        </StepContent>
+      </Step>
+    </Steps>
+  </TabsPanel>
+</CodeTabs>
+
+## Usage
+
+Sparklines are built for **small, axis-free** trend strips — not a shrunken line chart. Unlike `<BeeLineChart />`, which usually scales from **zero** and shows axes, legends, and brush, sparklines **pin the Y domain to your data min/max** (with a little padding) so variation fills the full height of a short container. Pass rows with a numeric `valueDataKey`, map series colors through `chartConfig`, and compose only the pieces you need — typically `<Sparkline />`, optionally `<Fill />`, `<EndDot />`, `<ReferenceBand />`, or `<Tooltip />`. Size the chart with `className` (for example `h-16 w-full`).
+
+```tsx
+import {
+  BeeSparklineChart,
+  Sparkline,
+  Fill,
+  EndDot,
+  Tooltip,
+} from "@/components/beecharts/charts/sparkline-chart";
+```
+
+```tsx
+const data = [{ value: 12 }, { value: 18 }, { value: 24 }];
+
+const chartConfig = {
+  trend: {
+    label: "Sessions",
+    colors: { light: ["#047857"], dark: ["#10b981"] },
+  },
+} satisfies ChartConfig;
+
+<BeeSparklineChart
+  data={data}
+  valueDataKey="value"
+  config={chartConfig}
+  backgroundVariant="dots"
+  className="h-12 w-40"
+>
+  <Fill dataKey="trend" />
+  <Sparkline dataKey="trend">
+    <EndDot variant="colored-border" />
+  </Sparkline>
+  <Tooltip defaultIndex={data.length - 1} />
+</BeeSparklineChart>
+```
+
+### Loading State
+
+<ComponentPreview className="mb-0" title="isLoading='true'" name="ex-loading-state-sparkline-chart"  />
+<Alert > 
+  <AlertContent >
+    Pass `isLoading` to show the motion shimmer skeleton. Placeholder points are synthesized with `loadingPoints` (default `18`) until real data resolves.
+  </AlertContent>
+</Alert>
+
+## Examples
+
+### Background patterns
+
+<ComponentPreview title="dots + fill" name="ex-sparkline-chart"  />
+
+<ComponentPreview title="bubbles" name="ex-bg-bubbles-sparkline-chart"  />
+
+Pass `backgroundVariant` on the root (e.g. `dots`, `graph-paper`, `cross-hatch`, `bubbles`). Or compose `<ChartBackground variant="graph-paper" />` inside `BeeSparklineChart`. Requires `@beecharts/background` when installing manually.
+
+### Area Fill
+
+<ComponentPreview title="gradient fill" name="ex-sparkline-area-chart"  />
+
+### Glowing Stroke
+
+<ComponentPreview title="glowing" name="ex-glowing-sparkline-chart"  />
+
+### End Dot + Tooltip
+
+<ComponentPreview title="end dot" name="ex-sparkline-end-dot-chart"  />
+
+### Reference Band
+
+<ComponentPreview title="reference band" name="ex-sparkline-reference-band-chart"  />
+
+## API Reference
+
+<ApiHeading>BeeSparklineChart</ApiHeading>
+
+Root container for compact line charts. Renders a hidden Y axis with a **data-min / data-max** domain (not zero-based). No visible axes — consumers control footprint via `className`.
+
+<ApiTable>
+  <ApiRow name="config" type="ChartConfig" required>
+    Series labels and theme-aware gradient colors keyed by each `<Sparkline dataKey />`.
+  </ApiRow>
+  <ApiRow name="data" type="TData[]" required>
+    Rows containing the numeric field referenced by `valueDataKey`.
+  </ApiRow>
+  <ApiRow name="valueDataKey" type='keyof TData & string' required>
+    Numeric column plotted on the sparkline (for example `"value"`).
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode" required>
+    Compose `<Fill />`, `<Sparkline />`, `<ReferenceBand />`, `<Tooltip />`.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Size and layout classes on `<ChartContainer />` (height/width for inline use).
+  </ApiRow>
+  <ApiRow name="curveType" type="CurveType" default='"monotone"'>
+    Default interpolation inherited by `<Sparkline />` and `<Fill />`.
+  </ApiRow>
+  <ApiRow name="animationType" type='"none" | "left-to-right"' default='"left-to-right"'>
+    Intro reveal mask; respects OS reduce-motion preference.
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean" default="false">
+    Shows shimmer skeleton line instead of composed series.
+  </ApiRow>
+  <ApiRow name="loadingPoints" type="number" default="18">
+    Number of placeholder points during loading.
+  </ApiRow>
+  <ApiRow name="backgroundVariant" type="BackgroundVariant">
+    Draws `<ChartBackground />` behind the series (`dots`, `grid`, `bubbles`, etc.).
+  </ApiRow>
+  <ApiRow name="chartProps" type="ComponentProps<typeof LineChart>">
+    Escape hatch for additional ECharts options (margins, `dataZoom`, etc.) compiled by BeeCharts.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Sparkline</ApiHeading>
+
+Single-series stroke with optional glow, dashed stroke, and terminal `<EndDot />`.
+
+<ApiTable>
+  <ApiRow name="dataKey" type="string" required>
+    Key into `chartConfig` for gradients and tooltip labels.
+  </ApiRow>
+  <ApiRow name="strokeVariant" type='"solid" | "dashed"' default='"solid"'>
+    Stroke dash pattern.
+  </ApiRow>
+  <ApiRow name="glowing" type="boolean" default="false">
+    Applies soft SVG glow filter to the stroke.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode">
+    Optional `<EndDot variant="..." />` configuration slot.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Fill</ApiHeading>
+
+Gradient area under the stroke (render **before** `<Sparkline />` so the line stays on top).
+
+<ApiTable>
+  <ApiRow name="dataKey" type="string" required>
+    Config key shared with `<Sparkline />`.
+  </ApiRow>
+  <ApiRow name="fillOpacity" type="number" default="1">
+    Opacity multiplier on the fill pattern.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>EndDot</ApiHeading>
+
+Configuration slot — renders a `<ChartDot />` on the **last** point only when composed inside `<Sparkline />`.
+
+<ApiTable>
+  <ApiRow name="variant" type="DotVariant">
+    Dot style forwarded to `@beecharts/dot`.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>ReferenceBand</ApiHeading>
+
+Muted horizontal band for targets, SLA ranges, or baselines.
+
+<ApiTable>
+  <ApiRow name="y1" type="number" required>
+    Lower bound in data units.
+  </ApiRow>
+  <ApiRow name="y2" type="number" required>
+    Upper bound in data units.
+  </ApiRow>
+  <ApiRow name="fillOpacity" type="number" default="0.12">
+    Band fill strength.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tooltip</ApiHeading>
+
+Compact hover readout; cursor line disabled by default for inline charts.
+
+<ApiTable>
+  <ApiRow name="variant" type="TooltipVariant">
+    Tooltip surface style.
+  </ApiRow>
+  <ApiRow name="cursor" type="boolean" default="false">
+    Vertical crosshair while hovering.
+  </ApiRow>
+  <ApiRow name="defaultIndex" type="number">
+    Highlights a point while idle (useful with `<EndDot />` on the last index).
+  </ApiRow>
+</ApiTable>

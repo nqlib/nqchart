@@ -1,0 +1,27 @@
+"use client";
+
+import { BeeBarChart, Bar, XAxis, Grid, Tooltip, Legend } from "@/registry/charts/bar-chart";
+import {
+  DUAL_SERIES_CHART_CONFIG,
+  formatMonthTickShort,
+  TRAFFIC_MONTHLY_DATA,
+} from "@/registry/examples/example-shared";
+
+export function BeeExampleHatchedVariantBarChart() {
+  return (
+    <BeeBarChart
+      data={[...TRAFFIC_MONTHLY_DATA]}
+      config={DUAL_SERIES_CHART_CONFIG}
+      className="h-full w-full p-4"
+      xDataKey="month"
+      barRadius={8}
+    >
+      <Grid />
+      <XAxis dataKey="month" tickFormatter={formatMonthTickShort} />
+      <Legend isClickable />
+      <Tooltip />
+      <Bar dataKey="desktop" variant="hatched" />
+      <Bar dataKey="mobile" variant="hatched" />
+    </BeeBarChart>
+  );
+}

@@ -1,0 +1,309 @@
+---
+title: Funnel Chart
+description: Stage-based funnel visuals built atop composable BeeCharts primitives
+image: /og/funnel-chart.png
+links:
+  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/funnel-chart.tsx
+  doc: https://echarts.apache.org/en/option.html#series-bar
+  api: https://echarts.apache.org/en/option.html#series-bar
+---
+
+<ComponentPreview title="Basic Chart" name="ex-funnel-chart"  />
+
+## Installation
+
+<CodeTabs>
+  <TabsList variant="underline">
+    <TabsTab value="cli">CLI</TabsTab>
+    <TabsTab value="manual">Manual</TabsTab>
+  </TabsList>
+  <TabsPanel value="cli">
+    <CliBlock commands={["@beecharts/funnel-chart"]} />
+  </TabsPanel>
+  <TabsPanel value="manual">
+    <Steps>
+      <Step>
+        <StepTitle>Install the following dependencies:</StepTitle>
+        <StepContent>
+          <CommandBlock commands={["echarts", "motion"]} />
+        </StepContent>
+      </Step>
+      <Step>
+        <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
+         <StepDescription>
+          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          Then, copy the following base funnel-chart code into a new file in that folder.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="funnel-chart"
+            title="components/beecharts/charts/funnel-chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
+        <StepDescription>
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+
+          Below is main chart component.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart"
+            title="components/beecharts/ui/chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, We need to add sub components.</StepTitle>
+        <StepDescription>
+          Create a file called `tooltip.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="tooltip"
+            title="components/beecharts/ui/tooltip.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Now, create another file called `legend.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="legend"
+            title="components/beecharts/ui/legend.tsx"
+          />
+        </StepContent>
+      </Step>
+    </Steps>
+  </TabsPanel>
+</CodeTabs>
+
+## Usage
+
+The funnel chart is composible. `<BeeFunnelChart>` compiles a vertically laid out ECharts bar series with custom trapezoid shapes per stage (`stageKey`) and measured values (`valueKey`). Compose `<Grid />`, `<XAxis />`, `<YAxis />`, `<Stages />`, `<Tooltip />`, `<Legend />` as needed, and set optional `backgroundVariant` on the chart root — ECharts has no standalone funnel primitive, but additional options can pass through `chartProps` alongside the underlying <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>bar series</Link> escape hatch documented below.
+
+```tsx
+import {
+  BeeFunnelChart,
+  Stages,
+  XAxis,
+  YAxis,
+  Grid,
+  Tooltip,
+  Legend,
+} from "@/components/beecharts/charts/funnel-chart";
+```
+
+```tsx
+<BeeFunnelChart
+  config={chartConfig}
+  data={funnelRows}
+  stageKey="stage"
+  valueKey="amount"
+  backgroundVariant="dots"
+>
+  <YAxis />
+  <XAxis />
+  <Stages isClickable glowingStages={["trials"]} />
+  <Grid />
+  <Tooltip />
+  <Legend isClickable />
+</BeeFunnelChart>
+```
+
+### Interactive Selection
+
+Add `isClickable` to `<Stages />` (plus `<Legend />` when you want swatches clickable) then listen on `onSelectionChange` (`{ dataKey, value } | null`). `dataKey` matches rows’ `stageKey` string:
+
+```tsx
+<BeeFunnelChart
+  config={chartConfig}
+  data={funnelRows}
+  stageKey="stage"
+  valueKey="amount"
+  onSelectionChange={(selection) => {
+    if (selection) {
+      console.log("Selected:", selection.dataKey, selection.value);
+    } else {
+      console.log("Deselected");
+    }
+  }}
+>
+  <YAxis />
+  <XAxis />
+  <Stages isClickable />
+  <Legend isClickable />
+  <Tooltip />
+</BeeFunnelChart>
+```
+
+### Loading State
+
+<ComponentPreview className="mb-0" title="isLoading='true'" name="ex-loading-state-funnel-chart"  />
+<Alert > 
+  <AlertContent >
+    The funnel chart supports loading state. Pass `isLoading` to shimmer placeholder stages synthesized from deterministic loading rows while awaiting real funnel data (tune fictitious heights with `loadingStages`).
+  </AlertContent>
+</Alert>
+
+## Examples
+
+### Intro animation
+
+Funnel stages expand from the center on first paint (motion.dev — ECharts built-in bar animation is off). Default `animationType="top-to-bottom"` staggers from the first stage downward. Also `"bottom-to-top"`, `"center-out"`, `"edges-in"`, or `"none"`. Honors reduce motion.
+
+```tsx
+<BeeFunnelChart animationType="center-out" ...>
+```
+
+### Glowing Stages
+
+<ComponentPreview title="glowing" name="ex-glowing-funnel-chart"  />
+
+## API Reference
+
+The chart is composed of several parts. The props below are grouped by the component they belong to.
+
+<ApiHeading>BeeFunnelChart</ApiHeading>
+
+The root container wrapping a vertical `<BarChart>`. Holds stage metadata, synthesized loading rows when `isLoading`, max-value scaling shared by funnel shapes, and selection state surfaced to `<Stages />`/`<Legend />`.
+
+<ApiTable>
+  <ApiRow name="config" type="Record<string, ChartConfig[string]>" required>
+    Keys must correspond to serialized `stageKey` values (`string`) so gradients + legend labels resolve per funnel stage color stop.
+  </ApiRow>
+  <ApiRow name="data" type="TData[]" required>
+    Rows with `stageKey` + numeric `valueKey` fields typed as literals for inference (`TData extends Record<string, unknown>`).
+  </ApiRow>
+  <ApiRow name="stageKey" type='keyof TData & string' required>
+    Categorical funnel stage identifier surfaced on `<YAxis />` ticks and gradients.
+  </ApiRow>
+  <ApiRow name="valueKey" type='keyof TData & string' required>
+    Numeric throughput used to scale each trapezoid width plus tooltip payload.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode" required>
+    `<Grid />`, `<XAxis />`, `<YAxis />`, `<Stages />`, `<Tooltip />`, `<Legend />`, plus optional root `backgroundVariant`, and escapes through additional ECharts options via `chartProps`.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Additional wrapper classes forwarded to `<ChartContainer />`.
+  </ApiRow>
+  <ApiRow name="stageGap" type="number" default="6">
+    Vertical gutter between stacked funnel polygons inside each category band.
+  </ApiRow>
+  <ApiRow name="backgroundVariant" type="BackgroundVariant">
+    Draws `<ChartBackground />` beneath the funnel (same pattern as bar and scatter charts).
+  </ApiRow>
+  <ApiRow name="defaultSelectedStage" type="string | null" default="null">
+    Pre-select matching `stageKey` string (`null` clears).
+  </ApiRow>
+  <ApiRow name="onSelectionChange" type="(selection: { dataKey: string; value: number } | null) => void">
+    Fires when clickable legend / stage polygons toggle visibility focus.
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean" default="false">
+    Swaps rendered rows with motion-shimmer placeholders while preserving axes + tooltip wiring.
+  </ApiRow>
+  <ApiRow name="loadingStages" type="number" default="5">
+    Count of synthesized placeholder polygons while `isLoading` is active.
+  </ApiRow>
+  <ApiRow name="animationType" type='"none" | "top-to-bottom" | "bottom-to-top" | "center-out" | "edges-in"' default='"top-to-bottom"'>
+    Staggered center-out grow for each trapezoid stage on first render.
+  </ApiRow>
+  <ApiRow name="chartProps" type="ComponentProps<typeof BarChart>">
+    Additional ECharts options merged into the compiled `option` by BeeCharts — sizing, responsiveness, `dataZoom`, margins, and more. Refer to <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>ECharts bar series</Link>; there is no dedicated funnel primitive, so this escape hatch doubles as funnel tuning.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Stages</ApiHeading>
+
+Configuration slot mirrored by funnel renderer — determines whether polygons listen for clicks / glow defs.
+
+<ApiTable>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Enables polygon click toggling. Selection dimming applies whenever a stage is selected (legend, default, or click).
+  </ApiRow>
+  <ApiRow name="glowingStages" type="string[]" default="[]">
+    Names matching `stageKey` values emitting glow filters akin to BeeBars.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>XAxis</ApiHeading>
+
+Mirrors numeric scale even though BeeFunnel hides ticks by default to keep silhouette clean (`hide` maps to ECharts axis visibility).
+
+<ApiTable>
+  <ApiRow name="hide" type="boolean" default="true">
+    Default hides axis line / ticks consistent with BeeFunnels marketing aesthetic.
+  </ApiRow>
+  <ApiRow name="type" type='"number" | ...' default='"number"'>
+    Forwarded verbatim to `<XAxis />` while loading states hide axes automatically.
+  </ApiRow>
+  <ApiRow name="…axisProps">
+    Additional xAxis options are merged into the compiled ECharts option. Read the <Link href="https://echarts.apache.org/en/option.html#xAxis" _blank>ECharts xAxis</Link> documentation for available props.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>YAxis</ApiHeading>
+
+Shows ordered funnel stages (category axis for vertical funnel layout).
+
+<ApiTable>
+  <ApiRow name="width" type="number" default="96">
+    Default tick gutter width accommodating stage labels before trapezoid math runs.
+  </ApiRow>
+  <ApiRow name="type" type='"category" | ...' default='"category"'>
+    Drives categorical placement for each funnel row (`dataKey={stageKey}` internally).
+  </ApiRow>
+  <ApiRow name="…axisProps">
+    Additional yAxis options are merged into the compiled ECharts option. Read the <Link href="https://echarts.apache.org/en/option.html#yAxis" _blank>ECharts yAxis</Link> documentation for available props.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Grid</ApiHeading>
+
+Optional vertical-only dashed scaffolding for alignment reference.
+
+<ApiTable>
+  <ApiRow name="strokeDasharray" type="string" default='"3 3"'>
+    Dash pattern forwarded to `<CartesianGrid />`.
+  </ApiRow>
+  <ApiRow name="…gridProps">
+    Horizontal lines stay disabled intentionally; remaining grid options are merged into the compiled ECharts option. Read the <Link href="https://echarts.apache.org/en/option.html#grid" _blank>ECharts grid documentation</Link> for nuance.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tooltip</ApiHeading>
+
+Disables Cartesian cursor crosshair (`cursor={false}`) for cleaner funnel hovering.
+
+<ApiTable>
+  <ApiRow name="variant" type='"default" | "frosted-glass"' default='"default"'>
+    Tooltip polish tier.
+  </ApiRow>
+  <ApiRow name="roundness" type='"sm" | "md" | "lg" | "xl"' default='"lg"'>
+    Tooltip radius.
+  </ApiRow>
+  <ApiRow name="defaultIndex" type="number">
+    Pre-highlights tooltip for a deterministic stage row while pointer idle.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Legend</ApiHeading>
+
+Stage keyed legend syncing dimming + selection mirrored from `<Stages />`.
+
+<ApiTable>
+  <ApiRow name="variant" type='"square" | "circle" | "circle-outline" | "rounded-square" | "rounded-square-outline" | "vertical-bar" | "horizontal-bar"'>
+    Legend marker motifs.
+  </ApiRow>
+  <ApiRow name="align" type='"left" | "center" | "right"' default='"center"'>
+    Horizontal alignment.
+  </ApiRow>
+  <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"bottom"'>
+    Vertical stacking vs chart canvas.
+  </ApiRow>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Legend entries toggle shared selection; dimming follows `selectedStage` even when `<Stages />` is not clickable.
+  </ApiRow>
+</ApiTable>

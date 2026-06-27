@@ -1,0 +1,240 @@
+---
+title: Treemap Chart
+description: Hierarchical treemaps sized by value — clear at a glance, beautiful by default
+image: /og/treemap-chart.png
+links:
+  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/treemap-chart.tsx
+  doc: https://echarts.apache.org/en/option.html#series-treemap
+  api: https://echarts.apache.org/en/option.html#series-treemap
+---
+
+<ComponentPreview title="Basic Chart" name="ex-treemap-chart"  />
+
+## Installation
+
+<CodeTabs>
+  <TabsList variant="underline">
+    <TabsTab value="cli">CLI</TabsTab>
+    <TabsTab value="manual">Manual</TabsTab>
+  </TabsList>
+  <TabsPanel value="cli">
+    <CliBlock commands={["@beecharts/treemap-chart"]} />
+  </TabsPanel>
+  <TabsPanel value="manual">
+    <Steps>
+      <Step>
+        <StepTitle>Install the following dependencies:</StepTitle>
+        <StepContent>
+          <CommandBlock commands={["echarts", "motion"]} />
+        </StepContent>
+      </Step>
+      <Step>
+        <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
+         <StepDescription>
+          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          Then, copy the following base treemap-chart code into a new file in that folder.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="treemap-chart"
+            title="components/beecharts/charts/treemap-chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
+        <StepDescription>
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+
+          Below is main chart component.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart"
+            title="components/beecharts/ui/chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, We need to add sub components.</StepTitle>
+        <StepDescription>
+          Create a file called `tooltip.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="tooltip"
+            title="components/beecharts/ui/tooltip.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Now, create another file called `legend.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="legend"
+            title="components/beecharts/ui/legend.tsx"
+          />
+        </StepContent>
+      </Step>
+    </Steps>
+  </TabsPanel>
+</CodeTabs>
+
+## Usage
+
+The treemap chart is composible. `<BeeTreemapChart>` is the container: you pass hierarchical or flat tile data (`TreemapNode[]`) plus a `chartConfig` whose keys match each tile’s display name (`nameKey`). Compose `<Tiles />` with behavior flags (`isClickable`, `glowingTiles`, `showLabels`), then `<Tooltip />` and `<Legend />`, optionally with `backgroundVariant` on the root — only the slots you need.
+
+```tsx
+import {
+  BeeTreemapChart,
+  Tiles,
+  Tooltip,
+  Legend,
+} from "@/components/beecharts/charts/treemap-chart";
+```
+
+```tsx
+<BeeTreemapChart config={chartConfig} data={treemapData} backgroundVariant="dots">
+  <Tiles isClickable glowingTiles={["mobile"]} showLabels />
+  <Tooltip />
+  <Legend isClickable />
+</BeeTreemapChart>
+```
+
+### Interactive Selection
+
+Add `isClickable` on `<Tiles />` (and on `<Legend />`) so clicks select a tile. Use `onSelectionChange` on `<BeeTreemapChart>` — it receives `{ dataKey, value } | null`, where `dataKey` is the tile name from `nameKey` and `value` comes from `dataKey` (defaults to cumulative `size` for nested nodes):
+
+```tsx
+<BeeTreemapChart
+  config={chartConfig}
+  data={treemapData}
+  onSelectionChange={(selection) => {
+    if (selection) {
+      console.log("Selected:", selection.dataKey, selection.value);
+    } else {
+      console.log("Deselected");
+    }
+  }}
+>
+  <Tiles isClickable />
+  <Legend isClickable />
+  <Tooltip />
+</BeeTreemapChart>
+```
+
+### Loading State
+
+<ComponentPreview className="mb-0" title="isLoading='true'" name="ex-loading-state-treemap-chart"  />
+<Alert > 
+  <AlertContent >
+    The treemap chart supports loading state. Pass `isLoading` to show an animated skeleton while data is being fetched.
+  </AlertContent>
+</Alert>
+
+## Examples
+
+### Glowing Tiles
+
+<ComponentPreview title="glowing" name="ex-glowing-treemap-chart"  />
+
+## API Reference
+
+The chart is composed of several parts. The props below are grouped by the component they belong to.
+
+<ApiHeading>BeeTreemapChart</ApiHeading>
+
+The root container. It owns hierarchical data (`TreemapNode[]`), shared tile selection state, loading skeleton behavior, gradient fills, and aspect ratio defaults. Compose visual slots as children.
+
+<ApiTable>
+  <ApiRow name="config" type="Record<string, ChartConfig[string]>" required>
+    Configuration keyed by tile name (`nameKey`). Each key drives gradient colors and legend labels for that leaf or series.
+  </ApiRow>
+  <ApiRow name="data" type="TreemapNode[]" required>
+    Nested or flat hierarchical data; each node should expose `name` (or override with `nameKey`) and typically `size` (or override with `dataKey`) plus optional nested `children`.
+  </ApiRow>
+  <ApiRow name="dataKey" type="string" default='"size"'>
+    Numeric field sized by each treemap rectangle.
+  </ApiRow>
+  <ApiRow name="nameKey" type="string" default='"name"'>
+    String field used as the stable tile identifier and tooltip / legend identity.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode" required>
+    Composed parts — `<Tiles />`, `<Tooltip />`, `<Legend />`, plus additional ECharts treemap options controlled through `treemapProps`.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Additional CSS classes to apply to the chart container.
+  </ApiRow>
+  <ApiRow name="aspectRatio" type="number" default="4/3">
+    Treemap rectangle aspect ratio mapped to ECharts treemap options.
+  </ApiRow>
+  <ApiRow name="strokeWidth" type="number" default="2">
+    Pixel stroke separating adjacent tiles (`stroke` stays tied to `--background`).
+  </ApiRow>
+  <ApiRow name="backgroundVariant" type="BackgroundVariant">
+    Draws `<ChartBackground />` behind the treemap rectangles (same pattern as bar and scatter charts).
+  </ApiRow>
+  <ApiRow name="defaultSelectedTile" type="string | null" default="null">
+    Pre-selects one tile (`nameKey` value).
+  </ApiRow>
+  <ApiRow name="onSelectionChange" type="(selection: { dataKey: string; value: number } | null) => void">
+    Fired after a clickable tile / legend toggle — `null` clears selection.
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean" default="false">
+    Displays the animated mosaic skeleton generated inside the SVG while data resolves.
+  </ApiRow>
+  <ApiRow name="treemapProps" type='Omit<TreemapProps, "data" | "dataKey">'>
+    Additional ECharts treemap options (`data`, `dataKey`, labels, gradients, strokes, naming keys, and sizing already owned by BeeTreemap internals). Read the <Link href="https://echarts.apache.org/en/option.html#series-treemap" _blank>ECharts treemap documentation</Link> for available escape hatches.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tiles</ApiHeading>
+
+A configuration slot consumed by `<BeeTreemapChart />` — renders nothing alone. Toggle click behavior, glowing filters, and in-tile labels for every rectangle.
+
+<ApiTable>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    When true, tile clicks toggle selection. Dimming applies whenever a tile is selected (legend, default, or click).
+  </ApiRow>
+  <ApiRow name="glowingTiles" type="string[]" default="[]">
+    Tile names (`nameKey` values) rendered with feathered glow filters sourced from defs.
+  </ApiRow>
+  <ApiRow name="showLabels" type="boolean" default="true">
+    Auto labels inside tiles large enough (&gt; 36×20 px guard) sourced from chart config labels when present.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tooltip</ApiHeading>
+
+The hover tooltip. Hidden automatically while the chart is loading; uses `hideLabel`.
+
+<ApiTable>
+  <ApiRow name="variant" type='"default" | "frosted-glass"' default='"default"'>
+    Tooltip surface preset.
+  </ApiRow>
+  <ApiRow name="roundness" type='"sm" | "md" | "lg" | "xl"' default='"lg"'>
+    Tooltip border radius.
+  </ApiRow>
+  <ApiRow name="defaultIndex" type="number">
+    Forces an initial hovered tile index so the tooltip is visible immediately.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Legend</ApiHeading>
+
+Tile legend keyed by each `config` series. Mirrors treemap gradients with optional click-to-select syncing with clickable tiles.
+
+<ApiTable>
+  <ApiRow name="variant" type='"square" | "circle" | "circle-outline" | "rounded-square" | "rounded-square-outline" | "vertical-bar" | "horizontal-bar"'>
+    Legend marker shape presets.
+  </ApiRow>
+  <ApiRow name="align" type='"left" | "center" | "right"' default='"center"'>
+    Horizontal legend alignment.
+  </ApiRow>
+  <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"bottom"'>
+    Vertical placement relative to the chart.
+  </ApiRow>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Legend entries toggle shared selection; dimming follows `selectedTile` even when `<Tiles />` is not clickable.
+  </ApiRow>
+</ApiTable>

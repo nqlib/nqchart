@@ -1,0 +1,309 @@
+---
+title: Line Chart
+description: Simple static & beautifully designed line charts
+image: /og/line-chart.png
+links:
+  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/line-chart.tsx
+  doc: https://echarts.apache.org/en/option.html#series-line
+  api: https://echarts.apache.org/en/option.html#series-line
+---
+
+<ComponentPreview title="Basic Chart" name="ex-line-chart"  />
+
+## Installation
+
+<CodeTabs>
+  <TabsList variant="underline">
+    <TabsTab value="cli">CLI</TabsTab>
+    <TabsTab value="manual">Manual</TabsTab>
+  </TabsList>
+  <TabsPanel value="cli">
+    <CliBlock commands={["@beecharts/line-chart"]} />
+  </TabsPanel>
+  <TabsPanel value="manual">
+    <Steps>
+      <Step>
+        <StepTitle>Install the following dependencies:</StepTitle>
+        <StepContent>
+          <CommandBlock commands={["echarts", "motion"]} />
+        </StepContent>
+      </Step>
+      <Step>
+        <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
+         <StepDescription>
+          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          Then, copy the following base line-chart code into a new file in that folder.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="line-chart"
+            title="components/beecharts/charts/line-chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
+        <StepDescription>
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+
+          Below is main chart component.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart"
+            title="components/beecharts/ui/chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, We need to add sub components.</StepTitle>
+        <StepDescription>
+          Create a file called `tooltip.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="tooltip"
+            title="components/beecharts/ui/tooltip.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Now, create another file called `legend.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="legend"
+            title="components/beecharts/ui/legend.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Finally, create last file called `dot.tsx` inside the `beecharts/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="dot"
+            title="components/beecharts/ui/dot.tsx"
+          />
+        </StepContent>
+      </Step>
+    </Steps>
+  </TabsPanel>
+</CodeTabs>
+
+## Usage
+
+The line chart is composible. `<BeeLineChart>` is the container, and you compose only the parts you need — `<Grid>`, `<XAxis>`, `<YAxis>`, `<Legend>`, `<Tooltip>`, and one or more `<Line>` — as its children. Each `<Line>` carries its own `strokeVariant`, `curveType`, `glowing`, `enableBufferLine`, and `isClickable`, so a single chart can mix stroke styles and make only some series interactive.
+
+```tsx
+import {
+  BeeLineChart,
+  Line,
+  XAxis,
+  Grid,
+  Tooltip,
+  Legend,
+} from "@/components/beecharts/charts/line-chart";
+```
+
+```tsx
+const chartConfig = {
+  desktop: {
+    label: "Desktop",
+    colors: { light: ["#047857"], dark: ["#10b981"] },
+  },
+  mobile: {
+    label: "Mobile",
+    colors: { light: ["#be123c"], dark: ["#f43f5e"] },
+  },
+} satisfies ChartConfig;
+
+<BeeLineChart data={data} config={chartConfig} xDataKey="month">
+  <Grid />
+  <XAxis dataKey="month" />
+  <Legend />
+  <Tooltip />
+  <Line dataKey="desktop" />
+  <Line dataKey="mobile" curveType="monotone" />
+</BeeLineChart>
+```
+
+Uses the same `desktop` / `mobile` traffic dataset as the [bar](/docs/bar-chart) and [composed](/docs/composed-chart) basic previews.
+
+### Loading State
+
+<ComponentPreview className="mb-0" title="isLoading='true'" name="ex-loading-state-line-chart"  />
+<Alert > 
+  <AlertContent >
+    Pass `isLoading` on `<BeeLineChart>` while data is fetching. The chart shows a loading overlay on top of the composed chart area.
+  </AlertContent>
+</Alert>
+
+## More examples
+
+Curve, stroke, buffer, and glow previews are being ported from earlier docs. See the API reference for supported `<Line>` props on ECharts.
+
+## API Reference
+
+The chart is composed of several parts. The props below are grouped by the component they belong to.
+
+<ApiHeading>BeeLineChart</ApiHeading>
+
+The root container. It owns the data, the shared selection state, the loading skeleton, and the optional brush. Everything visual is composed as its children.
+
+<ApiTable>
+  <ApiRow name="data" type="TData[]" required>
+    Data used to display the chart. An array of objects where each object represents a data point (`TData extends Record<string, unknown>`).
+  </ApiRow>
+  <ApiRow name="config" type="Record<string, ChartConfig[string]>" required>
+    Configuration object that defines the chart's series. Each key should match a data key in your data array, with a corresponding color or color array.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode" required>
+    The composed chart parts — `<Grid />`, `<XAxis />`, `<YAxis />`, `<Legend />`, `<Tooltip />`, and one or more `<Line />`.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Additional CSS classes to apply to the chart container.
+  </ApiRow>
+  <ApiRow name="curveType" type='"basis" | "bumpX" | "bumpY" | "bump" | "linear" | "natural" | "monotoneX" | "monotoneY" | "monotone" | "step" | …' default='"linear"'>
+    The default curve interpolation inherited by every `<Line />`. Each `<Line />` may override it locally.
+  </ApiRow>
+  <ApiRow name="animationType" type='"none" | "left-to-right" | "right-to-left" | "center-out" | "edges-in"' default='"left-to-right"'>
+    Direction of the custom intro reveal inherited by every `<Line />`. `"none"` disables it — devices with the OS reduce-motion preference fall back to `"none"` automatically.
+  </ApiRow>
+  <ApiRow name="defaultSelectedDataKey" type="string | null" default="null">
+    The data key that should be selected by default.
+  </ApiRow>
+  <ApiRow name="onSelectionChange" type="(selectedDataKey: string | null) => void">
+    Callback fired when a series is selected or deselected — by clicking a clickable `<Line />` or `<Legend />` entry. Receives the selected data key, or `null` when deselected.
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean" default="false">
+    Shows a loading skeleton animation with a shimmer effect when data is being fetched.
+  </ApiRow>
+  <ApiRow name="loadingPoints" type="number" default="14">
+    Number of data points to display in the loading skeleton.
+  </ApiRow>
+  <ApiRow name="showBrush" type="boolean" default="false">
+    When enabled, displays a brush control below the chart for selecting and zooming into a range of data.
+  </ApiRow>
+  <ApiRow name="xDataKey" type="keyof TData & string">
+    The data key used for the x-axis. Only needed by the brush footer — the axis itself reads its key from `<XAxis dataKey="…" />`.
+  </ApiRow>
+  <ApiRow name="brushHeight" type="number">
+    The height of the brush preview area in pixels.
+  </ApiRow>
+  <ApiRow name="brushFormatLabel" type="(value: unknown, index: number) => string">
+    Custom formatter for the brush axis labels.
+  </ApiRow>
+  <ApiRow name="onBrushChange" type="(range: BeeBrushRange) => void">
+    Callback invoked when the user changes the brush selection range.
+  </ApiRow>
+  <ApiRow name="chartProps" type="ComponentProps<typeof LineChart>">
+    Additional ECharts options merged into the compiled `option` by BeeCharts. Read the <Link href="https://echarts.apache.org/en/option.html#series-line" _blank>ECharts LineChart documentation</Link> for available props.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Line</ApiHeading>
+
+A single line series. Each `<Line />` is self-contained and generates its own gradient and glow definitions, so a chart can hold any number of lines — each with its own stroke, glow, and clickability.
+
+<ApiTable>
+  <ApiRow name="dataKey" type="string" required>
+    The series key. Must exist on both the data rows and the chart `config`.
+  </ApiRow>
+  <ApiRow name="strokeVariant" type='"solid" | "dashed" | "animated-dashed"' default='"solid"'>
+    The visual style for this line's stroke. Applies to this line only.
+  </ApiRow>
+  <ApiRow name="curveType" type='"basis" | "bump" | "linear" | "natural" | "monotoneX" | "monotoneY" | "monotone" | "step" | "stepBefore" | "stepAfter" | …'>
+    The curve interpolation for this line. Falls back to the chart's `curveType` when omitted.
+  </ApiRow>
+  <ApiRow name="animationType" type='"none" | "left-to-right" | "right-to-left" | "center-out" | "edges-in"'>
+    The intro reveal animation for this line. Falls back to the chart's `animationType` when omitted.
+  </ApiRow>
+  <ApiRow name="connectNulls" type="boolean" default="false">
+    Whether to connect line segments across null or missing values.
+  </ApiRow>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Lets this line be selected by clicking it. When any line is selected, unselected lines become semi-transparent.
+  </ApiRow>
+  <ApiRow name="glowing" type="boolean" default="false">
+    Applies a soft outer glow to this line.
+  </ApiRow>
+  <ApiRow name="enableBufferLine" type="boolean" default="false">
+    Renders this line's last segment as a dashed buffer while the rest stays solid. Useful for indicating projected or incomplete data at the end of a series.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode">
+    Optional `<Dot />` and `<ActiveDot />` composition that adds point markers to this line.
+  </ApiRow>
+  <ApiRow name="lineProps" type="ComponentProps<typeof Line>">
+    Escape hatch for raw ECharts series options compiled by BeeCharts.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Dot and ActiveDot</ApiHeading>
+
+Point markers composed inside a `<Line />`. `<Dot />` is the resting marker; `<ActiveDot />` is the hovered marker. They render nothing on their own — the parent `<Line />` reads their `variant`.
+
+<ApiTable>
+  <ApiRow name="variant" type='"default" | "border" | "colored-border"'>
+    The visual style of the point marker.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>XAxis and YAxis</ApiHeading>
+
+The category and value axes. Both ship with the chart's flat default styling and map BeeCharts axis props to ECharts axis options, so `dataKey`, `tickFormatter`, `tickMargin`, etc. pass straight through. They are hidden automatically while the chart is loading.
+
+<ApiTable>
+  <ApiRow name="dataKey" type="string">
+    The data key for the axis values.
+  </ApiRow>
+  <ApiRow name="…axisProps">
+    Additional axis options are merged into the compiled ECharts option. Read the <Link href="https://echarts.apache.org/en/option.html#xAxis" _blank>ECharts xAxis</Link> and <Link href="https://echarts.apache.org/en/option.html#yAxis" _blank>ECharts yAxis</Link> documentation for available props.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Grid</ApiHeading>
+
+The background grid lines. Defaults to horizontal-only dashed lines and maps to ECharts grid options.
+
+<ApiTable>
+  <ApiRow name="…gridProps">
+    Additional grid options are merged into the compiled ECharts option. Read the <Link href="https://echarts.apache.org/en/option.html#grid" _blank>ECharts grid documentation</Link> for available props.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tooltip</ApiHeading>
+
+The hover tooltip. It reads the chart's selection state so its content dims unselected series.
+
+<ApiTable>
+  <ApiRow name="variant" type='"default" | "frosted-glass"' default='"default"'>
+    The visual style of the tooltip surface.
+  </ApiRow>
+  <ApiRow name="roundness" type='"sm" | "md" | "lg" | "xl"' default='"lg"'>
+    Controls the border-radius of the tooltip.
+  </ApiRow>
+  <ApiRow name="defaultIndex" type="number">
+    When set, the tooltip is visible by default at the specified data point index.
+  </ApiRow>
+  <ApiRow name="cursor" type="boolean" default="true">
+    Whether the vertical cursor line follows the pointer on hover.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Legend</ApiHeading>
+
+The series legend. When the chart is clickable, each entry toggles selection of its series.
+
+<ApiTable>
+  <ApiRow name="variant" type='"square" | "circle" | "circle-outline" | "rounded-square" | "rounded-square-outline" | "vertical-bar" | "horizontal-bar"'>
+    The visual style of the legend indicators.
+  </ApiRow>
+  <ApiRow name="align" type='"left" | "center" | "right"' default='"right"'>
+    Horizontal placement of the legend.
+  </ApiRow>
+  <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"top"'>
+    Vertical placement of the legend.
+  </ApiRow>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Lets each legend entry toggle selection of its series.
+  </ApiRow>
+</ApiTable>

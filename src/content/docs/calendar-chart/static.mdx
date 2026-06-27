@@ -1,0 +1,209 @@
+---
+title: Calendar Chart
+description: Day-level calendar heatmaps for workload, capacity, and activity tracking — powered by Apache ECharts
+image: /og/calendar-chart.png
+links:
+  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/calendar-chart.tsx
+  doc: https://echarts.apache.org/en/option.html#calendar
+  api: https://echarts.apache.org/en/option.html#series-heatmap
+---
+
+<ComponentPreview title="Workload dashboard" name="ex-workload-dashboard-chart" containerClassName="min-h-[520px]" />
+
+## Installation
+
+<CodeTabs>
+  <TabsList variant="underline">
+    <TabsTab value="cli">CLI</TabsTab>
+    <TabsTab value="manual">Manual</TabsTab>
+  </TabsList>
+  <TabsPanel value="cli">
+    <CliBlock commands={["@beecharts/calendar-chart", "@beecharts/chart-recipes"]} />
+  </TabsPanel>
+  <TabsPanel value="manual">
+    <Steps>
+      <Step>
+        <StepTitle>Install the following dependencies:</StepTitle>
+        <StepContent>
+          <CommandBlock commands={["echarts"]} />
+        </StepContent>
+      </Step>
+      <Step>
+        <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
+         <StepDescription>
+          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          Then, copy the following base calendar-chart code into a new file in that folder.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="calendar-chart"
+            title="components/beecharts/charts/calendar-chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
+        <StepDescription>
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+
+          Below is main chart component.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart"
+            title="components/beecharts/ui/chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Add the chart-recipes helper.</StepTitle>
+        <StepDescription>
+          Copy `chart-recipes.ts` into your project (or install `@beecharts/chart-recipes`) so you can map daily capacity and assignments with `prepareCalendarWorkloadCells()`.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart-recipes"
+            title="lib/chart-recipes.ts"
+          />
+        </StepContent>
+      </Step>
+    </Steps>
+  </TabsPanel>
+</CodeTabs>
+
+## Usage
+
+The calendar chart is composable. `<BeeCalendarChart>` is the container — pass a `chartConfig` whose keys match your utilization series. Map daily `availableHours` and `assignedHours` with `prepareCalendarWorkloadCells()`, then compose `<Calendar />` with the resulting cells. Add `<Tooltip />` and `<Legend />` when you want the shared BeeCharts chrome.
+
+```tsx
+import {
+  BeeCalendarChart,
+  Calendar,
+  Tooltip,
+  Legend,
+} from "@/components/beecharts/charts/calendar-chart";
+import { prepareCalendarWorkloadCells } from "@/lib/chart-recipes";
+```
+
+```tsx
+const workloadDays = [
+  { date: "2025-06-02", availableHours: 8, assignedHours: 6.5 },
+  { date: "2025-06-03", availableHours: 8, assignedHours: 9.5 },
+  // …
+];
+
+const { cells, min, max, range } = prepareCalendarWorkloadCells(workloadDays);
+
+const chartConfig = {
+  utilization: {
+    label: "Utilization",
+    colors: {
+      light: ["#ecfdf5", "#34d399", "#b45309", "#dc2626"],
+      dark: ["#064e3b", "#34d399", "#fbbf24", "#f87171"],
+    },
+  },
+} satisfies ChartConfig;
+
+<BeeCalendarChart config={chartConfig} className="h-80 w-full">
+  <Calendar
+    dataKey="utilization"
+    data={cells}
+    range={range}
+    min={min}
+    max={max}
+  />
+  <Legend />
+  <Tooltip />
+</BeeCalendarChart>
+```
+
+Each cell's `value` is **utilization %** — `assignedHours ÷ availableHours × 100`. Values above 100 indicate overbooking. The tooltip shows assigned, available, and utilization for each day.
+
+## Calendar vs heatmap for workload
+
+| View | Chart | Best for |
+|------|-------|----------|
+| One person, one month | `BeeCalendarChart` | Spot overload days, PTO gaps, sprint rhythm |
+| Team × week | `BeeHeatmapChart` + `prepareTeamWorkloadMatrix()` | Compare who is over/under capacity across the same days |
+| Team × month (dense) | `BeeHeatmapChart` | Portfolio view when calendar tiles are too small |
+
+Managers typically monitor **assigned hours vs available hours per period**. Available comes from contracts, shifts, or PTO-adjusted capacity; assigned comes from project allocations, tickets, or scheduled work. Color encodes the ratio — not raw hours — so part-time and full-time staff are comparable.
+
+## Examples
+
+### Workload dashboard (wired)
+
+KPI summary, view toggle (team week vs employee month), and employee filter — calendar and heatmap share the same utilization scale and demo data.
+
+<ComponentPreview title="Workload dashboard" name="ex-workload-dashboard-chart" containerClassName="min-h-[520px]" />
+
+### Employee workload (calendar)
+
+One designer's June 2025 — weekday capacity 8h, weekends off. Green days are under capacity; amber/red days are at or above 100%.
+
+<ComponentPreview title="Employee workload" name="ex-calendar-workload-chart"  />
+
+### Team workload (heatmap)
+
+Same metric across five team members for one work week. Rows are people; columns are days. Use this when a manager needs to rebalance assignments before the week starts.
+
+<ComponentPreview title="Team workload" name="ex-heatmap-team-workload-chart"  />
+
+## API Reference
+
+The chart is composed of a root container and declarative parts. Render the root, then compose the slots you need as children.
+
+<ApiHeading>BeeCalendarChart</ApiHeading>
+
+The root container. Owns `chartConfig`, the ECharts canvas, and the part registry that compiles calendar options.
+
+<ApiTable>
+  <ApiRow name="config" type="ChartConfig" required>
+    Configuration for the utilization series. Use a multi-stop `colors.light` / `colors.dark` array on the key passed to `<Calendar dataKey />`.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode" required>
+    Compose `<Calendar />` (required for data), optionally `<Tooltip />` and `<Legend />`.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Size and layout classes on the chart container (for example `h-80 w-full`).
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean">
+    Shows a calendar-shaped skeleton while data loads.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Calendar</ApiHeading>
+
+Registers day cells and calendar layout with the ECharts compiler. Renders no DOM of its own.
+
+<ApiTable>
+  <ApiRow name="dataKey" type="string" required>
+    Key into `chartConfig` for the visual map gradient and tooltip labels.
+  </ApiRow>
+  <ApiRow name="data" type="CalendarCell[]" required>
+    Cells from `prepareCalendarWorkloadCells()` — each `{ date, value, assignedHours, availableHours }`.
+  </ApiRow>
+  <ApiRow name="range" type="string | [string, string]">
+    Month (`"2025-06"`) or date span for the calendar. Inferred from cell dates when omitted.
+  </ApiRow>
+  <ApiRow name="min" type="number">
+    Visual map minimum. Defaults to the smallest cell `value`.
+  </ApiRow>
+  <ApiRow name="max" type="number">
+    Visual map maximum. Defaults to the largest cell `value` (at least 100 for utilization).
+  </ApiRow>
+  <ApiRow name="cellSize" type="number | [number | string, number]">
+    Calendar cell dimensions. Default `["auto", 18]`.
+  </ApiRow>
+  <ApiRow name="orient" type="&quot;horizontal&quot; | &quot;vertical&quot;">
+    `"vertical"` (default for month ranges) — classic grid with weekdays across the top and weeks as rows. `"horizontal"` — GitHub-style strips; auto-selected for full-year `range` values like `"2025"`.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tooltip</ApiHeading>
+
+Enables the shared BeeCharts HTML tooltip layer. Built-in formatter shows date, assigned hours, available hours, and utilization %.
+
+<ApiHeading>Legend</ApiHeading>
+
+Hides the built-in ECharts legend and reserves space for the shared BeeCharts legend chrome when composed.
