@@ -24,7 +24,7 @@ Problem areas → domain overview → individual fix notes.
 
 | Domain | Symptoms (short) | Domain doc | Fix notes |
 |--------|------------------|------------|-----------|
-| **hover-focus** | Hover dims wrong mark; flicker; tile/point vanishes; stale bright siblings; `__highByOuter` | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md) |
+| **hover-focus** | Hover dims wrong mark; flicker; tile/point vanishes; stale bright siblings; `__highByOuter` | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md) |
 
 <!-- Add rows when new domains appear: animation, tooltip, compile-bar, registry-boundary, … -->
 
@@ -45,8 +45,10 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | funnel adjacent stage skip mouseout; funnel emphasis.disabled | funnel | [hover-focus-funnel-blur](./fixes/hover-focus-funnel-blur.md) |
 | waterfall hover dims hovered column; waterfall flicker; stale bright bars | waterfall | [hover-focus-waterfall-blur](./fixes/hover-focus-waterfall-blur.md) |
 | waterfall stacked bar blur; __wf_values__ emphasis.disabled | waterfall | [hover-focus-waterfall-blur](./fixes/hover-focus-waterfall-blur.md) |
+| radial hover dims hovered ring; rose petal flicker; stale bright rings | radial | [hover-focus-radial-blur](./fixes/hover-focus-radial-blur.md) |
+| polar bar series focus gap flicker; radial emphasis.disabled | radial | [hover-focus-radial-blur](./fixes/hover-focus-radial-blur.md) |
 | item focus opacity 0.2 on focused mark; emphasis state wrong | item-focus charts | Start [hover-focus domain](./domains/hover-focus.md), then chart-specific fix |
-| `repairScatterHoverFocus` / `repairTreemapHoverFocus` / `repairFunnelHoverFocus` / `repairWaterfallHoverFocus` | echarts-core runtime | See scatter, treemap, funnel, or waterfall fix note above |
+| `repairScatterHoverFocus` / `repairTreemapHoverFocus` / `repairFunnelHoverFocus` / `repairWaterfallHoverFocus` / `repairRadialHoverFocus` | echarts-core runtime | See scatter, treemap, funnel, waterfall, or radial fix note above |
 
 <!-- Add semantic rows with user phrases, CI failures, and file names agents grep for -->
 
@@ -60,12 +62,14 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/treemap-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/funnel-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/waterfall-hover-focus.ts` | hover-focus |
+| `src/registry/echarts-core/radial-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/emphasis-presets.ts` | hover-focus |
 | `src/registry/echarts-core/use-bee-echarts.ts` (mouseover / globalout) | hover-focus |
 | `src/registry/echarts-core/compile-scatter.ts` | hover-focus |
 | `src/registry/echarts-core/compile-treemap.ts` | hover-focus |
 | `src/registry/echarts-core/compile-funnel.ts` | hover-focus |
 | `src/registry/echarts-core/compile-waterfall.ts` | hover-focus |
+| `src/registry/echarts-core/compile-radial-bar.ts` | hover-focus |
 
 ---
 

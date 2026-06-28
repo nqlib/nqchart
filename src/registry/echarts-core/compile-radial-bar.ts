@@ -2,7 +2,7 @@ import type { EChartsOption } from "echarts";
 import { getColorsCount } from "@/registry/ui/chart";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { CHART_CORNER_RADIUS_PX } from "./chart-corner-radius";
-import { RADIAL_BAR_MIN_ANGLE, radialBarSeriesFocus } from "./emphasis-presets";
+import { HOVER_DIM_OPACITY, RADIAL_BAR_MIN_ANGLE, radialBarSeriesFocus } from "./emphasis-presets";
 import type { CompileContext, RadialBarPart } from "./parts/types";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 
@@ -31,6 +31,7 @@ function buildConcentricTrackSeries(
     tooltip: { show: false },
     emphasis: { disabled: true },
     select: { disabled: true },
+    blur: { itemStyle: { opacity: HOVER_DIM_OPACITY } },
     data: Array.from({ length: rowCount }, () => ({
       value: angleMax,
       itemStyle: {
@@ -62,6 +63,7 @@ function buildRoseTrackSeries(
     tooltip: { show: false },
     emphasis: { disabled: true },
     select: { disabled: true },
+    blur: { itemStyle: { opacity: HOVER_DIM_OPACITY } },
     data: Array.from({ length: rowCount }, (_, i) => ({
       value: radiusMax,
       name: categories[i],
@@ -157,7 +159,7 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
       coordinateSystem: "polar" as const,
       name: categories[i],
       stack: "ring",
-      z: 2,
+      z: 11,
       data: numericValues.map((v, j) => (j === i ? v : null)),
       barWidth: barSize,
       barMinAngle: RADIAL_BAR_MIN_ANGLE,
@@ -194,13 +196,11 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
       axisLabel: { show: false },
       splitLine: { show: false },
     },
-    /** Concentric ring per category (innermost row first). */
+    /** Category labels must not sit above ring bars (z 11) and steal hover. */
     radiusAxis: {
       type: "category",
       data: categories,
-      // Draw labels above the arcs and halo each glyph with the chart
-      // background so the ring name stays legible whether it sits over a
-      // coloured arc, the muted track, or an empty gap.
+      silent: true,
       z: 10,
       axisLine: { show: false },
       axisTick: { show: false },
@@ -269,7 +269,7 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
       coordinateSystem: "polar" as const,
       name: categories[i],
       stack: "petal",
-      z: 2,
+      z: 11,
       data: numericValues.map((v, j) => (j === i ? v : null)),
       ...(barSize != null ? { barWidth: barSize } : {}),
       barMinAngle: RADIAL_BAR_MIN_ANGLE,

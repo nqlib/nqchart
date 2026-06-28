@@ -8,6 +8,11 @@ import { maxIntroDurationMs, optionHasAnimatedSeries } from "./apply-chart-anima
 import { applyRolloutIntroReveal } from "./apply-rollout-intro";
 import type { ChartPlotInsets } from "./chart-grid";
 import { resetFunnelHoverFocus, scheduleFunnelHoverFocusRepair } from "./funnel-hover-focus";
+import {
+  isRadialRingSeriesEvent,
+  resetRadialHoverFocus,
+  scheduleRadialHoverFocusRepair,
+} from "./radial-hover-focus";
 import { repairScatterHoverFocus, resetScatterHoverFocus } from "./scatter-hover-focus";
 import { resetTreemapHoverFocus, scheduleTreemapHoverFocusRepair } from "./treemap-hover-focus";
 import {
@@ -184,7 +189,9 @@ export function useBeeEcharts(
         seriesIndex?: number;
         seriesName?: string;
       };
-      if (p.dataIndex != null && p.seriesIndex != null) {
+      if (p.seriesIndex != null && isRadialRingSeriesEvent(instance, p)) {
+        scheduleRadialHoverFocusRepair(instance, p.seriesIndex);
+      } else if (p.dataIndex != null && p.seriesIndex != null) {
         if (p.seriesType === "scatter") {
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
@@ -206,6 +213,7 @@ export function useBeeEcharts(
       resetTreemapHoverFocus(instance);
       resetFunnelHoverFocus(instance);
       resetWaterfallHoverFocus(instance);
+      resetRadialHoverFocus(instance);
       eventHandlersRef.current?.onGlobalOut?.();
     };
     instance.on("mouseover", onMouseOver);

@@ -42,6 +42,7 @@ BeeCharts hover contract: **one mark at full opacity, all others at `0.2`**. Spe
 6. **Treemap layout tween:** default `animationDurationUpdate` ~900ms → set `0` on series + in `apply-chart-animation.ts`.
 7. **Funnel:** same native+repair race as treemap on adjacent stages — use `funnelFocus()` + `funnel-hover-focus.ts`.
 8. **Waterfall:** stacked placeholder + values series races native index focus — use `waterfallColumnFocus()` + `waterfall-hover-focus.ts` on `__wf_values__`.
+9. **Radial / rose:** one series per ring/petal with `focus: "series"` — native high-down still races; use `radialBarSeriesFocus()` + `radial-hover-focus.ts`. **Read series options via `.get()`**, not `series.stack` / `series.id` fields.
 
 ## Fixed incidents
 
@@ -51,6 +52,7 @@ BeeCharts hover contract: **one mark at full opacity, all others at `0.2`**. Spe
 | treemap-flicker-vanish | Treemap flicker; hovered tile disappears | [../fixes/hover-focus-treemap-flicker-vanish.md](../fixes/hover-focus-treemap-flicker-vanish.md) |
 | funnel-blur | Funnel hover dim / flicker; stale bright stages | [../fixes/hover-focus-funnel-blur.md](../fixes/hover-focus-funnel-blur.md) |
 | waterfall-blur | Waterfall hover dim / flicker; stale bright columns | [../fixes/hover-focus-waterfall-blur.md](../fixes/hover-focus-waterfall-blur.md) |
+| radial-blur | Radial/rose hover dim / flicker; stale bright rings | [../fixes/hover-focus-radial-blur.md](../fixes/hover-focus-radial-blur.md) |
 
 ## Before adding a new fix here
 

@@ -53,9 +53,10 @@ describe("compileRadialOption", () => {
     const series = option.series as Array<{
       type?: string;
       id?: string;
-      emphasis?: { focus?: string; itemStyle?: { opacity?: number } };
+      emphasis?: { focus?: string; disabled?: boolean; itemStyle?: { opacity?: number } };
       blur?: { itemStyle?: { opacity?: number } };
       stateAnimation?: { duration?: number };
+      animationDurationUpdate?: number;
     }>;
 
     const rings = series.filter((s) => s.id !== "__radial_track__");
@@ -63,9 +64,11 @@ describe("compileRadialOption", () => {
     for (const ring of rings) {
       expect(ring.type).toBe("bar");
       expect(ring.emphasis?.focus).toBe("series");
+      expect(ring.emphasis?.disabled).toBe(true);
       expect(ring.emphasis?.itemStyle?.opacity).toBe(1);
       expect(ring.blur?.itemStyle?.opacity).toBe(0.2);
       expect(ring.stateAnimation?.duration).toBe(0);
+      expect(ring.animationDurationUpdate).toBe(0);
     }
   });
 });

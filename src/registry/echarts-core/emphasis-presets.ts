@@ -154,6 +154,8 @@ export function itemFocus(opts?: {
  * Concentric radial / rose — one ECharts series per ring or petal.
  * `focus:"series"` avoids per-segment hit-testing across ring gaps (flicker).
  * Instant state transitions — gradient fills cannot tween safely.
+ * `emphasis.disabled` turns off native high-down; BeeCharts applies focus in
+ * `radial-hover-focus.ts`.
  */
 export function radialBarSeriesFocus() {
   return {
@@ -161,10 +163,12 @@ export function radialBarSeriesFocus() {
     emphasis: {
       focus: "series" as const,
       scale: false as const,
+      disabled: true,
       // Pin focused ring to full opacity — sibling blur bleeds otherwise.
       itemStyle: { opacity: 1 },
     },
     stateAnimation: { duration: 0 },
+    animationDurationUpdate: 0,
   };
 }
 
