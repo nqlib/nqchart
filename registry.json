@@ -290,26 +290,6 @@
       ]
     },
     {
-      "name": "sankey-chart",
-      "description": "Sankey flow chart (ECharts engine)",
-      "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
-      ],
-      "dependencies": [
-        "echarts"
-      ],
-      "type": "registry:component",
-      "files": [
-        {
-          "path": "src/registry/charts/sankey-chart.tsx",
-          "type": "registry:component",
-          "target": "components/beecharts/charts/sankey-chart.tsx"
-        }
-      ]
-    },
-    {
       "name": "funnel-chart",
       "description": "Funnel chart (ECharts engine)",
       "registryDependencies": [
@@ -1361,22 +1341,6 @@
       }
     },
     {
-      "name": "ex-glowing-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleGlowingSankeyChart"
-      }
-    },
-    {
       "name": "ex-glowing-scatter-chart",
       "registryDependencies": [
         "@beecharts/scatter-chart"
@@ -1537,22 +1501,6 @@
       }
     },
     {
-      "name": "ex-gradient-colors-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleGradientColorsSankeyChart"
-      }
-    },
-    {
       "name": "ex-gradient-colors-scatter-chart",
       "registryDependencies": [
         "@beecharts/scatter-chart"
@@ -1598,22 +1546,6 @@
       ],
       "meta": {
         "exportName": "BeeExampleHatchedAreaVariantAreaChart"
-      }
-    },
-    {
-      "name": "ex-labeled-nodes-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleLabeledNodesSankeyChart"
       }
     },
     {
@@ -1745,22 +1677,6 @@
       }
     },
     {
-      "name": "ex-loading-state-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleLoadingStateSankeyChart"
-      }
-    },
-    {
       "name": "ex-loading-state-scatter-chart",
       "registryDependencies": [
         "@beecharts/scatter-chart"
@@ -1841,22 +1757,6 @@
       }
     },
     {
-      "name": "ex-outside-labels-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleOutsideLabelsSankeyChart"
-      }
-    },
-    {
       "name": "ex-radar-chart",
       "registryDependencies": [
         "@beecharts/radar-chart"
@@ -1886,22 +1786,6 @@
       ],
       "meta": {
         "exportName": "BeeExampleRadialChart"
-      }
-    },
-    {
-      "name": "ex-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleSankeyChart"
       }
     },
     {
@@ -1969,38 +1853,6 @@
       }
     },
     {
-      "name": "ex-solid-labeled-nodes-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleSolidLabeledNodesSankeyChart"
-      }
-    },
-    {
-      "name": "ex-solid-link-variant-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleSolidLinkVariantSankeyChart"
-      }
-    },
-    {
       "name": "ex-solid-stroke-area-chart",
       "registryDependencies": [
         "@beecharts/area-chart"
@@ -2014,22 +1866,6 @@
       ],
       "meta": {
         "exportName": "BeeExampleSolidStrokeAreaChart"
-      }
-    },
-    {
-      "name": "ex-source-link-variant-sankey-chart",
-      "registryDependencies": [
-        "@beecharts/sankey-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "BeeExampleSourceLinkVariantSankeyChart"
       }
     },
     {

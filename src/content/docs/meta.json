@@ -14,7 +14,6 @@
     "heatmap-chart",
     "calendar-chart",
     "radial-chart",
-    "sankey-chart",
     "scatter-chart",
     "treemap-chart",
     "funnel-chart",
@@ -24,6 +23,7 @@
     "ui/tooltip",
     "ui/legend",
     "chart-config",
+    "hover-focus",
     "chart-recipes"
   ]
 }

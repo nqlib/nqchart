@@ -75,18 +75,6 @@ export type RadarSeriesPart = {
 export type PolarAngleAxisPart = { type: "polarAngleAxis"; id: string; dataKey?: string };
 export type PolarGridPart = { type: "polarGrid"; id: string; variant?: string };
 
-export type SankeyGraph = {
-  nodes: Array<{ name: string }>;
-  links: Array<{ source: number | string; target: number | string; value: number }>;
-};
-
-export type SankeyPart = {
-  type: "sankey";
-  id: string;
-  graph: SankeyGraph;
-  linkVariant?: string;
-};
-
 export type FunnelPart = {
   type: "funnel";
   id: string;
@@ -211,6 +199,8 @@ export type GaugePart = {
   min?: number;
   max?: number;
   target?: number;
+  /** `chartConfig` key for target marker color/label. Default `"target"`. */
+  targetKey?: string;
 };
 
 export type TooltipPart = {
@@ -243,7 +233,6 @@ export type ChartPart =
   | RadarSeriesPart
   | PolarAngleAxisPart
   | PolarGridPart
-  | SankeyPart
   | FunnelPart
   | FunnelStylePart
   | WaterfallPart

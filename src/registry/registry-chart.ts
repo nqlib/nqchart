@@ -146,20 +146,6 @@ export const charts: Registry["items"] = [
     ],
   },
   {
-    name: "sankey-chart",
-    description: "Sankey flow chart (ECharts engine)",
-    registryDependencies: CHART_DEPS,
-    dependencies: ["echarts"],
-    type: "registry:component",
-    files: [
-      {
-        path: "charts/sankey-chart.tsx",
-        type: "registry:component",
-        target: TARGET_BASE_PATH + "/sankey-chart.tsx",
-      },
-    ],
-  },
-  {
     name: "funnel-chart",
     description: "Funnel chart (ECharts engine)",
     registryDependencies: CHART_DEPS,

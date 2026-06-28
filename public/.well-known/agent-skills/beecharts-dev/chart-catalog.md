@@ -14,7 +14,6 @@
 | scatter-chart | `BeeScatterChart` | bubble examples |
 | heatmap-chart | `BeeHeatmapChart` | grid intensity matrices |
 | calendar-chart | `BeeCalendarChart` | date-range calendar heat |
-| sankey-chart | `BeeSankeyChart` | Custom flow layout |
 | treemap-chart | `BeeTreemapChart` | |
 | waterfall-chart | `BeeWaterfallChart` | Bridge math |
 | funnel-chart | `BeeFunnelChart` | Stage layout |

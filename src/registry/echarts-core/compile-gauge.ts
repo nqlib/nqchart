@@ -2,6 +2,9 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import type { CompileContext, GaugePart } from "./parts/types";
 
+/** KPI dial — tooltip-only hover (no dim); see hover-focus.mdx. */
+const GAUGE_EMPHASIS = { disabled: true as const };
+
 export function compileGaugeOption(ctx: CompileContext): EChartsOption {
   const gauges = ctx.parts.filter((p): p is GaugePart => p.type === "gauge");
   const radialAsGauge = ctx.parts.find((p) => p.type === "radialBar");
@@ -18,6 +21,7 @@ export function compileGaugeOption(ctx: CompileContext): EChartsOption {
   const nameKey = ctx.nameKey ?? gauge?.nameKey ?? "series";
   const valueKey = gauge?.dataKey ?? "value";
   const target = gauge?.target;
+  const targetKey = gauge?.targetKey ?? "target";
   const row = ctx.data[0] ?? {};
   const seriesKey = String(row[nameKey] ?? "");
   const value = Number(row[valueKey] ?? 0);
@@ -55,24 +59,34 @@ export function compileGaugeOption(ctx: CompileContext): EChartsOption {
       },
       data: [{ value, name: ctx.config[seriesKey]?.label?.toString() ?? seriesKey }],
       itemStyle: { color },
+      emphasis: GAUGE_EMPHASIS,
     },
   ];
 
   if (target != null) {
+    const targetColor = ctx.resolveColor(targetKey, 0);
     (series as object[]).push({
       type: "gauge",
       startAngle: 180,
       endAngle: 0,
       min,
       max,
-      pointer: { show: false },
+      z: 3,
+      progress: { show: false },
+      pointer: {
+        show: true,
+        length: "72%",
+        width: 5,
+        itemStyle: { color: targetColor },
+      },
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { show: false },
       axisLabel: { show: false },
       detail: { show: false },
-      data: [{ value: target }],
-      markPoint: undefined,
+      title: { show: false },
+      emphasis: GAUGE_EMPHASIS,
+      data: [{ value: target, name: ctx.config[targetKey]?.label?.toString() ?? targetKey }],
     });
   }
 

@@ -39,7 +39,7 @@ npx skills add ctesibius/beecharts --skill beecharts -y
 See [install.md](./install.md) for registry namespace setup and peer deps.
 
 - **HTTP:** `/.well-known/agent-skills/beecharts/SKILL.md`
-- **Trigger phrases:** BeeCharts, `@beecharts`, gauge, histogram, pareto, waterfall, funnel, sankey, composable chart, `BeeBarChart`, demo dashboard, monospace bar, hover trace
+- **Trigger phrases:** BeeCharts, `@beecharts`, gauge, histogram, pareto, waterfall, funnel, composable chart, `BeeBarChart`, demo dashboard, monospace bar, hover trace
 
 ## Design principles
 

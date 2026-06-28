@@ -2,7 +2,6 @@
 
 import { BeeAreaChart, Area, XAxis, Grid, Legend, Tooltip } from "@/registry/charts/area-chart";
 import { BeeBarChart, Bar, XAxis as BarXAxis, Grid as BarGrid, Legend as BarLegend, Tooltip as BarTooltip } from "@/registry/charts/bar-chart";
-import { BeeSankeyChart, Tooltip as SankeyTooltip } from "@/registry/charts/sankey-chart";
 import { BeeScatterChart, Scatter, XAxis as ScatterXAxis, YAxis, Grid as ScatterGrid, Legend as ScatterLegend, Tooltip as ScatterTooltip } from "@/registry/charts/scatter-chart";
 import { BeeRadarChart, Radar, PolarGrid, PolarAngleAxis, Legend as RadarLegend, Tooltip as RadarTooltip } from "@/registry/charts/radar-chart";
 import { BeeFunnelChart, Stages, XAxis as FunnelXAxis, YAxis as FunnelYAxis, Legend as FunnelLegend, Tooltip as FunnelTooltip } from "@/registry/charts/funnel-chart";
@@ -11,7 +10,7 @@ import { BeeTreemapChart, Tiles, Tooltip as TreemapTooltip } from "@/registry/ch
 import { BeeSparklineChart, Fill, Sparkline, Tooltip as SparkTooltip } from "@/registry/charts/sparkline-chart";
 import { BeeRadialChart, RadialBar, Tooltip as RadialTooltip, Legend as RadialLegend } from "@/registry/charts/radial-chart";
 import { formatMonthTickShort, TRAFFIC_MONTHLY_DATA, DUAL_SERIES_CHART_CONFIG } from "@/registry/examples/example-shared";
-import { SCATTER_DESKTOP, SCATTER_MOBILE, RADAR_SKILLS_DATA, SANKEY_MARKETING, SANKEY_CONFIG, FUNNEL_DATA, FUNNEL_CONFIG, WATERFALL_DATA, WATERFALL_CONFIG, TREEMAP_DATA, TREEMAP_CONFIG, SPARKLINE_DATA, SPARKLINE_CONFIG, BROWSER_DATA, BROWSER_CONFIG, BROWSER_GRADIENT_CONFIG } from "@/registry/examples/example-datasets";
+import { SCATTER_DESKTOP, SCATTER_MOBILE, RADAR_SKILLS_DATA, FUNNEL_DATA, FUNNEL_CONFIG, WATERFALL_DATA, WATERFALL_CONFIG, TREEMAP_DATA, TREEMAP_CONFIG, SPARKLINE_DATA, SPARKLINE_CONFIG, BROWSER_DATA, BROWSER_CONFIG, BROWSER_GRADIENT_CONFIG } from "@/registry/examples/example-datasets";
 
 export function BeeExampleAnimatedDashedStrokeAreaChart() {
   return (
@@ -179,11 +178,6 @@ export function BeeExampleGlowingRadialChart() {
   );
 }
 
-export function BeeExampleGlowingSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
 export function BeeExampleGlowingScatterChart() {
   return (
@@ -278,11 +272,6 @@ export function BeeExampleGradientColorsRadialChart() {
   );
 }
 
-export function BeeExampleGradientColorsSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
 export function BeeExampleGradientColorsScatterChart() {
   return (
@@ -314,11 +303,6 @@ export function BeeExampleHatchedAreaVariantAreaChart() {
   );
 }
 
-export function BeeExampleLabeledNodesSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
 export function BeeExampleLinesAreaVariantAreaChart() {
   return (
@@ -387,11 +371,6 @@ export function BeeExampleLoadingStateRadialChart() {
   );
 }
 
-export function BeeExampleLoadingStateSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4" isLoading><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
 export function BeeExampleLoadingStateScatterChart() {
   return (
@@ -435,11 +414,6 @@ export function BeeExampleMonotoneyCurveTypeAreaChart() {
   );
 }
 
-export function BeeExampleOutsideLabelsSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
 export function BeeExampleRadarChart() {
   return (
@@ -456,11 +430,6 @@ export function BeeExampleRadialChart() {
   );
 }
 
-export function BeeExampleSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
 export function BeeExampleScatterChart() {
   return (
@@ -498,17 +467,7 @@ export function BeeExampleSolidAreaVariantAreaChart() {
   );
 }
 
-export function BeeExampleSolidLabeledNodesSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
-export function BeeExampleSolidLinkVariantSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
 export function BeeExampleSolidStrokeAreaChart() {
   return (
@@ -520,11 +479,6 @@ export function BeeExampleSolidStrokeAreaChart() {
   );
 }
 
-export function BeeExampleSourceLinkVariantSankeyChart() {
-  return (
-    <BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>
-  );
-}
 
 export function BeeExampleSparklineAreaChart() {
   return (

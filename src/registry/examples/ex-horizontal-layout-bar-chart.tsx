@@ -27,7 +27,6 @@ export function BeeExampleHorizontalLayoutBarChart() {
       className="h-full w-full p-4"
       xDataKey="month"
       layout="horizontal"
-      barRadius={8}
     >
       <Grid />
       <XAxis />

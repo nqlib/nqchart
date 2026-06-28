@@ -118,7 +118,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-<BeeComposedChart xDataKey="month" data={data} config={chartConfig} barRadius={8}>
+<BeeComposedChart xDataKey="month" data={data} config={chartConfig}>
   <Grid />
   <XAxis dataKey="month" />
   <YAxis />
@@ -129,7 +129,7 @@ const chartConfig = {
 </BeeComposedChart>
 ```
 
-The basic preview matches [bar](/docs/bar-chart) and [line](/docs/line-chart): twelve months, `desktop` bars, `mobile` line, same emerald/rose tokens, and the same default **8px** top corner radius on bars (`barRadius` / `DEFAULT_BAR_RADIUS`).
+The basic preview matches [bar](/docs/bar-chart) and [line](/docs/line-chart): twelve months, `desktop` bars, `mobile` line, same emerald/rose tokens, and the same default **3px** top corner radius on bars (`barRadius` / `DEFAULT_BAR_RADIUS`, nqui `--radius-sm`).
 
 ### Loading State
 
@@ -236,7 +236,7 @@ A single bar series. Each `<Bar />` is self-contained and generates its own grad
   <ApiRow name="variant" type='"default" | "hatched" | "duotone" | "duotone-reverse" | "gradient" | "stripped"' default='"default"'>
     The visual style of the bar fill. Applies to this bar only.
   </ApiRow>
-  <ApiRow name="radius" type="number" default="4">
+  <ApiRow name="radius" type="number" default="3">
     The corner radius of the bar in pixels.
   </ApiRow>
   <ApiRow name="animationType" type='"none" | "left-to-right" | "right-to-left" | "center-out" | "edges-in"'>

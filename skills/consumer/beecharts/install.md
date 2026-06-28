@@ -70,7 +70,6 @@ Installs `lib/chart-recipes.ts`. Use with primitives — see [recipes.md](./reci
 | `@beecharts/radial-chart` | chart, tooltip, legend, background |
 | `@beecharts/radar-chart` | chart, tooltip, legend, dot, background |
 | `@beecharts/scatter-chart` | chart, tooltip, legend, dot, background |
-| `@beecharts/sankey-chart` | chart, tooltip, background |
 | `@beecharts/treemap-chart` | chart, tooltip, legend, background |
 | `@beecharts/funnel-chart` | chart, tooltip, legend, background |
 | `@beecharts/waterfall-chart` | chart, tooltip, legend, background |

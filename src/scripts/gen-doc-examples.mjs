@@ -34,7 +34,6 @@ function toExportName(slug) {
 
 function chartFamily(slug) {
   if (slug.includes("area-chart")) return "area";
-  if (slug.includes("sankey-chart")) return "sankey";
   if (slug.includes("bubble-sized")) return "scatter-sized";
   if (slug.includes("bubble-chart")) return "scatter-bubble";
   if (slug.includes("scatter-chart")) return "scatter";
@@ -89,8 +88,6 @@ function renderComponent(family, opts, slug) {
       <Area dataKey="desktop" variant="${opts.glowing ? "glowing" : v}" curveType="${curve}" />
       <Area dataKey="mobile" variant="${opts.glowing ? "glowing" : v}" curveType="${curve}" />
     </BeeAreaChart>`;
-    case "sankey":
-      return `<BeeSankeyChart data={SANKEY_MARKETING} config={SANKEY_CONFIG} className="h-full w-full p-4"><SankeyTooltip /></BeeSankeyChart>`;
     case "scatter":
       return `<BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
       <ScatterGrid /><ScatterXAxis dataKey="x" /><YAxis dataKey="y" /><ScatterLegend isClickable /><ScatterTooltip />
@@ -145,7 +142,6 @@ const missing = [...all].filter((n) => !indexed.has(n) && chartFamily(n) !== "li
 let tsx = `"use client";\n\n`;
 tsx += `import { BeeAreaChart, Area, XAxis, Grid, Legend, Tooltip } from "@/registry/charts/area-chart";\n`;
 tsx += `import { BeeBarChart, Bar, XAxis as BarXAxis, Grid as BarGrid, Legend as BarLegend, Tooltip as BarTooltip } from "@/registry/charts/bar-chart";\n`;
-tsx += `import { BeeSankeyChart, Tooltip as SankeyTooltip } from "@/registry/charts/sankey-chart";\n`;
 tsx += `import { BeeScatterChart, Scatter, XAxis as ScatterXAxis, YAxis, Grid as ScatterGrid, Legend as ScatterLegend, Tooltip as ScatterTooltip } from "@/registry/charts/scatter-chart";\n`;
 tsx += `import { BeeRadarChart, Radar, PolarGrid, PolarAngleAxis, Legend as RadarLegend, Tooltip as RadarTooltip } from "@/registry/charts/radar-chart";\n`;
 tsx += `import { BeeFunnelChart, Stages, XAxis as FunnelXAxis, YAxis as FunnelYAxis, Legend as FunnelLegend, Tooltip as FunnelTooltip } from "@/registry/charts/funnel-chart";\n`;
@@ -154,13 +150,12 @@ tsx += `import { BeeTreemapChart, Tiles, Tooltip as TreemapTooltip } from "@/reg
 tsx += `import { BeeSparklineChart, Fill, Sparkline, Tooltip as SparkTooltip } from "@/registry/charts/sparkline-chart";\n`;
 tsx += `import { BeeRadialChart, RadialBar, Tooltip as RadialTooltip, Legend as RadialLegend } from "@/registry/charts/radial-chart";\n`;
 tsx += `import { formatMonthTickShort, TRAFFIC_MONTHLY_DATA, DUAL_SERIES_CHART_CONFIG } from "@/registry/examples/example-shared";\n`;
-tsx += `import { SCATTER_DESKTOP, SCATTER_MOBILE, RADAR_SKILLS_DATA, SANKEY_MARKETING, SANKEY_CONFIG, FUNNEL_DATA, FUNNEL_CONFIG, WATERFALL_DATA, WATERFALL_CONFIG, TREEMAP_DATA, TREEMAP_CONFIG, SPARKLINE_DATA, SPARKLINE_CONFIG, BROWSER_DATA, BROWSER_CONFIG } from "@/registry/examples/example-datasets";\n\n`;
+tsx += `import { SCATTER_DESKTOP, SCATTER_MOBILE, RADAR_SKILLS_DATA, FUNNEL_DATA, FUNNEL_CONFIG, WATERFALL_DATA, WATERFALL_CONFIG, TREEMAP_DATA, TREEMAP_CONFIG, SPARKLINE_DATA, SPARKLINE_CONFIG, BROWSER_DATA, BROWSER_CONFIG } from "@/registry/examples/example-datasets";\n\n`;
 
 let registry = `import type { Registry } from "shadcn/schema";\n\nconst FILE = "examples/ex-doc-charts.tsx";\n\nfunction ex(name: string, exportName: string, deps: string[]) {\n  return { name, registryDependencies: deps, type: "registry:block" as const, files: [{ path: FILE, type: "registry:block" as const }], meta: { exportName } };\n}\n\nexport const docExamples: Registry["items"] = [\n`;
 
 const depsMap = {
   area: ["@beecharts/area-chart"],
-  sankey: ["@beecharts/sankey-chart"],
   scatter: ["@beecharts/scatter-chart"],
   "scatter-bubble": ["@beecharts/scatter-chart"],
   "scatter-sized": ["@beecharts/scatter-chart"],

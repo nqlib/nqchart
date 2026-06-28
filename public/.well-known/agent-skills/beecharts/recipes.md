@@ -126,4 +126,4 @@ Add a `size` field per point; use `scatterProps.shape` to scale radius.
 
 ## When not to add a chart module
 
-Histogram, Pareto, bullet, heatmap, gauge, and box plot stay **recipes** on existing primitives unless geometry is truly custom (waterfall, funnel, sankey, sparkline tier).
+Histogram, Pareto, bullet, heatmap, gauge, and box plot stay **recipes** on existing primitives unless geometry is truly custom (waterfall, funnel, sparkline tier).

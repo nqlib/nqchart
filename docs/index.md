@@ -16,6 +16,7 @@ Public API reference lives in **`src/content/docs/`** (Fumadocs at `/docs`).
 | BI data helpers | [[engine/chart-recipes]] |
 | Product backlog | [[product/roadmap]] |
 | Maintainer DoD | [[product/ai-contract]] |
+| Past bug fixes (search first) | `.agents/skills/fixed/index.md` |
 | Consumer agent skill | `skills/consumer/beecharts/` · `npx skills add ctesibius/beecharts --skill beecharts -y` |
 | Agent HTTP / MCP | [[meta/llm-usage]] |
 | Deploy / registry | [[meta/publishing]] |
@@ -34,4 +35,4 @@ Public API reference lives in **`src/content/docs/`** (Fumadocs at `/docs`).
 - **Executor plans** — `plans/README.md`
 - **Improvement roadmap** — `plan/IMPROVEMENT_PLAN.md`
 - **Repo agent router** — root `AGENTS.md`
-- **Contributor skills** — `.agents/skills/beecharts-dev/`, `.agents/skills/beecharts-docs/`
+- **Contributor skills** — `.agents/skills/beecharts-dev/`, `.agents/skills/beecharts-docs/`, `.agents/skills/fixed/` (regression index)

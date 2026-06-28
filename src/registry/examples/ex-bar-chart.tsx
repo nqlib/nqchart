@@ -14,7 +14,6 @@ export function BeeExampleBarChart() {
       config={DUAL_SERIES_CHART_CONFIG}
       className="h-full w-full p-4"
       xDataKey="month"
-      barRadius={8}
       showBrush
       brushFormatLabel={formatMonthTickShort}
     >

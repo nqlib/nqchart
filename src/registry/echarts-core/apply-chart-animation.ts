@@ -24,6 +24,24 @@ const ROOT_ANIMATION = {
   animationThreshold: CHART_ANIMATION.root.threshold,
 } as const;
 
+function withInstantFocusUpdate(series: SeriesLike): SeriesLike {
+  const emphasis = series.emphasis as { focus?: string; disabled?: boolean } | undefined;
+  if (
+    emphasis?.disabled ||
+    series.blur ||
+    emphasis?.focus === "self" ||
+    emphasis?.focus === "series" ||
+    emphasis?.focus === "adjacency"
+  ) {
+    return {
+      ...series,
+      animationDurationUpdate: 0,
+      animationEasingUpdate: CHART_EASING.update,
+    };
+  }
+  return series;
+}
+
 function seriesIntroAnimation(series: SeriesLike, seriesIndex: number): SeriesLike {
   if (series.animation === false) return series;
 
@@ -36,7 +54,7 @@ function seriesIntroAnimation(series: SeriesLike, seriesIndex: number): SeriesLi
 
   switch (type) {
     case "bar": {
-      if (base.silent === true || base.name === "__wf_placeholder__") {
+      if (base.silent === true || base.id === "__wf_placeholder__" || base.id === "__radial_track__") {
         return { ...base, animation: false };
       }
       if (base.coordinateSystem === "polar") {
@@ -45,9 +63,12 @@ function seriesIntroAnimation(series: SeriesLike, seriesIndex: number): SeriesLi
           animationDuration: CHART_ANIMATION.radial.duration,
           animationEasing: CHART_ANIMATION.radial.easing,
           animationDelay: 0,
+          // Instant emphasis/blur updates — avoids polar ring flicker on hover.
+          animationDurationUpdate: 0,
+          animationEasingUpdate: CHART_EASING.update,
         };
       }
-      if (base.name === "__wf_values__") {
+      if (base.id === "__wf_values__") {
         return {
           ...base,
           animationDuration: CHART_ANIMATION.bar.duration,
@@ -115,20 +136,17 @@ function seriesIntroAnimation(series: SeriesLike, seriesIndex: number): SeriesLi
         animationDuration: CHART_ANIMATION.funnel.duration,
         animationEasing: CHART_ANIMATION.funnel.easing,
         animationDelay: createStaggerDelay(CHART_ANIMATION.funnel.staggerMs),
-      };
-    case "sankey":
-      return {
-        ...base,
-        animationDuration: CHART_ANIMATION.sankey.duration,
-        animationEasing: CHART_ANIMATION.sankey.easing,
+        animationDurationUpdate: 0,
+        animationEasingUpdate: CHART_EASING.update,
       };
     case "treemap":
       return {
         ...base,
         animationDuration: CHART_ANIMATION.treemap.duration,
-        animationDurationUpdate: CHART_ANIMATION.treemap.duration,
         animationEasing: CHART_ANIMATION.treemap.easing,
-        animationEasingUpdate: CHART_ANIMATION.treemap.easing,
+        // Hover emphasis must not re-run treemap layout tween (ECharts default 900ms).
+        animationDurationUpdate: 0,
+        animationEasingUpdate: CHART_EASING.update,
       };
     case "waterfall":
       return {
@@ -188,11 +206,34 @@ export function applyChartAnimationToOption(option: EChartsOption): EChartsOptio
     return { ...ROOT_ANIMATION, ...option, animation: true };
   }
 
+  const processedSeries = seriesList.map((series, index) =>
+    withInstantFocusUpdate(seriesIntroAnimation(series, index)),
+  ) as EChartsOption["series"];
+
+  const processedList = Array.isArray(processedSeries)
+    ? processedSeries
+    : processedSeries
+      ? [processedSeries]
+      : [];
+  const anyAnimated = processedList.some((series) => (series as SeriesLike).animation !== false);
+
+  // Fully static charts: disable root tweens too — raw ECharts sets no animation at all.
+  if (!anyAnimated) {
+    return {
+      ...option,
+      animation: false,
+      animationDuration: 0,
+      animationDurationUpdate: 0,
+      animationEasingUpdate: CHART_EASING.update,
+      series: processedSeries,
+    };
+  }
+
   return {
     ...ROOT_ANIMATION,
     ...option,
     animation: option.animation ?? true,
-    series: seriesList.map((series, index) => seriesIntroAnimation(series, index)) as EChartsOption["series"],
+    series: processedSeries,
   };
 }
 
@@ -206,13 +247,19 @@ export function optionHasAnimatedSeries(option: EChartsOption): boolean {
 
 /** Longest intro tween (duration + stagger) — used to guard merge updates during enter. */
 export function maxIntroDurationMs(option: EChartsOption): number {
+  if (option.animation === false) return 0;
+
+  const seriesList = normalizeSeries(option);
+  const animatedSeries = seriesList.filter((series) => series.animation !== false);
+  if (!animatedSeries.length) return 0;
+
   const rootDuration =
     typeof option.animationDuration === "number"
       ? option.animationDuration
       : CHART_ANIMATION.root.duration;
 
   let max = rootDuration;
-  for (const series of normalizeSeries(option)) {
+  for (const series of animatedSeries) {
     const duration =
       typeof series.animationDuration === "number"
         ? series.animationDuration

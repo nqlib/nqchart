@@ -5,7 +5,7 @@ Two audiences — do not mix them.
 | Audience | Location | Install |
 |----------|----------|---------|
 | **Consumers** — apps integrating `@beecharts/*` | [`consumer/beecharts/`](consumer/beecharts/SKILL.md) | `npx skills add ctesibius/beecharts --skill beecharts -y` |
-| **Contributors** — this repository | [`.agents/skills/beecharts-dev/`](../.agents/skills/beecharts-dev/SKILL.md), [`.agents/skills/beecharts-docs/`](../.agents/skills/beecharts-docs/SKILL.md) | Already active when working in this repo |
+| **Contributors** — this repository | [`.agents/skills/beecharts-dev/`](../.agents/skills/beecharts-dev/SKILL.md), [`.agents/skills/beecharts-docs/`](../.agents/skills/beecharts-docs/SKILL.md), [`.agents/skills/fixed/`](../.agents/skills/fixed/SKILL.md) | Already active when working in this repo |
 
 ## Two install paths (consumers)
 
@@ -35,7 +35,11 @@ HTTP discovery: `/.well-known/agent-skills/beecharts/SKILL.md`
 | **Who** | Teams building apps with BeeCharts | Maintainers changing engine, registry, docs site |
 | **Focus** | Chart type → shadcn install → compose children → BI recipes | Layer boundaries, registry pipeline, MDX previews, DoD |
 | **Success** | Chart type chosen, deps installed, chartConfig keys match dataKey, renders light/dark | Roadmap DoD: lint, tsc, test, audit:previews, registry:fresh |
-| **Docs** | `skills/consumer/beecharts/` | `.agents/skills/beecharts-dev/`, `.agents/skills/beecharts-docs/`, `docs/` vault |
+| **Docs** | `skills/consumer/beecharts/` | `.agents/skills/beecharts-dev/`, `.agents/skills/beecharts-docs/`, `.agents/skills/fixed/`, `docs/` vault |
 
 Consumer skill does **not** cover monorepo architecture or registry internals.  
 Development skills do **not** cover how to integrate the library in an external app.
+
+## Past fixes (maintainers)
+
+When debugging regressions, search [`.agents/skills/fixed/index.md`](../.agents/skills/fixed/index.md) (domain + semantic index) before inventing a new patch. Add a fix note when you close a non-trivial bug.

@@ -295,24 +295,6 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
-  "sankey-chart": {
-    name: "sankey-chart",
-    description: "Sankey flow chart (ECharts engine)",
-    type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
-    files: [{
-      path: "@/registry/charts/sankey-chart.tsx",
-      type: "registry:component",
-      target: "components/beecharts/charts/sankey-chart.tsx"
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/charts/sankey-chart.tsx")
-      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "sankey-chart"
-      return { default: mod.default || mod[exportName] }
-    }),
-    categories: undefined,
-    meta: undefined,
-  },
   "funnel-chart": {
     name: "funnel-chart",
     description: "Funnel chart (ECharts engine)",
@@ -1517,23 +1499,6 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: {"exportName":"BeeExampleGlowingRadialChart"},
   },
-  "ex-glowing-sankey-chart": {
-    name: "ex-glowing-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingSankeyChart"},
-  },
   "ex-glowing-scatter-chart": {
     name: "ex-glowing-scatter-chart",
     description: "",
@@ -1704,23 +1669,6 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: {"exportName":"BeeExampleGradientColorsRadialChart"},
   },
-  "ex-gradient-colors-sankey-chart": {
-    name: "ex-gradient-colors-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientColorsSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleGradientColorsSankeyChart"},
-  },
   "ex-gradient-colors-scatter-chart": {
     name: "ex-gradient-colors-scatter-chart",
     description: "",
@@ -1771,23 +1719,6 @@ export const Index: Record<string, any> = {
     }),
     categories: undefined,
     meta: {"exportName":"BeeExampleHatchedAreaVariantAreaChart"},
-  },
-  "ex-labeled-nodes-sankey-chart": {
-    name: "ex-labeled-nodes-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLabeledNodesSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleLabeledNodesSankeyChart"},
   },
   "ex-lines-area-variant-area-chart": {
     name: "ex-lines-area-variant-area-chart",
@@ -1925,23 +1856,6 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: {"exportName":"BeeExampleLoadingStateRadialChart"},
   },
-  "ex-loading-state-sankey-chart": {
-    name: "ex-loading-state-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateSankeyChart"},
-  },
   "ex-loading-state-scatter-chart": {
     name: "ex-loading-state-scatter-chart",
     description: "",
@@ -2027,23 +1941,6 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: {"exportName":"BeeExampleMonotoneyCurveTypeAreaChart"},
   },
-  "ex-outside-labels-sankey-chart": {
-    name: "ex-outside-labels-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleOutsideLabelsSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleOutsideLabelsSankeyChart"},
-  },
   "ex-radar-chart": {
     name: "ex-radar-chart",
     description: "",
@@ -2077,23 +1974,6 @@ export const Index: Record<string, any> = {
     }),
     categories: undefined,
     meta: {"exportName":"BeeExampleRadialChart"},
-  },
-  "ex-sankey-chart": {
-    name: "ex-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleSankeyChart"},
   },
   "ex-scatter-chart": {
     name: "ex-scatter-chart",
@@ -2163,40 +2043,6 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: {"exportName":"BeeExampleSolidAreaVariantAreaChart"},
   },
-  "ex-solid-labeled-nodes-sankey-chart": {
-    name: "ex-solid-labeled-nodes-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSolidLabeledNodesSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleSolidLabeledNodesSankeyChart"},
-  },
-  "ex-solid-link-variant-sankey-chart": {
-    name: "ex-solid-link-variant-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSolidLinkVariantSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleSolidLinkVariantSankeyChart"},
-  },
   "ex-solid-stroke-area-chart": {
     name: "ex-solid-stroke-area-chart",
     description: "",
@@ -2213,23 +2059,6 @@ export const Index: Record<string, any> = {
     }),
     categories: undefined,
     meta: {"exportName":"BeeExampleSolidStrokeAreaChart"},
-  },
-  "ex-source-link-variant-sankey-chart": {
-    name: "ex-source-link-variant-sankey-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@beecharts/sankey-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSourceLinkVariantSankeyChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"BeeExampleSourceLinkVariantSankeyChart"},
   },
   "ex-sparkline-area-chart": {
     name: "ex-sparkline-area-chart",

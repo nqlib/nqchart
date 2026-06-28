@@ -4,7 +4,7 @@
     {
       "name": "beecharts",
       "type": "skill-md",
-      "description": "Build dashboards with composable BeeCharts — install @beecharts/* via shadcn, compose Bee*Chart children, theme colors, BI recipes. Use when the user asks for charts, graphs, KPIs, sparklines, funnels, waterfalls, sankey, heatmaps, histograms, pareto, gauges, or @beecharts / BeeCharts components. NOT for contributing to the beecharts repo.",
+      "description": "Build dashboards with composable BeeCharts — install @beecharts/* via shadcn, compose Bee*Chart children, theme colors, BI recipes. Use when the user asks for charts, graphs, KPIs, sparklines, funnels, waterfalls, heatmaps, histograms, pareto, gauges, or @beecharts / BeeCharts components. NOT for contributing to the beecharts repo.",
       "url": "/.well-known/agent-skills/beecharts/SKILL.md"
     },
     {

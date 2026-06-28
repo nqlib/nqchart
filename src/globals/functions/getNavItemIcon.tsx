@@ -8,7 +8,6 @@ import {
   PieChartIcon,
   RadialChartIcon,
   RadarChartIcon,
-  SankeyChartIcon,
   ScatterChartIcon,
   TreemapChartIcon,
   FunnelChartIcon,
@@ -45,8 +44,6 @@ export function getNavItemIcon(tag?: string) {
       return <RadialChartIcon />;
     case "radar-chart":
       return <RadarChartIcon />;
-    case "sankey-chart":
-      return <SankeyChartIcon />;
     case "scatter-chart":
       return <ScatterChartIcon />;
     case "treemap-chart":

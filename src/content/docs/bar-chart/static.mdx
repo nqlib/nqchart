@@ -110,7 +110,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-<BeeBarChart data={data} config={chartConfig} xDataKey="month" barRadius={8}>
+<BeeBarChart data={data} config={chartConfig} xDataKey="month">
   <Grid />
   <XAxis dataKey="month" />
   <Legend />
@@ -120,7 +120,7 @@ const chartConfig = {
 </BeeBarChart>
 ```
 
-Bar, line, and composed **basic** previews share the same twelve-month `desktop` / `mobile` dataset, color tokens, and **8px** rounded bar tops (`barRadius` on the chart root).
+Bar, line, and composed **basic** previews share the same twelve-month `desktop` / `mobile` dataset, color tokens, and **3px** rounded bar tops (`barRadius` on the chart root — nqui `--radius-sm` at 16px root).
 
 ### Loading State
 
@@ -193,7 +193,7 @@ The root container. It owns the data, the shared selection state, the loading sk
   <ApiRow name="layout" type='"vertical" | "horizontal"' default='"vertical"'>
     The orientation of the bars. `"vertical"` displays bars vertically, `"horizontal"` displays bars horizontally — in which case the `<YAxis />` shows categories and the `<XAxis />` shows values.
   </ApiRow>
-  <ApiRow name="barRadius" type="number" default="2">
+  <ApiRow name="barRadius" type="number" default="3">
     The default corner radius for every `<Bar />`, in pixels. Each `<Bar />` may override it locally with its own `radius` prop.
   </ApiRow>
   <ApiRow name="animationType" type='"none" | "left-to-right" | "right-to-left" | "center-out" | "edges-in"' default='"left-to-right"'>

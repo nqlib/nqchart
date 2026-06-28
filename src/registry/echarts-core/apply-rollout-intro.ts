@@ -24,7 +24,7 @@ type SeriesModelLike = {
 
 /**
  * ECharts treemap skips `_doAnimation` on first render (`isInit`).
- * Sankey uses a horizontal clip-path wipe instead — mirror that for treemap.
+ * Apply a horizontal clip-path wipe on first paint instead.
  */
 export function applyRolloutIntroReveal(instance: EChartsType): boolean {
   if (prefersReducedMotion()) return false;

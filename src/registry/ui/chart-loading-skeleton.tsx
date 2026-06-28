@@ -17,7 +17,6 @@ export type ChartLoadingVariant =
   | "funnel"
   | "waterfall"
   | "sparkline"
-  | "sankey"
   | "treemap"
   | "generic";
 
@@ -327,19 +326,6 @@ function SparklineSkeleton({ maskId }: { maskId: string }) {
   );
 }
 
-function SankeySkeleton({ maskId }: { maskId: string }) {
-  return (
-    <SkeletonFrame maskId={maskId}>
-      <rect x={40} y={50} width={24} height={120} rx={4} fill="currentColor" opacity={0.3} />
-      <rect x={180} y={70} width={24} height={80} rx={4} fill="currentColor" opacity={0.35} />
-      <rect x={320} y={40} width={24} height={140} rx={4} fill="currentColor" opacity={0.3} />
-      <path d="M 64 80 C 120 80, 120 100, 180 100" stroke="currentColor" strokeWidth={8} opacity={0.2} fill="none" />
-      <path d="M 64 130 C 120 130, 120 120, 180 120" stroke="currentColor" strokeWidth={12} opacity={0.25} fill="none" />
-      <path d="M 204 110 C 260 110, 260 90, 320 90" stroke="currentColor" strokeWidth={10} opacity={0.2} fill="none" />
-    </SkeletonFrame>
-  );
-}
-
 function TreemapSkeleton({ maskId }: { maskId: string }) {
   return (
     <SkeletonFrame maskId={maskId}>
@@ -390,8 +376,6 @@ export function ChartLoadingSkeleton({ variant, className }: ChartLoadingSkeleto
         return <WaterfallSkeleton maskId={maskId} />;
       case "sparkline":
         return <SparklineSkeleton maskId={maskId} />;
-      case "sankey":
-        return <SankeySkeleton maskId={maskId} />;
       case "treemap":
         return <TreemapSkeleton maskId={maskId} />;
       default:

@@ -1,5 +1,6 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { cartesianLineFocus } from "./emphasis-presets";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
@@ -59,6 +60,8 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
     const color = ctx.resolveColor(area.dataKey, 0);
     const fillColor = resolveAreaFillColor(ctx.config, area.dataKey, ctx.resolveColor, 0);
     const glowing = isGlowing(area.variant);
+    const areaStyle = areaStyleFor(area.variant, fillColor);
+    const lineWidth = area.variant === "solid-stroke" ? 2 : 1.5;
     return {
       type: "line" as const,
       name: ctx.config[area.dataKey]?.label?.toString() ?? area.dataKey,
@@ -66,17 +69,23 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
       smooth: area.curveType === "monotone" || area.curveType === "bump",
       step: area.curveType === "step" ? ("end" as const) : undefined,
       data: ctx.data.map((row) => Number(row[area.dataKey] ?? 0)),
-      areaStyle: areaStyleFor(area.variant, fillColor),
+      areaStyle,
       lineStyle: {
         color,
         type: area.variant?.includes("dashed") ? ("dashed" as const) : ("solid" as const),
-        width: area.variant === "solid-stroke" ? 2 : 1.5,
+        width: lineWidth,
       },
+      triggerLineEvent: true,
       ...LINE_MARKER,
       itemStyle: { color, borderColor: gapColor, borderWidth: 1.5 },
-      emphasis: glowing
-        ? { focus: "series" as const, itemStyle: { shadowBlur: 16, shadowColor: color } }
-        : { scale: 1.4 },
+      ...cartesianLineFocus({
+        color,
+        lineWidth: glowing ? lineWidth + 0.5 : lineWidth,
+        borderColor: gapColor,
+        borderWidth: 1.5,
+        areaStyle,
+        shadowBlur: glowing ? 16 : undefined,
+      }),
     };
   });
 

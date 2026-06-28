@@ -1,5 +1,6 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { funnelFocus } from "./emphasis-presets";
 import { resolveFunnelLayout } from "./funnel-layout";
 import {
   resolveCanvasGapColor,
@@ -59,15 +60,7 @@ export function compileFunnelOption(ctx: CompileContext): EChartsOption {
           formatter: "{b}\n{c}",
         },
         labelLine: { show: false },
-        emphasis: {
-          focus: "self",
-          itemStyle: {
-            shadowBlur: 14,
-            shadowOffsetY: 2,
-            shadowColor: "rgba(0, 0, 0, 0.22)",
-          },
-          label: { fontSize: 12, fontWeight: 600 },
-        },
+        ...funnelFocus(),
         data: funnelData,
       },
     ],

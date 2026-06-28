@@ -4,6 +4,7 @@
  */
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { itemFocus } from "./emphasis-presets";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 import type { CompileContext, PieSeriesPart } from "./parts/types";
 
@@ -43,7 +44,7 @@ export function compilePieOption(ctx: CompileContext): EChartsOption {
           formatter: "{b}",
         },
         labelLine: { show: pie?.showLabels ?? true, length: 10, length2: 8 },
-        emphasis: { itemStyle: { shadowBlur: 10 } },
+        ...itemFocus({ dimLabel: true }),
       },
     ],
   };

@@ -1,5 +1,7 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { CHART_CORNER_RADIUS_PX } from "./chart-corner-radius";
+import { treemapFocus } from "./emphasis-presets";
 import {
   resolveCanvasGapColor,
   resolveCanvasGroupLabelColor,
@@ -9,17 +11,17 @@ import type { CompileContext, TreemapNode, TreemapPart, TreemapStylePart } from 
 
 const TILE_BORDER = 2;
 const TILE_GAP = 3;
-const TILE_RADIUS = 4;
+const TILE_RADIUS = CHART_CORNER_RADIUS_PX;
 
 function tileNameMatches(name: string, key: string): boolean {
   return name.toLowerCase() === key.toLowerCase();
 }
 
+/** Leaf colors + labels only — borders/gaps live on series `levels` (ECharts treemap pattern). */
 function colorizeTree(
   nodes: TreemapNode[],
   resolveColor: (key: string) => string,
   glowingTiles: string[],
-  gapColor: string,
   tileLabelColor: string,
   groupLabelColor: string,
 ): TreemapNode[] {
@@ -32,25 +34,13 @@ function colorizeTree(
       ...node,
       itemStyle: {
         color,
-        borderColor: gapColor,
-        borderWidth: TILE_BORDER,
-        gapWidth: TILE_GAP,
-        borderRadius: TILE_RADIUS,
-        shadowBlur: isGlowing ? 14 : 0,
-        shadowColor: isGlowing ? color : undefined,
+        ...(isGlowing ? { shadowBlur: 14, shadowColor: color } : {}),
       },
       label: {
         color: isParent ? groupLabelColor : tileLabelColor,
       },
       children: node.children
-        ? colorizeTree(
-            node.children,
-            resolveColor,
-            glowingTiles,
-            gapColor,
-            tileLabelColor,
-            groupLabelColor,
-          )
+        ? colorizeTree(node.children, resolveColor, glowingTiles, tileLabelColor, groupLabelColor)
         : undefined,
     };
   });
@@ -76,10 +66,16 @@ export function compileTreemapOption(ctx: CompileContext): EChartsOption {
     tree,
     (key) => ctx.resolveColor(key, 0),
     glowingTiles,
-    gapColor,
     tileLabelColor,
     groupLabelColor,
   );
+
+  const tileBorderStyle = {
+    borderColor: gapColor,
+    borderWidth: TILE_BORDER,
+    gapWidth: TILE_GAP,
+    borderRadius: TILE_RADIUS,
+  };
 
   const base: EChartsOption = {
     tooltip: { trigger: "item" },
@@ -87,17 +83,13 @@ export function compileTreemapOption(ctx: CompileContext): EChartsOption {
       {
         type: "treemap",
         roam: false,
+        sort: false,
         nodeClick: style?.isClickable ? "zoomToNode" : false,
         breadcrumb: { show: false },
         width: "100%",
         height: "100%",
         squareRatio: 0.5 * (1 + Math.sqrt(5)),
-        itemStyle: {
-          borderColor: gapColor,
-          borderWidth: TILE_BORDER,
-          gapWidth: TILE_GAP,
-          borderRadius: TILE_RADIUS,
-        },
+        itemStyle: tileBorderStyle,
         label: {
           show: showLabels,
           fontSize: 10,
@@ -122,25 +114,12 @@ export function compileTreemapOption(ctx: CompileContext): EChartsOption {
             upperLabel: { show: false },
           },
           {
-            itemStyle: {
-              borderColor: gapColor,
-              borderWidth: TILE_BORDER,
-              gapWidth: TILE_GAP,
-              borderRadius: TILE_RADIUS,
-            },
+            itemStyle: tileBorderStyle,
             label: { show: showLabels, color: tileLabelColor },
             upperLabel: { color: groupLabelColor },
-            colorSaturation: [0.35, 0.55],
-            colorAlpha: [0.85, 1],
           },
         ],
-        emphasis: {
-          focus: "descendant",
-          itemStyle: {
-            shadowBlur: 12,
-            shadowColor: "rgba(0,0,0,0.25)",
-          },
-        },
+        ...treemapFocus(),
         data: colored,
       },
     ],

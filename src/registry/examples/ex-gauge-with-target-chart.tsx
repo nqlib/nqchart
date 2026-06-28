@@ -1,13 +1,12 @@
 "use client";
 
 import { BeeRadialChart, RadialBar, Tooltip, Legend } from "@/registry/charts/radial-chart";
-import { normalizeGaugeValue, prepareGaugeRows } from "@/registry/lib/chart-recipes";
+import { normalizeGaugeValue } from "@/registry/lib/chart-recipes";
 import { type ChartConfig } from "@/registry/ui/chart";
 
-const data = prepareGaugeRows({
-  score: normalizeGaugeValue(72, 0, 100),
-  target: 80,
-});
+const TARGET = 80;
+
+const data = [{ series: "score", value: normalizeGaugeValue(72, 0, 100) }];
 
 const chartConfig = {
   score: {
@@ -26,7 +25,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-/** Semi gauge — one row per arc; `series` matches `chartConfig` keys. */
+/** KPI dial + target needle — single row, `<RadialBar target={…} />`. */
 export function BeeExampleGaugeWithTargetChart() {
   return (
     <BeeRadialChart
@@ -38,7 +37,7 @@ export function BeeExampleGaugeWithTargetChart() {
     >
       <Tooltip />
       <Legend />
-      <RadialBar dataKey="value" />
+      <RadialBar dataKey="value" target={TARGET} />
     </BeeRadialChart>
   );
 }

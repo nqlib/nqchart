@@ -4,6 +4,7 @@
  */
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { cartesianLineFocus } from "./emphasis-presets";
 import { categoryValues, getXKey, LINE_MARKER } from "./cartesian-series";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
@@ -26,9 +27,9 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
       step: line.curveType === "step" ? ("end" as const) : undefined,
       itemStyle: { color },
       lineStyle: { color },
+      triggerLineEvent: true,
       ...LINE_MARKER,
-      // Match composed-chart hover feedback: highlight the hovered series.
-      emphasis: { focus: "series" as const },
+      ...cartesianLineFocus({ color }),
     };
   });
 

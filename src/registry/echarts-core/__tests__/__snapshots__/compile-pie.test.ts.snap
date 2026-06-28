@@ -20,7 +20,17 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
       "animation": true,
       "animationDelay": [Function],
       "animationDuration": 1200,
+      "animationDurationUpdate": 0,
       "animationEasing": "cubicOut",
+      "animationEasingUpdate": "cubicOut",
+      "blur": {
+        "itemStyle": {
+          "opacity": 0.2,
+        },
+        "label": {
+          "opacity": 0.2,
+        },
+      },
       "data": [
         {
           "itemStyle": {
@@ -38,9 +48,12 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
         },
       ],
       "emphasis": {
+        "blurScope": "series",
+        "focus": "self",
         "itemStyle": {
-          "shadowBlur": 10,
+          "opacity": 1,
         },
+        "scale": false,
       },
       "label": {
         "color": "#737373",
@@ -67,11 +80,18 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
     "color": "#171717",
   },
   "tooltip": {
-    "backgroundColor": "#ffffff",
+    "backgroundColor": "transparent",
     "borderColor": "#e5e5e5",
+    "borderWidth": 0,
+    "confine": true,
+    "enterable": false,
+    "extraCssText": "box-shadow:none;pointer-events:none!important;",
+    "padding": 0,
+    "position": [Function],
     "textStyle": {
       "color": "#171717",
     },
+    "transitionDuration": 0,
     "trigger": "item",
   },
   "visualMap": undefined,

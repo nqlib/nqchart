@@ -4,6 +4,7 @@
  */
 import type { BarSeriesOption, EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { cartesianColumnFocus } from "./emphasis-presets";
 import { barVariantFill } from "./bar-pattern";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import {
@@ -17,8 +18,6 @@ import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { buildMonospaceCustomSeries } from "./compile-monospace-bar";
 import {
-  hoverTraceBlurStyle,
-  hoverTraceFocusEmphasis,
   hoverTraceSeriesId,
 } from "./hover-trace-bar";
 import { categoryValues, getXKey } from "./cartesian-series";
@@ -82,7 +81,7 @@ function buildBarDataPoints(
   isHistogram: boolean,
 ) {
   const r = isHistogram
-    ? resolveBarRadius(bar.radius, ctx.cartesian?.barRadius ?? 0)
+    ? (bar.radius != null ? bar.radius : 0)
     : resolveBarRadius(bar.radius, ctx.cartesian?.barRadius);
   const strokeColor = ctx.resolveColor(bar.dataKey, 0);
   const fillColor = resolveAreaFillColor(ctx.config, bar.dataKey, ctx.resolveColor, 0);
@@ -162,8 +161,10 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
       return buildMonospaceCustomSeries(bar, ctx, rows);
     }
 
+    const color = ctx.resolveColor(bar.dataKey, 0);
+    const columnFocus = cartesianColumnFocus(color);
+
     if (bar.variant === "hover-trace") {
-      const color = ctx.resolveColor(bar.dataKey, 0);
       return {
         type: "bar" as const,
         id: hoverTraceSeriesId(bar.dataKey),
@@ -171,11 +172,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
         triggerEvent: true,
         data: buildBarDataPoints(bar, ctx, rows, stack, horizontal, stackRoles, isHistogram) as BarSeriesOption["data"],
         stack: bar.stackId ?? stack,
-        blur: hoverTraceBlurStyle,
-        emphasis: {
-          ...hoverTraceFocusEmphasis,
-          itemStyle: { color, opacity: 1 },
-        },
+        ...columnFocus,
         ...histogramLayout,
         ...stackedLayout,
       };
@@ -186,7 +183,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
       name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
       data: buildBarDataPoints(bar, ctx, rows, stack, horizontal, stackRoles, isHistogram) as BarSeriesOption["data"],
       stack: bar.stackId ?? stack,
-      emphasis: { focus: "series" as const, scale: !isHistogram && !stack },
+      ...columnFocus,
       ...histogramLayout,
       ...stackedLayout,
     };

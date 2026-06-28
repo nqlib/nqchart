@@ -1,13 +1,78 @@
 import type { EChartsOption } from "echarts";
 import { getColorsCount } from "@/registry/ui/chart";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { CHART_CORNER_RADIUS_PX } from "./chart-corner-radius";
+import { RADIAL_BAR_MIN_ANGLE, radialBarSeriesFocus } from "./emphasis-presets";
 import type { CompileContext, RadialBarPart } from "./parts/types";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 
 const DEFAULT_INNER_RADIUS = "30%";
 const DEFAULT_OUTER_RADIUS = "100%";
-const DEFAULT_CORNER_RADIUS = 5;
+const DEFAULT_CORNER_RADIUS = CHART_CORNER_RADIUS_PX;
 const DEFAULT_BAR_SIZE = 14;
+const RADIAL_TRACK_SERIES_ID = "__radial_track__";
+
+function buildConcentricTrackSeries(
+  angleMax: number,
+  rowCount: number,
+  barSize: number,
+  cornerRadius: number,
+  trackColor: string,
+) {
+  return {
+    type: "bar" as const,
+    id: RADIAL_TRACK_SERIES_ID,
+    coordinateSystem: "polar" as const,
+    silent: true,
+    animation: false,
+    z: 1,
+    barWidth: barSize,
+    roundCap: true,
+    tooltip: { show: false },
+    emphasis: { disabled: true },
+    select: { disabled: true },
+    data: Array.from({ length: rowCount }, () => ({
+      value: angleMax,
+      itemStyle: {
+        color: trackColor,
+        opacity: 0.35,
+        borderRadius: cornerRadius,
+      },
+    })),
+  };
+}
+
+function buildRoseTrackSeries(
+  radiusMax: number,
+  rowCount: number,
+  categories: string[],
+  barSize: number | undefined,
+  cornerRadius: number,
+  trackColor: string,
+) {
+  return {
+    type: "bar" as const,
+    id: RADIAL_TRACK_SERIES_ID,
+    coordinateSystem: "polar" as const,
+    silent: true,
+    animation: false,
+    z: 1,
+    ...(barSize != null ? { barWidth: barSize } : {}),
+    roundCap: true,
+    tooltip: { show: false },
+    emphasis: { disabled: true },
+    select: { disabled: true },
+    data: Array.from({ length: rowCount }, (_, i) => ({
+      value: radiusMax,
+      name: categories[i],
+      itemStyle: {
+        color: trackColor,
+        opacity: 0.35,
+        borderRadius: cornerRadius,
+      },
+    })),
+  };
+}
 
 function getNameKey(ctx: CompileContext): string {
   if (ctx.nameKey) return ctx.nameKey;
@@ -74,14 +139,31 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
 
   const showLabels = radial?.showLabels ?? true;
 
-  const seriesData = ctx.data.map((row, i) => {
+  // One bar series per ring (not one series with N items). This matches the
+  // official ECharts polar-bar pattern: multiple series + `focus: "series"` gives
+  // stable, flicker-free hover focus, because the dim is applied per whole series
+  // rather than by per-item geometry hit-testing (which thrashes across the gaps
+  // between concentric rings). Each series carries a value only at its own ring
+  // index; a shared stack lets that single bar fill the category band.
+  const ringFocus = radialBarSeriesFocus();
+  const ringSeries = ctx.data.map((row, i) => {
     const configKey = configKeyFromRow(row, nameKey);
     const color = itemColor(configKey, ctx);
     const glowing = glowingBars.has(configKey);
     const shadowColor = shadowColorFromItem(color, configKey, ctx);
 
     return {
-      value: numericValues[i],
+      type: "bar" as const,
+      coordinateSystem: "polar" as const,
+      name: categories[i],
+      stack: "ring",
+      z: 2,
+      data: numericValues.map((v, j) => (j === i ? v : null)),
+      barWidth: barSize,
+      barMinAngle: RADIAL_BAR_MIN_ANGLE,
+      roundCap: true,
+      showBackground: false,
+      label: { show: false },
       itemStyle: {
         color,
         borderRadius: cornerRadius,
@@ -89,6 +171,7 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
           ? { shadowBlur: 12, shadowColor, shadowOffsetX: 0, shadowOffsetY: 0 }
           : {}),
       },
+      ...ringFocus,
     };
   });
 
@@ -135,26 +218,10 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
       splitLine: { show: false },
     },
     series: [
-      {
-        type: "bar",
-        coordinateSystem: "polar",
-        data: seriesData,
-        barWidth: barSize,
-        roundCap: true,
-        showBackground,
-        backgroundStyle: {
-          color: trackColor,
-          opacity: 0.35,
-          borderRadius: cornerRadius,
-        },
-        label: { show: false },
-        emphasis: {
-          focus: "self",
-          itemStyle: {
-            shadowBlur: 16,
-          },
-        },
-      },
+      ...(showBackground
+        ? [buildConcentricTrackSeries(angleMax, ringSeries.length, barSize, cornerRadius, trackColor)]
+        : []),
+      ...ringSeries,
     ],
   };
 
@@ -187,15 +254,27 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
   const numericValues = ctx.data.map((row) => Number(row[valueKey] ?? 0));
   const radiusMax = Math.max(...numericValues, 1) * 1.05;
 
-  const seriesData = ctx.data.map((row, i) => {
+  // One bar series per petal + `focus: "series"` — same flicker-free pattern as the
+  // concentric variant (see compileRadialBarOption). A shared stack lets each
+  // single-value series fill its own angular band without grouping.
+  const petalFocus = radialBarSeriesFocus();
+  const petalSeries = ctx.data.map((row, i) => {
     const configKey = configKeyFromRow(row, nameKey);
     const color = itemColor(configKey, ctx);
     const glowing = glowingBars.has(configKey);
     const shadowColor = shadowColorFromItem(color, configKey, ctx);
 
     return {
-      value: numericValues[i],
+      type: "bar" as const,
+      coordinateSystem: "polar" as const,
       name: categories[i],
+      stack: "petal",
+      z: 2,
+      data: numericValues.map((v, j) => (j === i ? v : null)),
+      ...(barSize != null ? { barWidth: barSize } : {}),
+      barMinAngle: RADIAL_BAR_MIN_ANGLE,
+      roundCap: true,
+      showBackground: false,
       itemStyle: {
         color,
         borderRadius: cornerRadius,
@@ -203,6 +282,7 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
           ? { shadowBlur: 12, shadowColor, shadowOffsetX: 0, shadowOffsetY: 0 }
           : {}),
       },
+      ...petalFocus,
     };
   });
 
@@ -238,27 +318,10 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
       splitLine: { show: false },
     },
     series: [
-      {
-        type: "bar",
-        coordinateSystem: "polar",
-        data: seriesData,
-        ...(barSize != null ? { barWidth: barSize } : {}),
-        roundCap: true,
-        showBackground,
-        backgroundStyle: showBackground
-          ? {
-              color: trackColor,
-              opacity: 0.35,
-              borderRadius: cornerRadius,
-            }
-          : undefined,
-        emphasis: {
-          focus: "self",
-          itemStyle: {
-            shadowBlur: 16,
-          },
-        },
-      },
+      ...(showBackground
+        ? [buildRoseTrackSeries(radiusMax, petalSeries.length, categories, barSize, cornerRadius, trackColor)]
+        : []),
+      ...petalSeries,
     ],
   };
 

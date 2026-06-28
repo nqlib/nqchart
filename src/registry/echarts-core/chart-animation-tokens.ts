@@ -96,10 +96,6 @@ export const CHART_ANIMATION = {
     staggerMs: 100,
     easing: CHART_EASING.intro,
   },
-  sankey: {
-    duration: CHART_INTRO_DURATION_MS,
-    easing: CHART_EASING.intro,
-  },
   treemap: {
     duration: CHART_INTRO_DURATION_MS,
     easing: CHART_EASING.intro,

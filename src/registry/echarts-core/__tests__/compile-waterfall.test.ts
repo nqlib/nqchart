@@ -25,10 +25,22 @@ describe("compileWaterfallOption", () => {
       }),
     );
 
-    const series = option.series as Array<{ data: number[] }>;
+    const series = option.series as Array<{
+      name?: string;
+      data: number[] | unknown[];
+      stateAnimation?: { duration?: number };
+      animationDurationUpdate?: number;
+      emphasis?: { focus?: string; disabled?: boolean };
+      blur?: { itemStyle?: { opacity?: number } };
+    }>;
     expect(series.length).toBeGreaterThanOrEqual(2);
-    const values = series.find((s) => s.data.some((v) => v > 0));
+    const values = series.find((s) => s.name === "__wf_values__");
     expect(values?.data).toBeDefined();
+    expect(values?.stateAnimation?.duration).toBe(0);
+    expect(values?.animationDurationUpdate).toBe(0);
+    expect(values?.emphasis?.focus).toBe("self");
+    expect(values?.emphasis?.disabled).toBe(true);
+    expect(values?.blur?.itemStyle?.opacity).toBe(0.2);
   });
 
   it("returns empty-ish option for empty data", () => {

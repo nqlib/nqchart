@@ -31,7 +31,6 @@ const CHART_DOCS = new Set([
   "/docs/heatmap-chart/static",
   "/docs/calendar-chart/static",
   "/docs/radial-chart/static",
-  "/docs/sankey-chart/static",
   "/docs/scatter-chart/static",
   "/docs/treemap-chart/static",
   "/docs/funnel-chart/static",

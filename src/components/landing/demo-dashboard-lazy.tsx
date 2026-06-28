@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { Suspense, useEffect, useState } from "react";
 
 import { LazyMount } from "@/components/docs/charts/lazy-mount";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -37,10 +38,28 @@ function DemoDashboardSkeleton() {
   );
 }
 
-export function DemoDashboardLazy() {
+function DemoDashboardLazyInner() {
+  const [captureMode, setCaptureMode] = useState(false);
+
+  useEffect(() => {
+    setCaptureMode(new URLSearchParams(window.location.search).get("capture") === "1");
+  }, []);
+
+  if (captureMode) {
+    return <DemoDashboard />;
+  }
+
   return (
     <LazyMount rootMargin="600px 0px" fallback={<DemoDashboardSkeleton />}>
       <DemoDashboard />
     </LazyMount>
+  );
+}
+
+export function DemoDashboardLazy() {
+  return (
+    <Suspense fallback={<DemoDashboardSkeleton />}>
+      <DemoDashboardLazyInner />
+    </Suspense>
   );
 }

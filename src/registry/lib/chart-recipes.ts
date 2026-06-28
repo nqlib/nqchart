@@ -236,8 +236,9 @@ export type GaugeSeriesRow = {
 };
 
 /**
- * Rows for `BeeRadialChart` gauges. Each `series` key must match a `chartConfig` entry;
- * use `nameKey="series"` and `<RadialBar dataKey="value" />`.
+ * Rows for multi-metric **semi radial bar** comparisons (one concentric ring per key).
+ * For a KPI **dial with target needle**, use a single row and `<RadialBar target={…} />`.
+ * Each `series` key must match a `chartConfig` entry; use `nameKey="series"`.
  */
 export function prepareGaugeRows(metrics: Record<string, number>): GaugeSeriesRow[] {
   return Object.entries(metrics).map(([series, value]) => ({ series, value }));

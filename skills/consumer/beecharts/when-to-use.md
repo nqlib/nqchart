@@ -20,7 +20,6 @@ Install helpers: `npx shadcn@latest add @beecharts/chart-recipes` — see [recip
 | Progress, score, capacity, KPI arc | `BeeRadialChart` `variant="semi"` | One or few metrics on an arc. |
 | Full circular comparison | `BeeRadialChart` `variant="full"` | Multiple categories as radial bars. |
 | Conversion funnel, stage drop-off | `BeeFunnelChart` | Ordered stages, decreasing values. |
-| User/path flows between nodes | `BeeSankeyChart` | Source → target flows with weights. |
 | Revenue bridge, variance walk | `BeeWaterfallChart` | Bridge stacking semantics. |
 | Inline trend in table or card | `BeeSparklineChart` | No axes; tight Y domain. |
 
@@ -62,8 +61,8 @@ Install helpers: `npx shadcn@latest add @beecharts/chart-recipes` — see [recip
 
 Different **data shaping**, **props** (`variant`, `layout`), or **ECharts escape hatches** (`barProps`, `scatterProps`) → extend `chart-recipes` + `ex-*` on the primitive doc.
 
-Dedicated modules only for non-standard geometry: waterfall, funnel, sankey, sparkline.
+Dedicated modules only for non-standard geometry: waterfall, funnel, sparkline.
 
 ## Specialized charts (keep dedicated module)
 
-`waterfall-chart`, `funnel-chart`, `sankey-chart`, `sparkline-chart`
+`waterfall-chart`, `funnel-chart`, `sparkline-chart`

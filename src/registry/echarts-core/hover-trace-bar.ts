@@ -9,17 +9,6 @@ export function hoverTraceSeriesId(dataKey: string): string {
   return `bee-hover-trace-${dataKey}`;
 }
 
-export const hoverTraceBlurStyle = {
-  itemStyle: { opacity: 0.2 },
-} as const;
-
-export const hoverTraceFocusEmphasis = {
-  focus: "self" as const,
-  blurScope: "coordinateSystem" as const,
-  scale: false,
-  itemStyle: { opacity: 1 },
-};
-
 type GridRect = { x: number; y: number; width: number; height: number };
 
 function getGridRect(chart: EChartsType): GridRect | null {

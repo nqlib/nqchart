@@ -1,5 +1,6 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { cartesianColumnFocus, cartesianLineFocus } from "./emphasis-presets";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
 import { barBorderRadius, resolveBarRadius } from "./bar-radius";
 import { categoryValues, getXKey, LINE_MARKER } from "./cartesian-series";
@@ -38,16 +39,6 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const rightAxisIndex = yAxisList.length > 1 ? 1 : 0;
   const yAxisIndexFor = (yAxisId?: string) => (yAxisId === "right" ? rightAxisIndex : 0);
 
-  /** Column-aligned focus: highlight the hovered category across bar + line, dim the rest. */
-  const columnFocusEmphasis = {
-    focus: "self" as const,
-    blurScope: "coordinateSystem" as const,
-  };
-  const columnFocusBlur = {
-    itemStyle: { opacity: 0.28 },
-    lineStyle: { opacity: 0.28 },
-  };
-
   const barSeries = bars.map((bar) => {
     const r = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius);
     const color = ctx.resolveColor(bar.dataKey, 0);
@@ -61,12 +52,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
         color,
         borderRadius: barBorderRadius(r, false),
       },
-      blur: columnFocusBlur,
-      emphasis: {
-        ...columnFocusEmphasis,
-        scale: true,
-        itemStyle: { color, opacity: 1 },
-      },
+      ...cartesianColumnFocus(color),
     };
   });
 
@@ -86,17 +72,12 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       showSymbol: true,
       symbol: markersOnly ? "rect" : LINE_MARKER.symbol,
       symbolSize: markersOnly ? [16, 3] : LINE_MARKER.symbolSize,
-      blur: columnFocusBlur,
-      emphasis: {
-        ...columnFocusEmphasis,
-        scale: true,
-        lineStyle: { color, width: markersOnly ? 0 : 3 },
-        itemStyle: {
-          color,
-          borderWidth: markersOnly ? 0 : 2,
-          borderColor: gapColor,
-        },
-      },
+      ...cartesianLineFocus({
+        color,
+        lineWidth: markersOnly ? 0 : 3,
+        borderColor: gapColor,
+        borderWidth: markersOnly ? 0 : 2,
+      }),
     };
   });
 

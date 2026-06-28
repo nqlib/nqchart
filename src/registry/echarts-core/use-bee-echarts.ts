@@ -7,6 +7,14 @@ import { echarts } from "./echarts-init";
 import { maxIntroDurationMs, optionHasAnimatedSeries } from "./apply-chart-animation";
 import { applyRolloutIntroReveal } from "./apply-rollout-intro";
 import type { ChartPlotInsets } from "./chart-grid";
+import { resetFunnelHoverFocus, scheduleFunnelHoverFocusRepair } from "./funnel-hover-focus";
+import { repairScatterHoverFocus, resetScatterHoverFocus } from "./scatter-hover-focus";
+import { resetTreemapHoverFocus, scheduleTreemapHoverFocusRepair } from "./treemap-hover-focus";
+import {
+  isWaterfallValuesSeriesEvent,
+  resetWaterfallHoverFocus,
+  scheduleWaterfallHoverFocusRepair,
+} from "./waterfall-hover-focus";
 
 export type BeeChartSeriesEvent = {
   componentType?: string;
@@ -39,15 +47,28 @@ function readPlotInsets(instance: EChartsType): ChartPlotInsets | null {
   };
 }
 
-type SeriesLike = { type?: string; data?: unknown; name?: string };
+type SeriesLike = { type?: string; data?: unknown; name?: string; links?: unknown };
 
 function seriesStructureKey(option: EChartsOption): string {
   const series = option.series
     ? (Array.isArray(option.series) ? option.series : [option.series])
     : [];
   return (series as SeriesLike[])
-    .map((s) => `${s.type ?? ""}:${s.name ?? ""}:${Array.isArray(s.data) ? s.data.length : 0}`)
+    .map((s) => {
+      const dataLen = Array.isArray(s.data) ? s.data.length : 0;
+      const linksLen = Array.isArray(s.links) ? s.links.length : 0;
+      return `${s.type ?? ""}:${s.name ?? ""}:${dataLen}:${linksLen}`;
+    })
     .join("|");
+}
+
+/** Skips redundant setOption when React re-renders with an identical compiled option. */
+function optionStableKey(option: EChartsOption): string {
+  try {
+    return JSON.stringify(option.series);
+  } catch {
+    return seriesStructureKey(option);
+  }
 }
 
 type SetOptionSizingMode = {
@@ -100,6 +121,7 @@ export function useBeeEcharts(
   const introTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingOptionRef = useRef<EChartsOption | null>(null);
   const structureKeyRef = useRef("");
+  const stableKeyRef = useRef("");
   // Latest event handlers, read by ECharts listeners; written post-render.
   const eventHandlersRef = useRef(eventHandlers);
   useEffect(() => {
@@ -120,6 +142,9 @@ export function useBeeEcharts(
     pendingOptionRef.current = null;
     if (!pending) return;
 
+    const pendingStableKey = optionStableKey(pending);
+    if (pendingStableKey === stableKeyRef.current) return;
+
     const pendingKey = seriesStructureKey(pending);
     setOptionWhenSized(
       instance,
@@ -128,18 +153,22 @@ export function useBeeEcharts(
       { replaceSeries: pendingKey !== structureKeyRef.current },
       (plotInsets) => {
         structureKeyRef.current = pendingKey;
+        stableKeyRef.current = pendingStableKey;
         if (plotInsets && onPlotRect) onPlotRect(plotInsets);
       },
     );
   };
 
   const startIntroLock = (instance: EChartsType, el: HTMLElement, appliedOption: EChartsOption) => {
+    const introMs = maxIntroDurationMs(appliedOption);
+    if (introMs <= 0) return;
+
     introLockRef.current = true;
     clearIntroTimer();
     introTimerRef.current = setTimeout(() => {
       introTimerRef.current = null;
       releaseIntroLock(instance, el);
-    }, maxIntroDurationMs(appliedOption));
+    }, introMs);
   };
 
   useEffect(() => {
@@ -151,9 +180,32 @@ export function useBeeEcharts(
     onChartInstance?.(instance);
 
     const onMouseOver = (params: unknown) => {
+      const p = params as BeeChartSeriesEvent & {
+        seriesIndex?: number;
+        seriesName?: string;
+      };
+      if (p.dataIndex != null && p.seriesIndex != null) {
+        if (p.seriesType === "scatter") {
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              repairScatterHoverFocus(instance, p.seriesIndex!, p.dataIndex!);
+            });
+          });
+        } else if (p.seriesType === "treemap") {
+          scheduleTreemapHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+        } else if (p.seriesType === "funnel") {
+          scheduleFunnelHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+        } else if (isWaterfallValuesSeriesEvent(p)) {
+          scheduleWaterfallHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+        }
+      }
       eventHandlersRef.current?.onSeriesMouseOver?.(params as BeeChartSeriesEvent);
     };
     const onGlobalOut = () => {
+      resetScatterHoverFocus(instance);
+      resetTreemapHoverFocus(instance);
+      resetFunnelHoverFocus(instance);
+      resetWaterfallHoverFocus(instance);
       eventHandlersRef.current?.onGlobalOut?.();
     };
     instance.on("mouseover", onMouseOver);
@@ -183,6 +235,7 @@ export function useBeeEcharts(
       introLockRef.current = false;
       pendingOptionRef.current = null;
       structureKeyRef.current = "";
+      stableKeyRef.current = "";
       onChartInstance?.(null);
     };
   }, [containerRef, onPlotRect, onChartInstance]);
@@ -203,11 +256,16 @@ export function useBeeEcharts(
     const frame = requestAnimationFrame(() => {
       if (cancelled) return;
 
+      const stableKey = optionStableKey(option);
       const structureKey = seriesStructureKey(option);
       const isFirstPaint = !introStartedRef.current;
+
+      if (!isFirstPaint && stableKey === stableKeyRef.current) return;
+
       const structureChanged =
         structureKeyRef.current !== "" && structureKey !== structureKeyRef.current;
       structureKeyRef.current = structureKey;
+      stableKeyRef.current = stableKey;
 
       const replaceSeries = isFirstPaint || structureChanged;
 

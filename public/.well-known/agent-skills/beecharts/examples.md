@@ -102,7 +102,6 @@ Dedicated `.tsx` files — best starting points for primitives.
 | **radial** | `ex-radial-chart`, `ex-semi-variant-radial-chart`, `ex-rose-radial-chart`, `ex-glowing-radial-chart`, `ex-loading-state-radial-chart`, … |
 | **pie** | *(use core `ex-pie-chart`)* |
 | **scatter** | `ex-scatter-chart`, `ex-bubble-chart`, `ex-bubble-sized-chart`, `ex-glowing-bubble-chart`, `ex-loading-state-scatter-chart`, … |
-| **sankey** | `ex-sankey-chart`, `ex-labeled-nodes-sankey-chart`, `ex-glowing-sankey-chart`, `ex-loading-state-sankey-chart`, … |
 | **treemap** | `ex-treemap-chart`, `ex-glowing-treemap-chart`, `ex-loading-state-treemap-chart` |
 | **funnel** | `ex-funnel-chart`, `ex-glowing-funnel-chart`, `ex-loading-state-funnel-chart` |
 | **waterfall** | `ex-waterfall-chart`, `ex-glowing-waterfall-chart`, `ex-loading-state-waterfall-chart` |

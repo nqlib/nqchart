@@ -25,7 +25,6 @@ export const SITE_KEYWORDS: string[] = [
   "area chart",
   "radar chart",
   "radial chart",
-  "sankey chart",
   "composed chart",
   "data visualization",
   "chart components",

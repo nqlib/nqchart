@@ -1,5 +1,4 @@
 import { ComposedPreview } from "@/components/docs/svg-previews/composed-preview";
-import { SankeyPreview } from "@/components/docs/svg-previews/sankey-preview";
 import { RadialPreview } from "@/components/docs/svg-previews/radial-preview";
 import { RadarPreview } from "@/components/docs/svg-previews/radar-preview";
 import { LinePreview } from "@/components/docs/svg-previews/line-preview";
@@ -77,12 +76,6 @@ const CHARTS: Chart[] = [
     description: "Visualize totals in a circular layout.",
     Component: RadialPreview,
     url: "/docs/radial-chart",
-  },
-  {
-    name: "Sankey Chart",
-    description: "Show flows between stages with weighted links.",
-    Component: SankeyPreview,
-    url: "/docs/sankey-chart",
   },
   {
     name: "Scatter Chart",

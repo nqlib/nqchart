@@ -26,7 +26,7 @@ export async function LandingHeader() {
             <Link href="/docs">Docs</Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
-            <Link href="https://github.com/ctesibius/beecharts" target="_blank" rel="noreferrer">
+            <Link href="https://github.com/nqlib/beecharts" target="_blank" rel="noreferrer">
               <GithubIcon />
               {stars && <span className="text-xs tabular-nums">{stars}</span>}
             </Link>

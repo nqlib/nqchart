@@ -1,5 +1,8 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { barBorderRadius } from "./bar-radius";
+import { CHART_BAR_CORNER_RADIUS_PX } from "./chart-corner-radius";
+import { waterfallColumnFocus } from "./emphasis-presets";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import type { CompileContext, WaterfallPart, WaterfallRow } from "./parts/types";
@@ -65,9 +68,13 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
         type: "bar",
         name: "__wf_values__",
         stack: "wf",
+        ...waterfallColumnFocus(),
         data: values.map((v, i) => ({
           value: v,
-          itemStyle: { color: colors[i], borderRadius: [4, 4, 0, 0] },
+          itemStyle: {
+            color: colors[i],
+            borderRadius: barBorderRadius(CHART_BAR_CORNER_RADIUS_PX, false),
+          },
         })),
       },
     ],

@@ -1,0 +1,94 @@
+---
+title: Hover Focus
+description: The single hover-focus system every BeeChart follows — one contract, no per-chart guesswork
+---
+
+Every BeeChart uses the **same** hover behavior. There is one contract, applied
+uniformly; individual charts do not invent their own hover animation.
+
+## The contract
+
+On hover:
+
+- The **focused mark group** stays at **full opacity**.
+- **Every other mark dims to `0.2` opacity** (`HOVER_DIM_OPACITY`).
+- **Nothing else changes** — no scale, no shadow "pop", no size jump. The focus
+  mechanism is *opacity only*.
+
+That's it. Whether it's a bar, a pie slice, or a radar polygon, the hovered thing
+stays bright and the rest fade back. The single source of truth is
+[`emphasis-presets.ts`](https://github.com/nqlib/beecharts/blob/main/src/registry/echarts-core/emphasis-presets.ts).
+
+## Two mappings, one contract
+
+The contract is implemented two ways, chosen by **geometry** — never by taste:
+
+| Mapping | Charts | ECharts config |
+| --- | --- | --- |
+| **Index focus** | bar, line, area, composed, waterfall | `focus: "self"`, `blurScope: "coordinateSystem"` (axis tooltip) |
+| **Item focus** | pie, funnel, radar, heatmap, treemap, calendar, scatter | `focus: "self"`, `blurScope: "series"` (item tooltip) |
+| **Series focus** | radial bar, rose | one series per ring/petal + `focus: "series"` |
+
+- **Index focus** — charts share a category axis. Hovering a category keeps that
+  whole column bright and dims the rest. Driven by the axis tooltip.
+- **Item focus** — single-series charts. Hovering one segment keeps it bright and
+  dims its siblings. Driven by the item tooltip. Scatter compiles every `<Scatter />`
+  into **one** ECharts series and copies `itemFocus()` onto **each data row** (Symbol
+  ignores series-level emphasis when rows are object-shaped).
+- **Series focus** — polar bars. Each ring (or petal) is its **own series**, so
+  `focus: "series"` highlights the hovered ring and dims the others. This is the
+  official ECharts polar-bar pattern; doing it per data-item (`focus: "self"`)
+  instead thrashes the dim across the gaps between rings (flicker), so polar bars
+  must be modeled as one-series-per-ring. State changes are instant
+  (`stateAnimation.duration: 0`) to avoid interpolating gradient fills.
+
+All three produce the *identical visual result*: one thing bright, everything else
+at `0.2`.
+
+## Why the blur shapes differ (they don't change the look)
+
+Each chart dims through whichever style channels it actually draws —
+`itemStyle` for bars and tiles, plus `lineStyle` for lines and radar polygons, plus
+`areaStyle` for filled areas. This is **not** a stylistic choice: ECharts corrupts
+bar columns if you blur their `lineStyle`, and throws if you blur
+`areaStyle` on a lines-only radar. The opacity value (`0.2`) and the focus mode are
+constant everywhere — only the channel that carries the opacity varies.
+
+## The one sanctioned exception: `*-glow` variants
+
+The explicit glow variants — `area-glow`, `scatter-glow`, `radar-glow` — add their
+signature shadow to the focused mark on top of the opacity focus. This is a
+**variant style**, opted into by name, not a hover animation. Default charts pass
+no shadow and therefore never pop.
+
+## Exceptions: tooltip-only charts
+
+Two cases are **tooltip-only** — they show the tooltip on hover but do not dim:
+
+- **Gauge / target** (single-row radial) — a single arc has no siblings to dim.
+- **Sparkline** — decorative; emphasis disabled (its gradient area fill also can't be
+  interpolated in a state transition).
+
+Radial bar / rose used to be tooltip-only for two reasons — gradient
+`itemStyle.color` can't be interpolated in an emphasis tween (throws
+`Cannot read properties of undefined (reading 'length')`), and per-item focus
+flickered across the ring gaps. **Series focus solves both**: modeling each ring as
+its own series means `focus: "series"` never hit-tests per item (no gap flicker), and
+`stateAnimation.duration: 0` skips the tween entirely (no gradient interpolation). So
+polar bars now follow the full dim-to-`0.2` contract — see "Series focus" above.
+
+## Flicker control
+
+HTML tooltips render over the canvas. To stop the pointer from ever landing on the
+tooltip DOM (which would bounce hover on/off), the tooltip is `pointer-events: none`,
+offset from the cursor, and uses `transitionDuration: 0`. See
+[`echarts-tooltip.ts`](https://github.com/nqlib/beecharts/blob/main/src/registry/echarts-core/echarts-tooltip.ts).
+
+## Adding or changing a chart
+
+1. Pick the mapping by geometry: shared category axis → `cartesianColumnFocus` /
+   `cartesianLineFocus`; per-point item charts (pie, scatter) → `itemFocus`; polar rings → `radialBarSeriesFocus`.
+2. Do **not** add `scale`, `shadowBlur` (unless it's a `*-glow` variant), or any
+   other hover transform. If a chart "needs" something different, the contract
+   changes here first — in this doc and `emphasis-presets.ts` — for **all** charts,
+   not just one.

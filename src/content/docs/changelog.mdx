@@ -3,7 +3,48 @@ title: Changelog
 description: Release notes and notable changes to BeeCharts
 ---
 
-## Unreleased
+## 0.1.1 — 2026-06-27
+
+### Hover focus
+
+Unified hover behavior across every chart: one mark at full opacity, everything else at `0.2`. See the new [Hover Focus](/docs/hover-focus) doc and `emphasis-presets.ts`.
+
+- **Scatter** — runtime repair for Symbol path blur and stale multi-focus (`scatter-hover-focus.ts`).
+- **Treemap** — disabled native emphasis, instant layout updates, blur-only sibling sync (`treemap-hover-focus.ts`).
+- **Funnel** — same repair pattern for adjacent stage hover (`funnel-hover-focus.ts`).
+- **Waterfall** — index-focus repair on stacked `__wf_values__` bars (`waterfall-hover-focus.ts`).
+- **Radial bar / rose** — series-level focus with instant state transitions (no gradient tween flicker).
+- **Tooltip** — pointer-events none, zero transition, cursor offset to prevent hover flicker on all charts.
+
+### Charts & engine
+
+- Shared **chart corner radius** token and bar radius helpers.
+- **Composed**, **bar**, **gauge**, **radial**, **area**, **line**, and **pie** compiler polish and animation tokens.
+- **Scatter** merged into a single ECharts series with per-row `itemFocus` for Symbol compatibility.
+- **Treemap** compiler rebuilt — borders on levels only, no `colorSaturation` / `colorAlpha`, `sort: false`.
+- Vitest coverage added for scatter, treemap, funnel, waterfall, and radial compilers.
+
+### Removed
+
+- **Sankey chart** — registry entry, docs page, and compiler removed (not ready for release quality).
+
+### Docs & site
+
+- README hero dashboard and chart gallery screenshots.
+- CI workflow to capture README assets (`capture-readme.yml`).
+- Landing demo dashboard and header tweaks.
+
+### Maintainer
+
+- **`fixed` agent skill** — searchable regression index (domain + semantic) for past hover-focus fixes.
+- **ECharts AI skill** — internal dev reference for option shapes (not published to consumer index).
+- Skill frontmatter validation extended for `fixed/` skill files.
+
+---
+
+## 0.1.0 — 2026-06-27
+
+Initial release of BeeCharts.
 
 - Migrated chart engine from Recharts to Apache ECharts
 - Added Vitest baseline for compiler and LLM pipeline tests

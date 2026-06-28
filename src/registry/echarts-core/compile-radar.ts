@@ -1,6 +1,7 @@
 import type { EChartsOption } from "echarts";
 import { getColorsCount } from "@/registry/ui/chart";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { itemFocus } from "./emphasis-presets";
 import { radarAreaFill } from "./color-alpha";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import type { ChartPart, CompileContext, RadarSeriesPart } from "./parts/types";
@@ -39,19 +40,11 @@ export function compileRadarOption(ctx: CompileContext): EChartsOption {
       name: ctx.config[radar.dataKey]?.label?.toString() ?? radar.dataKey,
       value: ctx.data.map((row) => Number(row[radar.dataKey] ?? 0)),
       areaStyle,
-      lineStyle: { color, width: 2 },
+      lineStyle: { color, width: glowing ? 3 : 2 },
       itemStyle: { color },
       symbol: "circle",
       symbolSize: 4,
-      emphasis: glowing
-        ? {
-            lineStyle: { shadowBlur: 14, shadowColor: color },
-            areaStyle,
-          }
-        : {
-            lineStyle: { width: 3 },
-            areaStyle,
-          },
+      ...itemFocus({ blurLine: true, ...(glowing ? { shadowBlur: 14 } : {}) }),
     };
   });
 

@@ -10,6 +10,7 @@ import { useMonospaceCollapse } from "@/registry/echarts-core/use-monospace-coll
 import { useMonospaceFoldAnimation } from "@/registry/echarts-core/use-monospace-fold-animation";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { compileBarOption } from "@/registry/echarts-core/compile-bar";
+import { CHART_BAR_CORNER_RADIUS_PX } from "@/registry/echarts-core/chart-corner-radius";
 import { hoverTraceSeriesId } from "@/registry/echarts-core/hover-trace-bar";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import type { BeeChartEventHandlers } from "@/registry/echarts-core/use-bee-echarts";
@@ -246,6 +247,7 @@ const { Chart: BarChartInner } = createCartesianChart<
     variant: "default",
     isLoading: false,
     showBrush: true,
+    barRadius: CHART_BAR_CORNER_RADIUS_PX,
   },
   getLoadingPoints: ({ loadingBars }) => loadingBars ?? 8,
   getRootFields: ({ layout, stackType, barRadius, variant }, xKey) => ({

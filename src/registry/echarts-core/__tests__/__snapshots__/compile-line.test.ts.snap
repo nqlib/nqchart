@@ -27,13 +27,33 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
       "animation": true,
       "animationDelay": 0,
       "animationDuration": 1200,
+      "animationDurationUpdate": 0,
       "animationEasing": "cubicInOut",
+      "animationEasingUpdate": "cubicOut",
+      "blur": {
+        "itemStyle": {
+          "opacity": 0.2,
+        },
+        "lineStyle": {
+          "opacity": 0.2,
+        },
+      },
       "data": [
         100,
         150,
       ],
       "emphasis": {
-        "focus": "series",
+        "blurScope": "coordinateSystem",
+        "focus": "self",
+        "itemStyle": {
+          "color": "color(sales,0)",
+          "opacity": 1,
+        },
+        "lineStyle": {
+          "color": "color(sales,0)",
+          "width": 2,
+        },
+        "scale": false,
       },
       "itemStyle": {
         "color": "color(sales,0)",
@@ -47,6 +67,7 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
       "step": undefined,
       "symbol": "circle",
       "symbolSize": 5,
+      "triggerLineEvent": true,
       "type": "line",
     },
   ],
@@ -54,11 +75,18 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
     "color": "#171717",
   },
   "tooltip": {
-    "backgroundColor": "#ffffff",
+    "backgroundColor": "transparent",
     "borderColor": "#e5e5e5",
+    "borderWidth": 0,
+    "confine": true,
+    "enterable": false,
+    "extraCssText": "box-shadow:none;pointer-events:none!important;",
+    "padding": 0,
+    "position": [Function],
     "textStyle": {
       "color": "#171717",
     },
+    "transitionDuration": 0,
     "trigger": "axis",
   },
   "visualMap": undefined,

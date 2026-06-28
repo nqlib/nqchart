@@ -22,7 +22,6 @@ export function BeeExampleComposedChart() {
       config={DUAL_SERIES_CHART_CONFIG}
       data={[...TRAFFIC_MONTHLY_DATA]}
       xDataKey="month"
-      barRadius={8}
       className="h-full w-full p-4"
     >
       <Grid />

@@ -173,14 +173,6 @@ Stage rows with ordered values (see `ex-funnel-chart`).
 
 ---
 
-## Sankey (`BeeSankeyChart`)
-
-**Children:** `Tooltip` only (nodes/links configured on root)
-
-Pass `nodes` and `links` on root; see `ex-sankey-chart`.
-
----
-
 ## Treemap (`BeeTreemapChart`)
 
 **Children:** `Tooltip`, `Legend`

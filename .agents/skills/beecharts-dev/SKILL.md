@@ -19,7 +19,8 @@ This skill is for **maintainers** of the beecharts repository only.
 
 Read **[chart-catalog.md](./chart-catalog.md)** for the chart list and example index.  
 Internal vault: [docs/index.md](../../../docs/index.md).  
-DoD: [docs/product/ai-contract.md](../../../docs/product/ai-contract.md).
+DoD: [docs/product/ai-contract.md](../../../docs/product/ai-contract.md).  
+**Fixing regressions:** search [fixed/index.md](../fixed/index.md) before changing hover, compile, or ECharts state code.
 
 ## In / out of scope
 
@@ -31,12 +32,12 @@ DoD: [docs/product/ai-contract.md](../../../docs/product/ai-contract.md).
 
 ## Rules
 
-1. **One primitive per chart family** — bar, line, area, composed, scatter, radial, pie, radar, sankey, treemap, waterfall, funnel, sparkline, heatmap, calendar.
+1. **One primitive per chart family** — bar, line, area, composed, scatter, radial, pie, radar, treemap, waterfall, funnel, sparkline, heatmap, calendar.
 2. **BI shapes = data helpers + examples** — use `src/registry/lib/chart-recipes.ts`, not new chart components.
 3. **Examples live on the primitive doc** — register in `registry-example.ts`; embed with `<ComponentPreview name="ex-…" />` in matching `static.mdx`.
 4. **No duplicate doc nav** — do not add `gauge-chart`, `histogram-chart`, etc. to `meta.json`.
 5. **Registry boundary** — `src/registry/**` must not import `src/components/**`. Run `pnpm run audit:registry-boundary`.
-6. **ECharts engine** — compilers are pure fns in `compile-*.ts` + `useCompiledOption`. No Recharts.
+6. **ECharts engine** — compilers are pure fns in `compile-*.ts` + `useCompiledOption`. No Recharts. For correct ECharts `option` shapes, consult the **[echarts-ai-skill](../echarts-ai-skill/SKILL.md)** reference (`examples/*.option.json`, `src/core/spec-to-option.ts`). Reference only — build via the compilers, **not** its CLI.
 
 ## chart-recipes
 

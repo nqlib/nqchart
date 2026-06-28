@@ -15,7 +15,6 @@ export function BeeExamplePercentTypeBarChart() {
       className="h-full w-full p-4"
       xDataKey="month"
       stackType="percent"
-      barRadius={8}
     >
       <Grid />
       <XAxis dataKey="month" tickFormatter={formatMonthTickShort} />

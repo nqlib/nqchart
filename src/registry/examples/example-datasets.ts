@@ -1,5 +1,5 @@
 import { type ChartConfig } from "@/registry/ui/chart";
-import type { SankeyGraph, TreemapNode } from "@/registry/echarts-core/parts/types";
+import type { TreemapNode } from "@/registry/echarts-core/parts/types";
 import { chartConfigColor, chartConfigGradient } from "./chart-tokens";
 import { DUAL_SERIES_CHART_CONFIG, TRAFFIC_MONTHLY_DATA } from "./example-shared";
 
@@ -35,41 +35,6 @@ export const RADAR_SKILLS_DATA = [
   { skill: "CSS", desktop: 209, mobile: 130 },
   { skill: "Python", desktop: 214, mobile: 140 },
 ];
-
-export const SANKEY_MARKETING: SankeyGraph = {
-  nodes: [
-    { name: "Organic" },
-    { name: "PaidAds" },
-    { name: "Social" },
-    { name: "Landing" },
-    { name: "Product" },
-    { name: "Cart" },
-    { name: "Purchase" },
-    { name: "Bounced" },
-  ],
-  links: [
-    { source: 0, target: 3, value: 42000 },
-    { source: 1, target: 3, value: 28000 },
-    { source: 2, target: 3, value: 18000 },
-    { source: 3, target: 4, value: 52000 },
-    { source: 3, target: 7, value: 36000 },
-    { source: 4, target: 5, value: 31000 },
-    { source: 4, target: 7, value: 21000 },
-    { source: 5, target: 6, value: 24000 },
-    { source: 5, target: 7, value: 7000 },
-  ],
-};
-
-export const SANKEY_CONFIG = {
-  Organic: { label: "Organic", colors: chartConfigColor(1) },
-  PaidAds: { label: "Paid Ads", colors: chartConfigColor(4) },
-  Social: { label: "Social", colors: chartConfigColor(0) },
-  Landing: { label: "Landing", colors: chartConfigColor(2) },
-  Product: { label: "Product", colors: chartConfigColor(0) },
-  Cart: { label: "Cart", colors: chartConfigColor(3) },
-  Purchase: { label: "Purchase", colors: chartConfigColor(1) },
-  Bounced: { label: "Bounced", colors: chartConfigColor(4) },
-} satisfies ChartConfig;
 
 export const FUNNEL_DATA = [
   { stage: "visitors", value: 10000 },

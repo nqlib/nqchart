@@ -8,7 +8,6 @@ import {
   LineChart,
   PieChart,
   RadarChart,
-  SankeyChart,
   ScatterChart,
   TreemapChart,
 } from "echarts/charts";
@@ -34,7 +33,6 @@ echarts.use([
   GaugeChart,
   RadarChart,
   ScatterChart,
-  SankeyChart,
   TreemapChart,
   FunnelChart,
   CalendarComponent,

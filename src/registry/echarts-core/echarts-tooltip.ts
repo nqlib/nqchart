@@ -64,7 +64,7 @@ function tooltipShell(
 ) {
   const variant = tooltip?.variant ?? "default";
   const roundness = tooltip?.roundness ?? "lg";
-  return `<div class="bee-echarts-tooltip text-foreground border-border/50 grid min-w-32 gap-1.5 border px-2.5 py-1.5 text-xs shadow-xl ${ROUNDNESS_CLASS[roundness]} ${VARIANT_CLASS[variant]}" data-chart="${chartId}">
+  return `<div class="bee-echarts-tooltip pointer-events-none text-foreground border-border/50 grid min-w-32 gap-1.5 border px-2.5 py-1.5 text-xs shadow-xl ${ROUNDNESS_CLASS[roundness]} ${VARIANT_CLASS[variant]}" data-chart="${chartId}">
     ${inner}
   </div>`;
 }
@@ -109,7 +109,7 @@ function inferTooltipTrigger(option: EChartsOption): "axis" | "item" {
       ? [option.series]
       : [];
   const types = series.map((s) => (s as { type?: string })?.type);
-  if (types.some((t) => t === "pie" || t === "gauge" || t === "funnel" || t === "sankey")) {
+  if (types.some((t) => t === "pie" || t === "gauge" || t === "funnel")) {
     return "item";
   }
   if (option.polar && types.some((t) => t === "bar")) {
@@ -124,8 +124,48 @@ function sharedTooltipOptions() {
     padding: 0,
     borderWidth: 0,
     backgroundColor: "transparent" as const,
-    extraCssText: "box-shadow:none;",
+    enterable: false,
+    // HTML tooltips sit over the canvas — pointer-events must stay off or hover flickers.
+    extraCssText: "box-shadow:none;pointer-events:none!important;",
+    transitionDuration: 0,
+    // Offset away from cursor so tooltip DOM never sits under the pointer.
+    position: (
+      point: [number, number],
+      _params: unknown,
+      _dom: HTMLElement,
+      _rect: unknown,
+      size: { contentSize: [number, number]; viewSize: [number, number] },
+    ): [number, number] => {
+      const [x, y] = point;
+      const offsetX = 20;
+      const offsetY = -20;
+      const [cw, ch] = size.contentSize;
+      const [vw, vh] = size.viewSize;
+      let left = x + offsetX;
+      let top = y + offsetY;
+      if (left + cw > vw) left = Math.max(0, x - cw - offsetX);
+      if (top < 0) top = y + Math.abs(offsetY);
+      if (top + ch > vh) top = Math.max(0, vh - ch);
+      return [left, top];
+    },
   };
+}
+
+function mergeStableTooltip(
+  option: EChartsOption,
+  overrides: Record<string, unknown>,
+): EChartsOption {
+  const existing = option.tooltip;
+  if (Array.isArray(existing)) return option;
+  if (existing?.show === false) return option;
+
+  const merged = {
+    ...(existing ?? {}),
+    ...sharedTooltipOptions(),
+    ...overrides,
+  } as EChartsOption["tooltip"];
+
+  return { ...option, tooltip: merged };
 }
 
 function formatAxisTooltipHtml(
@@ -181,7 +221,7 @@ export function applyTooltipToOption(
   }
 
   if (!tooltipPart) {
-    return option;
+    return mergeStableTooltip(option, {});
   }
 
   const trigger = inferTooltipTrigger(option);
@@ -192,14 +232,7 @@ export function applyTooltipToOption(
       : (params: TooltipAxisParams | TooltipAxisParams[]) =>
           formatAxisTooltipHtml(params, config, tooltipPart, chartId);
 
-  return {
-    ...option,
-    tooltip: {
-      trigger,
-      ...sharedTooltipOptions(),
-      formatter,
-    },
-  };
+  return mergeStableTooltip(option, { trigger, formatter });
 }
 
 export function hideBuiltInLegend(option: EChartsOption): EChartsOption {

@@ -206,7 +206,7 @@ Single-metric semi-circle for scorecards — `variant="semi"` with one `<RadialB
 
 ### Gauge with target
 
-`prepareGaugeRows({ score, target })` — one row per arc; `normalizeGaugeValue()` optional for the score.
+Single KPI row plus `<RadialBar target={80} />` — same dial compiler as the basic gauge, with a target needle from `chartConfig.target`. Optional `normalizeGaugeValue()` for the score.
 
 <ComponentPreview title="gauge + target" name="ex-gauge-with-target-chart"  />
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Validate SKILL.md frontmatter (name + description) for all agent skills.
+ * The beecharts-fixed skill validates every .md file under its root.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -11,7 +12,10 @@ const skillRoots = [
   join(root, "skills/consumer/beecharts"),
   join(root, ".agents/skills/beecharts-dev"),
   join(root, ".agents/skills/beecharts-docs"),
+  join(root, ".agents/skills/fixed"),
 ];
+
+const fixedSkillRoot = join(root, ".agents/skills/fixed");
 
 function findSkillFiles(dir, files = []) {
   for (const entry of readdirSync(dir)) {
@@ -25,6 +29,65 @@ function findSkillFiles(dir, files = []) {
   return files;
 }
 
+function findAllMarkdownFiles(dir, files = []) {
+  for (const entry of readdirSync(dir)) {
+    const path = join(dir, entry);
+    if (statSync(path).isDirectory()) {
+      findAllMarkdownFiles(path, files);
+    } else if (entry.endsWith(".md")) {
+      files.push(path);
+    }
+  }
+  return files;
+}
+
+function validateFrontmatter(file, content, { requireSkillKind = false } = {}) {
+  let fileOk = true;
+
+  if (!content.startsWith("---")) {
+    console.error(`FAIL ${file}: missing YAML frontmatter`);
+    return false;
+  }
+
+  const end = content.indexOf("---", 3);
+  if (end === -1) {
+    console.error(`FAIL ${file}: unclosed YAML frontmatter`);
+    return false;
+  }
+
+  const frontmatter = content.slice(3, end);
+
+  if (!/^name:\s*.+/m.test(frontmatter)) {
+    console.error(`FAIL ${file}: missing name`);
+    fileOk = false;
+  }
+  if (!/^description:/m.test(frontmatter)) {
+    console.error(`FAIL ${file}: missing description`);
+    fileOk = false;
+  }
+
+  if (requireSkillKind) {
+    if (!/^skill:\s*beecharts-fixed/m.test(frontmatter)) {
+      console.error(`FAIL ${file}: missing skill: beecharts-fixed`);
+      fileOk = false;
+    }
+    if (!/^kind:\s*.+/m.test(frontmatter)) {
+      console.error(`FAIL ${file}: missing kind`);
+      fileOk = false;
+    }
+    if (!/^metadata:\s*\n\s+author:/m.test(frontmatter)) {
+      console.error(`FAIL ${file}: missing metadata.author`);
+      fileOk = false;
+    }
+    if (!/^metadata:\s*[\s\S]*?\n\s+version:/m.test(frontmatter)) {
+      console.error(`FAIL ${file}: missing metadata.version`);
+      fileOk = false;
+    }
+  }
+
+  return fileOk;
+}
+
 let failed = false;
 
 for (const skillRoot of skillRoots) {
@@ -34,25 +97,16 @@ for (const skillRoot of skillRoots) {
     continue;
   }
 
-  for (const file of findSkillFiles(skillRoot)) {
-    const content = readFileSync(file, "utf8");
-    let fileOk = true;
+  const isFixedSkill = skillRoot === fixedSkillRoot;
+  const files = isFixedSkill
+    ? findAllMarkdownFiles(skillRoot)
+    : findSkillFiles(skillRoot);
 
-    if (!content.startsWith("---")) {
-      console.error(`FAIL ${file}: missing YAML frontmatter`);
-      fileOk = false;
-    } else {
-      const end = content.indexOf("---", 3);
-      const frontmatter = content.slice(3, end);
-      if (!/^name:\s*.+/m.test(frontmatter)) {
-        console.error(`FAIL ${file}: missing name`);
-        fileOk = false;
-      }
-      if (!/^description:/m.test(frontmatter)) {
-        console.error(`FAIL ${file}: missing description`);
-        fileOk = false;
-      }
-    }
+  for (const file of files) {
+    const content = readFileSync(file, "utf8");
+    const fileOk = validateFrontmatter(file, content, {
+      requireSkillKind: isFixedSkill,
+    });
 
     if (fileOk) {
       console.log(`OK ${file}`);

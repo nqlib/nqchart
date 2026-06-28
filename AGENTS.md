@@ -15,10 +15,13 @@ Architecture and skill routing for agents working in this repository.
 |----------|------------|
 | Integrating BeeCharts in an **external app** | [skills/consumer/beecharts/SKILL.md](skills/consumer/beecharts/SKILL.md) |
 | Changing **engine, registry, examples** | [.agents/skills/beecharts-dev/SKILL.md](.agents/skills/beecharts-dev/SKILL.md) |
+| **Fixing bugs / regressions** (search past fixes first) | [.agents/skills/fixed/index.md](.agents/skills/fixed/index.md) |
 | Changing **docs site, landing, agent HTTP** | [.agents/skills/beecharts-docs/SKILL.md](.agents/skills/beecharts-docs/SKILL.md) |
 | Understanding **architecture / backlog** | [docs/index.md](docs/index.md) |
 
 Do **not** use the consumer skill when contributing to this repo.
+
+**ECharts option reference** — when writing or debugging compilers, consult [.agents/skills/echarts-ai-skill/SKILL.md](.agents/skills/echarts-ai-skill/SKILL.md) for correct ECharts `option` shapes (`examples/*.option.json`, `src/core/spec-to-option.ts`). It's an **internal dev reference only** — not a consumer skill, and not in the public agent-skills index; build charts via this repo's `compile-*.ts`, never the skill's CLI.
 
 ## Skills hub
 
@@ -65,4 +68,4 @@ Full DoD: [docs/product/ai-contract.md](docs/product/ai-contract.md).
 
 ## Trigger phrases
 
-BeeCharts, `@beecharts`, registry, compile-*, chart-recipes, ComponentPreview, fumadocs, llms.txt, MCP, shadcn registry.
+BeeCharts, `@beecharts`, registry, compile-*, chart-recipes, ComponentPreview, fumadocs, llms.txt, MCP, shadcn registry, hover flicker, scatter dim, treemap vanish, fixed skill.

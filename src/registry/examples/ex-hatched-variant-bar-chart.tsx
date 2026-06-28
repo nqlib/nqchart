@@ -14,7 +14,6 @@ export function BeeExampleHatchedVariantBarChart() {
       config={DUAL_SERIES_CHART_CONFIG}
       className="h-full w-full p-4"
       xDataKey="month"
-      barRadius={8}
     >
       <Grid />
       <XAxis dataKey="month" tickFormatter={formatMonthTickShort} />

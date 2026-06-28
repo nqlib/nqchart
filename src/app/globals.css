@@ -51,7 +51,7 @@
 }
 
 :root {
-  --radius: 0.525rem;
+  --radius: 0.45rem;
   /* Palette ported from @nqlib/nqui — warm-paper neutrals + hue-240 blue primary. */
   --background: oklch(0.982 0.0054 95);
   --foreground: oklch(0.2416 0.0219 57);

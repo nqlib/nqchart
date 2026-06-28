@@ -37,7 +37,6 @@ export function BeeExampleBulletChart() {
       xDataKey="label"
       layout="horizontal"
       className="h-full w-full p-4"
-      barRadius={4}
     >
       <Grid />
       <XAxis />
@@ -47,7 +46,7 @@ export function BeeExampleBulletChart() {
       <Bar dataKey="poor" stackId="range" />
       <Bar dataKey="satisfactory" stackId="range" />
       <Bar dataKey="good" stackId="range" />
-      <Bar dataKey="actual" radius={4} />
+      <Bar dataKey="actual" />
       <Bar dataKey="target" radius={2} />
     </BeeBarChart>
   );

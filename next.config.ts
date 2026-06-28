@@ -44,11 +44,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/docs/sankey-chart",
-        destination: "/docs/sankey-chart/static",
-        permanent: true,
-      },
-      {
         source: "/docs/scatter-chart",
         destination: "/docs/scatter-chart/static",
         permanent: true,

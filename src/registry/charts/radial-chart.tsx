@@ -126,6 +126,7 @@ export function BeeRadialChart<
 export function RadialBar({
   dataKey,
   target,
+  targetKey = "target",
   cornerRadius,
   barSize,
   showBackground,
@@ -135,6 +136,8 @@ export function RadialBar({
 }: {
   dataKey: string;
   target?: number;
+  /** `chartConfig` key for target marker color/label when `target` is set. */
+  targetKey?: string;
   cornerRadius?: number;
   barSize?: number;
   showBackground?: boolean;
@@ -145,7 +148,7 @@ export function RadialBar({
   const id = usePartId();
   useRegisterPart(
     target != null
-      ? { type: "gauge", id, dataKey, target }
+      ? { type: "gauge", id, dataKey, target, targetKey }
       : {
           type: "radialBar",
           id,

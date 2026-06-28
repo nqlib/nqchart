@@ -8,7 +8,6 @@ import { LinePreview } from "@/components/docs/svg-previews/line-preview";
 import { PiePreview } from "@/components/docs/svg-previews/pie-preview";
 import { RadarPreview } from "@/components/docs/svg-previews/radar-preview";
 import { RadialPreview } from "@/components/docs/svg-previews/radial-preview";
-import { SankeyPreview } from "@/components/docs/svg-previews/sankey-preview";
 import { ScatterPreview } from "@/components/docs/svg-previews/scatter-preview";
 import { TreemapPreview } from "@/components/docs/svg-previews/treemap-preview";
 import { WaterfallPreview } from "@/components/docs/svg-previews/waterfall-preview";
@@ -30,7 +29,6 @@ const CHARTS: GalleryItem[] = [
   { name: "Scatter", slug: "scatter-chart", Preview: ScatterPreview },
   { name: "Funnel", slug: "funnel-chart", Preview: FunnelPreview },
   { name: "Waterfall", slug: "waterfall-chart", Preview: WaterfallPreview },
-  { name: "Sankey", slug: "sankey-chart", Preview: SankeyPreview },
   { name: "Treemap", slug: "treemap-chart", Preview: TreemapPreview },
 ];
 
@@ -40,7 +38,7 @@ export function ChartGallery() {
       <div className="mb-8 flex flex-col gap-2">
         <h2 className="text-xl font-semibold tracking-tight">Every chart, one composable API</h2>
         <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
-          Twelve chart families and counting — each built from the same{" "}
+          Eleven chart families and counting — each built from the same{" "}
           <code className="text-foreground font-mono text-[13px]">{"Bee*Chart"}</code> primitives.
           Pick one to read its docs and copy the source.
         </p>

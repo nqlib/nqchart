@@ -3,7 +3,7 @@ name: beecharts
 description: >-
   Build dashboards with composable BeeCharts — install @beecharts/* via shadcn,
   compose Bee*Chart children, theme colors, BI recipes. Use when the user asks
-  for charts, graphs, KPIs, sparklines, funnels, waterfalls, sankey, heatmaps,
+  for charts, graphs, KPIs, sparklines, funnels, waterfalls, heatmaps,
   histograms, pareto, gauges, or @beecharts / BeeCharts components. NOT for
   contributing to the beecharts repo.
 license: MIT
@@ -61,7 +61,7 @@ User goal?
 ├─ X vs Y correlation → scatter-chart
 ├─ Grid intensity / correlation → heatmap-chart
 ├─ Calendar heat (GitHub-style) → calendar-chart
-├─ Flow / funnel stages → funnel-chart or sankey-chart
+├─ Flow / funnel stages → funnel-chart
 ├─ Bridge / running total deltas → waterfall-chart
 ├─ Inline tiny trend (table/KPI) → sparkline-chart
 ├─ Distribution of numbers → bar-chart + binForHistogram (recipes.md)

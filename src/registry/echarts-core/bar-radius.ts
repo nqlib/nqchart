@@ -1,5 +1,7 @@
-/** Default top-rounded bar corners (matches legacy Recharts `DEFAULT_BAR_RADIUS`). */
-export const DEFAULT_BAR_RADIUS = 8;
+import { CHART_BAR_CORNER_RADIUS_PX } from "./chart-corner-radius";
+
+/** Default top-rounded bar corners — nqui `--radius-sm` at 16px root. */
+export const DEFAULT_BAR_RADIUS = CHART_BAR_CORNER_RADIUS_PX;
 
 export type StackCornerRole = "only" | "bottom" | "middle" | "top";
 

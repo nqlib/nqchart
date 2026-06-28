@@ -1,0 +1,43 @@
+name: Capture README screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [Released]
+    paths:
+      - "src/components/landing/**"
+      - "src/registry/**"
+      - "src/content/docs/**"
+      - "scripts/capture-readme-screenshots.mts"
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium --with-deps
+
+      - name: Build site
+        run: pnpm build
+
+      - name: Capture screenshots
+        run: pnpm capture:readme
+
+      - name: Upload README assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: readme-screenshots
+          path: docs/assets/readme/
+          retention-days: 30
