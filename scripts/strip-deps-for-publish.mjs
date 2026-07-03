@@ -39,11 +39,28 @@ if (mode === "prepack") {
   }
   copyFileSync(pkgPath, backupPath);
   const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
+
+  // The root package.json doubles as the Next.js app manifest. Strip everything
+  // that is app-only or would run in a CONSUMER's project, keeping only what a
+  // published library manifest needs (name, version, exports, files, types,
+  // peerDependencies, publishConfig, sideEffects, …).
   const depCount = Object.keys(pkg.dependencies ?? {}).length;
   delete pkg.dependencies;
+
+  // Scripts are the dangerous part: `postinstall: fumadocs-mdx` (and other app
+  // scripts like `dev`/`build`/`registry:*`) would execute or clutter on
+  // `npm i @nqlib/nqchart`. A library needs no install-time scripts at all, so
+  // drop the whole block — this removes the postinstall that breaks consumers.
+  const scriptCount = Object.keys(pkg.scripts ?? {}).length;
+  delete pkg.scripts;
+
+  // App-only tooling config that has no meaning in a consumed package.
+  delete pkg.devDependencies;
+  delete pkg.pnpm; // overrides + patchedDependencies for this repo's dev only
+
   writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
   console.error(
-    `strip-deps — removed ${depCount} dependencies for pack (peerDependencies kept)`,
+    `strip-deps — stripped ${depCount} dependencies + ${scriptCount} scripts (postinstall included) + devDependencies/pnpm for pack; peerDependencies kept`,
   );
 } else if (mode === "postpack") {
   if (existsSync(backupPath)) {

@@ -102,6 +102,7 @@ function verifyPublishedManifest() {
     const packed = JSON.parse(manifest.stdout);
     const depCount = Object.keys(packed.dependencies ?? {}).length;
     const peerCount = Object.keys(packed.peerDependencies ?? {}).length;
+    const scriptNames = Object.keys(packed.scripts ?? {});
     if (depCount > 0) {
       console.error(
         `verify:publish — published manifest still has ${depCount} dependencies; prepack strip did not run. Consumers would install the whole app.`,
@@ -112,8 +113,20 @@ function verifyPublishedManifest() {
       console.error("verify:publish — published manifest has no peerDependencies; expected react/react-dom/echarts/motion.");
       process.exit(1);
     }
+    // Any install-time lifecycle script runs in the CONSUMER's project on
+    // `npm i`. The app's `postinstall: fumadocs-mdx` breaks installs — assert
+    // no such scripts survive into the published manifest.
+    const installHooks = scriptNames.filter((s) =>
+      ["preinstall", "install", "postinstall", "prepare", "preprepare", "postprepare"].includes(s),
+    );
+    if (installHooks.length) {
+      console.error(
+        `verify:publish — published manifest has consumer-facing lifecycle scripts: ${installHooks.join(", ")}. These run on 'npm i' and can break installs.`,
+      );
+      process.exit(1);
+    }
     console.log(
-      `verify:publish — published manifest OK (0 dependencies, ${peerCount} peerDependencies)`,
+      `verify:publish — published manifest OK (0 dependencies, ${peerCount} peerDependencies, 0 install scripts)`,
     );
   } finally {
     // Clean up the real tarball we created for inspection.
