@@ -3,7 +3,11 @@
 import { useEffect, useRef, type RefObject } from "react";
 import type { EChartsOption } from "echarts";
 import type { EChartsType } from "echarts/core";
-import { echarts } from "./echarts-init";
+import { getEcharts } from "./echarts-init";
+
+// Call (don't just import) so the module registry — including the canvas renderer —
+// is guaranteed in the bundle despite `sideEffects: false`. See echarts-init.ts.
+const echarts = getEcharts();
 import { maxIntroDurationMs, optionHasAnimatedSeries } from "./apply-chart-animation";
 import { applyRolloutIntroReveal } from "./apply-rollout-intro";
 import type { ChartPlotInsets } from "./chart-grid";
