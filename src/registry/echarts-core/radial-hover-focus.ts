@@ -89,9 +89,11 @@ function forEachRingOrTrackGraphic(
  */
 export function repairRadialHoverFocus(instance: EChartsType, hoveredSeriesIndex: number): void {
   const hovered = getChartModel(instance).getSeriesByIndex(hoveredSeriesIndex);
+  // isRadialRingSeries returns false for null, so a truthy result guarantees
+  // non-null; the boolean return can't narrow the type, hence the assertion.
   if (!isRadialRingSeries(hovered)) return;
 
-  const focusIndex = focusedCategoryIndex(hovered);
+  const focusIndex = focusedCategoryIndex(hovered!);
   if (focusIndex == null) return;
 
   forEachRingOrTrackGraphic(instance, (_series, _seriesIndex, _dataIndex, el) => {
