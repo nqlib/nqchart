@@ -50,7 +50,7 @@ jobs:
       - name: Sync skills (no drift)
         run: |
           pnpm sync:skills
-          git diff --exit-code -- public/.well-known/agent-skills .agents/skills/beecharts
+          git diff --exit-code -- public/.well-known/agent-skills .agents/skills/nqchart
 
       - name: Cache Next.js build
         uses: actions/cache@v4

@@ -10,7 +10,7 @@ import { ChartBackground, type BackgroundVariant } from "@/registry/ui/backgroun
 import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { ReactNode } from "react";
 
-type BeeSparklineChartProps<
+type NQSparklineChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -37,7 +37,7 @@ function SparklineChartCanvas<TData extends Record<string, unknown>>({
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeeSparklineChart<
+export function NQSparklineChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 >({
@@ -48,7 +48,7 @@ export function BeeSparklineChart<
   valueDataKey = "value",
   backgroundVariant,
   isLoading,
-}: BeeSparklineChartProps<TData, TConfig>) {
+}: NQSparklineChartProps<TData, TConfig>) {
   return (
     <PartRegistryProvider>
       <ChartContainer config={config} className={className} isLoading={isLoading}>

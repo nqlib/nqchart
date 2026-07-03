@@ -1,6 +1,6 @@
-# Contributing to BeeCharts
+# Contributing to NQChart
 
-Thanks for your interest in contributing! BeeCharts is a **shadcn-style chart registry** built on **Apache ECharts** — the deliverable is installable source under `src/registry/`, not a separate npm chart package.
+Thanks for your interest in contributing! NQChart is a **shadcn-style chart registry** built on **Apache ECharts** — the deliverable is installable source under `src/registry/`, not a separate npm chart package.
 
 ## Prerequisites
 
@@ -10,8 +10,8 @@ Thanks for your interest in contributing! BeeCharts is a **shadcn-style chart re
 ## Setup
 
 ```bash
-git clone https://github.com/ctesibius/beecharts.git
-cd beecharts
+git clone https://github.com/ctesibius/nqchart.git
+cd nqchart
 pnpm install   # runs postinstall: fumadocs-mdx (generates .source/)
 pnpm dev
 ```
@@ -27,7 +27,7 @@ src/
   content/docs/   # MDX documentation (fumadocs)
   registry/       # THE PRODUCT — installable chart components
     echarts-core/ # Engine: compilers, hooks, animation tokens, color resolution
-    charts/       # Public Bee*Chart components
+    charts/       # Public NQ*Chart components
     ui/           # Chart-adjacent UI shipped via registry (chart shell, legend, tooltip)
     examples/     # Docs example components
     blocks/       # Larger composed blocks
@@ -40,7 +40,7 @@ src/
 ## `components/ui` vs `registry/ui`
 
 - `src/components/ui/` — shadcn primitives for **this docs site only**. Not exported via the registry.
-- `src/registry/ui/` — chart shell pieces users install with `shadcn add @beecharts/*`.
+- `src/registry/ui/` — chart shell pieces users install with `shadcn add @nqchart/*`.
 
 Registry code must **not** import from `src/components/**`. Run `pnpm run audit:registry-boundary` to verify.
 
@@ -80,13 +80,13 @@ CI (`.github/workflows/ci.yml`) runs the same checks plus `pnpm audit --audit-le
 
 ## Agent skills
 
-BeeCharts ships agent skills for coding assistants. **Edit source files only** — synced copies are generated.
+NQChart ships agent skills for coding assistants. **Edit source files only** — synced copies are generated.
 
 | Audience | Source of truth | Synced to |
 |----------|-----------------|-----------|
-| Consumers (external apps) | `skills/consumer/beecharts/` | `.agents/skills/beecharts/`, `public/.well-known/agent-skills/beecharts/` |
-| Contributors (engine/registry) | `.agents/skills/beecharts-dev/` | `public/.well-known/agent-skills/beecharts-dev/` |
-| Contributors (docs site) | `.agents/skills/beecharts-docs/` | `public/.well-known/agent-skills/beecharts-docs/` |
+| Consumers (external apps) | `skills/consumer/nqchart/` | `.agents/skills/nqchart/`, `public/.well-known/agent-skills/nqchart/` |
+| Contributors (engine/registry) | `.agents/skills/nqchart-dev/` | `public/.well-known/agent-skills/nqchart-dev/` |
+| Contributors (docs site) | `.agents/skills/nqchart-docs/` | `public/.well-known/agent-skills/nqchart-docs/` |
 
 ```bash
 pnpm sync:skills       # after editing consumer skill
@@ -97,7 +97,7 @@ pnpm skill:validate    # check SKILL.md frontmatter
 - Repo agent router: root `AGENTS.md`
 - Skills hub: `skills/README.md`
 
-When changing public chart API or install flow, update `skills/consumer/beecharts/` and run `pnpm sync:skills`.
+When changing public chart API or install flow, update `skills/consumer/nqchart/` and run `pnpm sync:skills`.
 
 ## Code style
 
@@ -116,4 +116,4 @@ When changing public chart API or install flow, update `skills/consumer/beechart
 
 ## Questions
 
-Open a [GitHub issue](https://github.com/ctesibius/beecharts/issues) for bugs or feature requests.
+Open a [GitHub issue](https://github.com/ctesibius/nqchart/issues) for bugs or feature requests.

@@ -176,13 +176,13 @@ const PATTERN_MAP: Record<BackgroundVariant, FC<PatternProps>> = {
   "wiggle-lines": WiggleLinesPattern,
 };
 
-export const BEE_CHART_BACKGROUND_MARKER = Symbol.for("beecharts.ChartBackground");
+export const NQ_CHART_BACKGROUND_MARKER = Symbol.for("nqchart.ChartBackground");
 
 interface ChartBackgroundProps {
   variant: BackgroundVariant;
 }
 
-/** SVG pattern layer behind the ECharts canvas. Compose inside `Bee*Chart`. */
+/** SVG pattern layer behind the ECharts canvas. Compose inside `NQ*Chart`. */
 export function ChartBackground({ variant }: ChartBackgroundProps) {
   const baseId = useId().replace(/:/g, "");
   const patternId = `${baseId}-bg-${variant}`;
@@ -192,7 +192,7 @@ export function ChartBackground({ variant }: ChartBackgroundProps) {
 
   return (
     <div
-      data-bee-chart-background=""
+      data-nq-chart-background=""
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
       aria-hidden
     >
@@ -212,4 +212,4 @@ export function ChartBackground({ variant }: ChartBackgroundProps) {
   );
 }
 
-ChartBackground.displayName = "BeeChartBackground";
+ChartBackground.displayName = "NQChartBackground";

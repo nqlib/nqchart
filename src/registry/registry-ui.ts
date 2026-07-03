@@ -1,6 +1,6 @@
 import type { Registry } from "shadcn/schema";
 
-const TARGET_BASE_PATH = "components/beecharts/ui";
+const TARGET_BASE_PATH = "components/nqchart/ui";
 
 export const ui: Registry["items"] = [
   {
@@ -52,15 +52,15 @@ export const ui: Registry["items"] = [
     ],
   },
   {
-    name: "bee-brush",
+    name: "nq-brush",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart"],
+    registryDependencies: ["@nqchart/chart"],
     dependencies: ["echarts"],
     files: [
       {
-        path: "ui/bee-brush.tsx",
+        path: "ui/nq-brush.tsx",
         type: "registry:component",
-        target: TARGET_BASE_PATH + "/bee-brush.tsx",
+        target: TARGET_BASE_PATH + "/nq-brush.tsx",
       },
     ],
   },

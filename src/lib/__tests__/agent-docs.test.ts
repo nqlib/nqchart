@@ -40,9 +40,9 @@ describe("agent-skills-index", () => {
     expect(index.$schema).toBe(AGENT_SKILLS_SCHEMA);
     expect(index.skills).toHaveLength(3);
     expect(index.skills.map((s) => s.name)).toEqual([
-      "beecharts",
-      "beecharts-dev",
-      "beecharts-docs",
+      "nqchart",
+      "nqchart-dev",
+      "nqchart-docs",
     ]);
   });
 
@@ -59,7 +59,7 @@ describe("agent-skills-index", () => {
 describe("agent-docs", () => {
   it("reads consumer SKILL.md from SOT", () => {
     const skill = readConsumerSkillFile("SKILL.md");
-    expect(skill).toMatch(/^---\nname: beecharts/);
+    expect(skill).toMatch(/^---\nname: nqchart/);
     expect(skill).toContain("Success gates");
   });
 

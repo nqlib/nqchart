@@ -19,19 +19,19 @@ const FEATURES = [
 ];
 
 const CODE = `import {
-  BeeBarChart, Bar, Grid, XAxis, Legend, Tooltip,
-} from "@/components/beecharts/charts/bar-chart";
+  NQBarChart, Bar, Grid, XAxis, Legend, Tooltip,
+} from "@/components/nqchart/charts/bar-chart";
 
 export function Traffic({ data }) {
   return (
-    <BeeBarChart data={data} config={config} xDataKey="month">
+    <NQBarChart data={data} config={config} xDataKey="month">
       <Grid />
       <XAxis dataKey="month" />
       <Legend isClickable />
       <Tooltip />
       <Bar dataKey="desktop" />
       <Bar dataKey="mobile" />
-    </BeeBarChart>
+    </NQBarChart>
   );
 }`;
 

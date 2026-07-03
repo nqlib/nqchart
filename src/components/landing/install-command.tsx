@@ -9,13 +9,13 @@ import { cn } from "@/lib/utils";
 
 type PackageManager = "pnpm" | "npm" | "yarn" | "bun";
 
-const STORAGE_KEY = "beecharts:package-manager";
+const STORAGE_KEY = "nqchart:package-manager";
 
 const COMMANDS: Record<PackageManager, string> = {
-  pnpm: "pnpm dlx shadcn@latest add @beecharts/bar-chart",
-  npm: "npx shadcn@latest add @beecharts/bar-chart",
-  yarn: "yarn dlx shadcn@latest add @beecharts/bar-chart",
-  bun: "bunx --bun shadcn@latest add @beecharts/bar-chart",
+  pnpm: "pnpm dlx shadcn@latest add @nqchart/bar-chart",
+  npm: "npx shadcn@latest add @nqchart/bar-chart",
+  yarn: "yarn dlx shadcn@latest add @nqchart/bar-chart",
+  bun: "bunx --bun shadcn@latest add @nqchart/bar-chart",
 };
 
 function readStoredManager(): PackageManager {

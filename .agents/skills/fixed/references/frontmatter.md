@@ -1,12 +1,12 @@
 ---
-name: beecharts-fixed-ref-frontmatter
+name: nqchart-fixed-ref-frontmatter
 description: >-
-  Frontmatter schema and templates for every markdown file under beecharts-fixed.
+  Frontmatter schema and templates for every markdown file under nqchart-fixed.
   Read when adding a new domain or fix note to the fixed skill.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: reference
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
@@ -18,11 +18,11 @@ Every markdown file under `.agents/skills/fixed/` **must** start with YAML front
 
 | Field | Required | Notes |
 |-------|----------|--------|
-| `name` | yes | Unique slug, kebab-case, prefix `beecharts-fixed-` |
+| `name` | yes | Unique slug, kebab-case, prefix `nqchart-fixed-` |
 | `description` | yes | One paragraph: what this file is + when to read it |
-| `skill` | yes | Always `beecharts-fixed` |
+| `skill` | yes | Always `nqchart-fixed` |
 | `kind` | yes | `skill` \| `agents` \| `index` \| `domain` \| `fix` \| `reference` |
-| `metadata.author` | yes | `beecharts` |
+| `metadata.author` | yes | `nqchart` |
 | `metadata.version` | yes | Semver string |
 
 ## Kind-specific fields
@@ -40,13 +40,13 @@ Every markdown file under `.agents/skills/fixed/` **must** start with YAML front
 
 ```yaml
 ---
-name: beecharts-fixed-index
+name: nqchart-fixed-index
 description: >-
-  Domain and semantic search index for past BeeCharts fixes. Search here first when fixing regressions.
-skill: beecharts-fixed
+  Domain and semantic search index for past NQChart fixes. Search here first when fixing regressions.
+skill: nqchart-fixed
 kind: index
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 ```
@@ -55,15 +55,15 @@ metadata:
 
 ```yaml
 ---
-name: beecharts-fixed-domain-<slug>
+name: nqchart-fixed-domain-<slug>
 description: >-
   <Domain> — symptoms and layers. Read before chart-specific fix notes in this domain.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: domain
 domain: <slug>
 tags: tag1, tag2, tag3
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 ```
@@ -72,17 +72,17 @@ metadata:
 
 ```yaml
 ---
-name: beecharts-fixed-<domain>-<slug>
+name: nqchart-fixed-<domain>-<slug>
 description: >-
   Fixed: <one-line summary>. Root cause, files, and verification for this incident.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: fix
 domain: <domain>
 status: fixed
 fixed: YYYY-MM
 tags: tag1, tag2
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 ```

@@ -6,14 +6,14 @@ import { compileLineOption } from "@/registry/echarts-core/compile-line";
 import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { ChartBackground } from "@/registry/ui/background";
 import {
-  BeeChartLegend,
+  NQChartLegend,
   bindChartLegendLayer,
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
 import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/registry/ui/tooltip";
 import { useState } from "react";
 
-type BeeLineChartProps<
+type NQLineChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -30,9 +30,9 @@ type BeeLineChartProps<
 const { Chart: LineChartInner } = createCartesianChart<
   Record<string, unknown>,
   Record<string, ChartConfig[string]>,
-  BeeLineChartProps<Record<string, unknown>, Record<string, ChartConfig[string]>>
+  NQLineChartProps<Record<string, unknown>, Record<string, ChartConfig[string]>>
 >({
-  displayName: "BeeLineChart",
+  displayName: "NQLineChart",
   compile: compileLineOption,
   loadingVariant: "line",
   defaultLoadingPoints: 12,
@@ -53,10 +53,10 @@ const { Chart: LineChartInner } = createCartesianChart<
   }),
 });
 
-export function BeeLineChart<
+export function NQLineChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
->(props: BeeLineChartProps<TData, TConfig>) {
+>(props: NQLineChartProps<TData, TConfig>) {
   return <LineChartInner {...props} />;
 }
 
@@ -141,7 +141,7 @@ export function Legend({
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <BeeChartLegend
+    <NQChartLegend
       variant={variant}
       align={align}
       hideIcon={hideIcon}

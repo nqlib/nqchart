@@ -24,7 +24,7 @@ function collectPreviewsSync() {
 function toExportName(slug) {
   const base = slug.replace(/^ex-/, "");
   return (
-    "BeeExample" +
+    "NQExample" +
     base
       .split("-")
       .map((s) => (s.match(/^\d/) ? s : s.charAt(0).toUpperCase() + s.slice(1)))
@@ -83,54 +83,54 @@ function renderComponent(family, opts, slug) {
   const curve = opts.curveType ?? "monotone";
   switch (family) {
     case "area":
-      return `<BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="${stack}"${opts.isLoading ? " isLoading" : ""}>
+      return `<NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="${stack}"${opts.isLoading ? " isLoading" : ""}>
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="${opts.glowing ? "glowing" : v}" curveType="${curve}" />
       <Area dataKey="mobile" variant="${opts.glowing ? "glowing" : v}" curveType="${curve}" />
-    </BeeAreaChart>`;
+    </NQAreaChart>`;
     case "scatter":
-      return `<BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
+      return `<NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
       <ScatterGrid /><ScatterXAxis dataKey="x" /><YAxis dataKey="y" /><ScatterLegend isClickable /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="${opts.glowing ? "glowing" : "default"}" />
       <Scatter dataKey="mobile" data={SCATTER_MOBILE} />
-    </BeeScatterChart>`;
+    </NQScatterChart>`;
     case "scatter-bubble":
-      return `<BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+      return `<NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <ScatterGrid /><ScatterXAxis /><YAxis /><ScatterLegend /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="bubble" /><Scatter dataKey="mobile" data={SCATTER_MOBILE} variant="bubble" />
-    </BeeScatterChart>`;
+    </NQScatterChart>`;
     case "scatter-sized":
-      return `<BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+      return `<NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="bubble" />
-    </BeeScatterChart>`;
+    </NQScatterChart>`;
     case "radar":
-      return `<BeeRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
+      return `<NQRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
       <PolarGrid variant="${opts.gridVariant ?? "polygon"}" /><PolarAngleAxis dataKey="skill" /><RadarLegend isClickable /><RadarTooltip />
       <Radar dataKey="desktop" variant="${opts.glowing ? "glowing" : opts.radarVariant ?? "filled"}" /><Radar dataKey="mobile" variant="filled" />
-    </BeeRadarChart>`;
+    </NQRadarChart>`;
     case "funnel":
-      return `<BeeFunnelChart data={FUNNEL_DATA} config={FUNNEL_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
+      return `<NQFunnelChart data={FUNNEL_DATA} config={FUNNEL_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
       <FunnelYAxis /><FunnelXAxis /><Stages /><FunnelLegend isClickable /><FunnelTooltip />
-    </BeeFunnelChart>`;
+    </NQFunnelChart>`;
     case "waterfall":
-      return `<BeeWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
+      return `<NQWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4"${opts.isLoading ? " isLoading" : ""}>
       <WfGrid /><WfXAxis /><WfYAxis /><Bars /><WfLegend /><WfTooltip />
-    </BeeWaterfallChart>`;
+    </NQWaterfallChart>`;
     case "treemap":
-      return `<BeeTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4"><Tiles /><TreemapTooltip /></BeeTreemapChart>`;
+      return `<NQTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4"><Tiles /><TreemapTooltip /></NQTreemapChart>`;
     case "sparkline":
-      return `<BeeSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4"${opts.bgBubbles ? ' backgroundVariant="bubbles"' : ""}${opts.isLoading ? " isLoading" : ""}>
+      return `<NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4"${opts.bgBubbles ? ' backgroundVariant="bubbles"' : ""}${opts.isLoading ? " isLoading" : ""}>
       <Fill dataKey="trend" /><Sparkline dataKey="trend" /><SparkTooltip />
-    </BeeSparklineChart>`;
+    </NQSparklineChart>`;
     case "radial-gauge":
-      return `<BeeRadialChart data={[{ series: "score", value: 72 }]} config={{ score: { label: "NPS", colors: { light: ["#3b82f6","#10b981"], dark: ["#60a5fa","#34d399"] } } }} nameKey="series" variant="semi" className="h-full w-full p-4"><RadialTooltip /><RadialBar dataKey="value" /></BeeRadialChart>`;
+      return `<NQRadialChart data={[{ series: "score", value: 72 }]} config={{ score: { label: "NPS", colors: { light: ["#3b82f6","#10b981"], dark: ["#60a5fa","#34d399"] } } }} nameKey="series" variant="semi" className="h-full w-full p-4"><RadialTooltip /><RadialBar dataKey="value" /></NQRadialChart>`;
     case "radial":
-      return `<BeeRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="${opts.variant ?? "full"}" className="h-full w-full p-4"><RadialLegend isClickable /><RadialTooltip /><RadialBar dataKey="visitors" /></BeeRadialChart>`;
+      return `<NQRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="${opts.variant ?? "full"}" className="h-full w-full p-4"><RadialLegend isClickable /><RadialTooltip /><RadialBar dataKey="visitors" /></NQRadialChart>`;
     case "bar":
-      return `<BeeBarChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month"${opts.isLoading ? " isLoading" : ""}>
+      return `<NQBarChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month"${opts.isLoading ? " isLoading" : ""}>
       <BarGrid /><BarXAxis dataKey="month" tickFormatter={formatMonthTickShort} /><BarLegend /><BarTooltip />
       <Bar dataKey="desktop" /><Bar dataKey="mobile" />
-    </BeeBarChart>`;
+    </NQBarChart>`;
     default:
       return null;
   }
@@ -140,33 +140,33 @@ const all = collectPreviewsSync();
 const missing = [...all].filter((n) => !indexed.has(n) && chartFamily(n) !== "line-skip");
 
 let tsx = `"use client";\n\n`;
-tsx += `import { BeeAreaChart, Area, XAxis, Grid, Legend, Tooltip } from "@/registry/charts/area-chart";\n`;
-tsx += `import { BeeBarChart, Bar, XAxis as BarXAxis, Grid as BarGrid, Legend as BarLegend, Tooltip as BarTooltip } from "@/registry/charts/bar-chart";\n`;
-tsx += `import { BeeScatterChart, Scatter, XAxis as ScatterXAxis, YAxis, Grid as ScatterGrid, Legend as ScatterLegend, Tooltip as ScatterTooltip } from "@/registry/charts/scatter-chart";\n`;
-tsx += `import { BeeRadarChart, Radar, PolarGrid, PolarAngleAxis, Legend as RadarLegend, Tooltip as RadarTooltip } from "@/registry/charts/radar-chart";\n`;
-tsx += `import { BeeFunnelChart, Stages, XAxis as FunnelXAxis, YAxis as FunnelYAxis, Legend as FunnelLegend, Tooltip as FunnelTooltip } from "@/registry/charts/funnel-chart";\n`;
-tsx += `import { BeeWaterfallChart, Bars, Grid as WfGrid, XAxis as WfXAxis, YAxis as WfYAxis, Legend as WfLegend, Tooltip as WfTooltip } from "@/registry/charts/waterfall-chart";\n`;
-tsx += `import { BeeTreemapChart, Tiles, Tooltip as TreemapTooltip } from "@/registry/charts/treemap-chart";\n`;
-tsx += `import { BeeSparklineChart, Fill, Sparkline, Tooltip as SparkTooltip } from "@/registry/charts/sparkline-chart";\n`;
-tsx += `import { BeeRadialChart, RadialBar, Tooltip as RadialTooltip, Legend as RadialLegend } from "@/registry/charts/radial-chart";\n`;
+tsx += `import { NQAreaChart, Area, XAxis, Grid, Legend, Tooltip } from "@/registry/charts/area-chart";\n`;
+tsx += `import { NQBarChart, Bar, XAxis as BarXAxis, Grid as BarGrid, Legend as BarLegend, Tooltip as BarTooltip } from "@/registry/charts/bar-chart";\n`;
+tsx += `import { NQScatterChart, Scatter, XAxis as ScatterXAxis, YAxis, Grid as ScatterGrid, Legend as ScatterLegend, Tooltip as ScatterTooltip } from "@/registry/charts/scatter-chart";\n`;
+tsx += `import { NQRadarChart, Radar, PolarGrid, PolarAngleAxis, Legend as RadarLegend, Tooltip as RadarTooltip } from "@/registry/charts/radar-chart";\n`;
+tsx += `import { NQFunnelChart, Stages, XAxis as FunnelXAxis, YAxis as FunnelYAxis, Legend as FunnelLegend, Tooltip as FunnelTooltip } from "@/registry/charts/funnel-chart";\n`;
+tsx += `import { NQWaterfallChart, Bars, Grid as WfGrid, XAxis as WfXAxis, YAxis as WfYAxis, Legend as WfLegend, Tooltip as WfTooltip } from "@/registry/charts/waterfall-chart";\n`;
+tsx += `import { NQTreemapChart, Tiles, Tooltip as TreemapTooltip } from "@/registry/charts/treemap-chart";\n`;
+tsx += `import { NQSparklineChart, Fill, Sparkline, Tooltip as SparkTooltip } from "@/registry/charts/sparkline-chart";\n`;
+tsx += `import { NQRadialChart, RadialBar, Tooltip as RadialTooltip, Legend as RadialLegend } from "@/registry/charts/radial-chart";\n`;
 tsx += `import { formatMonthTickShort, TRAFFIC_MONTHLY_DATA, DUAL_SERIES_CHART_CONFIG } from "@/registry/examples/example-shared";\n`;
 tsx += `import { SCATTER_DESKTOP, SCATTER_MOBILE, RADAR_SKILLS_DATA, FUNNEL_DATA, FUNNEL_CONFIG, WATERFALL_DATA, WATERFALL_CONFIG, TREEMAP_DATA, TREEMAP_CONFIG, SPARKLINE_DATA, SPARKLINE_CONFIG, BROWSER_DATA, BROWSER_CONFIG } from "@/registry/examples/example-datasets";\n\n`;
 
 let registry = `import type { Registry } from "shadcn/schema";\n\nconst FILE = "examples/ex-doc-charts.tsx";\n\nfunction ex(name: string, exportName: string, deps: string[]) {\n  return { name, registryDependencies: deps, type: "registry:block" as const, files: [{ path: FILE, type: "registry:block" as const }], meta: { exportName } };\n}\n\nexport const docExamples: Registry["items"] = [\n`;
 
 const depsMap = {
-  area: ["@beecharts/area-chart"],
-  scatter: ["@beecharts/scatter-chart"],
-  "scatter-bubble": ["@beecharts/scatter-chart"],
-  "scatter-sized": ["@beecharts/scatter-chart"],
-  radar: ["@beecharts/radar-chart"],
-  funnel: ["@beecharts/funnel-chart"],
-  waterfall: ["@beecharts/waterfall-chart"],
-  treemap: ["@beecharts/treemap-chart"],
-  sparkline: ["@beecharts/sparkline-chart"],
-  radial: ["@beecharts/radial-chart"],
-  "radial-gauge": ["@beecharts/radial-chart"],
-  bar: ["@beecharts/bar-chart"],
+  area: ["@nqchart/area-chart"],
+  scatter: ["@nqchart/scatter-chart"],
+  "scatter-bubble": ["@nqchart/scatter-chart"],
+  "scatter-sized": ["@nqchart/scatter-chart"],
+  radar: ["@nqchart/radar-chart"],
+  funnel: ["@nqchart/funnel-chart"],
+  waterfall: ["@nqchart/waterfall-chart"],
+  treemap: ["@nqchart/treemap-chart"],
+  sparkline: ["@nqchart/sparkline-chart"],
+  radial: ["@nqchart/radial-chart"],
+  "radial-gauge": ["@nqchart/radial-chart"],
+  bar: ["@nqchart/bar-chart"],
 };
 
 let count = 0;

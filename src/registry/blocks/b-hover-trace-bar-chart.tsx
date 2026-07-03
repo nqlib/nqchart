@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { BeeBarChart, Bar, Tooltip, XAxis } from "@/registry/charts/bar-chart";
+import { NQBarChart, Bar, Tooltip, XAxis } from "@/registry/charts/bar-chart";
 import { peakBarIndex } from "@/registry/echarts-core/hover-trace-bar";
 import { type ChartConfig } from "@/registry/ui/chart";
 import { formatMonthTickShort, TRAFFIC_MONTHLY_DATA } from "@/registry/examples/example-shared";
@@ -13,7 +13,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BeeHoverTraceBarChart() {
+export function NQHoverTraceBarChart() {
   const data = useMemo(
     () => TRAFFIC_MONTHLY_DATA.map(({ month, desktop }) => ({ month, desktop })),
     [],
@@ -42,7 +42,7 @@ export function BeeHoverTraceBarChart() {
           <p className="font-mono text-xs">{selected.month}</p>
         </div>
       </div>
-      <BeeBarChart
+      <NQBarChart
         data={data}
         config={chartConfig}
         xDataKey="month"
@@ -53,7 +53,7 @@ export function BeeHoverTraceBarChart() {
         <XAxis dataKey="month" tickFormatter={formatMonthTickShort} />
         <Tooltip hide />
         <Bar dataKey="desktop" variant="hover-trace" />
-      </BeeBarChart>
+      </NQBarChart>
     </div>
   );
 }

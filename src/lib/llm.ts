@@ -172,13 +172,13 @@ function renderRegistrySource(name: string, title?: string) {
   let src = fs.readFileSync(absolutePath, "utf8")
 
   // Rewrite internal registry paths to user-facing paths.
-  src = src.replaceAll("@/registry/ui/", "@/components/beecharts/ui/")
+  src = src.replaceAll("@/registry/ui/", "@/components/nqchart/ui/")
   src = src.replaceAll(
     "@/registry/charts/",
-    "@/components/beecharts/charts/",
+    "@/components/nqchart/charts/",
   )
   src = src.replaceAll("@/registry/examples/", "@/components/")
-  src = src.replaceAll("@/registry/blocks/", "@/components/beecharts/blocks/")
+  src = src.replaceAll("@/registry/blocks/", "@/components/nqchart/blocks/")
   src = src.replaceAll("export default", "export")
 
   const heading = title ? `### ${title}\n\n` : ""

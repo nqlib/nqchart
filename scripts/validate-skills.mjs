@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Validate SKILL.md frontmatter (name + description) for all agent skills.
- * The beecharts-fixed skill validates every .md file under its root.
+ * The nqchart-fixed skill validates every .md file under its root.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
@@ -9,9 +9,9 @@ import { join } from "node:path";
 const root = join(import.meta.dirname, "..");
 
 const skillRoots = [
-  join(root, "skills/consumer/beecharts"),
-  join(root, ".agents/skills/beecharts-dev"),
-  join(root, ".agents/skills/beecharts-docs"),
+  join(root, "skills/consumer/nqchart"),
+  join(root, ".agents/skills/nqchart-dev"),
+  join(root, ".agents/skills/nqchart-docs"),
   join(root, ".agents/skills/fixed"),
 ];
 
@@ -67,8 +67,8 @@ function validateFrontmatter(file, content, { requireSkillKind = false } = {}) {
   }
 
   if (requireSkillKind) {
-    if (!/^skill:\s*beecharts-fixed/m.test(frontmatter)) {
-      console.error(`FAIL ${file}: missing skill: beecharts-fixed`);
+    if (!/^skill:\s*nqchart-fixed/m.test(frontmatter)) {
+      console.error(`FAIL ${file}: missing skill: nqchart-fixed`);
       fileOk = false;
     }
     if (!/^kind:\s*.+/m.test(frontmatter)) {

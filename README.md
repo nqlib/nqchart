@@ -1,32 +1,32 @@
-# BeeCharts
+# NQChart
 
-**Composable React charts for dashboards and BI** — Apache ECharts engine, shadcn registry install, compound `Bee*Chart` API.
+**Composable React charts for dashboards and BI** — Apache ECharts engine, shadcn registry install, compound `NQ*Chart` API.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/hero-dashboard-dark.png">
-    <img src="docs/assets/readme/hero-dashboard-light.png" alt="BeeCharts SaaS revenue dashboard demo with area, stacked bar, radial gauge, and pie charts" width="920">
+    <img src="docs/assets/readme/hero-dashboard-light.png" alt="NQChart SaaS revenue dashboard demo with area, stacked bar, radial gauge, and pie charts" width="920">
   </picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/nqlib/beecharts"><strong>Repository</strong></a> ·
-  <a href="https://github.com/nqlib/beecharts/tree/Released/docs">Docs (in repo)</a> ·
-  <a href="https://github.com/nqlib/beecharts/blob/Released/src/content/docs/installation.mdx">Installation</a>
+  <a href="https://github.com/nqlib/nqchart"><strong>Repository</strong></a> ·
+  <a href="https://github.com/nqlib/nqchart/tree/Released/docs">Docs (in repo)</a> ·
+  <a href="https://github.com/nqlib/nqchart/blob/Released/src/content/docs/installation.mdx">Installation</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/nqlib/beecharts/stargazers"><img src="https://img.shields.io/github/stars/nqlib/beecharts?style=flat&logo=github" alt="GitHub stars"></a>
-  <a href="https://github.com/nqlib/beecharts/blob/Released/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://github.com/nqlib/nqchart/stargazers"><img src="https://img.shields.io/github/stars/nqlib/nqchart?style=flat&logo=github" alt="GitHub stars"></a>
+  <a href="https://github.com/nqlib/nqchart/blob/Released/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
 </p>
 
 ---
 
-## Why BeeCharts
+## Why NQChart
 
 - **Compound components** — compose `<Bar />`, `<Grid />`, `<Legend />` as children, not a giant options object
 - **Theme-aware** — `ChartConfig` maps to CSS variables for light/dark
-- **You own the source** — install via shadcn registry into `components/beecharts/`
+- **You own the source** — install via shadcn registry into `components/nqchart/`
 - **BI recipes** — histogram, Pareto, bullet, heatmap, gauge on primitives + `chart-recipes`
 
 Inspired by the [evilcharts](https://github.com/ali-tas/evilcharts) UX, rebuilt on **ECharts** instead of Recharts.
@@ -34,7 +34,7 @@ Inspired by the [evilcharts](https://github.com/ali-tas/evilcharts) UX, rebuilt 
 ## Chart gallery
 
 <p align="center">
-  <img src="docs/assets/readme/gallery-light.png" alt="BeeCharts chart type gallery" width="920">
+  <img src="docs/assets/readme/gallery-light.png" alt="NQChart chart type gallery" width="920">
 </p>
 
 <table align="center">
@@ -58,7 +58,7 @@ Add the registry namespace to `components.json`:
 ```json
 {
   "registries": {
-    "@beecharts": "https://beecharts.vercel.app/r/{name}.json"
+    "@nqchart": "https://nqchart.vercel.app/r/{name}.json"
   }
 }
 ```
@@ -67,13 +67,13 @@ Install a chart (peer deps: `echarts`, `motion`):
 
 ```bash
 pnpm add echarts motion
-pnpm dlx shadcn@latest add @beecharts/bar-chart
+pnpm dlx shadcn@latest add @nqchart/bar-chart
 ```
 
 Optional agent skill for Cursor / Claude Code:
 
 ```bash
-npx skills add nqlib/beecharts --skill beecharts -y
+npx skills add nqlib/nqchart --skill nqchart -y
 ```
 
 Full steps: [installation docs](src/content/docs/installation.mdx).

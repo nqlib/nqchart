@@ -1,16 +1,16 @@
 ---
-name: beecharts-fixed-hover-focus-waterfall-blur
+name: nqchart-fixed-hover-focus-waterfall-blur
 description: >-
   Fixed: waterfall hover dims wrong column, flicker, stale bright bars. waterfallColumnFocus
   preset, emphasis.disabled, waterfall-hover-focus.ts microtask repair by category index.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: fix
 domain: hover-focus
 status: fixed
 fixed: "2026-06"
 tags: waterfall, hover, blur, flicker, emphasis-disabled, stacked-bar, index-focus
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
@@ -40,7 +40,7 @@ metadata:
 | `src/registry/echarts-core/emphasis-presets.ts` | `waterfallColumnFocus()`: `cartesianColumnFocus()`, `stateAnimation.duration: 0`, `animationDurationUpdate: 0`, **`emphasis.disabled: true`**. |
 | `src/registry/echarts-core/compile-waterfall.ts` | Spread `waterfallColumnFocus()` on `__wf_values__` series. |
 | `src/registry/echarts-core/waterfall-hover-focus.ts` | Reset all value bars; **`enterBlur` on non-hovered categories only** — hovered stays **normal**. `scheduleWaterfallHoverFocusRepair` via `queueMicrotask`. `resetWaterfallHoverFocus` on globalout. |
-| `src/registry/echarts-core/use-bee-echarts.ts` | Bar `mouseover` on `__wf_values__` → `scheduleWaterfallHoverFocusRepair`; `globalout` → `resetWaterfallHoverFocus`. |
+| `src/registry/echarts-core/use-nq-echarts.ts` | Bar `mouseover` on `__wf_values__` → `scheduleWaterfallHoverFocusRepair`; `globalout` → `resetWaterfallHoverFocus`. |
 
 ## Wrong fixes (rejected)
 

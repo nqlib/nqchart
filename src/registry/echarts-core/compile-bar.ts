@@ -115,7 +115,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
   const horizontal = ctx.cartesian?.layout === "horizontal";
   const stack =
     ctx.cartesian?.stackType === "stacked" || ctx.cartesian?.stackType === "percent"
-      ? "bee-stack"
+      ? "nq-stack"
       : undefined;
   const barKeys = bars.map((bar) => bar.dataKey);
   const rows =

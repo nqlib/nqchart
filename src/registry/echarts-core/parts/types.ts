@@ -255,7 +255,7 @@ export type CartesianCompileConfig = {
   variant?: string;
   /** Default corner radius for all `<Bar />` series (px). */
   barRadius?: number;
-  /** Footer `BeeChartBrush` is active — use tighter cartesian grid margins. */
+  /** Footer `NQChartBrush` is active — use tighter cartesian grid margins. */
   externalBrush?: boolean;
   /** Monospace bars: false = intro expanded width, true = collapsed thin rest state. */
   monospaceCollapsed?: boolean;

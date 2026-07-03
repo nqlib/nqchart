@@ -61,7 +61,7 @@ export function cartesianColumnFocus(color?: string) {
 
 /**
  * Waterfall value bars — index focus with instant state updates.
- * Stacked placeholder + values series races native high-down; BeeCharts owns hover in
+ * Stacked placeholder + values series races native high-down; NQChart owns hover in
  * `waterfall-hover-focus.ts` (same pattern as funnel/treemap).
  */
 export function waterfallColumnFocus() {
@@ -154,7 +154,7 @@ export function itemFocus(opts?: {
  * Concentric radial / rose — one ECharts series per ring or petal.
  * `focus:"series"` avoids per-segment hit-testing across ring gaps (flicker).
  * Instant state transitions — gradient fills cannot tween safely.
- * `emphasis.disabled` turns off native high-down; BeeCharts applies focus in
+ * `emphasis.disabled` turns off native high-down; NQChart applies focus in
  * `radial-hover-focus.ts`.
  */
 export function radialBarSeriesFocus() {
@@ -175,7 +175,7 @@ export function radialBarSeriesFocus() {
 /**
  * Treemap tiles — item focus with instant state + layout updates.
  * ECharts defaults to animationDurationUpdate 900ms; hover re-layout causes flicker.
- * `emphasis.disabled` turns off ECharts native blur/emphasis; BeeCharts applies focus in
+ * `emphasis.disabled` turns off ECharts native blur/emphasis; NQChart applies focus in
  * `treemap-hover-focus.ts` to avoid fighting the built-in high-down pipeline.
  */
 export function treemapFocus() {
@@ -193,7 +193,7 @@ export function treemapFocus() {
 
 /**
  * Funnel stages — item focus with instant state updates.
- * Native high-down races BeeCharts blur sync on adjacent segments; BeeCharts owns hover in
+ * Native high-down races NQChart blur sync on adjacent segments; NQChart owns hover in
  * `funnel-hover-focus.ts` (same pattern as treemap).
  */
 export function funnelFocus() {

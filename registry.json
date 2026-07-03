@@ -1,6 +1,6 @@
 {
-  "homepage": "https://beecharts.vercel.app",
-  "name": "BeeCharts",
+  "homepage": "https://nqchart.vercel.app",
+  "name": "NQChart",
   "items": [
     {
       "name": "chart",
@@ -12,7 +12,7 @@
         {
           "path": "src/registry/ui/chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/ui/chart.tsx"
+          "target": "components/nqchart/ui/chart.tsx"
         }
       ]
     },
@@ -26,7 +26,7 @@
         {
           "path": "src/registry/ui/tooltip.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/ui/tooltip.tsx"
+          "target": "components/nqchart/ui/tooltip.tsx"
         }
       ]
     },
@@ -40,7 +40,7 @@
         {
           "path": "src/registry/ui/legend.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/ui/legend.tsx"
+          "target": "components/nqchart/ui/legend.tsx"
         }
       ]
     },
@@ -54,24 +54,24 @@
         {
           "path": "src/registry/ui/dot.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/ui/dot.tsx"
+          "target": "components/nqchart/ui/dot.tsx"
         }
       ]
     },
     {
-      "name": "bee-brush",
+      "name": "nq-brush",
       "type": "registry:component",
       "registryDependencies": [
-        "@beecharts/chart"
+        "@nqchart/chart"
       ],
       "dependencies": [
         "echarts"
       ],
       "files": [
         {
-          "path": "src/registry/ui/bee-brush.tsx",
+          "path": "src/registry/ui/nq-brush.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/ui/bee-brush.tsx"
+          "target": "components/nqchart/ui/nq-brush.tsx"
         }
       ]
     },
@@ -85,7 +85,7 @@
         {
           "path": "src/registry/ui/background.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/ui/background.tsx"
+          "target": "components/nqchart/ui/background.tsx"
         }
       ]
     },
@@ -93,9 +93,9 @@
       "name": "bar-chart",
       "description": "Bar chart (ECharts engine, compound API)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -105,7 +105,7 @@
         {
           "path": "src/registry/charts/bar-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/bar-chart.tsx"
+          "target": "components/nqchart/charts/bar-chart.tsx"
         }
       ]
     },
@@ -113,9 +113,9 @@
       "name": "line-chart",
       "description": "Line chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -125,7 +125,7 @@
         {
           "path": "src/registry/charts/line-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/line-chart.tsx"
+          "target": "components/nqchart/charts/line-chart.tsx"
         }
       ]
     },
@@ -133,9 +133,9 @@
       "name": "composed-chart",
       "description": "Composed bar + line chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -145,7 +145,7 @@
         {
           "path": "src/registry/charts/composed-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/composed-chart.tsx"
+          "target": "components/nqchart/charts/composed-chart.tsx"
         }
       ]
     },
@@ -153,9 +153,9 @@
       "name": "pie-chart",
       "description": "Pie / donut chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -165,7 +165,7 @@
         {
           "path": "src/registry/charts/pie-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/pie-chart.tsx"
+          "target": "components/nqchart/charts/pie-chart.tsx"
         }
       ]
     },
@@ -173,9 +173,9 @@
       "name": "heatmap-chart",
       "description": "Heatmap chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -185,7 +185,7 @@
         {
           "path": "src/registry/charts/heatmap-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/heatmap-chart.tsx"
+          "target": "components/nqchart/charts/heatmap-chart.tsx"
         }
       ]
     },
@@ -193,9 +193,9 @@
       "name": "calendar-chart",
       "description": "Calendar heatmap chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -205,7 +205,7 @@
         {
           "path": "src/registry/charts/calendar-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/calendar-chart.tsx"
+          "target": "components/nqchart/charts/calendar-chart.tsx"
         }
       ]
     },
@@ -213,9 +213,9 @@
       "name": "radial-chart",
       "description": "Radial / gauge chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -225,7 +225,7 @@
         {
           "path": "src/registry/charts/radial-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/radial-chart.tsx"
+          "target": "components/nqchart/charts/radial-chart.tsx"
         }
       ]
     },
@@ -233,9 +233,9 @@
       "name": "area-chart",
       "description": "Area chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -245,7 +245,7 @@
         {
           "path": "src/registry/charts/area-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/area-chart.tsx"
+          "target": "components/nqchart/charts/area-chart.tsx"
         }
       ]
     },
@@ -253,9 +253,9 @@
       "name": "scatter-chart",
       "description": "Scatter / bubble chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -265,7 +265,7 @@
         {
           "path": "src/registry/charts/scatter-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/scatter-chart.tsx"
+          "target": "components/nqchart/charts/scatter-chart.tsx"
         }
       ]
     },
@@ -273,9 +273,9 @@
       "name": "radar-chart",
       "description": "Radar chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -285,7 +285,7 @@
         {
           "path": "src/registry/charts/radar-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/radar-chart.tsx"
+          "target": "components/nqchart/charts/radar-chart.tsx"
         }
       ]
     },
@@ -293,9 +293,9 @@
       "name": "funnel-chart",
       "description": "Funnel chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -305,7 +305,7 @@
         {
           "path": "src/registry/charts/funnel-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/funnel-chart.tsx"
+          "target": "components/nqchart/charts/funnel-chart.tsx"
         }
       ]
     },
@@ -313,9 +313,9 @@
       "name": "waterfall-chart",
       "description": "Waterfall chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -325,7 +325,7 @@
         {
           "path": "src/registry/charts/waterfall-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/waterfall-chart.tsx"
+          "target": "components/nqchart/charts/waterfall-chart.tsx"
         }
       ]
     },
@@ -333,9 +333,9 @@
       "name": "treemap-chart",
       "description": "Treemap chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -345,7 +345,7 @@
         {
           "path": "src/registry/charts/treemap-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/treemap-chart.tsx"
+          "target": "components/nqchart/charts/treemap-chart.tsx"
         }
       ]
     },
@@ -353,9 +353,9 @@
       "name": "sparkline-chart",
       "description": "Sparkline chart (ECharts engine)",
       "registryDependencies": [
-        "@beecharts/chart",
-        "@beecharts/tooltip",
-        "@beecharts/legend"
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
       ],
       "dependencies": [
         "echarts"
@@ -365,7 +365,7 @@
         {
           "path": "src/registry/charts/sparkline-chart.tsx",
           "type": "registry:component",
-          "target": "components/beecharts/charts/sparkline-chart.tsx"
+          "target": "components/nqchart/charts/sparkline-chart.tsx"
         }
       ]
     },
@@ -384,7 +384,7 @@
     {
       "name": "ex-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -397,7 +397,7 @@
     {
       "name": "ex-loading-state-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -410,7 +410,7 @@
     {
       "name": "ex-stacked-type-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -423,7 +423,7 @@
     {
       "name": "ex-percent-type-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -436,7 +436,7 @@
     {
       "name": "ex-horizontal-layout-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -449,7 +449,7 @@
     {
       "name": "ex-hatched-variant-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -462,7 +462,7 @@
     {
       "name": "ex-stripped-variant-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -475,7 +475,7 @@
     {
       "name": "ex-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -488,7 +488,7 @@
     {
       "name": "ex-loading-state-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -501,7 +501,7 @@
     {
       "name": "ex-composed-chart",
       "registryDependencies": [
-        "@beecharts/composed-chart"
+        "@nqchart/composed-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -514,7 +514,7 @@
     {
       "name": "ex-loading-state-composed-chart",
       "registryDependencies": [
-        "@beecharts/composed-chart"
+        "@nqchart/composed-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -527,8 +527,8 @@
     {
       "name": "ex-pareto-chart",
       "registryDependencies": [
-        "@beecharts/composed-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/composed-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -541,7 +541,7 @@
     {
       "name": "ex-pie-chart",
       "registryDependencies": [
-        "@beecharts/pie-chart"
+        "@nqchart/pie-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -554,7 +554,7 @@
     {
       "name": "ex-gauge-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -567,7 +567,7 @@
     {
       "name": "ex-gauge-with-target-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -580,8 +580,8 @@
     {
       "name": "ex-histogram-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/bar-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -594,8 +594,8 @@
     {
       "name": "ex-loading-state-histogram-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/bar-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -608,8 +608,8 @@
     {
       "name": "ex-bullet-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/bar-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -622,8 +622,8 @@
     {
       "name": "ex-loading-state-pareto-chart",
       "registryDependencies": [
-        "@beecharts/composed-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/composed-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -636,8 +636,8 @@
     {
       "name": "ex-boxplot-chart",
       "registryDependencies": [
-        "@beecharts/composed-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/composed-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -650,8 +650,8 @@
     {
       "name": "ex-heatmap-chart",
       "registryDependencies": [
-        "@beecharts/heatmap-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/heatmap-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -664,8 +664,8 @@
     {
       "name": "ex-heatmap-weekly-chart",
       "registryDependencies": [
-        "@beecharts/heatmap-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/heatmap-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -678,8 +678,8 @@
     {
       "name": "ex-heatmap-correlation-chart",
       "registryDependencies": [
-        "@beecharts/heatmap-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/heatmap-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -692,9 +692,9 @@
     {
       "name": "ex-workload-dashboard-chart",
       "registryDependencies": [
-        "@beecharts/calendar-chart",
-        "@beecharts/heatmap-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/calendar-chart",
+        "@nqchart/heatmap-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -707,8 +707,8 @@
     {
       "name": "ex-calendar-workload-chart",
       "registryDependencies": [
-        "@beecharts/calendar-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/calendar-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -721,8 +721,8 @@
     {
       "name": "ex-heatmap-team-workload-chart",
       "registryDependencies": [
-        "@beecharts/heatmap-chart",
-        "@beecharts/chart-recipes"
+        "@nqchart/heatmap-chart",
+        "@nqchart/chart-recipes"
       ],
       "type": "registry:block",
       "files": [
@@ -735,7 +735,7 @@
     {
       "name": "ex-bg-dots-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -745,13 +745,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgDotsLineChart"
+        "exportName": "NQExampleBgDotsLineChart"
       }
     },
     {
       "name": "ex-bg-graph-paper-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -761,13 +761,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgGraphPaperLineChart"
+        "exportName": "NQExampleBgGraphPaperLineChart"
       }
     },
     {
       "name": "ex-bg-cross-hatch-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -777,13 +777,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgCrossHatchLineChart"
+        "exportName": "NQExampleBgCrossHatchLineChart"
       }
     },
     {
       "name": "ex-bg-diagonal-lines-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -793,13 +793,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgDiagonalLinesLineChart"
+        "exportName": "NQExampleBgDiagonalLinesLineChart"
       }
     },
     {
       "name": "ex-bg-plus-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -809,13 +809,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgPlusLineChart"
+        "exportName": "NQExampleBgPlusLineChart"
       }
     },
     {
       "name": "ex-bg-falling-triangles-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -825,13 +825,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgFallingTrianglesLineChart"
+        "exportName": "NQExampleBgFallingTrianglesLineChart"
       }
     },
     {
       "name": "ex-bg-4-pointed-star-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -841,13 +841,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBg4PointedStarLineChart"
+        "exportName": "NQExampleBg4PointedStarLineChart"
       }
     },
     {
       "name": "ex-bg-tiny-checkers-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -857,13 +857,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgTinyCheckersLineChart"
+        "exportName": "NQExampleBgTinyCheckersLineChart"
       }
     },
     {
       "name": "ex-bg-overlapping-circles-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -873,13 +873,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgOverlappingCirclesLineChart"
+        "exportName": "NQExampleBgOverlappingCirclesLineChart"
       }
     },
     {
       "name": "ex-bg-wiggle-lines-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -889,13 +889,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgWiggleLinesLineChart"
+        "exportName": "NQExampleBgWiggleLinesLineChart"
       }
     },
     {
       "name": "ex-bg-bubbles-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -905,13 +905,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgBubblesLineChart"
+        "exportName": "NQExampleBgBubblesLineChart"
       }
     },
     {
       "name": "ex-legend-square-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -921,13 +921,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLegendSquareLineChart"
+        "exportName": "NQExampleLegendSquareLineChart"
       }
     },
     {
       "name": "ex-legend-circle-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -937,13 +937,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLegendCircleLineChart"
+        "exportName": "NQExampleLegendCircleLineChart"
       }
     },
     {
       "name": "ex-legend-circle-outline-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -953,13 +953,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLegendCircleOutlineLineChart"
+        "exportName": "NQExampleLegendCircleOutlineLineChart"
       }
     },
     {
       "name": "ex-legend-rounded-square-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -969,13 +969,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLegendRoundedSquareLineChart"
+        "exportName": "NQExampleLegendRoundedSquareLineChart"
       }
     },
     {
       "name": "ex-legend-rounded-square-outline-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -985,13 +985,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLegendRoundedSquareOutlineLineChart"
+        "exportName": "NQExampleLegendRoundedSquareOutlineLineChart"
       }
     },
     {
       "name": "ex-legend-vertical-bar-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1001,13 +1001,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLegendVerticalBarLineChart"
+        "exportName": "NQExampleLegendVerticalBarLineChart"
       }
     },
     {
       "name": "ex-legend-horizontal-bar-line-chart",
       "registryDependencies": [
-        "@beecharts/line-chart"
+        "@nqchart/line-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1017,13 +1017,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLegendHorizontalBarLineChart"
+        "exportName": "NQExampleLegendHorizontalBarLineChart"
       }
     },
     {
       "name": "ex-tooltip-default-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1033,13 +1033,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleTooltipDefaultBarChart"
+        "exportName": "NQExampleTooltipDefaultBarChart"
       }
     },
     {
       "name": "ex-tooltip-frosted-glass-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1049,13 +1049,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleTooltipFrostedGlassBarChart"
+        "exportName": "NQExampleTooltipFrostedGlassBarChart"
       }
     },
     {
       "name": "ex-animated-dashed-stroke-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1065,13 +1065,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleAnimatedDashedStrokeAreaChart"
+        "exportName": "NQExampleAnimatedDashedStrokeAreaChart"
       }
     },
     {
       "name": "ex-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1081,13 +1081,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleAreaChart"
+        "exportName": "NQExampleAreaChart"
       }
     },
     {
       "name": "ex-bg-bubbles-sparkline-chart",
       "registryDependencies": [
-        "@beecharts/sparkline-chart"
+        "@nqchart/sparkline-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1097,13 +1097,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBgBubblesSparklineChart"
+        "exportName": "NQExampleBgBubblesSparklineChart"
       }
     },
     {
       "name": "ex-bubble-chart",
       "registryDependencies": [
-        "@beecharts/scatter-chart"
+        "@nqchart/scatter-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1113,13 +1113,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBubbleChart"
+        "exportName": "NQExampleBubbleChart"
       }
     },
     {
       "name": "ex-bubble-sized-chart",
       "registryDependencies": [
-        "@beecharts/scatter-chart"
+        "@nqchart/scatter-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1129,13 +1129,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBubbleSizedChart"
+        "exportName": "NQExampleBubbleSizedChart"
       }
     },
     {
       "name": "ex-bump-curve-type-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1145,13 +1145,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleBumpCurveTypeAreaChart"
+        "exportName": "NQExampleBumpCurveTypeAreaChart"
       }
     },
     {
       "name": "ex-chart-config-default-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1161,13 +1161,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleChartConfigDefaultBarChart"
+        "exportName": "NQExampleChartConfigDefaultBarChart"
       }
     },
     {
       "name": "ex-chart-config-icons-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1177,13 +1177,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleChartConfigIconsBarChart"
+        "exportName": "NQExampleChartConfigIconsBarChart"
       }
     },
     {
       "name": "ex-circle-grid-radar-chart",
       "registryDependencies": [
-        "@beecharts/radar-chart"
+        "@nqchart/radar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1193,13 +1193,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleCircleGridRadarChart"
+        "exportName": "NQExampleCircleGridRadarChart"
       }
     },
     {
       "name": "ex-dashed-stroke-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1209,13 +1209,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleDashedStrokeAreaChart"
+        "exportName": "NQExampleDashedStrokeAreaChart"
       }
     },
     {
       "name": "ex-default-type-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1225,13 +1225,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleDefaultTypeAreaChart"
+        "exportName": "NQExampleDefaultTypeAreaChart"
       }
     },
     {
       "name": "ex-dotted-area-variant-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1241,13 +1241,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleDottedAreaVariantAreaChart"
+        "exportName": "NQExampleDottedAreaVariantAreaChart"
       }
     },
     {
       "name": "ex-expanded-type-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1257,13 +1257,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleExpandedTypeAreaChart"
+        "exportName": "NQExampleExpandedTypeAreaChart"
       }
     },
     {
       "name": "ex-funnel-chart",
       "registryDependencies": [
-        "@beecharts/funnel-chart"
+        "@nqchart/funnel-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1273,13 +1273,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleFunnelChart"
+        "exportName": "NQExampleFunnelChart"
       }
     },
     {
       "name": "ex-glowing-bubble-chart",
       "registryDependencies": [
-        "@beecharts/scatter-chart"
+        "@nqchart/scatter-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1289,13 +1289,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGlowingBubbleChart"
+        "exportName": "NQExampleGlowingBubbleChart"
       }
     },
     {
       "name": "ex-glowing-funnel-chart",
       "registryDependencies": [
-        "@beecharts/funnel-chart"
+        "@nqchart/funnel-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1305,13 +1305,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGlowingFunnelChart"
+        "exportName": "NQExampleGlowingFunnelChart"
       }
     },
     {
       "name": "ex-glowing-radar-chart",
       "registryDependencies": [
-        "@beecharts/radar-chart"
+        "@nqchart/radar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1321,13 +1321,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGlowingRadarChart"
+        "exportName": "NQExampleGlowingRadarChart"
       }
     },
     {
       "name": "ex-glowing-radial-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1337,13 +1337,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGlowingRadialChart"
+        "exportName": "NQExampleGlowingRadialChart"
       }
     },
     {
       "name": "ex-glowing-scatter-chart",
       "registryDependencies": [
-        "@beecharts/scatter-chart"
+        "@nqchart/scatter-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1353,13 +1353,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGlowingScatterChart"
+        "exportName": "NQExampleGlowingScatterChart"
       }
     },
     {
       "name": "ex-glowing-sparkline-chart",
       "registryDependencies": [
-        "@beecharts/sparkline-chart"
+        "@nqchart/sparkline-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1369,13 +1369,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGlowingSparklineChart"
+        "exportName": "NQExampleGlowingSparklineChart"
       }
     },
     {
       "name": "ex-glowing-treemap-chart",
       "registryDependencies": [
-        "@beecharts/treemap-chart"
+        "@nqchart/treemap-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1385,13 +1385,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGlowingTreemapChart"
+        "exportName": "NQExampleGlowingTreemapChart"
       }
     },
     {
       "name": "ex-glowing-waterfall-chart",
       "registryDependencies": [
-        "@beecharts/waterfall-chart"
+        "@nqchart/waterfall-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1401,13 +1401,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGlowingWaterfallChart"
+        "exportName": "NQExampleGlowingWaterfallChart"
       }
     },
     {
       "name": "ex-gradient-area-variant-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1417,13 +1417,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGradientAreaVariantAreaChart"
+        "exportName": "NQExampleGradientAreaVariantAreaChart"
       }
     },
     {
       "name": "ex-gradient-colors-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1433,13 +1433,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGradientColorsAreaChart"
+        "exportName": "NQExampleGradientColorsAreaChart"
       }
     },
     {
       "name": "ex-gradient-colors-bar-chart",
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1449,13 +1449,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGradientColorsBarChart"
+        "exportName": "NQExampleGradientColorsBarChart"
       }
     },
     {
       "name": "ex-gradient-colors-bump-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1465,13 +1465,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGradientColorsBumpAreaChart"
+        "exportName": "NQExampleGradientColorsBumpAreaChart"
       }
     },
     {
       "name": "ex-gradient-colors-radar-chart",
       "registryDependencies": [
-        "@beecharts/radar-chart"
+        "@nqchart/radar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1481,13 +1481,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGradientColorsRadarChart"
+        "exportName": "NQExampleGradientColorsRadarChart"
       }
     },
     {
       "name": "ex-gradient-colors-radial-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1497,13 +1497,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGradientColorsRadialChart"
+        "exportName": "NQExampleGradientColorsRadialChart"
       }
     },
     {
       "name": "ex-gradient-colors-scatter-chart",
       "registryDependencies": [
-        "@beecharts/scatter-chart"
+        "@nqchart/scatter-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1513,13 +1513,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGradientColorsScatterChart"
+        "exportName": "NQExampleGradientColorsScatterChart"
       }
     },
     {
       "name": "ex-gradient-reverse-area-variant-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1529,13 +1529,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleGradientReverseAreaVariantAreaChart"
+        "exportName": "NQExampleGradientReverseAreaVariantAreaChart"
       }
     },
     {
       "name": "ex-hatched-area-variant-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1545,13 +1545,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleHatchedAreaVariantAreaChart"
+        "exportName": "NQExampleHatchedAreaVariantAreaChart"
       }
     },
     {
       "name": "ex-lines-area-variant-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1561,13 +1561,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLinesAreaVariantAreaChart"
+        "exportName": "NQExampleLinesAreaVariantAreaChart"
       }
     },
     {
       "name": "ex-lines-variant-radar-chart",
       "registryDependencies": [
-        "@beecharts/radar-chart"
+        "@nqchart/radar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1577,13 +1577,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLinesVariantRadarChart"
+        "exportName": "NQExampleLinesVariantRadarChart"
       }
     },
     {
       "name": "ex-loading-state-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1593,13 +1593,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateAreaChart"
+        "exportName": "NQExampleLoadingStateAreaChart"
       }
     },
     {
       "name": "ex-loading-state-bubble-chart",
       "registryDependencies": [
-        "@beecharts/scatter-chart"
+        "@nqchart/scatter-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1609,13 +1609,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateBubbleChart"
+        "exportName": "NQExampleLoadingStateBubbleChart"
       }
     },
     {
       "name": "ex-loading-state-funnel-chart",
       "registryDependencies": [
-        "@beecharts/funnel-chart"
+        "@nqchart/funnel-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1625,13 +1625,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateFunnelChart"
+        "exportName": "NQExampleLoadingStateFunnelChart"
       }
     },
     {
       "name": "ex-loading-state-gauge-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1641,13 +1641,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateGaugeChart"
+        "exportName": "NQExampleLoadingStateGaugeChart"
       }
     },
     {
       "name": "ex-loading-state-radar-chart",
       "registryDependencies": [
-        "@beecharts/radar-chart"
+        "@nqchart/radar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1657,13 +1657,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateRadarChart"
+        "exportName": "NQExampleLoadingStateRadarChart"
       }
     },
     {
       "name": "ex-loading-state-radial-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1673,13 +1673,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateRadialChart"
+        "exportName": "NQExampleLoadingStateRadialChart"
       }
     },
     {
       "name": "ex-loading-state-scatter-chart",
       "registryDependencies": [
-        "@beecharts/scatter-chart"
+        "@nqchart/scatter-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1689,13 +1689,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateScatterChart"
+        "exportName": "NQExampleLoadingStateScatterChart"
       }
     },
     {
       "name": "ex-loading-state-sparkline-chart",
       "registryDependencies": [
-        "@beecharts/sparkline-chart"
+        "@nqchart/sparkline-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1705,13 +1705,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateSparklineChart"
+        "exportName": "NQExampleLoadingStateSparklineChart"
       }
     },
     {
       "name": "ex-loading-state-treemap-chart",
       "registryDependencies": [
-        "@beecharts/treemap-chart"
+        "@nqchart/treemap-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1721,13 +1721,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateTreemapChart"
+        "exportName": "NQExampleLoadingStateTreemapChart"
       }
     },
     {
       "name": "ex-loading-state-waterfall-chart",
       "registryDependencies": [
-        "@beecharts/waterfall-chart"
+        "@nqchart/waterfall-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1737,13 +1737,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleLoadingStateWaterfallChart"
+        "exportName": "NQExampleLoadingStateWaterfallChart"
       }
     },
     {
       "name": "ex-monotoney-curve-type-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1753,13 +1753,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleMonotoneyCurveTypeAreaChart"
+        "exportName": "NQExampleMonotoneyCurveTypeAreaChart"
       }
     },
     {
       "name": "ex-radar-chart",
       "registryDependencies": [
-        "@beecharts/radar-chart"
+        "@nqchart/radar-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1769,13 +1769,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleRadarChart"
+        "exportName": "NQExampleRadarChart"
       }
     },
     {
       "name": "ex-radial-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1785,13 +1785,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleRadialChart"
+        "exportName": "NQExampleRadialChart"
       }
     },
     {
       "name": "ex-scatter-chart",
       "registryDependencies": [
-        "@beecharts/scatter-chart"
+        "@nqchart/scatter-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1801,13 +1801,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleScatterChart"
+        "exportName": "NQExampleScatterChart"
       }
     },
     {
       "name": "ex-semi-variant-radial-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1817,13 +1817,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleSemiVariantRadialChart"
+        "exportName": "NQExampleSemiVariantRadialChart"
       }
     },
     {
       "name": "ex-rose-radial-chart",
       "registryDependencies": [
-        "@beecharts/radial-chart"
+        "@nqchart/radial-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1833,13 +1833,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleRoseRadialChart"
+        "exportName": "NQExampleRoseRadialChart"
       }
     },
     {
       "name": "ex-solid-area-variant-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1849,13 +1849,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleSolidAreaVariantAreaChart"
+        "exportName": "NQExampleSolidAreaVariantAreaChart"
       }
     },
     {
       "name": "ex-solid-stroke-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1865,13 +1865,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleSolidStrokeAreaChart"
+        "exportName": "NQExampleSolidStrokeAreaChart"
       }
     },
     {
       "name": "ex-sparkline-area-chart",
       "registryDependencies": [
-        "@beecharts/sparkline-chart"
+        "@nqchart/sparkline-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1881,13 +1881,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleSparklineAreaChart"
+        "exportName": "NQExampleSparklineAreaChart"
       }
     },
     {
       "name": "ex-sparkline-chart",
       "registryDependencies": [
-        "@beecharts/sparkline-chart"
+        "@nqchart/sparkline-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1897,13 +1897,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleSparklineChart"
+        "exportName": "NQExampleSparklineChart"
       }
     },
     {
       "name": "ex-stacked-type-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1913,13 +1913,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleStackedTypeAreaChart"
+        "exportName": "NQExampleStackedTypeAreaChart"
       }
     },
     {
       "name": "ex-step-curve-type-area-chart",
       "registryDependencies": [
-        "@beecharts/area-chart"
+        "@nqchart/area-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1929,13 +1929,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleStepCurveTypeAreaChart"
+        "exportName": "NQExampleStepCurveTypeAreaChart"
       }
     },
     {
       "name": "ex-treemap-chart",
       "registryDependencies": [
-        "@beecharts/treemap-chart"
+        "@nqchart/treemap-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1945,13 +1945,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleTreemapChart"
+        "exportName": "NQExampleTreemapChart"
       }
     },
     {
       "name": "ex-waterfall-chart",
       "registryDependencies": [
-        "@beecharts/waterfall-chart"
+        "@nqchart/waterfall-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1961,13 +1961,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleWaterfallChart"
+        "exportName": "NQExampleWaterfallChart"
       }
     },
     {
       "name": "ex-sparkline-end-dot-chart",
       "registryDependencies": [
-        "@beecharts/sparkline-chart"
+        "@nqchart/sparkline-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1977,13 +1977,13 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleSparklineEndDotChart"
+        "exportName": "NQExampleSparklineEndDotChart"
       }
     },
     {
       "name": "ex-sparkline-reference-band-chart",
       "registryDependencies": [
-        "@beecharts/sparkline-chart"
+        "@nqchart/sparkline-chart"
       ],
       "type": "registry:block",
       "files": [
@@ -1993,7 +1993,7 @@
         }
       ],
       "meta": {
-        "exportName": "BeeExampleSparklineReferenceBandChart"
+        "exportName": "NQExampleSparklineReferenceBandChart"
       }
     },
     {
@@ -2004,14 +2004,14 @@
         "motion"
       ],
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
         {
           "path": "src/registry/blocks/b-monospace-bar-chart.tsx",
           "type": "registry:block",
-          "target": "components/beecharts/blocks/monospace-bar-chart.tsx"
+          "target": "components/nqchart/blocks/monospace-bar-chart.tsx"
         }
       ]
     },
@@ -2022,14 +2022,14 @@
         "echarts"
       ],
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
         {
           "path": "src/registry/blocks/b-hover-trace-bar-chart.tsx",
           "type": "registry:block",
-          "target": "components/beecharts/blocks/hover-trace-bar-chart.tsx"
+          "target": "components/nqchart/blocks/hover-trace-bar-chart.tsx"
         }
       ]
     },
@@ -2040,14 +2040,14 @@
         "echarts"
       ],
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
         {
           "path": "src/registry/blocks/b-grid-bar-chart.tsx",
           "type": "registry:block",
-          "target": "components/beecharts/blocks/grid-bar-chart.tsx"
+          "target": "components/nqchart/blocks/grid-bar-chart.tsx"
         }
       ]
     },
@@ -2058,14 +2058,14 @@
         "echarts"
       ],
       "registryDependencies": [
-        "@beecharts/bar-chart"
+        "@nqchart/bar-chart"
       ],
       "type": "registry:block",
       "files": [
         {
           "path": "src/registry/blocks/b-isometric-bar-chart.tsx",
           "type": "registry:block",
-          "target": "components/beecharts/blocks/isometric-bar-chart.tsx"
+          "target": "components/nqchart/blocks/isometric-bar-chart.tsx"
         }
       ]
     }

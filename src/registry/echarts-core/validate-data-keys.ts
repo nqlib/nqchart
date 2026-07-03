@@ -40,7 +40,7 @@ export function validateDataKeys(
     if (!key || rowKeys.has(key) || warned.has(key)) continue;
     warned.add(key);
     console.warn(
-      `[BeeCharts] dataKey "${key}" not found in data rows. Available keys: ${[...rowKeys].join(", ")}`,
+      `[NQChart] dataKey "${key}" not found in data rows. Available keys: ${[...rowKeys].join(", ")}`,
     );
   }
 
@@ -49,7 +49,7 @@ export function validateDataKeys(
       if (rowKeys.has(key) || warned.has(`${part.type}:${key}`)) continue;
       warned.add(`${part.type}:${key}`);
       console.warn(
-        `[BeeCharts] dataKey "${key}" on ${part.type} part not found in data rows. Available keys: ${[...rowKeys].join(", ")}`,
+        `[NQChart] dataKey "${key}" on ${part.type} part not found in data rows. Available keys: ${[...rowKeys].join(", ")}`,
       );
     }
   }

@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BeeComposedChart,
+  NQComposedChart,
   Bar,
   Line,
   Grid,
@@ -45,9 +45,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BeeExampleBoxplotChart() {
+export function NQExampleBoxplotChart() {
   return (
-    <BeeComposedChart
+    <NQComposedChart
       config={chartConfig}
       data={data}
       xDataKey="category"
@@ -62,6 +62,6 @@ export function BeeExampleBoxplotChart() {
       <Bar dataKey="iqrFloor" stackId="box" radius={0} showInLegend={false} />
       <Bar dataKey="iqr" stackId="box" radius={4} />
       <Line dataKey="median" variant="points" />
-    </BeeComposedChart>
+    </NQComposedChart>
   );
 }

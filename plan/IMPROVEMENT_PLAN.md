@@ -1,4 +1,4 @@
-# BeeCharts — Engine + Docs App Improvement Plan
+# NQChart — Engine + Docs App Improvement Plan
 
 > Principal-engineer + design-engineer review of the chart **engine** (`src/registry/**`) and the **docs/landing app** (`src/app/**`, `src/components/**`).
 > Date: 2026-06-10 · Branch reviewed: `landing-redesign-and-theme` (f43ccf9)
@@ -25,8 +25,8 @@
 
 ### 1.1 Landing page has no `<h1>`
 - **Files:** `src/app/page.tsx`
-- Page goes Badge → `<BeeChartWordmark>` (SVG) → `<p>`, then sections start at `<h2>`. Breaks document outline and SEO.
-- **Fix:** add `<h1 className="sr-only">BeeCharts — Composable React charts for shadcn/ui</h1>` at the top of the hero (or wrap the wordmark in an `<h1>`).
+- Page goes Badge → `<NQChartWordmark>` (SVG) → `<p>`, then sections start at `<h2>`. Breaks document outline and SEO.
+- **Fix:** add `<h1 className="sr-only">NQChart — Composable React charts for shadcn/ui</h1>` at the top of the hero (or wrap the wordmark in an `<h1>`).
 - **Accept:** axe/lighthouse reports exactly one h1; heading levels don't skip.
 
 ### 1.2 `prefers-reduced-motion` for the UI layer
@@ -48,8 +48,8 @@
 
 ### 1.3 Aria labels on logo + gallery SVGs
 - **Files:** `src/components/landing/landing-header.tsx`, `src/components/landing/chart-gallery.tsx`, wordmark/mark components, `src/components/docs/svg-previews/*`
-- **Fix:** `role="img" aria-label="BeeCharts"` on wordmark/mark; gallery preview SVGs get `aria-hidden="true"` (decorative — card text already names the chart type).
-- **Accept:** VoiceOver announces header logo as "BeeCharts"; previews are silent.
+- **Fix:** `role="img" aria-label="NQChart"` on wordmark/mark; gallery preview SVGs get `aria-hidden="true"` (decorative — card text already names the chart type).
+- **Accept:** VoiceOver announces header logo as "NQChart"; previews are silent.
 
 ### 1.4 Dark-mode button contrast (`opacity-90`)
 - **Files:** `src/components/ui/enhanced-button.tsx` (~lines 35, 44, 53)
@@ -138,7 +138,7 @@
 
 ### 3.4 Generalize hover-trace + monospace-fold hooks
 - **Files:** `bar-chart.tsx` (lines ~86–88, 141–174), `use-monospace-collapse.ts`, hover-trace hook
-- Both are hardcoded to the bar series (`BEE_HOVER_TRACE_SERIES_ID`), blocking reuse by radial-bar/composed.
+- Both are hardcoded to the bar series (`NQ_HOVER_TRACE_SERIES_ID`), blocking reuse by radial-bar/composed.
 - **Fix:** parameterize by `seriesId`/`dataKey` instead of bar constants.
 - **Accept:** radial-bar can adopt hover-trace without copy-paste.
 
@@ -165,7 +165,7 @@
 
 ### 4.1 Decide the `components/ui` story
 - **Files:** `src/components/ui/` (54 files) vs `src/registry/ui/` (8 files)
-- 53 shadcn primitives power the site but aren't registry-exported. This is **likely fine** — BeeCharts is a *chart* registry and shadcn users bring their own primitives — but it's currently ambiguous.
+- 53 shadcn primitives power the site but aren't registry-exported. This is **likely fine** — NQChart is a *chart* registry and shadcn users bring their own primitives — but it's currently ambiguous.
 - **Fix:** explicit decision, documented in CONTRIBUTING.md: site-internal primitives stay in `src/components/ui` (document "bring your own shadcn"), and chart registry items must only depend on `src/registry/**` + published shadcn components. Add a lint/audit script check that no `src/registry/**` file imports from `src/components/**`.
 - **Accept:** documented policy + automated boundary check passes.
 

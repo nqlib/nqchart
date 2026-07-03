@@ -37,7 +37,7 @@ function createHatchedPattern(color: string): PatternFill {
   return { image: canvas, repeat: "repeat" };
 }
 
-/** Muted body + solid cap — matches beecharts `stripped` (not zebra stripes). */
+/** Muted body + solid cap — matches nqchart `stripped` (not zebra stripes). */
 function strippedBarGradient(strokeColor: string, fillColor: string, horizontal: boolean) {
   if (horizontal) {
     return {

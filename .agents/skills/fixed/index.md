@@ -1,12 +1,12 @@
 ---
-name: beecharts-fixed-index
+name: nqchart-fixed-index
 description: >-
-  Domain and semantic search index for past BeeCharts fixes. Agents must search this
+  Domain and semantic search index for past NQChart fixes. Agents must search this
   file first when the user asks to fix a bug, flicker, hover dimming, or regression.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: index
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
@@ -64,7 +64,7 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/waterfall-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/radial-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/emphasis-presets.ts` | hover-focus |
-| `src/registry/echarts-core/use-bee-echarts.ts` (mouseover / globalout) | hover-focus |
+| `src/registry/echarts-core/use-nq-echarts.ts` (mouseover / globalout) | hover-focus |
 | `src/registry/echarts-core/compile-scatter.ts` | hover-focus |
 | `src/registry/echarts-core/compile-treemap.ts` | hover-focus |
 | `src/registry/echarts-core/compile-funnel.ts` | hover-focus |

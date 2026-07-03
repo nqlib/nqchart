@@ -1,4 +1,4 @@
-# BeeCharts — Agent guide
+# NQChart — Agent guide
 
 Architecture and skill routing for agents working in this repository.
 
@@ -13,10 +13,10 @@ Architecture and skill routing for agents working in this repository.
 
 | You are… | Start here |
 |----------|------------|
-| Integrating BeeCharts in an **external app** | [skills/consumer/beecharts/SKILL.md](skills/consumer/beecharts/SKILL.md) |
-| Changing **engine, registry, examples** | [.agents/skills/beecharts-dev/SKILL.md](.agents/skills/beecharts-dev/SKILL.md) |
+| Integrating NQChart in an **external app** | [skills/consumer/nqchart/SKILL.md](skills/consumer/nqchart/SKILL.md) |
+| Changing **engine, registry, examples** | [.agents/skills/nqchart-dev/SKILL.md](.agents/skills/nqchart-dev/SKILL.md) |
 | **Fixing bugs / regressions** (search past fixes first) | [.agents/skills/fixed/index.md](.agents/skills/fixed/index.md) |
-| Changing **docs site, landing, agent HTTP** | [.agents/skills/beecharts-docs/SKILL.md](.agents/skills/beecharts-docs/SKILL.md) |
+| Changing **docs site, landing, agent HTTP** | [.agents/skills/nqchart-docs/SKILL.md](.agents/skills/nqchart-docs/SKILL.md) |
 | Understanding **architecture / backlog** | [docs/index.md](docs/index.md) |
 
 Do **not** use the consumer skill when contributing to this repo.
@@ -30,13 +30,13 @@ See [skills/README.md](skills/README.md) for the consumer vs contributor split.
 **Charts** — shadcn registry (copies source into your app):
 
 ```bash
-pnpm dlx shadcn@latest add @beecharts/bar-chart
+pnpm dlx shadcn@latest add @nqchart/bar-chart
 ```
 
 **Agent skill** — skills CLI (markdown guidance only):
 
 ```bash
-npx skills add ctesibius/beecharts --skill beecharts -y
+npx skills add ctesibius/nqchart --skill nqchart -y
 ```
 
 After editing consumer skill in this repo: `pnpm sync:skills`
@@ -46,7 +46,7 @@ After editing consumer skill in this repo: `pnpm sync:skills`
 ```
 src/content/docs/     → public MDX reference
 src/components/       → site-only UI (never imported by registry)
-src/registry/charts/  → Bee*Chart compound roots
+src/registry/charts/  → NQ*Chart compound roots
 src/registry/echarts-core/ → pure compilers + hooks
 ```
 
@@ -68,4 +68,4 @@ Full DoD: [docs/product/ai-contract.md](docs/product/ai-contract.md).
 
 ## Trigger phrases
 
-BeeCharts, `@beecharts`, registry, compile-*, chart-recipes, ComponentPreview, fumadocs, llms.txt, MCP, shadcn registry, hover flicker, scatter dim, treemap vanish, fixed skill.
+NQChart, `@nqchart`, registry, compile-*, chart-recipes, ComponentPreview, fumadocs, llms.txt, MCP, shadcn registry, hover flicker, scatter dim, treemap vanish, fixed skill.

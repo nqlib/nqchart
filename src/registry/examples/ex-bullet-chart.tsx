@@ -1,6 +1,6 @@
 "use client";
 
-import { BeeBarChart, Bar, Grid, XAxis, YAxis, Tooltip, Legend } from "@/registry/charts/bar-chart";
+import { NQBarChart, Bar, Grid, XAxis, YAxis, Tooltip, Legend } from "@/registry/charts/bar-chart";
 import { prepareBulletRow } from "@/registry/lib/chart-recipes";
 import { type ChartConfig } from "@/registry/ui/chart";
 
@@ -29,9 +29,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BeeExampleBulletChart() {
+export function NQExampleBulletChart() {
   return (
-    <BeeBarChart
+    <NQBarChart
       config={chartConfig}
       data={data}
       xDataKey="label"
@@ -48,6 +48,6 @@ export function BeeExampleBulletChart() {
       <Bar dataKey="good" stackId="range" />
       <Bar dataKey="actual" />
       <Bar dataKey="target" radius={2} />
-    </BeeBarChart>
+    </NQBarChart>
   );
 }

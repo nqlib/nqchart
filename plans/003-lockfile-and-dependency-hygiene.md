@@ -6,7 +6,7 @@
 
 ## Why this matters
 
-The repo (`beecharts`, Next.js app, package manager **pnpm 10.12.1** per the `packageManager` field) currently carries three lockfiles and several dependencies with zero imports:
+The repo (`nqchart`, Next.js app, package manager **pnpm 10.12.1** per the `packageManager` field) currently carries three lockfiles and several dependencies with zero imports:
 
 - `pnpm-lock.yaml` — canonical; CI (`.github/workflows/ci.yml`) runs `pnpm install --frozen-lockfile`.
 - `bun.lock` — **tracked in git** (verified via `git ls-files`), stale (predates recent dependency changes). A contributor running `bun install` would silently diverge from CI.

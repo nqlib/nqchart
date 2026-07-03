@@ -1,16 +1,16 @@
 ---
-name: beecharts-fixed-hover-focus-funnel-blur
+name: nqchart-fixed-hover-focus-funnel-blur
 description: >-
   Fixed: funnel hover dims wrong stage, flicker, stale emphasis. funnelFocus preset,
   emphasis.disabled, animationDurationUpdate 0, funnel-hover-focus.ts microtask repair.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: fix
 domain: hover-focus
 status: fixed
 fixed: "2026-06"
 tags: funnel, hover, blur, flicker, emphasis-disabled, animationDurationUpdate
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
@@ -29,7 +29,7 @@ metadata:
 
 ## Root cause
 
-1. ECharts funnel **native high-down** and BeeCharts blur sync can **race** on adjacent segments.
+1. ECharts funnel **native high-down** and NQChart blur sync can **race** on adjacent segments.
 2. Default **`animationDurationUpdate`** can tween segment geometry on hover updates → flicker.
 3. **`__highByOuter`** leaves stale emphasis when moving quickly between stages.
 4. With `emphasis.disabled: false`, native emphasis fights runtime repair (treemap pattern).
@@ -42,7 +42,7 @@ metadata:
 | `src/registry/echarts-core/compile-funnel.ts` | Spread `funnelFocus()` instead of bare `itemFocus`. |
 | `src/registry/echarts-core/apply-chart-animation.ts` | Funnel case keeps `animationDurationUpdate: 0`. |
 | `src/registry/echarts-core/funnel-hover-focus.ts` | Reset all segments; **`enterBlur` on non-hovered only** — hovered stays **normal**. `scheduleFunnelHoverFocusRepair` via `queueMicrotask`. `resetFunnelHoverFocus` on globalout. |
-| `src/registry/echarts-core/use-bee-echarts.ts` | Funnel `mouseover` → `scheduleFunnelHoverFocusRepair`; `globalout` → `resetFunnelHoverFocus`. |
+| `src/registry/echarts-core/use-nq-echarts.ts` | Funnel `mouseover` → `scheduleFunnelHoverFocusRepair`; `globalout` → `resetFunnelHoverFocus`. |
 
 ## Wrong fixes (rejected)
 

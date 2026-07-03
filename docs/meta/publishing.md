@@ -1,6 +1,6 @@
 # Publishing
 
-BeeCharts is **not** published as npm packages. Distribution is via the **shadcn registry** hosted on Vercel.
+NQChart is **not** published as npm packages. Distribution is via the **shadcn registry** hosted on Vercel.
 
 ## What gets deployed
 
@@ -23,7 +23,7 @@ Users configure:
 ```json
 {
   "registries": {
-    "@beecharts": "https://beecharts.vercel.app/r/{name}.json"
+    "@nqchart": "https://nqchart.vercel.app/r/{name}.json"
   }
 }
 ```
@@ -42,7 +42,7 @@ pnpm build
 
 ## Not in scope
 
-- `@beecharts/*` npm packages
+- `@nqchart/*` npm packages
 - npm `publish` workflow for chart source (users copy via shadcn CLI)
 
 See [[registry/build-pipeline]] for local registry regeneration.

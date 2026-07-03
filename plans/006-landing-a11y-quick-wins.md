@@ -6,11 +6,11 @@
 
 ## Why this matters
 
-Four verified accessibility gaps in the `beecharts` site (Next.js app: landing page + fumadocs docs). None require design changes; all are mechanical.
+Four verified accessibility gaps in the `nqchart` site (Next.js app: landing page + fumadocs docs). None require design changes; all are mechanical.
 
-1. **No `<h1>` on the landing page.** `src/app/page.tsx:36-50` renders the hero as Badge → `<BeeChartWordmark>` (an SVG wordmark component) → `<p>`; the first heading on the page is the final CTA's `<h2>` at line 89. Screen-reader outline and SEO both expect exactly one h1.
+1. **No `<h1>` on the landing page.** `src/app/page.tsx:36-50` renders the hero as Badge → `<NQChartWordmark>` (an SVG wordmark component) → `<p>`; the first heading on the page is the final CTA's `<h2>` at line 89. Screen-reader outline and SEO both expect exactly one h1.
 2. **No `prefers-reduced-motion` handling in the UI layer.** The chart engine already respects it (`src/registry/echarts-core/chart-animation-tokens.ts:133-136` has a `prefersReducedMotion()` helper used by `apply-chart-animation.ts`, `apply-rollout-intro.ts`, `use-monospace-collapse.ts`) — but the **CSS layer** (`src/app/globals.css`, 421 lines, no `@media (prefers-reduced-motion)` rule anywhere) and the **motion/react springs** (`src/components/docs/mdx/components/toc-indicator.tsx`, `src/components/docs/sidebar/nav-main.tsx`, `src/registry/ui/loading-shimmer.tsx`) animate unconditionally. WCAG 2.3.3.
-3. **Logo SVGs lack accessible names.** `BeeChartWordmark` (imported from `@/assets/logos/beechart`) is rendered in `src/app/page.tsx:41-45` and in `src/components/landing/landing-header.tsx` with no `aria-label`/`role` — as the de-facto page title and header logo link content, it's announced as nothing.
+3. **Logo SVGs lack accessible names.** `NQChartWordmark` (imported from `@/assets/logos/nqchart`) is rendered in `src/app/page.tsx:41-45` and in `src/components/landing/landing-header.tsx` with no `aria-label`/`role` — as the de-facto page title and header logo link content, it's announced as nothing.
 4. **Dark-mode button contrast.** `src/components/ui/enhanced-button.tsx:35,44,53` — the `default`, `destructive`, and `secondary` variants all include `"opacity-90 hover:opacity-100"`. At 90% opacity over the dark background, primary-button label contrast risks falling below WCAG AA 4.5:1, and the default↔hover distinction is weak for low-vision users.
 
 ## Verification commands
@@ -28,7 +28,7 @@ Tailwind v4 utility classes; tokens defined in `src/app/globals.css` via `@theme
 In `src/app/page.tsx`, inside the hero `<section>` (line 37), add as first child:
 
 ```tsx
-<h1 className="sr-only">BeeCharts — composable React charts for shadcn/ui dashboards</h1>
+<h1 className="sr-only">NQChart — composable React charts for shadcn/ui dashboards</h1>
 ```
 
 Check `src/globals/constants/site.ts` for `SITE_NAME`/`SITE_DESCRIPTION` (already imported in this file at line 13) — prefer composing the h1 text from those constants over a hardcoded string if they read naturally.
@@ -68,10 +68,10 @@ Note `loading-shimmer.tsx` is in `src/registry/` (shipped to users via the regis
 
 ### Step 4 — SVG accessible names
 
-- Open `src/assets/logos/beechart` (resolve the actual file; also find the mark/logomark component if separate — check `src/components/landing/landing-header.tsx` imports). If the component spreads props onto `<svg>`, add `role="img"` and `aria-label="BeeCharts"` at the call sites that convey identity: the hero usage in `page.tsx` and the header logo. If the header logo is wrapped in a `<Link href="/">`, the link needs the accessible name (`aria-label="BeeCharts home"` on the Link) and the SVG should get `aria-hidden="true"` instead — inspect the actual markup and apply the correct one of these two patterns.
+- Open `src/assets/logos/nqchart` (resolve the actual file; also find the mark/logomark component if separate — check `src/components/landing/landing-header.tsx` imports). If the component spreads props onto `<svg>`, add `role="img"` and `aria-label="NQChart"` at the call sites that convey identity: the hero usage in `page.tsx` and the header logo. If the header logo is wrapped in a `<Link href="/">`, the link needs the accessible name (`aria-label="NQChart home"` on the Link) and the SVG should get `aria-hidden="true"` instead — inspect the actual markup and apply the correct one of these two patterns.
 - `src/components/landing/chart-gallery.tsx` renders decorative SVG previews (from `src/components/docs/svg-previews/`) inside cards that already have visible text labels — add `aria-hidden="true"` to the preview wrapper so they're skipped.
 
-**Verify:** VoiceOver (or browser accessibility tree in devtools) announces the header logo link as "BeeCharts home" (or equivalent) and does not announce the gallery preview SVGs.
+**Verify:** VoiceOver (or browser accessibility tree in devtools) announces the header logo link as "NQChart home" (or equivalent) and does not announce the gallery preview SVGs.
 
 ### Step 5 — Dark-mode button opacity
 

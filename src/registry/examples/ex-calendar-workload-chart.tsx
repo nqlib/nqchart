@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BeeCalendarChart,
+  NQCalendarChart,
   Calendar,
   Tooltip,
   Legend,
@@ -14,9 +14,9 @@ import {
 
 const { cells, min, max, range } = prepareCalendarWorkloadCells(MAYA_MONTH_WORKLOAD);
 
-export function BeeExampleCalendarWorkloadChart() {
+export function NQExampleCalendarWorkloadChart() {
   return (
-    <BeeCalendarChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full p-4">
+    <NQCalendarChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full p-4">
       <Calendar
         dataKey="utilization"
         data={cells}
@@ -27,6 +27,6 @@ export function BeeExampleCalendarWorkloadChart() {
       />
       <Legend />
       <Tooltip />
-    </BeeCalendarChart>
+    </NQCalendarChart>
   );
 }

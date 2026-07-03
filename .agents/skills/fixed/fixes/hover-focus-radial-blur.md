@@ -1,16 +1,16 @@
 ---
-name: beecharts-fixed-hover-focus-radial-blur
+name: nqchart-fixed-hover-focus-radial-blur
 description: >-
   Fixed: radial/rose hover dims wrong ring, flicker across gaps. radialBarSeriesFocus
   emphasis.disabled, radial-hover-focus.ts series-level microtask repair.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: fix
 domain: hover-focus
 status: fixed
 fixed: "2026-06"
 tags: radial, rose, polar, hover, blur, series-focus, emphasis-disabled, ring-gap
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
@@ -24,7 +24,7 @@ metadata:
 
 - Hovered radial **ring dims** with siblings (should stay at 1.0).
 - **Flicker** when moving between concentric rings or rose petals (per-item hit-testing across gaps).
-- **Stale bright rings** when native series focus races BeeCharts blur sync.
+- **Stale bright rings** when native series focus races NQChart blur sync.
 - Gradient fills throw if emphasis tweens — must stay instant.
 
 ## Root cause
@@ -42,7 +42,7 @@ metadata:
 | `src/registry/echarts-core/emphasis-presets.ts` | `radialBarSeriesFocus()`: `focus: "series"`, `stateAnimation.duration: 0`, `animationDurationUpdate: 0`, **`emphasis.disabled: true`**. |
 | `src/registry/echarts-core/compile-radial-bar.ts` | Spread `radialBarSeriesFocus()` on each ring/petal series (unchanged structure). |
 | `src/registry/echarts-core/radial-hover-focus.ts` | Reset all ring/petal graphics; **`enterEmphasis` on hovered series, `enterBlur` on siblings** (scatter-style). Detect rings via `series.get('coordinateSystem') === 'polar'`, not `series.stack`. `scheduleRadialHoverFocusRepair` via `queueMicrotask`. |
-| `src/registry/echarts-core/use-bee-echarts.ts` | Polar bar `mouseover` on ring series → `scheduleRadialHoverFocusRepair`; `globalout` → `resetRadialHoverFocus`. |
+| `src/registry/echarts-core/use-nq-echarts.ts` | Polar bar `mouseover` on ring series → `scheduleRadialHoverFocusRepair`; `globalout` → `resetRadialHoverFocus`. |
 
 ## Wrong fixes (rejected)
 

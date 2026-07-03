@@ -31,12 +31,12 @@ A fresh clone typechecks without running `registry:build` because `__index__.tsx
 
 ## Install namespace
 
-Users add `@beecharts/{slug}` via shadcn CLI. Registry namespace config:
+Users add `@nqchart/{slug}` via shadcn CLI. Registry namespace config:
 
 ```json
 {
   "registries": {
-    "@beecharts": "https://beecharts.vercel.app/r/{name}.json"
+    "@nqchart": "https://nqchart.vercel.app/r/{name}.json"
   }
 }
 ```

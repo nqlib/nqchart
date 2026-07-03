@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { BeeBarChart, Bar, XAxis } from "@/registry/charts/bar-chart";
+import { NQBarChart, Bar, XAxis } from "@/registry/charts/bar-chart";
 import { type ChartConfig } from "@/registry/ui/chart";
 import {
   formatMonthTickShort,
@@ -25,7 +25,7 @@ const topMonth = TRAFFIC_MONTHLY_DATA.reduce(
   TRAFFIC_MONTHLY_DATA[0],
 );
 
-export function BeeMonospaceBarChart() {
+export function NQMonospaceBarChart() {
   const data = useMemo(
     () => TRAFFIC_MONTHLY_DATA.map(({ month, desktop }) => ({ month, desktop })),
     [],
@@ -62,7 +62,7 @@ export function BeeMonospaceBarChart() {
         </div>
       </div>
       <hr className="my-4 border-t border-dashed" />
-      <BeeBarChart
+      <NQBarChart
         data={data}
         config={chartConfig}
         xDataKey="month"
@@ -72,7 +72,7 @@ export function BeeMonospaceBarChart() {
       >
         <XAxis dataKey="month" tickFormatter={formatMonthTickShort} />
         <Bar dataKey="desktop" variant="monospace" radius={0} />
-      </BeeBarChart>
+      </NQBarChart>
     </div>
   );
 }

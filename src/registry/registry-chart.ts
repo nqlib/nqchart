@@ -1,8 +1,8 @@
 import type { Registry } from "shadcn/schema";
 
-const TARGET_BASE_PATH = "components/beecharts/charts";
+const TARGET_BASE_PATH = "components/nqchart/charts";
 
-const CHART_DEPS = ["@beecharts/chart", "@beecharts/tooltip", "@beecharts/legend"];
+const CHART_DEPS = ["@nqchart/chart", "@nqchart/tooltip", "@nqchart/legend"];
 
 export const charts: Registry["items"] = [
   {

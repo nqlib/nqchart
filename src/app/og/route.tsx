@@ -4,7 +4,7 @@ export const runtime = "edge";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const title = searchParams.get("title")?.slice(0, 120) ?? "BeeCharts";
+  const title = searchParams.get("title")?.slice(0, 120) ?? "NQChart";
   const description =
     searchParams.get("description")?.slice(0, 200) ??
     "Composable React charts for dashboards and BI";
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
           >
             🐝
           </div>
-          <span style={{ fontSize: 28, fontWeight: 600 }}>BeeCharts</span>
+          <span style={{ fontSize: 28, fontWeight: 600 }}>NQChart</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div style={{ fontSize: 56, fontWeight: 700, lineHeight: 1.1, letterSpacing: -1 }}>
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
           </div>
           <div style={{ fontSize: 26, color: "#94a3b8", lineHeight: 1.4 }}>{description}</div>
         </div>
-        <div style={{ fontSize: 20, color: "#64748b" }}>beecharts.dev</div>
+        <div style={{ fontSize: 20, color: "#64748b" }}>nqchart.dev</div>
       </div>
     ),
     { width: 1200, height: 630 },

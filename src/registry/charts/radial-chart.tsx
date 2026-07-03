@@ -8,7 +8,7 @@ import { compileRadialOption } from "@/registry/echarts-core/compile-radial";
 import { segmentKeysFromData } from "@/registry/echarts-core/segment-keys";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import {
-  BeeChartLegend,
+  NQChartLegend,
   bindChartLegendLayer,
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
@@ -22,7 +22,7 @@ import { type ReactNode, useMemo, useState } from "react";
 type RadialVariant = "full" | "semi";
 type RadialLayout = "concentric" | "rose";
 
-type BeeRadialChartProps<
+type NQRadialChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -73,7 +73,7 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeeRadialChart<
+export function NQRadialChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 >({
@@ -89,7 +89,7 @@ export function BeeRadialChart<
   min,
   max,
   isLoading = false,
-}: BeeRadialChartProps<TData, TConfig>) {
+}: NQRadialChartProps<TData, TConfig>) {
   const resolvedNameKey = (nameKey ?? Object.keys(data[0] ?? {})[0] ?? "name") as string;
   const displayData = isLoading ? (getLoadingData(5) as unknown as TData[]) : data;
   const segmentKeys = useMemo(
@@ -206,7 +206,7 @@ export function Legend({
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <BeeChartLegend
+    <NQChartLegend
       variant={variant}
       align={align}
       hideIcon={hideIcon}

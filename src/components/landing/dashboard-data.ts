@@ -88,7 +88,7 @@ export const PLAN_MIX_CONFIG = {
 
 /**
  * Activation-rate gauge (radial semi). Kept on a 0–100 scale so the gauge
- * dial reads honestly — the BeeRadialChart gauge defaults to min 0 / max 100.
+ * dial reads honestly — the NQRadialChart gauge defaults to min 0 / max 100.
  */
 export const ACTIVATION_DATA = [{ series: "activation", value: 78 }];
 

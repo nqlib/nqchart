@@ -9,7 +9,7 @@ import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import type { CalendarCell } from "@/registry/lib/chart-recipes";
 import type { ReactNode } from "react";
 
-type BeeCalendarChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
+type NQCalendarChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
   children: ReactNode;
   className?: string;
@@ -21,12 +21,12 @@ function CalendarChartCanvas() {
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeeCalendarChart<TConfig extends Record<string, ChartConfig[string]>>({
+export function NQCalendarChart<TConfig extends Record<string, ChartConfig[string]>>({
   config,
   children,
   className,
   isLoading,
-}: BeeCalendarChartProps<TConfig>) {
+}: NQCalendarChartProps<TConfig>) {
   return (
     <PartRegistryProvider>
       <ChartContainer config={config} className={className} isLoading={isLoading}>

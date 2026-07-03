@@ -1,553 +1,553 @@
 "use client";
 
-import { BeeAreaChart, Area, XAxis, Grid, Legend, Tooltip } from "@/registry/charts/area-chart";
-import { BeeBarChart, Bar, XAxis as BarXAxis, Grid as BarGrid, Legend as BarLegend, Tooltip as BarTooltip } from "@/registry/charts/bar-chart";
-import { BeeScatterChart, Scatter, XAxis as ScatterXAxis, YAxis, Grid as ScatterGrid, Legend as ScatterLegend, Tooltip as ScatterTooltip } from "@/registry/charts/scatter-chart";
-import { BeeRadarChart, Radar, PolarGrid, PolarAngleAxis, Legend as RadarLegend, Tooltip as RadarTooltip } from "@/registry/charts/radar-chart";
-import { BeeFunnelChart, Stages, XAxis as FunnelXAxis, YAxis as FunnelYAxis, Legend as FunnelLegend, Tooltip as FunnelTooltip } from "@/registry/charts/funnel-chart";
-import { BeeWaterfallChart, Bars, Grid as WfGrid, XAxis as WfXAxis, YAxis as WfYAxis, Legend as WfLegend, Tooltip as WfTooltip } from "@/registry/charts/waterfall-chart";
-import { BeeTreemapChart, Tiles, Tooltip as TreemapTooltip } from "@/registry/charts/treemap-chart";
-import { BeeSparklineChart, Fill, Sparkline, Tooltip as SparkTooltip } from "@/registry/charts/sparkline-chart";
-import { BeeRadialChart, RadialBar, Tooltip as RadialTooltip, Legend as RadialLegend } from "@/registry/charts/radial-chart";
+import { NQAreaChart, Area, XAxis, Grid, Legend, Tooltip } from "@/registry/charts/area-chart";
+import { NQBarChart, Bar, XAxis as BarXAxis, Grid as BarGrid, Legend as BarLegend, Tooltip as BarTooltip } from "@/registry/charts/bar-chart";
+import { NQScatterChart, Scatter, XAxis as ScatterXAxis, YAxis, Grid as ScatterGrid, Legend as ScatterLegend, Tooltip as ScatterTooltip } from "@/registry/charts/scatter-chart";
+import { NQRadarChart, Radar, PolarGrid, PolarAngleAxis, Legend as RadarLegend, Tooltip as RadarTooltip } from "@/registry/charts/radar-chart";
+import { NQFunnelChart, Stages, XAxis as FunnelXAxis, YAxis as FunnelYAxis, Legend as FunnelLegend, Tooltip as FunnelTooltip } from "@/registry/charts/funnel-chart";
+import { NQWaterfallChart, Bars, Grid as WfGrid, XAxis as WfXAxis, YAxis as WfYAxis, Legend as WfLegend, Tooltip as WfTooltip } from "@/registry/charts/waterfall-chart";
+import { NQTreemapChart, Tiles, Tooltip as TreemapTooltip } from "@/registry/charts/treemap-chart";
+import { NQSparklineChart, Fill, Sparkline, Tooltip as SparkTooltip } from "@/registry/charts/sparkline-chart";
+import { NQRadialChart, RadialBar, Tooltip as RadialTooltip, Legend as RadialLegend } from "@/registry/charts/radial-chart";
 import { formatMonthTickShort, TRAFFIC_MONTHLY_DATA, DUAL_SERIES_CHART_CONFIG } from "@/registry/examples/example-shared";
 import { SCATTER_DESKTOP, SCATTER_MOBILE, RADAR_SKILLS_DATA, FUNNEL_DATA, FUNNEL_CONFIG, WATERFALL_DATA, WATERFALL_CONFIG, TREEMAP_DATA, TREEMAP_CONFIG, SPARKLINE_DATA, SPARKLINE_CONFIG, BROWSER_DATA, BROWSER_CONFIG, BROWSER_GRADIENT_CONFIG } from "@/registry/examples/example-datasets";
 
-export function BeeExampleAnimatedDashedStrokeAreaChart() {
+export function NQExampleAnimatedDashedStrokeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="dashed-stroke" curveType="monotone" />
       <Area dataKey="mobile" variant="dashed-stroke" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleAreaChart() {
+export function NQExampleAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleBgBubblesSparklineChart() {
+export function NQExampleBgBubblesSparklineChart() {
   return (
-    <BeeSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4" backgroundVariant="bubbles">
+    <NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4" backgroundVariant="bubbles">
       <Fill dataKey="trend" /><Sparkline dataKey="trend" /><SparkTooltip />
-    </BeeSparklineChart>
+    </NQSparklineChart>
   );
 }
 
-export function BeeExampleBubbleChart() {
+export function NQExampleBubbleChart() {
   return (
-    <BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <ScatterGrid /><ScatterXAxis /><YAxis /><ScatterLegend /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="bubble" /><Scatter dataKey="mobile" data={SCATTER_MOBILE} variant="bubble" />
-    </BeeScatterChart>
+    </NQScatterChart>
   );
 }
 
-export function BeeExampleBubbleSizedChart() {
+export function NQExampleBubbleSizedChart() {
   return (
-    <BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="bubble" />
-    </BeeScatterChart>
+    </NQScatterChart>
   );
 }
 
-export function BeeExampleBumpCurveTypeAreaChart() {
+export function NQExampleBumpCurveTypeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="bump" />
       <Area dataKey="mobile" variant="gradient" curveType="bump" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleChartConfigDefaultBarChart() {
+export function NQExampleChartConfigDefaultBarChart() {
   return (
-    <BeeBarChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month">
+    <NQBarChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month">
       <BarGrid /><BarXAxis dataKey="month" tickFormatter={formatMonthTickShort} /><BarLegend /><BarTooltip />
       <Bar dataKey="desktop" /><Bar dataKey="mobile" />
-    </BeeBarChart>
+    </NQBarChart>
   );
 }
 
-export function BeeExampleChartConfigIconsBarChart() {
+export function NQExampleChartConfigIconsBarChart() {
   return (
-    <BeeBarChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month">
+    <NQBarChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month">
       <BarGrid /><BarXAxis dataKey="month" tickFormatter={formatMonthTickShort} /><BarLegend /><BarTooltip />
       <Bar dataKey="desktop" /><Bar dataKey="mobile" />
-    </BeeBarChart>
+    </NQBarChart>
   );
 }
 
-export function BeeExampleCircleGridRadarChart() {
+export function NQExampleCircleGridRadarChart() {
   return (
-    <BeeRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <PolarGrid variant="circle" /><PolarAngleAxis dataKey="skill" /><RadarLegend isClickable /><RadarTooltip />
       <Radar dataKey="desktop" variant="filled" /><Radar dataKey="mobile" variant="filled" />
-    </BeeRadarChart>
+    </NQRadarChart>
   );
 }
 
-export function BeeExampleDashedStrokeAreaChart() {
+export function NQExampleDashedStrokeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="dashed-stroke" curveType="monotone" />
       <Area dataKey="mobile" variant="dashed-stroke" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleDefaultTypeAreaChart() {
+export function NQExampleDefaultTypeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleDottedAreaVariantAreaChart() {
+export function NQExampleDottedAreaVariantAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="dotted" curveType="monotone" />
       <Area dataKey="mobile" variant="dotted" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleExpandedTypeAreaChart() {
+export function NQExampleExpandedTypeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="percent">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="percent">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleFunnelChart() {
+export function NQExampleFunnelChart() {
   return (
-    <BeeFunnelChart data={FUNNEL_DATA} config={FUNNEL_CONFIG} className="h-full w-full p-4">
+    <NQFunnelChart data={FUNNEL_DATA} config={FUNNEL_CONFIG} className="h-full w-full p-4">
       <FunnelYAxis /><FunnelXAxis /><Stages /><FunnelLegend isClickable /><FunnelTooltip />
-    </BeeFunnelChart>
+    </NQFunnelChart>
   );
 }
 
-export function BeeExampleGlowingBubbleChart() {
+export function NQExampleGlowingBubbleChart() {
   return (
-    <BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <ScatterGrid /><ScatterXAxis /><YAxis /><ScatterLegend /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="bubble" /><Scatter dataKey="mobile" data={SCATTER_MOBILE} variant="bubble" />
-    </BeeScatterChart>
+    </NQScatterChart>
   );
 }
 
-export function BeeExampleGlowingFunnelChart() {
+export function NQExampleGlowingFunnelChart() {
   return (
-    <BeeFunnelChart data={FUNNEL_DATA} config={FUNNEL_CONFIG} className="h-full w-full p-4">
+    <NQFunnelChart data={FUNNEL_DATA} config={FUNNEL_CONFIG} className="h-full w-full p-4">
       <FunnelYAxis /><FunnelXAxis /><Stages /><FunnelLegend isClickable /><FunnelTooltip />
-    </BeeFunnelChart>
+    </NQFunnelChart>
   );
 }
 
-export function BeeExampleGlowingRadarChart() {
+export function NQExampleGlowingRadarChart() {
   return (
-    <BeeRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <PolarGrid variant="polygon" /><PolarAngleAxis dataKey="skill" /><RadarLegend isClickable /><RadarTooltip />
       <Radar dataKey="desktop" variant="glowing" /><Radar dataKey="mobile" variant="filled" />
-    </BeeRadarChart>
+    </NQRadarChart>
   );
 }
 
-export function BeeExampleGlowingRadialChart() {
+export function NQExampleGlowingRadialChart() {
   return (
-    <BeeRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4">
+    <NQRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4">
       <RadialLegend isClickable />
       <RadialTooltip />
       <RadialBar dataKey="visitors" glowingBars={["chrome", "safari", "firefox"]} />
-    </BeeRadialChart>
+    </NQRadialChart>
   );
 }
 
 
-export function BeeExampleGlowingScatterChart() {
+export function NQExampleGlowingScatterChart() {
   return (
-    <BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <ScatterGrid /><ScatterXAxis dataKey="x" /><YAxis dataKey="y" /><ScatterLegend isClickable /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="glowing" />
       <Scatter dataKey="mobile" data={SCATTER_MOBILE} />
-    </BeeScatterChart>
+    </NQScatterChart>
   );
 }
 
-export function BeeExampleGlowingSparklineChart() {
+export function NQExampleGlowingSparklineChart() {
   return (
-    <BeeSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
+    <NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
       <Fill dataKey="trend" /><Sparkline dataKey="trend" /><SparkTooltip />
-    </BeeSparklineChart>
+    </NQSparklineChart>
   );
 }
 
-export function BeeExampleGlowingTreemapChart() {
+export function NQExampleGlowingTreemapChart() {
   return (
-    <BeeTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4">
+    <NQTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4">
       <Tiles glowingTiles={["Frontend", "Sales"]} showLabels />
       <TreemapTooltip />
-    </BeeTreemapChart>
+    </NQTreemapChart>
   );
 }
 
-export function BeeExampleGlowingWaterfallChart() {
+export function NQExampleGlowingWaterfallChart() {
   return (
-    <BeeWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4">
+    <NQWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4">
       <WfGrid /><WfXAxis /><WfYAxis /><Bars /><WfLegend /><WfTooltip />
-    </BeeWaterfallChart>
+    </NQWaterfallChart>
   );
 }
 
-export function BeeExampleGradientAreaVariantAreaChart() {
+export function NQExampleGradientAreaVariantAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleGradientColorsAreaChart() {
+export function NQExampleGradientColorsAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleGradientColorsBarChart() {
+export function NQExampleGradientColorsBarChart() {
   return (
-    <BeeBarChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month">
+    <NQBarChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month">
       <BarGrid /><BarXAxis dataKey="month" tickFormatter={formatMonthTickShort} /><BarLegend /><BarTooltip />
       <Bar dataKey="desktop" /><Bar dataKey="mobile" />
-    </BeeBarChart>
+    </NQBarChart>
   );
 }
 
-export function BeeExampleGradientColorsBumpAreaChart() {
+export function NQExampleGradientColorsBumpAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleGradientColorsRadarChart() {
+export function NQExampleGradientColorsRadarChart() {
   return (
-    <BeeRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <PolarGrid variant="polygon" /><PolarAngleAxis dataKey="skill" /><RadarLegend isClickable /><RadarTooltip />
       <Radar dataKey="desktop" variant="filled" /><Radar dataKey="mobile" variant="filled" />
-    </BeeRadarChart>
+    </NQRadarChart>
   );
 }
 
-export function BeeExampleGradientColorsRadialChart() {
+export function NQExampleGradientColorsRadialChart() {
   return (
-    <BeeRadialChart data={BROWSER_DATA} config={BROWSER_GRADIENT_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4">
+    <NQRadialChart data={BROWSER_DATA} config={BROWSER_GRADIENT_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4">
       <RadialLegend isClickable />
       <RadialTooltip />
       <RadialBar dataKey="visitors" />
-    </BeeRadialChart>
+    </NQRadialChart>
   );
 }
 
 
-export function BeeExampleGradientColorsScatterChart() {
+export function NQExampleGradientColorsScatterChart() {
   return (
-    <BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <ScatterGrid /><ScatterXAxis dataKey="x" /><YAxis dataKey="y" /><ScatterLegend isClickable /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="default" />
       <Scatter dataKey="mobile" data={SCATTER_MOBILE} />
-    </BeeScatterChart>
+    </NQScatterChart>
   );
 }
 
-export function BeeExampleGradientReverseAreaVariantAreaChart() {
+export function NQExampleGradientReverseAreaVariantAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleHatchedAreaVariantAreaChart() {
+export function NQExampleHatchedAreaVariantAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="hatched" curveType="monotone" />
       <Area dataKey="mobile" variant="hatched" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
 
-export function BeeExampleLinesAreaVariantAreaChart() {
+export function NQExampleLinesAreaVariantAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="lines" curveType="monotone" />
       <Area dataKey="mobile" variant="lines" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleLinesVariantRadarChart() {
+export function NQExampleLinesVariantRadarChart() {
   return (
-    <BeeRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <PolarGrid variant="polygon" /><PolarAngleAxis dataKey="skill" /><RadarLegend isClickable /><RadarTooltip />
       <Radar dataKey="desktop" variant="lines" /><Radar dataKey="mobile" variant="filled" />
-    </BeeRadarChart>
+    </NQRadarChart>
   );
 }
 
-export function BeeExampleLoadingStateAreaChart() {
+export function NQExampleLoadingStateAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default" isLoading>
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default" isLoading>
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleLoadingStateBubbleChart() {
+export function NQExampleLoadingStateBubbleChart() {
   return (
-    <BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" isLoading>
+    <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" isLoading>
       <ScatterGrid /><ScatterXAxis /><YAxis /><ScatterLegend /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="bubble" /><Scatter dataKey="mobile" data={SCATTER_MOBILE} variant="bubble" />
-    </BeeScatterChart>
+    </NQScatterChart>
   );
 }
 
-export function BeeExampleLoadingStateFunnelChart() {
+export function NQExampleLoadingStateFunnelChart() {
   return (
-    <BeeFunnelChart data={FUNNEL_DATA} config={FUNNEL_CONFIG} className="h-full w-full p-4" isLoading>
+    <NQFunnelChart data={FUNNEL_DATA} config={FUNNEL_CONFIG} className="h-full w-full p-4" isLoading>
       <FunnelYAxis /><FunnelXAxis /><Stages /><FunnelLegend isClickable /><FunnelTooltip />
-    </BeeFunnelChart>
+    </NQFunnelChart>
   );
 }
 
-export function BeeExampleLoadingStateGaugeChart() {
+export function NQExampleLoadingStateGaugeChart() {
   return (
-    <BeeRadialChart data={[{ series: "score", value: 72 }]} config={{ score: { label: "NPS", colors: { light: ["#3b82f6","#10b981"], dark: ["#60a5fa","#34d399"] } } }} nameKey="series" variant="semi" className="h-full w-full p-4" isLoading><RadialTooltip /><RadialBar dataKey="value" /></BeeRadialChart>
+    <NQRadialChart data={[{ series: "score", value: 72 }]} config={{ score: { label: "NPS", colors: { light: ["#3b82f6","#10b981"], dark: ["#60a5fa","#34d399"] } } }} nameKey="series" variant="semi" className="h-full w-full p-4" isLoading><RadialTooltip /><RadialBar dataKey="value" /></NQRadialChart>
   );
 }
 
-export function BeeExampleLoadingStateRadarChart() {
+export function NQExampleLoadingStateRadarChart() {
   return (
-    <BeeRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" isLoading>
+    <NQRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" isLoading>
       <PolarGrid variant="polygon" /><PolarAngleAxis dataKey="skill" /><RadarLegend isClickable /><RadarTooltip />
       <Radar dataKey="desktop" variant="filled" /><Radar dataKey="mobile" variant="filled" />
-    </BeeRadarChart>
+    </NQRadarChart>
   );
 }
 
-export function BeeExampleLoadingStateRadialChart() {
+export function NQExampleLoadingStateRadialChart() {
   return (
-    <BeeRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4" isLoading><RadialLegend isClickable /><RadialTooltip /><RadialBar dataKey="visitors" /></BeeRadialChart>
+    <NQRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4" isLoading><RadialLegend isClickable /><RadialTooltip /><RadialBar dataKey="visitors" /></NQRadialChart>
   );
 }
 
 
-export function BeeExampleLoadingStateScatterChart() {
+export function NQExampleLoadingStateScatterChart() {
   return (
-    <BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" isLoading>
+    <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" isLoading>
       <ScatterGrid /><ScatterXAxis dataKey="x" /><YAxis dataKey="y" /><ScatterLegend isClickable /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="default" />
       <Scatter dataKey="mobile" data={SCATTER_MOBILE} />
-    </BeeScatterChart>
+    </NQScatterChart>
   );
 }
 
-export function BeeExampleLoadingStateSparklineChart() {
+export function NQExampleLoadingStateSparklineChart() {
   return (
-    <BeeSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4" isLoading>
+    <NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4" isLoading>
       <Fill dataKey="trend" /><Sparkline dataKey="trend" /><SparkTooltip />
-    </BeeSparklineChart>
+    </NQSparklineChart>
   );
 }
 
-export function BeeExampleLoadingStateTreemapChart() {
+export function NQExampleLoadingStateTreemapChart() {
   return (
-    <BeeTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4" isLoading><Tiles /><TreemapTooltip /></BeeTreemapChart>
+    <NQTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4" isLoading><Tiles /><TreemapTooltip /></NQTreemapChart>
   );
 }
 
-export function BeeExampleLoadingStateWaterfallChart() {
+export function NQExampleLoadingStateWaterfallChart() {
   return (
-    <BeeWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4" isLoading>
+    <NQWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4" isLoading>
       <WfGrid /><WfXAxis /><WfYAxis /><Bars /><WfLegend /><WfTooltip />
-    </BeeWaterfallChart>
+    </NQWaterfallChart>
   );
 }
 
-export function BeeExampleMonotoneyCurveTypeAreaChart() {
+export function NQExampleMonotoneyCurveTypeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="bump" />
       <Area dataKey="mobile" variant="gradient" curveType="bump" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
 
-export function BeeExampleRadarChart() {
+export function NQExampleRadarChart() {
   return (
-    <BeeRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQRadarChart data={[...RADAR_SKILLS_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <PolarGrid variant="polygon" /><PolarAngleAxis dataKey="skill" /><RadarLegend isClickable /><RadarTooltip />
       <Radar dataKey="desktop" variant="filled" /><Radar dataKey="mobile" variant="filled" />
-    </BeeRadarChart>
+    </NQRadarChart>
   );
 }
 
-export function BeeExampleRadialChart() {
+export function NQExampleRadialChart() {
   return (
-    <BeeRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4"><RadialLegend isClickable /><RadialTooltip /><RadialBar dataKey="visitors" /></BeeRadialChart>
+    <NQRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4"><RadialLegend isClickable /><RadialTooltip /><RadialBar dataKey="visitors" /></NQRadialChart>
   );
 }
 
 
-export function BeeExampleScatterChart() {
+export function NQExampleScatterChart() {
   return (
-    <BeeScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
+    <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
       <ScatterGrid /><ScatterXAxis dataKey="x" /><YAxis dataKey="y" /><ScatterLegend isClickable /><ScatterTooltip />
       <Scatter dataKey="desktop" data={SCATTER_DESKTOP} variant="default" />
       <Scatter dataKey="mobile" data={SCATTER_MOBILE} />
-    </BeeScatterChart>
+    </NQScatterChart>
   );
 }
 
-export function BeeExampleSemiVariantRadialChart() {
+export function NQExampleSemiVariantRadialChart() {
   return (
-    <BeeRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="semi" className="h-full w-full p-4"><RadialLegend isClickable /><RadialTooltip /><RadialBar dataKey="visitors" /></BeeRadialChart>
+    <NQRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="semi" className="h-full w-full p-4"><RadialLegend isClickable /><RadialTooltip /><RadialBar dataKey="visitors" /></NQRadialChart>
   );
 }
 
-export function BeeExampleRoseRadialChart() {
+export function NQExampleRoseRadialChart() {
   return (
-    <BeeRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" layout="rose" className="h-full w-full p-4">
+    <NQRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" layout="rose" className="h-full w-full p-4">
       <RadialLegend isClickable />
       <RadialTooltip />
       <RadialBar dataKey="visitors" />
-    </BeeRadialChart>
+    </NQRadialChart>
   );
 }
 
-export function BeeExampleSolidAreaVariantAreaChart() {
+export function NQExampleSolidAreaVariantAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="solid" curveType="monotone" />
       <Area dataKey="mobile" variant="solid" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
 
 
-export function BeeExampleSolidStrokeAreaChart() {
+export function NQExampleSolidStrokeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
 
-export function BeeExampleSparklineAreaChart() {
+export function NQExampleSparklineAreaChart() {
   return (
-    <BeeSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
+    <NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
       <Fill dataKey="trend" />
       <Sparkline dataKey="trend" />
       <SparkTooltip />
-    </BeeSparklineChart>
+    </NQSparklineChart>
   );
 }
 
-export function BeeExampleSparklineChart() {
+export function NQExampleSparklineChart() {
   return (
-    <BeeSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
+    <NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
       <Fill dataKey="trend" /><Sparkline dataKey="trend" /><SparkTooltip />
-    </BeeSparklineChart>
+    </NQSparklineChart>
   );
 }
 
-export function BeeExampleStackedTypeAreaChart() {
+export function NQExampleStackedTypeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="stacked">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="stacked">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="monotone" />
       <Area dataKey="mobile" variant="gradient" curveType="monotone" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleStepCurveTypeAreaChart() {
+export function NQExampleStepCurveTypeAreaChart() {
   return (
-    <BeeAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
+    <NQAreaChart data={[...TRAFFIC_MONTHLY_DATA]} config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4" xDataKey="month" stackType="default">
       <Grid /><XAxis dataKey="month" tickFormatter={formatMonthTickShort} /><Legend isClickable /><Tooltip />
       <Area dataKey="desktop" variant="gradient" curveType="step" />
       <Area dataKey="mobile" variant="gradient" curveType="step" />
-    </BeeAreaChart>
+    </NQAreaChart>
   );
 }
 
-export function BeeExampleTreemapChart() {
+export function NQExampleTreemapChart() {
   return (
-    <BeeTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4"><Tiles /><TreemapTooltip /></BeeTreemapChart>
+    <NQTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4"><Tiles /><TreemapTooltip /></NQTreemapChart>
   );
 }
 
-export function BeeExampleWaterfallChart() {
+export function NQExampleWaterfallChart() {
   return (
-    <BeeWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4">
+    <NQWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4">
       <WfGrid /><WfXAxis /><WfYAxis /><Bars /><WfLegend /><WfTooltip />
-    </BeeWaterfallChart>
+    </NQWaterfallChart>
   );
 }
 
-export function BeeExampleSparklineEndDotChart() {
+export function NQExampleSparklineEndDotChart() {
   return (
-    <BeeSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
+    <NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
       <Sparkline dataKey="trend" />
       <SparkTooltip />
-    </BeeSparklineChart>
+    </NQSparklineChart>
   );
 }
 
-export function BeeExampleSparklineReferenceBandChart() {
+export function NQExampleSparklineReferenceBandChart() {
   return (
-    <BeeSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
+    <NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
       <Fill dataKey="trend" />
       <Sparkline dataKey="trend" />
       <SparkTooltip />
-    </BeeSparklineChart>
+    </NQSparklineChart>
   );
 }
 

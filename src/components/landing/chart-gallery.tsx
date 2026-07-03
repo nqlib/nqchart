@@ -39,7 +39,7 @@ export function ChartGallery() {
         <h2 className="text-xl font-semibold tracking-tight">Every chart, one composable API</h2>
         <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">
           Eleven chart families and counting — each built from the same{" "}
-          <code className="text-foreground font-mono text-[13px]">{"Bee*Chart"}</code> primitives.
+          <code className="text-foreground font-mono text-[13px]">{"NQ*Chart"}</code> primitives.
           Pick one to read its docs and copy the source.
         </p>
       </div>

@@ -1,5 +1,5 @@
 import type { CustomSeriesOption, CustomSeriesRenderItemAPI, CustomSeriesRenderItemParams } from "echarts";
-import { BEE_MONOSPACE_SERIES_ID, CHART_ANIMATION } from "./chart-animation-tokens";
+import { NQ_MONOSPACE_SERIES_ID, CHART_ANIMATION } from "./chart-animation-tokens";
 import type { BarSeriesPart, CompileContext } from "./parts/types";
 
 /** [categoryIndex, value, foldScale, showLabel] */
@@ -48,18 +48,18 @@ function renderMonospaceBarItem(
 
   return {
     type: "group" as const,
-    id: `bee-ms-group-${categoryIndex}`,
+    id: `nq-ms-group-${categoryIndex}`,
     children: [
       {
         type: "rect",
-        id: `bee-ms-hit-${categoryIndex}`,
+        id: `nq-ms-hit-${categoryIndex}`,
         shape: { x: hitX, y, width: bandWidth, height },
         style: { fill: "transparent" },
         z2: 0,
       },
       {
         type: "rect",
-        id: `bee-ms-bar-${categoryIndex}`,
+        id: `nq-ms-bar-${categoryIndex}`,
         shape: { x: barX, y, width: visualWidth, height, r: 0 },
         style: api.style({ fill: color }),
         silent: true,
@@ -67,7 +67,7 @@ function renderMonospaceBarItem(
       },
       {
         type: "text",
-        id: `bee-ms-label-${categoryIndex}`,
+        id: `nq-ms-label-${categoryIndex}`,
         silent: true,
         style: {
           text: String(value),
@@ -107,9 +107,9 @@ export function buildMonospaceCustomSeries(
 
   return {
     type: "custom",
-    id: BEE_MONOSPACE_SERIES_ID,
+    id: NQ_MONOSPACE_SERIES_ID,
     name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
-    beeMonospace: true,
+    nqMonospace: true,
     clip: true,
     coordinateSystem: "cartesian2d",
     dimensions: ["x", "value", "foldScale", "showLabel"],

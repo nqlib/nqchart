@@ -3,7 +3,7 @@ title: Heatmap Chart
 description: Categorical heatmaps for session grids, correlation matrices, and intensity maps — powered by Apache ECharts
 image: /og/heatmap-chart.png
 links:
-  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/heatmap-chart.tsx
+  github: https://github.com/ctesibius/nqchart/blob/main/src/registry/charts/heatmap-chart.tsx
   doc: https://echarts.apache.org/en/option.html#series-heatmap
   api: https://echarts.apache.org/en/option.html#series-heatmap
 ---
@@ -18,7 +18,7 @@ links:
     <TabsTab value="manual">Manual</TabsTab>
   </TabsList>
   <TabsPanel value="cli">
-    <CliBlock commands={["@beecharts/heatmap-chart", "@beecharts/chart-recipes"]} />
+    <CliBlock commands={["@nqchart/heatmap-chart", "@nqchart/chart-recipes"]} />
   </TabsPanel>
   <TabsPanel value="manual">
     <Steps>
@@ -31,34 +31,34 @@ links:
       <Step>
         <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
          <StepDescription>
-          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          To use the chart, first create the folder `nqchart` and a subfolder called `charts` inside your `components` directory.
           Then, copy the following base heatmap-chart code into a new file in that folder.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="heatmap-chart"
-            title="components/beecharts/charts/heatmap-chart.tsx"
+            title="components/nqchart/charts/heatmap-chart.tsx"
           />
         </StepContent>
       </Step>
        <Step>
         <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
         <StepDescription>
-          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `nqchart` folder and paste the code there.
 
           Below is main chart component.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="chart"
-            title="components/beecharts/ui/chart.tsx"
+            title="components/nqchart/ui/chart.tsx"
           />
         </StepContent>
       </Step>
        <Step>
         <StepTitle>Add the chart-recipes helper.</StepTitle>
         <StepDescription>
-          Copy `chart-recipes.ts` into your project (or install `@beecharts/chart-recipes`) so you can flatten row × column matrices with `prepareHeatmapCells()`.
+          Copy `chart-recipes.ts` into your project (or install `@nqchart/chart-recipes`) so you can flatten row × column matrices with `prepareHeatmapCells()`.
         </StepDescription>
         <StepContent>
           <ComponentSource
@@ -73,15 +73,15 @@ links:
 
 ## Usage
 
-The heatmap chart is composible. `<BeeHeatmapChart>` is the container — pass a `chartConfig` whose keys match your intensity series. Flatten a row × column matrix with `prepareHeatmapCells()`, then compose `<Heatmap />` with the resulting cells and optional axis labels. Add `<Tooltip />` and `<Legend />` when you want the shared BeeCharts chrome.
+The heatmap chart is composible. `<NQHeatmapChart>` is the container — pass a `chartConfig` whose keys match your intensity series. Flatten a row × column matrix with `prepareHeatmapCells()`, then compose `<Heatmap />` with the resulting cells and optional axis labels. Add `<Tooltip />` and `<Legend />` when you want the shared NQChart chrome.
 
 ```tsx
 import {
-  BeeHeatmapChart,
+  NQHeatmapChart,
   Heatmap,
   Tooltip,
   Legend,
-} from "@/components/beecharts/charts/heatmap-chart";
+} from "@/components/nqchart/charts/heatmap-chart";
 import { prepareHeatmapCells } from "@/lib/chart-recipes";
 ```
 
@@ -108,7 +108,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-<BeeHeatmapChart config={chartConfig} className="h-80 w-full">
+<NQHeatmapChart config={chartConfig} className="h-80 w-full">
   <Heatmap
     dataKey="intensity"
     data={cells}
@@ -119,7 +119,7 @@ const chartConfig = {
   />
   <Legend />
   <Tooltip />
-</BeeHeatmapChart>
+</NQHeatmapChart>
 ```
 
 `prepareHeatmapCells()` returns flat `{ row, col, x, y, value }` cells plus computed `min` / `max` for the visual map. Pass explicit `min` and `max` when you need a fixed scale across refreshes (for example, comparing weeks).
@@ -154,7 +154,7 @@ Employee × day utilization for capacity planning — see also the [calendar cha
 
 The chart is composed of a root container and declarative parts. Render the root, then compose the slots you need as children.
 
-<ApiHeading>BeeHeatmapChart</ApiHeading>
+<ApiHeading>NQHeatmapChart</ApiHeading>
 
 The root container. Owns `chartConfig`, the ECharts canvas, and the part registry that compiles heatmap options.
 
@@ -197,8 +197,8 @@ Registers matrix cells and axis labels with the ECharts compiler. Renders no DOM
 
 <ApiHeading>Tooltip</ApiHeading>
 
-Enables the shared BeeCharts HTML tooltip layer when composed.
+Enables the shared NQChart HTML tooltip layer when composed.
 
 <ApiHeading>Legend</ApiHeading>
 
-Hides the built-in ECharts legend and reserves space for the shared BeeCharts legend chrome when composed.
+Hides the built-in ECharts legend and reserves space for the shared NQChart legend chrome when composed.

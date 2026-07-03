@@ -1,4 +1,4 @@
-# Plans index — beecharts improvement program
+# Plans index — nqchart improvement program
 
 Written by an advisor session on **2026-06-10** against commit **`f43ccf9`** (branch `landing-redesign-and-theme`). Each plan is self-contained: an executor needs no other context. Plans were selected non-interactively as the top findings by leverage (impact ÷ effort, weighted by confidence) — the user did not pick a subset; adjust if priorities differ.
 

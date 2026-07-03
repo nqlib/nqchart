@@ -1,6 +1,6 @@
 "use client";
 
-import { BeeBarChart, Bar, Grid, XAxis, YAxis, Tooltip, Legend } from "@/registry/charts/bar-chart";
+import { NQBarChart, Bar, Grid, XAxis, YAxis, Tooltip, Legend } from "@/registry/charts/bar-chart";
 import { binForHistogram } from "@/registry/lib/chart-recipes";
 import { type ChartConfig } from "@/registry/ui/chart";
 
@@ -21,9 +21,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BeeExampleHistogramChart() {
+export function NQExampleHistogramChart() {
   return (
-    <BeeBarChart
+    <NQBarChart
       config={chartConfig}
       data={data}
       xDataKey="bin"
@@ -37,6 +37,6 @@ export function BeeExampleHistogramChart() {
       <Legend />
       <Tooltip />
       <Bar dataKey="count" />
-    </BeeBarChart>
+    </NQBarChart>
   );
 }

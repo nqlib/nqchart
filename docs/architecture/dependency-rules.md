@@ -4,7 +4,7 @@
 
 **`src/registry/**` must NOT import from `src/components/**`.**
 
-Registry items ship as standalone files via `shadcn add @beecharts/*`. Site-internal shadcn primitives live in `src/components/ui/` and are not exported.
+Registry items ship as standalone files via `shadcn add @nqchart/*`. Site-internal shadcn primitives live in `src/components/ui/` and are not exported.
 
 Verify:
 

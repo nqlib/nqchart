@@ -19,5 +19,5 @@
   <circle cx="21.2" cy="4.8" r="1.5" fill="white"/>
   <circle cx="26.8" cy="4.8" r="1.5" fill="white"/>
   <path d="M24 38L22 42.5H26L24 38Z" fill="white"/>
-  <text x="58" y="32" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" letter-spacing="-0.02em">BeeCharts</text>
+  <text x="58" y="32" fill="white" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" letter-spacing="-0.02em">NQChart</text>
 </svg>

@@ -1,9 +1,9 @@
 ---
 title: Hover Focus
-description: The single hover-focus system every BeeChart follows — one contract, no per-chart guesswork
+description: The single hover-focus system every NQChart follows — one contract, no per-chart guesswork
 ---
 
-Every BeeChart uses the **same** hover behavior. There is one contract, applied
+Every NQChart uses the **same** hover behavior. There is one contract, applied
 uniformly; individual charts do not invent their own hover animation.
 
 ## The contract
@@ -17,7 +17,7 @@ On hover:
 
 That's it. Whether it's a bar, a pie slice, or a radar polygon, the hovered thing
 stays bright and the rest fade back. The single source of truth is
-[`emphasis-presets.ts`](https://github.com/nqlib/beecharts/blob/main/src/registry/echarts-core/emphasis-presets.ts).
+[`emphasis-presets.ts`](https://github.com/nqlib/nqchart/blob/main/src/registry/echarts-core/emphasis-presets.ts).
 
 ## Two mappings, one contract
 
@@ -82,7 +82,7 @@ polar bars now follow the full dim-to-`0.2` contract — see "Series focus" abov
 HTML tooltips render over the canvas. To stop the pointer from ever landing on the
 tooltip DOM (which would bounce hover on/off), the tooltip is `pointer-events: none`,
 offset from the cursor, and uses `transitionDuration: 0`. See
-[`echarts-tooltip.ts`](https://github.com/nqlib/beecharts/blob/main/src/registry/echarts-core/echarts-tooltip.ts).
+[`echarts-tooltip.ts`](https://github.com/nqlib/nqchart/blob/main/src/registry/echarts-core/echarts-tooltip.ts).
 
 ## Adding or changing a chart
 

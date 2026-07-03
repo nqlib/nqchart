@@ -1,7 +1,7 @@
 "use client";
 
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
-import { BeeChartBrush } from "@/registry/echarts-core/bee-chart-brush";
+import { NQChartBrush } from "@/registry/echarts-core/nq-chart-brush";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
@@ -152,7 +152,7 @@ export function createCartesianChart<
           isLoading={isLoading}
           footer={
             showBrush && !isLoading ? (
-              <BeeChartBrush
+              <NQChartBrush
                 data={displayData}
                 compile={compile}
                 rootFields={getRootFields(merged, xKey)}

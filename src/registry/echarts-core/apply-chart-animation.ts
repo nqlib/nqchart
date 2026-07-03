@@ -11,7 +11,7 @@ import {
 type SeriesLike = Record<string, unknown> & {
   type?: string;
   data?: unknown;
-  beeMonospace?: boolean;
+  nqMonospace?: boolean;
   coordinateSystem?: string;
 };
 
@@ -156,7 +156,7 @@ function seriesIntroAnimation(series: SeriesLike, seriesIndex: number): SeriesLi
         animationDelay: createStaggerDelay(CHART_ANIMATION.waterfall.staggerMs),
       };
     case "custom":
-      if (base.beeMonospace) {
+      if (base.nqMonospace) {
         return { ...base, ...monospaceSeriesAnimationFields() };
       }
       return {
@@ -169,7 +169,7 @@ function seriesIntroAnimation(series: SeriesLike, seriesIndex: number): SeriesLi
         ),
       };
     default:
-      if (base.beeMonospace) {
+      if (base.nqMonospace) {
         return { ...base, ...monospaceSeriesAnimationFields() };
       }
       return {

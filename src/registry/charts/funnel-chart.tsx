@@ -7,14 +7,14 @@ import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/ech
 import { compileFunnelOption } from "@/registry/echarts-core/compile-funnel";
 import type { FunnelConnection, FunnelTaper } from "@/registry/echarts-core/parts/types";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
-import { BeeChartLegend } from "@/registry/ui/legend";
+import { NQChartLegend } from "@/registry/ui/legend";
 import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
 export type { FunnelConnection, FunnelTaper };
 
-type BeeFunnelChartProps<
+type NQFunnelChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -61,7 +61,7 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeeFunnelChart<
+export function NQFunnelChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 >({
@@ -75,7 +75,7 @@ export function BeeFunnelChart<
   stageGap,
   connection,
   taper,
-}: BeeFunnelChartProps<TData, TConfig>) {
+}: NQFunnelChartProps<TData, TConfig>) {
   const displayData = isLoading ? (getLoadingData(4) as unknown as TData[]) : data;
   return (
     <PartRegistryProvider>
@@ -145,6 +145,6 @@ export function Legend(props: { isClickable?: boolean }) {
   useRegisterPart({ type: "legend", id, isClickable: props.isClickable });
   const [selected, setSelected] = useState<string | null>(null);
   return (
-    <BeeChartLegend isClickable={props.isClickable} selected={selected} onSelectChange={setSelected} />
+    <NQChartLegend isClickable={props.isClickable} selected={selected} onSelectChange={setSelected} />
   );
 }

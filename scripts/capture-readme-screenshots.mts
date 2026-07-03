@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Capture README marketing screenshots from a running BeeCharts site.
+ * Capture README marketing screenshots from a running NQChart site.
  *
  * Usage:
  *   pnpm build && pnpm start &   # terminal 1
  *   pnpm capture:readme          # terminal 2
  *
  * Or point at any deployed URL:
- *   BASE_URL=https://beecharts.vercel.app pnpm capture:readme
+ *   BASE_URL=https://nqchart.vercel.app pnpm capture:readme
  */
 import { spawn, type ChildProcess } from "node:child_process";
 import { mkdir } from "node:fs/promises";

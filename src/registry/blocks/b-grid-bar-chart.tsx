@@ -66,7 +66,7 @@ function renderSquareColumn(
   });
 }
 
-export function BeeGridBarChart() {
+export function NQGridBarChart() {
   const total = chartData.reduce((sum, item) => sum + item.desktop, 0);
   const maxData = chartData.reduce(
     (max, item, index) =>

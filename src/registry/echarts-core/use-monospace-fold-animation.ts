@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { EChartsType } from "echarts/core";
 import {
-  BEE_MONOSPACE_SERIES_ID,
+  NQ_MONOSPACE_SERIES_ID,
   CHART_ANIMATION,
   monospaceFoldPatchFields,
   monospaceTargetScale,
@@ -33,7 +33,7 @@ function patchMonospaceSeries(chart: EChartsType, data: MonospaceDataRow[]) {
     {
       series: [
         {
-          id: BEE_MONOSPACE_SERIES_ID,
+          id: NQ_MONOSPACE_SERIES_ID,
           ...monospaceFoldPatchFields(),
           dimensions: ["x", "value", "foldScale", "showLabel"],
           encode: { x: 0, y: 1 },

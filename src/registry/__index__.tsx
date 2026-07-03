@@ -15,7 +15,7 @@ export const Index: Record<string, any> = {
     files: [{
       path: "@/registry/ui/chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/ui/chart.tsx"
+      target: "components/nqchart/ui/chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/ui/chart.tsx")
@@ -33,7 +33,7 @@ export const Index: Record<string, any> = {
     files: [{
       path: "@/registry/ui/tooltip.tsx",
       type: "registry:component",
-      target: "components/beecharts/ui/tooltip.tsx"
+      target: "components/nqchart/ui/tooltip.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/ui/tooltip.tsx")
@@ -51,7 +51,7 @@ export const Index: Record<string, any> = {
     files: [{
       path: "@/registry/ui/legend.tsx",
       type: "registry:component",
-      target: "components/beecharts/ui/legend.tsx"
+      target: "components/nqchart/ui/legend.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/ui/legend.tsx")
@@ -69,7 +69,7 @@ export const Index: Record<string, any> = {
     files: [{
       path: "@/registry/ui/dot.tsx",
       type: "registry:component",
-      target: "components/beecharts/ui/dot.tsx"
+      target: "components/nqchart/ui/dot.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/ui/dot.tsx")
@@ -79,19 +79,19 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
-  "bee-brush": {
-    name: "bee-brush",
+  "nq-brush": {
+    name: "nq-brush",
     description: "",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart"],
+    registryDependencies: ["@nqchart/chart"],
     files: [{
-      path: "@/registry/ui/bee-brush.tsx",
+      path: "@/registry/ui/nq-brush.tsx",
       type: "registry:component",
-      target: "components/beecharts/ui/bee-brush.tsx"
+      target: "components/nqchart/ui/nq-brush.tsx"
     }],
     component: React.lazy(async () => {
-      const mod = await import("@/registry/ui/bee-brush.tsx")
-      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "bee-brush"
+      const mod = await import("@/registry/ui/nq-brush.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "nq-brush"
       return { default: mod.default || mod[exportName] }
     }),
     categories: undefined,
@@ -105,7 +105,7 @@ export const Index: Record<string, any> = {
     files: [{
       path: "@/registry/ui/background.tsx",
       type: "registry:component",
-      target: "components/beecharts/ui/background.tsx"
+      target: "components/nqchart/ui/background.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/ui/background.tsx")
@@ -119,11 +119,11 @@ export const Index: Record<string, any> = {
     name: "bar-chart",
     description: "Bar chart (ECharts engine, compound API)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/bar-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/bar-chart.tsx"
+      target: "components/nqchart/charts/bar-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/bar-chart.tsx")
@@ -137,11 +137,11 @@ export const Index: Record<string, any> = {
     name: "line-chart",
     description: "Line chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/line-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/line-chart.tsx"
+      target: "components/nqchart/charts/line-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/line-chart.tsx")
@@ -155,11 +155,11 @@ export const Index: Record<string, any> = {
     name: "composed-chart",
     description: "Composed bar + line chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/composed-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/composed-chart.tsx"
+      target: "components/nqchart/charts/composed-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/composed-chart.tsx")
@@ -173,11 +173,11 @@ export const Index: Record<string, any> = {
     name: "pie-chart",
     description: "Pie / donut chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/pie-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/pie-chart.tsx"
+      target: "components/nqchart/charts/pie-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/pie-chart.tsx")
@@ -191,11 +191,11 @@ export const Index: Record<string, any> = {
     name: "heatmap-chart",
     description: "Heatmap chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/heatmap-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/heatmap-chart.tsx"
+      target: "components/nqchart/charts/heatmap-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/heatmap-chart.tsx")
@@ -209,11 +209,11 @@ export const Index: Record<string, any> = {
     name: "calendar-chart",
     description: "Calendar heatmap chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/calendar-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/calendar-chart.tsx"
+      target: "components/nqchart/charts/calendar-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/calendar-chart.tsx")
@@ -227,11 +227,11 @@ export const Index: Record<string, any> = {
     name: "radial-chart",
     description: "Radial / gauge chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/radial-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/radial-chart.tsx"
+      target: "components/nqchart/charts/radial-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/radial-chart.tsx")
@@ -245,11 +245,11 @@ export const Index: Record<string, any> = {
     name: "area-chart",
     description: "Area chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/area-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/area-chart.tsx"
+      target: "components/nqchart/charts/area-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/area-chart.tsx")
@@ -263,11 +263,11 @@ export const Index: Record<string, any> = {
     name: "scatter-chart",
     description: "Scatter / bubble chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/scatter-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/scatter-chart.tsx"
+      target: "components/nqchart/charts/scatter-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/scatter-chart.tsx")
@@ -281,11 +281,11 @@ export const Index: Record<string, any> = {
     name: "radar-chart",
     description: "Radar chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/radar-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/radar-chart.tsx"
+      target: "components/nqchart/charts/radar-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/radar-chart.tsx")
@@ -299,11 +299,11 @@ export const Index: Record<string, any> = {
     name: "funnel-chart",
     description: "Funnel chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/funnel-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/funnel-chart.tsx"
+      target: "components/nqchart/charts/funnel-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/funnel-chart.tsx")
@@ -317,11 +317,11 @@ export const Index: Record<string, any> = {
     name: "waterfall-chart",
     description: "Waterfall chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/waterfall-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/waterfall-chart.tsx"
+      target: "components/nqchart/charts/waterfall-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/waterfall-chart.tsx")
@@ -335,11 +335,11 @@ export const Index: Record<string, any> = {
     name: "treemap-chart",
     description: "Treemap chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/treemap-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/treemap-chart.tsx"
+      target: "components/nqchart/charts/treemap-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/treemap-chart.tsx")
@@ -353,11 +353,11 @@ export const Index: Record<string, any> = {
     name: "sparkline-chart",
     description: "Sparkline chart (ECharts engine)",
     type: "registry:component",
-    registryDependencies: ["@beecharts/chart","@beecharts/tooltip","@beecharts/legend"],
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
     files: [{
       path: "@/registry/charts/sparkline-chart.tsx",
       type: "registry:component",
-      target: "components/beecharts/charts/sparkline-chart.tsx"
+      target: "components/nqchart/charts/sparkline-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/sparkline-chart.tsx")
@@ -389,7 +389,7 @@ export const Index: Record<string, any> = {
     name: "ex-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-bar-chart.tsx",
       type: "registry:block",
@@ -407,7 +407,7 @@ export const Index: Record<string, any> = {
     name: "ex-loading-state-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-loading-state-bar-chart.tsx",
       type: "registry:block",
@@ -425,7 +425,7 @@ export const Index: Record<string, any> = {
     name: "ex-stacked-type-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-stacked-type-bar-chart.tsx",
       type: "registry:block",
@@ -443,7 +443,7 @@ export const Index: Record<string, any> = {
     name: "ex-percent-type-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-percent-type-bar-chart.tsx",
       type: "registry:block",
@@ -461,7 +461,7 @@ export const Index: Record<string, any> = {
     name: "ex-horizontal-layout-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-horizontal-layout-bar-chart.tsx",
       type: "registry:block",
@@ -479,7 +479,7 @@ export const Index: Record<string, any> = {
     name: "ex-hatched-variant-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-hatched-variant-bar-chart.tsx",
       type: "registry:block",
@@ -497,7 +497,7 @@ export const Index: Record<string, any> = {
     name: "ex-stripped-variant-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-stripped-variant-bar-chart.tsx",
       type: "registry:block",
@@ -515,7 +515,7 @@ export const Index: Record<string, any> = {
     name: "ex-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-line-chart.tsx",
       type: "registry:block",
@@ -533,7 +533,7 @@ export const Index: Record<string, any> = {
     name: "ex-loading-state-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-loading-state-line-chart.tsx",
       type: "registry:block",
@@ -551,7 +551,7 @@ export const Index: Record<string, any> = {
     name: "ex-composed-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/composed-chart"],
+    registryDependencies: ["@nqchart/composed-chart"],
     files: [{
       path: "@/registry/examples/ex-composed-chart.tsx",
       type: "registry:block",
@@ -569,7 +569,7 @@ export const Index: Record<string, any> = {
     name: "ex-loading-state-composed-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/composed-chart"],
+    registryDependencies: ["@nqchart/composed-chart"],
     files: [{
       path: "@/registry/examples/ex-loading-state-composed-chart.tsx",
       type: "registry:block",
@@ -587,7 +587,7 @@ export const Index: Record<string, any> = {
     name: "ex-pareto-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/composed-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/composed-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-pareto-chart.tsx",
       type: "registry:block",
@@ -605,7 +605,7 @@ export const Index: Record<string, any> = {
     name: "ex-pie-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/pie-chart"],
+    registryDependencies: ["@nqchart/pie-chart"],
     files: [{
       path: "@/registry/examples/ex-pie-chart.tsx",
       type: "registry:block",
@@ -623,7 +623,7 @@ export const Index: Record<string, any> = {
     name: "ex-gauge-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-gauge-chart.tsx",
       type: "registry:block",
@@ -641,7 +641,7 @@ export const Index: Record<string, any> = {
     name: "ex-gauge-with-target-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-gauge-with-target-chart.tsx",
       type: "registry:block",
@@ -659,7 +659,7 @@ export const Index: Record<string, any> = {
     name: "ex-histogram-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/bar-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-histogram-chart.tsx",
       type: "registry:block",
@@ -677,7 +677,7 @@ export const Index: Record<string, any> = {
     name: "ex-loading-state-histogram-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/bar-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-loading-state-histogram-chart.tsx",
       type: "registry:block",
@@ -695,7 +695,7 @@ export const Index: Record<string, any> = {
     name: "ex-bullet-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/bar-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-bullet-chart.tsx",
       type: "registry:block",
@@ -713,7 +713,7 @@ export const Index: Record<string, any> = {
     name: "ex-loading-state-pareto-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/composed-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/composed-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-loading-state-pareto-chart.tsx",
       type: "registry:block",
@@ -731,7 +731,7 @@ export const Index: Record<string, any> = {
     name: "ex-boxplot-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/composed-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/composed-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-boxplot-chart.tsx",
       type: "registry:block",
@@ -749,7 +749,7 @@ export const Index: Record<string, any> = {
     name: "ex-heatmap-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/heatmap-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/heatmap-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-heatmap-chart.tsx",
       type: "registry:block",
@@ -767,7 +767,7 @@ export const Index: Record<string, any> = {
     name: "ex-heatmap-weekly-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/heatmap-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/heatmap-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-heatmap-weekly-chart.tsx",
       type: "registry:block",
@@ -785,7 +785,7 @@ export const Index: Record<string, any> = {
     name: "ex-heatmap-correlation-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/heatmap-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/heatmap-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-heatmap-correlation-chart.tsx",
       type: "registry:block",
@@ -803,7 +803,7 @@ export const Index: Record<string, any> = {
     name: "ex-workload-dashboard-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/calendar-chart","@beecharts/heatmap-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/calendar-chart","@nqchart/heatmap-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-workload-dashboard-chart.tsx",
       type: "registry:block",
@@ -821,7 +821,7 @@ export const Index: Record<string, any> = {
     name: "ex-calendar-workload-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/calendar-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/calendar-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-calendar-workload-chart.tsx",
       type: "registry:block",
@@ -839,7 +839,7 @@ export const Index: Record<string, any> = {
     name: "ex-heatmap-team-workload-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/heatmap-chart","@beecharts/chart-recipes"],
+    registryDependencies: ["@nqchart/heatmap-chart","@nqchart/chart-recipes"],
     files: [{
       path: "@/registry/examples/ex-heatmap-team-workload-chart.tsx",
       type: "registry:block",
@@ -857,7 +857,7 @@ export const Index: Record<string, any> = {
     name: "ex-bg-dots-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -865,16 +865,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgDotsLineChart"] }
+      return { default: mod.default || mod["NQExampleBgDotsLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgDotsLineChart"},
+    meta: {"exportName":"NQExampleBgDotsLineChart"},
   },
   "ex-bg-graph-paper-line-chart": {
     name: "ex-bg-graph-paper-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -882,16 +882,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgGraphPaperLineChart"] }
+      return { default: mod.default || mod["NQExampleBgGraphPaperLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgGraphPaperLineChart"},
+    meta: {"exportName":"NQExampleBgGraphPaperLineChart"},
   },
   "ex-bg-cross-hatch-line-chart": {
     name: "ex-bg-cross-hatch-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -899,16 +899,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgCrossHatchLineChart"] }
+      return { default: mod.default || mod["NQExampleBgCrossHatchLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgCrossHatchLineChart"},
+    meta: {"exportName":"NQExampleBgCrossHatchLineChart"},
   },
   "ex-bg-diagonal-lines-line-chart": {
     name: "ex-bg-diagonal-lines-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -916,16 +916,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgDiagonalLinesLineChart"] }
+      return { default: mod.default || mod["NQExampleBgDiagonalLinesLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgDiagonalLinesLineChart"},
+    meta: {"exportName":"NQExampleBgDiagonalLinesLineChart"},
   },
   "ex-bg-plus-line-chart": {
     name: "ex-bg-plus-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -933,16 +933,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgPlusLineChart"] }
+      return { default: mod.default || mod["NQExampleBgPlusLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgPlusLineChart"},
+    meta: {"exportName":"NQExampleBgPlusLineChart"},
   },
   "ex-bg-falling-triangles-line-chart": {
     name: "ex-bg-falling-triangles-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -950,16 +950,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgFallingTrianglesLineChart"] }
+      return { default: mod.default || mod["NQExampleBgFallingTrianglesLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgFallingTrianglesLineChart"},
+    meta: {"exportName":"NQExampleBgFallingTrianglesLineChart"},
   },
   "ex-bg-4-pointed-star-line-chart": {
     name: "ex-bg-4-pointed-star-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -967,16 +967,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBg4PointedStarLineChart"] }
+      return { default: mod.default || mod["NQExampleBg4PointedStarLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBg4PointedStarLineChart"},
+    meta: {"exportName":"NQExampleBg4PointedStarLineChart"},
   },
   "ex-bg-tiny-checkers-line-chart": {
     name: "ex-bg-tiny-checkers-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -984,16 +984,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgTinyCheckersLineChart"] }
+      return { default: mod.default || mod["NQExampleBgTinyCheckersLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgTinyCheckersLineChart"},
+    meta: {"exportName":"NQExampleBgTinyCheckersLineChart"},
   },
   "ex-bg-overlapping-circles-line-chart": {
     name: "ex-bg-overlapping-circles-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1001,16 +1001,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgOverlappingCirclesLineChart"] }
+      return { default: mod.default || mod["NQExampleBgOverlappingCirclesLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgOverlappingCirclesLineChart"},
+    meta: {"exportName":"NQExampleBgOverlappingCirclesLineChart"},
   },
   "ex-bg-wiggle-lines-line-chart": {
     name: "ex-bg-wiggle-lines-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1018,16 +1018,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgWiggleLinesLineChart"] }
+      return { default: mod.default || mod["NQExampleBgWiggleLinesLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgWiggleLinesLineChart"},
+    meta: {"exportName":"NQExampleBgWiggleLinesLineChart"},
   },
   "ex-bg-bubbles-line-chart": {
     name: "ex-bg-bubbles-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1035,16 +1035,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgBubblesLineChart"] }
+      return { default: mod.default || mod["NQExampleBgBubblesLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgBubblesLineChart"},
+    meta: {"exportName":"NQExampleBgBubblesLineChart"},
   },
   "ex-legend-square-line-chart": {
     name: "ex-legend-square-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1052,16 +1052,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLegendSquareLineChart"] }
+      return { default: mod.default || mod["NQExampleLegendSquareLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLegendSquareLineChart"},
+    meta: {"exportName":"NQExampleLegendSquareLineChart"},
   },
   "ex-legend-circle-line-chart": {
     name: "ex-legend-circle-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1069,16 +1069,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLegendCircleLineChart"] }
+      return { default: mod.default || mod["NQExampleLegendCircleLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLegendCircleLineChart"},
+    meta: {"exportName":"NQExampleLegendCircleLineChart"},
   },
   "ex-legend-circle-outline-line-chart": {
     name: "ex-legend-circle-outline-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1086,16 +1086,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLegendCircleOutlineLineChart"] }
+      return { default: mod.default || mod["NQExampleLegendCircleOutlineLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLegendCircleOutlineLineChart"},
+    meta: {"exportName":"NQExampleLegendCircleOutlineLineChart"},
   },
   "ex-legend-rounded-square-line-chart": {
     name: "ex-legend-rounded-square-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1103,16 +1103,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLegendRoundedSquareLineChart"] }
+      return { default: mod.default || mod["NQExampleLegendRoundedSquareLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLegendRoundedSquareLineChart"},
+    meta: {"exportName":"NQExampleLegendRoundedSquareLineChart"},
   },
   "ex-legend-rounded-square-outline-line-chart": {
     name: "ex-legend-rounded-square-outline-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1120,16 +1120,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLegendRoundedSquareOutlineLineChart"] }
+      return { default: mod.default || mod["NQExampleLegendRoundedSquareOutlineLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLegendRoundedSquareOutlineLineChart"},
+    meta: {"exportName":"NQExampleLegendRoundedSquareOutlineLineChart"},
   },
   "ex-legend-vertical-bar-line-chart": {
     name: "ex-legend-vertical-bar-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1137,16 +1137,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLegendVerticalBarLineChart"] }
+      return { default: mod.default || mod["NQExampleLegendVerticalBarLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLegendVerticalBarLineChart"},
+    meta: {"exportName":"NQExampleLegendVerticalBarLineChart"},
   },
   "ex-legend-horizontal-bar-line-chart": {
     name: "ex-legend-horizontal-bar-line-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/line-chart"],
+    registryDependencies: ["@nqchart/line-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1154,16 +1154,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLegendHorizontalBarLineChart"] }
+      return { default: mod.default || mod["NQExampleLegendHorizontalBarLineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLegendHorizontalBarLineChart"},
+    meta: {"exportName":"NQExampleLegendHorizontalBarLineChart"},
   },
   "ex-tooltip-default-bar-chart": {
     name: "ex-tooltip-default-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1171,16 +1171,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleTooltipDefaultBarChart"] }
+      return { default: mod.default || mod["NQExampleTooltipDefaultBarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleTooltipDefaultBarChart"},
+    meta: {"exportName":"NQExampleTooltipDefaultBarChart"},
   },
   "ex-tooltip-frosted-glass-bar-chart": {
     name: "ex-tooltip-frosted-glass-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-ui-charts.tsx",
       type: "registry:block",
@@ -1188,16 +1188,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-ui-charts.tsx")
-      return { default: mod.default || mod["BeeExampleTooltipFrostedGlassBarChart"] }
+      return { default: mod.default || mod["NQExampleTooltipFrostedGlassBarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleTooltipFrostedGlassBarChart"},
+    meta: {"exportName":"NQExampleTooltipFrostedGlassBarChart"},
   },
   "ex-animated-dashed-stroke-area-chart": {
     name: "ex-animated-dashed-stroke-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1205,16 +1205,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleAnimatedDashedStrokeAreaChart"] }
+      return { default: mod.default || mod["NQExampleAnimatedDashedStrokeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleAnimatedDashedStrokeAreaChart"},
+    meta: {"exportName":"NQExampleAnimatedDashedStrokeAreaChart"},
   },
   "ex-area-chart": {
     name: "ex-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1222,16 +1222,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleAreaChart"] }
+      return { default: mod.default || mod["NQExampleAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleAreaChart"},
+    meta: {"exportName":"NQExampleAreaChart"},
   },
   "ex-bg-bubbles-sparkline-chart": {
     name: "ex-bg-bubbles-sparkline-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/sparkline-chart"],
+    registryDependencies: ["@nqchart/sparkline-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1239,16 +1239,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBgBubblesSparklineChart"] }
+      return { default: mod.default || mod["NQExampleBgBubblesSparklineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBgBubblesSparklineChart"},
+    meta: {"exportName":"NQExampleBgBubblesSparklineChart"},
   },
   "ex-bubble-chart": {
     name: "ex-bubble-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/scatter-chart"],
+    registryDependencies: ["@nqchart/scatter-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1256,16 +1256,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBubbleChart"] }
+      return { default: mod.default || mod["NQExampleBubbleChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBubbleChart"},
+    meta: {"exportName":"NQExampleBubbleChart"},
   },
   "ex-bubble-sized-chart": {
     name: "ex-bubble-sized-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/scatter-chart"],
+    registryDependencies: ["@nqchart/scatter-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1273,16 +1273,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBubbleSizedChart"] }
+      return { default: mod.default || mod["NQExampleBubbleSizedChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBubbleSizedChart"},
+    meta: {"exportName":"NQExampleBubbleSizedChart"},
   },
   "ex-bump-curve-type-area-chart": {
     name: "ex-bump-curve-type-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1290,16 +1290,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleBumpCurveTypeAreaChart"] }
+      return { default: mod.default || mod["NQExampleBumpCurveTypeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleBumpCurveTypeAreaChart"},
+    meta: {"exportName":"NQExampleBumpCurveTypeAreaChart"},
   },
   "ex-chart-config-default-bar-chart": {
     name: "ex-chart-config-default-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1307,16 +1307,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleChartConfigDefaultBarChart"] }
+      return { default: mod.default || mod["NQExampleChartConfigDefaultBarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleChartConfigDefaultBarChart"},
+    meta: {"exportName":"NQExampleChartConfigDefaultBarChart"},
   },
   "ex-chart-config-icons-bar-chart": {
     name: "ex-chart-config-icons-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1324,16 +1324,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleChartConfigIconsBarChart"] }
+      return { default: mod.default || mod["NQExampleChartConfigIconsBarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleChartConfigIconsBarChart"},
+    meta: {"exportName":"NQExampleChartConfigIconsBarChart"},
   },
   "ex-circle-grid-radar-chart": {
     name: "ex-circle-grid-radar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radar-chart"],
+    registryDependencies: ["@nqchart/radar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1341,16 +1341,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleCircleGridRadarChart"] }
+      return { default: mod.default || mod["NQExampleCircleGridRadarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleCircleGridRadarChart"},
+    meta: {"exportName":"NQExampleCircleGridRadarChart"},
   },
   "ex-dashed-stroke-area-chart": {
     name: "ex-dashed-stroke-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1358,16 +1358,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleDashedStrokeAreaChart"] }
+      return { default: mod.default || mod["NQExampleDashedStrokeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleDashedStrokeAreaChart"},
+    meta: {"exportName":"NQExampleDashedStrokeAreaChart"},
   },
   "ex-default-type-area-chart": {
     name: "ex-default-type-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1375,16 +1375,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleDefaultTypeAreaChart"] }
+      return { default: mod.default || mod["NQExampleDefaultTypeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleDefaultTypeAreaChart"},
+    meta: {"exportName":"NQExampleDefaultTypeAreaChart"},
   },
   "ex-dotted-area-variant-area-chart": {
     name: "ex-dotted-area-variant-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1392,16 +1392,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleDottedAreaVariantAreaChart"] }
+      return { default: mod.default || mod["NQExampleDottedAreaVariantAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleDottedAreaVariantAreaChart"},
+    meta: {"exportName":"NQExampleDottedAreaVariantAreaChart"},
   },
   "ex-expanded-type-area-chart": {
     name: "ex-expanded-type-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1409,16 +1409,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleExpandedTypeAreaChart"] }
+      return { default: mod.default || mod["NQExampleExpandedTypeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleExpandedTypeAreaChart"},
+    meta: {"exportName":"NQExampleExpandedTypeAreaChart"},
   },
   "ex-funnel-chart": {
     name: "ex-funnel-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/funnel-chart"],
+    registryDependencies: ["@nqchart/funnel-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1426,16 +1426,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleFunnelChart"] }
+      return { default: mod.default || mod["NQExampleFunnelChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleFunnelChart"},
+    meta: {"exportName":"NQExampleFunnelChart"},
   },
   "ex-glowing-bubble-chart": {
     name: "ex-glowing-bubble-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/scatter-chart"],
+    registryDependencies: ["@nqchart/scatter-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1443,16 +1443,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingBubbleChart"] }
+      return { default: mod.default || mod["NQExampleGlowingBubbleChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingBubbleChart"},
+    meta: {"exportName":"NQExampleGlowingBubbleChart"},
   },
   "ex-glowing-funnel-chart": {
     name: "ex-glowing-funnel-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/funnel-chart"],
+    registryDependencies: ["@nqchart/funnel-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1460,16 +1460,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingFunnelChart"] }
+      return { default: mod.default || mod["NQExampleGlowingFunnelChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingFunnelChart"},
+    meta: {"exportName":"NQExampleGlowingFunnelChart"},
   },
   "ex-glowing-radar-chart": {
     name: "ex-glowing-radar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radar-chart"],
+    registryDependencies: ["@nqchart/radar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1477,16 +1477,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingRadarChart"] }
+      return { default: mod.default || mod["NQExampleGlowingRadarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingRadarChart"},
+    meta: {"exportName":"NQExampleGlowingRadarChart"},
   },
   "ex-glowing-radial-chart": {
     name: "ex-glowing-radial-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1494,16 +1494,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingRadialChart"] }
+      return { default: mod.default || mod["NQExampleGlowingRadialChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingRadialChart"},
+    meta: {"exportName":"NQExampleGlowingRadialChart"},
   },
   "ex-glowing-scatter-chart": {
     name: "ex-glowing-scatter-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/scatter-chart"],
+    registryDependencies: ["@nqchart/scatter-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1511,16 +1511,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingScatterChart"] }
+      return { default: mod.default || mod["NQExampleGlowingScatterChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingScatterChart"},
+    meta: {"exportName":"NQExampleGlowingScatterChart"},
   },
   "ex-glowing-sparkline-chart": {
     name: "ex-glowing-sparkline-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/sparkline-chart"],
+    registryDependencies: ["@nqchart/sparkline-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1528,16 +1528,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingSparklineChart"] }
+      return { default: mod.default || mod["NQExampleGlowingSparklineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingSparklineChart"},
+    meta: {"exportName":"NQExampleGlowingSparklineChart"},
   },
   "ex-glowing-treemap-chart": {
     name: "ex-glowing-treemap-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/treemap-chart"],
+    registryDependencies: ["@nqchart/treemap-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1545,16 +1545,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingTreemapChart"] }
+      return { default: mod.default || mod["NQExampleGlowingTreemapChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingTreemapChart"},
+    meta: {"exportName":"NQExampleGlowingTreemapChart"},
   },
   "ex-glowing-waterfall-chart": {
     name: "ex-glowing-waterfall-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/waterfall-chart"],
+    registryDependencies: ["@nqchart/waterfall-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1562,16 +1562,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGlowingWaterfallChart"] }
+      return { default: mod.default || mod["NQExampleGlowingWaterfallChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGlowingWaterfallChart"},
+    meta: {"exportName":"NQExampleGlowingWaterfallChart"},
   },
   "ex-gradient-area-variant-area-chart": {
     name: "ex-gradient-area-variant-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1579,16 +1579,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientAreaVariantAreaChart"] }
+      return { default: mod.default || mod["NQExampleGradientAreaVariantAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGradientAreaVariantAreaChart"},
+    meta: {"exportName":"NQExampleGradientAreaVariantAreaChart"},
   },
   "ex-gradient-colors-area-chart": {
     name: "ex-gradient-colors-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1596,16 +1596,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientColorsAreaChart"] }
+      return { default: mod.default || mod["NQExampleGradientColorsAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGradientColorsAreaChart"},
+    meta: {"exportName":"NQExampleGradientColorsAreaChart"},
   },
   "ex-gradient-colors-bar-chart": {
     name: "ex-gradient-colors-bar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1613,16 +1613,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientColorsBarChart"] }
+      return { default: mod.default || mod["NQExampleGradientColorsBarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGradientColorsBarChart"},
+    meta: {"exportName":"NQExampleGradientColorsBarChart"},
   },
   "ex-gradient-colors-bump-area-chart": {
     name: "ex-gradient-colors-bump-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1630,16 +1630,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientColorsBumpAreaChart"] }
+      return { default: mod.default || mod["NQExampleGradientColorsBumpAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGradientColorsBumpAreaChart"},
+    meta: {"exportName":"NQExampleGradientColorsBumpAreaChart"},
   },
   "ex-gradient-colors-radar-chart": {
     name: "ex-gradient-colors-radar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radar-chart"],
+    registryDependencies: ["@nqchart/radar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1647,16 +1647,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientColorsRadarChart"] }
+      return { default: mod.default || mod["NQExampleGradientColorsRadarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGradientColorsRadarChart"},
+    meta: {"exportName":"NQExampleGradientColorsRadarChart"},
   },
   "ex-gradient-colors-radial-chart": {
     name: "ex-gradient-colors-radial-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1664,16 +1664,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientColorsRadialChart"] }
+      return { default: mod.default || mod["NQExampleGradientColorsRadialChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGradientColorsRadialChart"},
+    meta: {"exportName":"NQExampleGradientColorsRadialChart"},
   },
   "ex-gradient-colors-scatter-chart": {
     name: "ex-gradient-colors-scatter-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/scatter-chart"],
+    registryDependencies: ["@nqchart/scatter-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1681,16 +1681,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientColorsScatterChart"] }
+      return { default: mod.default || mod["NQExampleGradientColorsScatterChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGradientColorsScatterChart"},
+    meta: {"exportName":"NQExampleGradientColorsScatterChart"},
   },
   "ex-gradient-reverse-area-variant-area-chart": {
     name: "ex-gradient-reverse-area-variant-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1698,16 +1698,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleGradientReverseAreaVariantAreaChart"] }
+      return { default: mod.default || mod["NQExampleGradientReverseAreaVariantAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleGradientReverseAreaVariantAreaChart"},
+    meta: {"exportName":"NQExampleGradientReverseAreaVariantAreaChart"},
   },
   "ex-hatched-area-variant-area-chart": {
     name: "ex-hatched-area-variant-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1715,16 +1715,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleHatchedAreaVariantAreaChart"] }
+      return { default: mod.default || mod["NQExampleHatchedAreaVariantAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleHatchedAreaVariantAreaChart"},
+    meta: {"exportName":"NQExampleHatchedAreaVariantAreaChart"},
   },
   "ex-lines-area-variant-area-chart": {
     name: "ex-lines-area-variant-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1732,16 +1732,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLinesAreaVariantAreaChart"] }
+      return { default: mod.default || mod["NQExampleLinesAreaVariantAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLinesAreaVariantAreaChart"},
+    meta: {"exportName":"NQExampleLinesAreaVariantAreaChart"},
   },
   "ex-lines-variant-radar-chart": {
     name: "ex-lines-variant-radar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radar-chart"],
+    registryDependencies: ["@nqchart/radar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1749,16 +1749,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLinesVariantRadarChart"] }
+      return { default: mod.default || mod["NQExampleLinesVariantRadarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLinesVariantRadarChart"},
+    meta: {"exportName":"NQExampleLinesVariantRadarChart"},
   },
   "ex-loading-state-area-chart": {
     name: "ex-loading-state-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1766,16 +1766,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateAreaChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateAreaChart"},
+    meta: {"exportName":"NQExampleLoadingStateAreaChart"},
   },
   "ex-loading-state-bubble-chart": {
     name: "ex-loading-state-bubble-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/scatter-chart"],
+    registryDependencies: ["@nqchart/scatter-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1783,16 +1783,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateBubbleChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateBubbleChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateBubbleChart"},
+    meta: {"exportName":"NQExampleLoadingStateBubbleChart"},
   },
   "ex-loading-state-funnel-chart": {
     name: "ex-loading-state-funnel-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/funnel-chart"],
+    registryDependencies: ["@nqchart/funnel-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1800,16 +1800,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateFunnelChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateFunnelChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateFunnelChart"},
+    meta: {"exportName":"NQExampleLoadingStateFunnelChart"},
   },
   "ex-loading-state-gauge-chart": {
     name: "ex-loading-state-gauge-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1817,16 +1817,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateGaugeChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateGaugeChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateGaugeChart"},
+    meta: {"exportName":"NQExampleLoadingStateGaugeChart"},
   },
   "ex-loading-state-radar-chart": {
     name: "ex-loading-state-radar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radar-chart"],
+    registryDependencies: ["@nqchart/radar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1834,16 +1834,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateRadarChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateRadarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateRadarChart"},
+    meta: {"exportName":"NQExampleLoadingStateRadarChart"},
   },
   "ex-loading-state-radial-chart": {
     name: "ex-loading-state-radial-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1851,16 +1851,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateRadialChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateRadialChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateRadialChart"},
+    meta: {"exportName":"NQExampleLoadingStateRadialChart"},
   },
   "ex-loading-state-scatter-chart": {
     name: "ex-loading-state-scatter-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/scatter-chart"],
+    registryDependencies: ["@nqchart/scatter-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1868,16 +1868,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateScatterChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateScatterChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateScatterChart"},
+    meta: {"exportName":"NQExampleLoadingStateScatterChart"},
   },
   "ex-loading-state-sparkline-chart": {
     name: "ex-loading-state-sparkline-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/sparkline-chart"],
+    registryDependencies: ["@nqchart/sparkline-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1885,16 +1885,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateSparklineChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateSparklineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateSparklineChart"},
+    meta: {"exportName":"NQExampleLoadingStateSparklineChart"},
   },
   "ex-loading-state-treemap-chart": {
     name: "ex-loading-state-treemap-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/treemap-chart"],
+    registryDependencies: ["@nqchart/treemap-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1902,16 +1902,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateTreemapChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateTreemapChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateTreemapChart"},
+    meta: {"exportName":"NQExampleLoadingStateTreemapChart"},
   },
   "ex-loading-state-waterfall-chart": {
     name: "ex-loading-state-waterfall-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/waterfall-chart"],
+    registryDependencies: ["@nqchart/waterfall-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1919,16 +1919,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleLoadingStateWaterfallChart"] }
+      return { default: mod.default || mod["NQExampleLoadingStateWaterfallChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleLoadingStateWaterfallChart"},
+    meta: {"exportName":"NQExampleLoadingStateWaterfallChart"},
   },
   "ex-monotoney-curve-type-area-chart": {
     name: "ex-monotoney-curve-type-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1936,16 +1936,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleMonotoneyCurveTypeAreaChart"] }
+      return { default: mod.default || mod["NQExampleMonotoneyCurveTypeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleMonotoneyCurveTypeAreaChart"},
+    meta: {"exportName":"NQExampleMonotoneyCurveTypeAreaChart"},
   },
   "ex-radar-chart": {
     name: "ex-radar-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radar-chart"],
+    registryDependencies: ["@nqchart/radar-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1953,16 +1953,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleRadarChart"] }
+      return { default: mod.default || mod["NQExampleRadarChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleRadarChart"},
+    meta: {"exportName":"NQExampleRadarChart"},
   },
   "ex-radial-chart": {
     name: "ex-radial-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1970,16 +1970,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleRadialChart"] }
+      return { default: mod.default || mod["NQExampleRadialChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleRadialChart"},
+    meta: {"exportName":"NQExampleRadialChart"},
   },
   "ex-scatter-chart": {
     name: "ex-scatter-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/scatter-chart"],
+    registryDependencies: ["@nqchart/scatter-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -1987,16 +1987,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleScatterChart"] }
+      return { default: mod.default || mod["NQExampleScatterChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleScatterChart"},
+    meta: {"exportName":"NQExampleScatterChart"},
   },
   "ex-semi-variant-radial-chart": {
     name: "ex-semi-variant-radial-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2004,16 +2004,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSemiVariantRadialChart"] }
+      return { default: mod.default || mod["NQExampleSemiVariantRadialChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleSemiVariantRadialChart"},
+    meta: {"exportName":"NQExampleSemiVariantRadialChart"},
   },
   "ex-rose-radial-chart": {
     name: "ex-rose-radial-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/radial-chart"],
+    registryDependencies: ["@nqchart/radial-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2021,16 +2021,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleRoseRadialChart"] }
+      return { default: mod.default || mod["NQExampleRoseRadialChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleRoseRadialChart"},
+    meta: {"exportName":"NQExampleRoseRadialChart"},
   },
   "ex-solid-area-variant-area-chart": {
     name: "ex-solid-area-variant-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2038,16 +2038,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSolidAreaVariantAreaChart"] }
+      return { default: mod.default || mod["NQExampleSolidAreaVariantAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleSolidAreaVariantAreaChart"},
+    meta: {"exportName":"NQExampleSolidAreaVariantAreaChart"},
   },
   "ex-solid-stroke-area-chart": {
     name: "ex-solid-stroke-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2055,16 +2055,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSolidStrokeAreaChart"] }
+      return { default: mod.default || mod["NQExampleSolidStrokeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleSolidStrokeAreaChart"},
+    meta: {"exportName":"NQExampleSolidStrokeAreaChart"},
   },
   "ex-sparkline-area-chart": {
     name: "ex-sparkline-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/sparkline-chart"],
+    registryDependencies: ["@nqchart/sparkline-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2072,16 +2072,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSparklineAreaChart"] }
+      return { default: mod.default || mod["NQExampleSparklineAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleSparklineAreaChart"},
+    meta: {"exportName":"NQExampleSparklineAreaChart"},
   },
   "ex-sparkline-chart": {
     name: "ex-sparkline-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/sparkline-chart"],
+    registryDependencies: ["@nqchart/sparkline-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2089,16 +2089,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSparklineChart"] }
+      return { default: mod.default || mod["NQExampleSparklineChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleSparklineChart"},
+    meta: {"exportName":"NQExampleSparklineChart"},
   },
   "ex-stacked-type-area-chart": {
     name: "ex-stacked-type-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2106,16 +2106,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleStackedTypeAreaChart"] }
+      return { default: mod.default || mod["NQExampleStackedTypeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleStackedTypeAreaChart"},
+    meta: {"exportName":"NQExampleStackedTypeAreaChart"},
   },
   "ex-step-curve-type-area-chart": {
     name: "ex-step-curve-type-area-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/area-chart"],
+    registryDependencies: ["@nqchart/area-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2123,16 +2123,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleStepCurveTypeAreaChart"] }
+      return { default: mod.default || mod["NQExampleStepCurveTypeAreaChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleStepCurveTypeAreaChart"},
+    meta: {"exportName":"NQExampleStepCurveTypeAreaChart"},
   },
   "ex-treemap-chart": {
     name: "ex-treemap-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/treemap-chart"],
+    registryDependencies: ["@nqchart/treemap-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2140,16 +2140,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleTreemapChart"] }
+      return { default: mod.default || mod["NQExampleTreemapChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleTreemapChart"},
+    meta: {"exportName":"NQExampleTreemapChart"},
   },
   "ex-waterfall-chart": {
     name: "ex-waterfall-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/waterfall-chart"],
+    registryDependencies: ["@nqchart/waterfall-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2157,16 +2157,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleWaterfallChart"] }
+      return { default: mod.default || mod["NQExampleWaterfallChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleWaterfallChart"},
+    meta: {"exportName":"NQExampleWaterfallChart"},
   },
   "ex-sparkline-end-dot-chart": {
     name: "ex-sparkline-end-dot-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/sparkline-chart"],
+    registryDependencies: ["@nqchart/sparkline-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2174,16 +2174,16 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSparklineEndDotChart"] }
+      return { default: mod.default || mod["NQExampleSparklineEndDotChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleSparklineEndDotChart"},
+    meta: {"exportName":"NQExampleSparklineEndDotChart"},
   },
   "ex-sparkline-reference-band-chart": {
     name: "ex-sparkline-reference-band-chart",
     description: "",
     type: "registry:block",
-    registryDependencies: ["@beecharts/sparkline-chart"],
+    registryDependencies: ["@nqchart/sparkline-chart"],
     files: [{
       path: "@/registry/examples/ex-doc-charts.tsx",
       type: "registry:block",
@@ -2191,20 +2191,20 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["BeeExampleSparklineReferenceBandChart"] }
+      return { default: mod.default || mod["NQExampleSparklineReferenceBandChart"] }
     }),
     categories: undefined,
-    meta: {"exportName":"BeeExampleSparklineReferenceBandChart"},
+    meta: {"exportName":"NQExampleSparklineReferenceBandChart"},
   },
   "monospace-bar-chart": {
     name: "monospace-bar-chart",
     description: "Terminal-style bar chart with monospace KPI chrome (ECharts)",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/blocks/b-monospace-bar-chart.tsx",
       type: "registry:block",
-      target: "components/beecharts/blocks/monospace-bar-chart.tsx"
+      target: "components/nqchart/blocks/monospace-bar-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/blocks/b-monospace-bar-chart.tsx")
@@ -2218,11 +2218,11 @@ export const Index: Record<string, any> = {
     name: "hover-trace-bar-chart",
     description: "Bar chart with KPI header trace (ECharts)",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/blocks/b-hover-trace-bar-chart.tsx",
       type: "registry:block",
-      target: "components/beecharts/blocks/hover-trace-bar-chart.tsx"
+      target: "components/nqchart/blocks/hover-trace-bar-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/blocks/b-hover-trace-bar-chart.tsx")
@@ -2236,11 +2236,11 @@ export const Index: Record<string, any> = {
     name: "grid-bar-chart",
     description: "Stacked ghost grid bar chart (ECharts)",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/blocks/b-grid-bar-chart.tsx",
       type: "registry:block",
-      target: "components/beecharts/blocks/grid-bar-chart.tsx"
+      target: "components/nqchart/blocks/grid-bar-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/blocks/b-grid-bar-chart.tsx")
@@ -2254,11 +2254,11 @@ export const Index: Record<string, any> = {
     name: "isometric-bar-chart",
     description: "Rounded bar chart block (ECharts)",
     type: "registry:block",
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     files: [{
       path: "@/registry/blocks/b-isometric-bar-chart.tsx",
       type: "registry:block",
-      target: "components/beecharts/blocks/isometric-bar-chart.tsx"
+      target: "components/nqchart/blocks/isometric-bar-chart.tsx"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/blocks/b-isometric-bar-chart.tsx")

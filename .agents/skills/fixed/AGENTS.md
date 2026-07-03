@@ -1,24 +1,24 @@
 ---
-name: beecharts-fixed-agents
+name: nqchart-fixed-agents
 description: >-
-  Agent routing for beecharts-fixed — search index.md before fixing bugs, flicker,
+  Agent routing for nqchart-fixed — search index.md before fixing bugs, flicker,
   or hover regressions in this repo. NOT for external app integration.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: agents
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
-# BeeCharts fixed — Agent routing
+# NQChart fixed — Agent routing
 
-**Audience:** Maintainers fixing bugs in the beecharts repo.
+**Audience:** Maintainers fixing bugs in the nqchart repo.
 
 ## When to use
 
 - User asks to **fix**, **debug**, or **investigate** chart behavior (hover, flicker, wrong opacity, compile output, tooltip).
 - You suspect a **regression** of something fixed before.
-- Before writing a new `compile-*` or `use-bee-echarts` workaround.
+- Before writing a new `compile-*` or `use-nq-echarts` workaround.
 
 ## Read order
 
@@ -28,6 +28,6 @@ metadata:
 
 ## Do not use for
 
-- Integrating BeeCharts in an external app → [skills/consumer/beecharts/SKILL.md](../../../skills/consumer/beecharts/SKILL.md)
-- New chart features or registry items → [beecharts-dev](../beecharts-dev/SKILL.md)
-- Docs site / MDX only → [beecharts-docs](../beecharts-docs/SKILL.md)
+- Integrating NQChart in an external app → [skills/consumer/nqchart/SKILL.md](../../../skills/consumer/nqchart/SKILL.md)
+- New chart features or registry items → [nqchart-dev](../nqchart-dev/SKILL.md)
+- Docs site / MDX only → [nqchart-docs](../nqchart-docs/SKILL.md)

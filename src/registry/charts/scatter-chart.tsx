@@ -7,7 +7,7 @@ import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/ech
 import { compileScatterOption } from "@/registry/echarts-core/compile-scatter";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import {
-  BeeChartLegend,
+  NQChartLegend,
   bindChartLegendLayer,
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
@@ -15,7 +15,7 @@ import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
-type BeeScatterChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
+type NQScatterChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
   children: ReactNode;
   className?: string;
@@ -27,12 +27,12 @@ function ScatterChartCanvas() {
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeeScatterChart<TConfig extends Record<string, ChartConfig[string]>>({
+export function NQScatterChart<TConfig extends Record<string, ChartConfig[string]>>({
   config,
   children,
   className,
   isLoading,
-}: BeeScatterChartProps<TConfig>) {
+}: NQScatterChartProps<TConfig>) {
   return (
     <PartRegistryProvider>
       <ChartContainer config={config} className={className} isLoading={isLoading}>
@@ -89,7 +89,7 @@ export function Legend(props: { variant?: ChartLegendVariant; isClickable?: bool
   useRegisterPart({ type: "legend", id, variant: props.variant, isClickable: props.isClickable });
   const [selected, setSelected] = useState<string | null>(null);
   return (
-    <BeeChartLegend
+    <NQChartLegend
       variant={props.variant}
       isClickable={props.isClickable}
       selected={selected}

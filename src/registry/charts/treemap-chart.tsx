@@ -10,7 +10,7 @@ import type { TreemapNode } from "@/registry/echarts-core/parts/types";
 import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { ReactNode } from "react";
 
-type BeeTreemapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
+type NQTreemapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
   data: TreemapNode[] | Record<string, unknown>[];
   children: ReactNode;
@@ -23,13 +23,13 @@ function TreemapChartCanvas() {
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeeTreemapChart<TConfig extends Record<string, ChartConfig[string]>>({
+export function NQTreemapChart<TConfig extends Record<string, ChartConfig[string]>>({
   config,
   data,
   children,
   className,
   isLoading,
-}: BeeTreemapChartProps<TConfig>) {
+}: NQTreemapChartProps<TConfig>) {
   const tree = data as TreemapNode[];
   return (
     <PartRegistryProvider>
