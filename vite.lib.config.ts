@@ -35,6 +35,10 @@ const CHART_FAMILIES = [
 
 const entry: Record<string, string> = {
   index: path.resolve(__dirname, "src/lib/public.ts"),
+  // Standalone BI data helpers (histogram binning, Pareto, gauge, box plot,
+  // heatmap/calendar prep). Pure functions, no React — shipped as its own
+  // subpath so dashboards can transform data without pulling a chart bundle.
+  recipes: path.resolve(__dirname, "src/registry/lib/chart-recipes.ts"),
 };
 for (const family of CHART_FAMILIES) {
   entry[family] = path.resolve(__dirname, `src/registry/charts/${family}.tsx`);

@@ -45,7 +45,7 @@ Ensure `globals.css` defines `--chart-1` … `--chart-5` for `:root` and `.dark`
 ### Single-series config
 
 ```ts
-import { type ChartConfig } from "@/components/nqchart/ui/chart";
+import { type ChartConfig } from "@nqlib/nqchart";
 import { chartConfigColor } from "@/lib/chart-tokens";
 
 export const MRR_CONFIG = {

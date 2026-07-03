@@ -17,6 +17,7 @@ const require = createRequire(import.meta.url);
 
 const CHECKS = [
   { entry: "index", expect: ["ChartConfig?", "useChart", "ChartTooltip", "ChartLegend"] },
+  { entry: "recipes", expect: ["binForHistogram", "prepareParetoData", "prepareGaugeRows"] },
   { entry: "bar-chart", expect: ["NQBarChart", "Bar", "XAxis", "Tooltip"] },
   { entry: "area-chart", expect: ["NQAreaChart", "Area"] },
   { entry: "line-chart", expect: ["NQLineChart", "Line"] },

@@ -1,13 +1,13 @@
 ---
 name: nqchart
 description: >-
-  Build dashboards with composable NQChart — install @nqchart/* via shadcn,
-  compose NQ*Chart children, theme colors, BI recipes. Use when the user asks
-  for charts, graphs, KPIs, sparklines, funnels, waterfalls, heatmaps,
-  histograms, pareto, gauges, or @nqchart / NQChart components. NOT for
-  contributing to the nqchart repo.
+  Build dashboards with composable NQChart — install the @nqlib/nqchart npm
+  package, compose NQ*Chart children, theme colors, BI recipes. Use when the
+  user asks for charts, graphs, KPIs, sparklines, funnels, waterfalls,
+  heatmaps, histograms, pareto, gauges, or @nqlib/nqchart / NQChart components.
+  NOT for contributing to the nqchart repo.
 license: MIT
-compatibility: Requires React/Next.js, shadcn/ui, echarts, and motion.
+compatibility: Requires React, echarts, and motion (peer deps).
 metadata:
   author: ctesibius/nqchart
   version: "1.2.0"
@@ -22,12 +22,12 @@ Read in order:
 | Doc | Use when |
 |-----|----------|
 | [when-to-use.md](./when-to-use.md) | Picking chart type from user intent |
-| [install.md](./install.md) | CLI packages and peer deps |
+| [install.md](./install.md) | `npm i @nqlib/nqchart`, peer deps, subpaths |
 | [colors.md](./colors.md) | Theme-aware `ChartConfig` (`chartConfigColor`, gradients) |
 | [demo-dashboard.md](./demo-dashboard.md) | Multi-chart SaaS dashboard like the homepage demo |
 | [components.md](./components.md) | Roots, parts, and props per chart |
-| [recipes.md](./recipes.md) | `@nqchart/chart-recipes` — histogram, bullet, Pareto, heatmap, box plot, gauge |
-| [examples.md](./examples.md) | Registry blocks (`ex-*`, CLI blocks) to copy |
+| [recipes.md](./recipes.md) | `@nqlib/nqchart/recipes` — histogram, bullet, Pareto, heatmap, box plot, gauge |
+| [examples.md](./examples.md) | Copy-ready chart patterns |
 
 Repo docs: `https://nqchart.vercel.app/docs` (or local `/docs/<chart>`).
 
@@ -40,7 +40,7 @@ Stop and verify before marking the task done:
 | Gate | Check |
 |------|-------|
 | Chart type | Matches user intent via [when-to-use.md](./when-to-use.md) |
-| Install | `shadcn add @nqchart/{chart}` + peers from [install.md](./install.md) |
+| Install | `npm i @nqlib/nqchart` + peers from [install.md](./install.md) |
 | Config | `chartConfig` keys match every series `dataKey` / slice `nameKey` |
 | Layout | Root has `className="h-full w-full p-4"` (sparklines: `h-12`–`h-16`) |
 | Theme | Colors use `chartConfigColor()` or explicit light/dark arrays |
@@ -76,7 +76,7 @@ User goal?
 
 ## Non-negotiable patterns
 
-1. **Install chart + UI deps** — Every chart needs `@nqchart/chart` at minimum. See [install.md](./install.md).
+1. **Install the package + peers** — `npm i @nqlib/nqchart` plus `react react-dom echarts motion`. See [install.md](./install.md).
 
 2. **Compose children** — Root holds `config`, `data`, layout props. Put `<Grid />`, axes, series, `<Tooltip />`, `<Legend />` inside the root.
 
@@ -97,8 +97,8 @@ User goal?
 ```tsx
 "use client";
 
-import { NQBarChart, Bar, Grid, XAxis, YAxis, Tooltip, Legend } from "@/components/nqchart/charts/bar-chart";
-import { type ChartConfig } from "@/components/nqchart/ui/chart";
+import { NQBarChart, Bar, Grid, XAxis, YAxis, Tooltip, Legend } from "@nqlib/nqchart/bar-chart";
+import { type ChartConfig } from "@nqlib/nqchart";
 import { chartConfigColor } from "@/lib/chart-tokens"; // copy from colors.md
 
 const data = [{ month: "Jan", desktop: 120, mobile: 80 }];
@@ -123,20 +123,24 @@ export function RevenueChart() {
 }
 ```
 
-Adjust import path to match the project (`@/components/nqchart/...` after CLI install).
+Import the root from `@nqlib/nqchart/{family}` and its children from the **same** subpath.
 
 ---
 
-## Shared UI modules
+## Shared exports
 
-| CLI | Role |
-|-----|------|
-| `@nqchart/chart` | `ChartContainer`, `ChartConfig`, `LoadingIndicator` |
-| `@nqchart/tooltip` | `ChartTooltip` / `ChartTooltipContent` (used by chart `Tooltip`) |
-| `@nqchart/legend` | `ChartLegend` / `ChartLegendContent` |
-| `@nqchart/dot` | Point markers for line/scatter/radar |
-| `@nqchart/background` | `ChartBackground` / `backgroundVariant` on roots |
-| `@nqchart/nq-brush` | Zoom brush footer on bar/line/area/composed |
+All from the root `@nqlib/nqchart` (no separate install — one package):
+
+| Import | Role |
+|--------|------|
+| `ChartConfig`, `useChart` | Config type + chart context |
+| `ChartTooltip`, `ChartTooltipContent` | Backing the per-chart `Tooltip` child |
+| `ChartLegend`, `ChartLegendContent` | Backing the per-chart `Legend` child |
+| `ChartBackground` | Background variants on roots |
+| `NQBrush`, `useNQBrush` | Zoom brush footer on bar/line/area/composed |
+| `ChartLoadingSkeleton` | Loading placeholder |
+
+BI data helpers live at `@nqlib/nqchart/recipes` — see [recipes.md](./recipes.md).
 
 ---
 

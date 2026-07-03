@@ -4,7 +4,7 @@
     {
       "name": "nqchart",
       "type": "skill-md",
-      "description": "Build dashboards with composable NQChart — install @nqchart/* via shadcn, compose NQ*Chart children, theme colors, BI recipes. Use when the user asks for charts, graphs, KPIs, sparklines, funnels, waterfalls, heatmaps, histograms, pareto, gauges, or @nqchart / NQChart components. NOT for contributing to the nqchart repo.",
+      "description": "Build dashboards with composable NQChart — install the @nqlib/nqchart npm package, compose NQ*Chart children, theme colors, BI recipes. Use when the user asks for charts, graphs, KPIs, sparklines, funnels, waterfalls, heatmaps, histograms, pareto, gauges, or @nqlib/nqchart / NQChart components. NOT for contributing to the nqchart repo.",
       "url": "/.well-known/agent-skills/nqchart/SKILL.md"
     },
     {

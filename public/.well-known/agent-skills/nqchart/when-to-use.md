@@ -2,7 +2,7 @@
 
 Map user language → **one** `NQ*Chart` + optional **chart-recipes** helper.
 
-Install helpers: `npx shadcn@latest add @nqchart/chart-recipes` — see [recipes.md](./recipes.md).
+Data helpers: import from `@nqlib/nqchart/recipes` — see [recipes.md](./recipes.md).
 
 ## By analytical goal
 

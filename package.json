@@ -130,6 +130,11 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
+    "./recipes": {
+      "types": "./dist/types/registry/lib/chart-recipes.d.ts",
+      "import": "./dist/recipes.mjs",
+      "require": "./dist/recipes.cjs"
+    },
     "./area-chart": {
       "types": "./dist/types/registry/charts/area-chart.d.ts",
       "import": "./dist/area-chart.mjs",

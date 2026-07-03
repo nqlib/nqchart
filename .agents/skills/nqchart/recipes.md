@@ -1,12 +1,12 @@
-# Data recipes (`@nqchart/chart-recipes`)
+# Data recipes (`@nqlib/nqchart/recipes`)
 
-Install once:
+Pure data-prep helpers (no React) shipped in the package — no separate install. Import from the `recipes` subpath:
 
-```bash
-npx shadcn@latest add @nqchart/chart-recipes
+```ts
+import { binForHistogram, prepareParetoData, prepareGaugeRows } from "@nqlib/nqchart/recipes";
 ```
 
-Repo source: `src/registry/lib/chart-recipes.ts`. Docs: `/docs/chart-recipes`.
+Docs: `/docs/chart-recipes`.
 
 ---
 

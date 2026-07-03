@@ -196,7 +196,7 @@ Small height (`h-12`–`h-16`), `data` with value field.
 Compose inside `NQLineChart`, `NQBarChart`, `NQComposedChart`, `NQAreaChart`, `NQSparklineChart`:
 
 ```tsx
-import { ChartBackground } from "@nqchart/background";
+import { ChartBackground } from "@nqlib/nqchart";
 
 <ChartBackground variant="dots" />
 ```

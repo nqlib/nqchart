@@ -14,7 +14,8 @@
     "src/lib/public.ts",
     "src/registry/charts",
     "src/registry/ui",
-    "src/registry/echarts-core"
+    "src/registry/echarts-core",
+    "src/registry/lib/chart-recipes.ts"
   ],
   "exclude": [
     "node_modules",

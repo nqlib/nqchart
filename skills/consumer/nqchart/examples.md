@@ -11,7 +11,7 @@ All previews are registered in `src/registry/registry-example.ts`, `registry-doc
 ## Agent workflow
 
 1. [when-to-use.md](./when-to-use.md) → pick primitive
-2. [install.md](./install.md) → CLI packages
+2. [install.md](./install.md) → `npm i @nqlib/nqchart` + subpath imports
 3. [colors.md](./colors.md) → theme-aware `ChartConfig`
 4. Closest `ex-*` or block below → copy composition
 5. [components.md](./components.md) → child parts
@@ -20,9 +20,9 @@ All previews are registered in `src/registry/registry-example.ts`, `registry-doc
 
 ---
 
-## CLI blocks (copy whole file)
+## Prebuilt blocks (copy the composition)
 
-Install with `npx shadcn@latest add @nqchart/<block-name>`.
+Full dashboard-widget compositions built on the package. View at `/docs/bar-chart/blocks` and copy the `.tsx` into your app (they import from `@nqlib/nqchart/bar-chart`).
 
 | Block name | File | Chart |
 |------------|------|-------|
