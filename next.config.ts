@@ -105,8 +105,8 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/.well-known/skills/beecharts/skill.md",
-        destination: "/.well-known/agent-skills/beecharts/SKILL.md",
+        source: "/.well-known/skills/nqchart/skill.md",
+        destination: "/.well-known/agent-skills/nqchart/SKILL.md",
         permanent: true,
       },
     ];

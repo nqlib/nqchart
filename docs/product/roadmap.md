@@ -25,7 +25,7 @@ Also completed in full-roadmap pass: cartesian chart factory, color-token migrat
 
 ## Explicitly not planned
 
-- npm package publish for `@beecharts/*` (shadcn registry distribution)
+- npm package publish for `@nqchart/*` (shadcn registry distribution)
 - CMS for landing demo data
 - Engine rewrite (architecture is sound)
 - Auth/rate-limiting on `/mcp` (public docs)

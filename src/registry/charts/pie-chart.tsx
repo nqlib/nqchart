@@ -8,7 +8,7 @@ import { compilePieOption } from "@/registry/echarts-core/compile-pie";
 import { segmentKeysFromData } from "@/registry/echarts-core/segment-keys";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import {
-  BeeChartLegend,
+  NQChartLegend,
   bindChartLegendLayer,
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
@@ -19,7 +19,7 @@ import {
 } from "@/registry/ui/tooltip";
 import { type ReactNode, useMemo, useState } from "react";
 
-type BeePieChartProps<
+type NQPieChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -42,10 +42,10 @@ function PieChartCanvas<TData extends Record<string, unknown>>({
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeePieChart<
+export function NQPieChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
->({ config, data, children, className, nameKey, isLoading }: BeePieChartProps<TData, TConfig>) {
+>({ config, data, children, className, nameKey, isLoading }: NQPieChartProps<TData, TConfig>) {
   const resolvedNameKey = (nameKey ?? Object.keys(data[0] ?? {})[0] ?? "name") as string;
   const displayData = isLoading ? (getLoadingData(5) as unknown as TData[]) : data;
   const segmentKeys = useMemo(
@@ -128,7 +128,7 @@ export function Legend({
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <BeeChartLegend
+    <NQChartLegend
       variant={variant}
       align={align}
       hideIcon={hideIcon}

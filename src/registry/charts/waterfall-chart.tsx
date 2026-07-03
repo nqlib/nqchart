@@ -1,7 +1,7 @@
 "use client";
 
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
-import { BeeChartBrush } from "@/registry/echarts-core/bee-chart-brush";
+import { NQChartBrush } from "@/registry/echarts-core/nq-chart-brush";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
@@ -9,12 +9,12 @@ import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/ech
 import { compileWaterfallOption } from "@/registry/echarts-core/compile-waterfall";
 import { useChartBrush } from "@/registry/echarts-core/use-chart-brush";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
-import { BeeChartLegend } from "@/registry/ui/legend";
+import { NQChartLegend } from "@/registry/ui/legend";
 import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
-type BeeWaterfallChartProps<
+type NQWaterfallChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -45,7 +45,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
   return <EChartsHost option={option} colorEpoch={colorEpoch} onPlotRect={onPlotRect} />;
 }
 
-export function BeeWaterfallChart<
+export function NQWaterfallChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 >({
@@ -58,7 +58,7 @@ export function BeeWaterfallChart<
   isLoading,
   showBrush = true,
   brushFormatLabel,
-}: BeeWaterfallChartProps<TData, TConfig>) {
+}: NQWaterfallChartProps<TData, TConfig>) {
   const displayData = isLoading ? (getLoadingData(5) as unknown as TData[]) : data;
   const { visibleData, brushProps } = useChartBrush({ data: displayData, minSpan: 1 });
   const chartData = showBrush && !isLoading ? visibleData : displayData;
@@ -73,7 +73,7 @@ export function BeeWaterfallChart<
         isLoading={isLoading}
         footer={
           showBrush && !isLoading ? (
-            <BeeChartBrush
+            <NQChartBrush
               data={displayData}
               compile={compileWaterfallOption}
               rootFields={{ nameKey, valueKey, cartesian: { externalBrush: true } }}
@@ -143,6 +143,6 @@ export function Legend(props: { isClickable?: boolean }) {
   useRegisterPart({ type: "legend", id, isClickable: props.isClickable });
   const [selected, setSelected] = useState<string | null>(null);
   return (
-    <BeeChartLegend isClickable={props.isClickable} selected={selected} onSelectChange={setSelected} />
+    <NQChartLegend isClickable={props.isClickable} selected={selected} onSelectChange={setSelected} />
   );
 }

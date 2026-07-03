@@ -3,7 +3,7 @@
 ## Flow
 
 ```
-Bee*Chart (root)
+NQ*Chart (root)
   → PartRegistryProvider (children register parts)
   → useCompiledOption(compileFn, rootFields)
   → CompileContext { data, chartConfig, parts, layout, … }

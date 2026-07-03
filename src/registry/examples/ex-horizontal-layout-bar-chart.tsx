@@ -1,6 +1,6 @@
 "use client";
 
-import { BeeBarChart, Bar, XAxis, YAxis, Grid, Tooltip, Legend } from "@/registry/charts/bar-chart";
+import { NQBarChart, Bar, XAxis, YAxis, Grid, Tooltip, Legend } from "@/registry/charts/bar-chart";
 import { type ChartConfig } from "@/registry/ui/chart";
 import { TRAFFIC_MONTHLY_DATA } from "@/registry/examples/example-shared";
 
@@ -19,9 +19,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BeeExampleHorizontalLayoutBarChart() {
+export function NQExampleHorizontalLayoutBarChart() {
   return (
-    <BeeBarChart
+    <NQBarChart
       data={horizontalData}
       config={chartConfig}
       className="h-full w-full p-4"
@@ -34,6 +34,6 @@ export function BeeExampleHorizontalLayoutBarChart() {
       <Legend />
       <Tooltip />
       <Bar dataKey="desktop" />
-    </BeeBarChart>
+    </NQBarChart>
   );
 }

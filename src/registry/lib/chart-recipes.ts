@@ -1,11 +1,11 @@
-/** Data helpers for common BI chart shapes — use with primitive Bee*Chart components. */
+/** Data helpers for common BI chart shapes — use with primitive NQ*Chart components. */
 
 const formatBin = (value: number) => {
   if (Math.abs(value) >= 1000) return `${(value / 1000).toFixed(1)}k`;
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
 };
 
-/** Bin numeric samples for use with `BeeBarChart` (`bin` + `count` keys). */
+/** Bin numeric samples for use with `NQBarChart` (`bin` + `count` keys). */
 export function binForHistogram(values: number[], binCount = 8) {
   if (values.length === 0) return [];
 
@@ -83,7 +83,7 @@ export function workloadUtilization(assignedHours: number, availableHours: numbe
 }
 
 /**
- * Map daily capacity + assignments into calendar cells for `BeeCalendarChart`.
+ * Map daily capacity + assignments into calendar cells for `NQCalendarChart`.
  * `value` is utilization %; values above 100 indicate overbooking.
  */
 export function prepareCalendarWorkloadCells(
@@ -127,7 +127,7 @@ export type TeamWorkloadRow = {
 };
 
 /**
- * Flatten team × day utilization into a heatmap matrix for `BeeHeatmapChart`.
+ * Flatten team × day utilization into a heatmap matrix for `NQHeatmapChart`.
  * Rows are employees; columns are short date labels (e.g. `Mon 3`).
  */
 export function prepareTeamWorkloadMatrix(
@@ -154,7 +154,7 @@ export function prepareTeamWorkloadMatrix(
   return { cells, min, max: Math.max(max, 100), rowLabels, colLabels };
 }
 
-/** Flatten a row × column matrix for categorical heatmaps on `BeeHeatmapChart`. */
+/** Flatten a row × column matrix for categorical heatmaps on `NQHeatmapChart`. */
 export function prepareHeatmapCells(
   rowLabels: string[],
   colLabels: string[],
@@ -196,7 +196,7 @@ export type BulletRow = {
   max: number;
 };
 
-/** One horizontal bullet row for `BeeBarChart` with `layout="horizontal"`. */
+/** One horizontal bullet row for `NQBarChart` with `layout="horizontal"`. */
 export function prepareBulletRow(
   label: string,
   options: {
@@ -253,7 +253,7 @@ export type BoxPlotRow = {
   max: number;
 };
 
-/** Summarize numeric samples into quartiles for box plot recipes on `BeeComposedChart`. */
+/** Summarize numeric samples into quartiles for box plot recipes on `NQComposedChart`. */
 export function prepareBoxPlotRow(category: string, samples: number[]): BoxPlotRow {
   if (samples.length === 0) {
     return { category, min: 0, q1: 0, median: 0, q3: 0, max: 0 };

@@ -6,7 +6,7 @@
 
 ## Why this matters
 
-`src/app/mcp/route.ts` is a public, unauthenticated MCP (Model Context Protocol) endpoint exposing two tools (`search_docs`, `read_doc`) over JSON-RPC 2.0 so AI agents can query the BeeCharts docs. Three failure paths currently escape as unhandled exceptions → Next.js returns a generic 500 instead of a JSON-RPC error object, which breaks MCP clients:
+`src/app/mcp/route.ts` is a public, unauthenticated MCP (Model Context Protocol) endpoint exposing two tools (`search_docs`, `read_doc`) over JSON-RPC 2.0 so AI agents can query the NQChart docs. Three failure paths currently escape as unhandled exceptions → Next.js returns a generic 500 instead of a JSON-RPC error object, which breaks MCP clients:
 
 1. **Malformed JSON body** — `route.ts:158`: `const body = (await request.json()) as JsonRpcRequest;` is unguarded. Any non-JSON POST throws `SyntaxError`.
 2. **Unknown doc path** — `route.ts:77-78`: `readDoc` throws `new Error(\`No documentation page found for path: ${path}\`)`, and the caller `handleToolCall` (`route.ts:134-141`) has no try/catch.

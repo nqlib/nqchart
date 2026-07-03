@@ -35,7 +35,7 @@ export function ComponentPreview({
           recently added it, or{" "}
           <a
             target="_blank"
-            href="https://github.com/ctesibius/beecharts/issues"
+            href="https://github.com/ctesibius/nqchart/issues"
             className="text-primary hover:underline"
           >
             open an issue

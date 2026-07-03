@@ -16,7 +16,7 @@ const DocsHeader = async () => {
       <div className="pointer-events-auto relative z-10 flex h-full items-center gap-2 pl-6">
         {stars && (
           <>
-            <Link href="https://github.com/ctesibius/beecharts" target="_blank">
+            <Link href="https://github.com/ctesibius/nqchart" target="_blank">
               <Button variant="link" size="sm">
                 <GithubIcon /> <span className="text-foreground text-xs">{stars}</span>
               </Button>

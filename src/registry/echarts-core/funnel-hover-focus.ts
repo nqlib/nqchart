@@ -39,7 +39,7 @@ function getFunnelData(instance: EChartsType, seriesIndex: number): FunnelData |
 /**
  * Funnel segments skip mouseout between adjacent stages; blurSeries skips paths with
  * __highByOuter. Reset all segments, then blur non-hovered only — hovered stays normal
- * so native emphasis (disabled at compile) does not fight BeeCharts blur sync.
+ * so native emphasis (disabled at compile) does not fight NQChart blur sync.
  */
 export function repairFunnelHoverFocus(
   instance: EChartsType,

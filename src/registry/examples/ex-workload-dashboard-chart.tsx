@@ -2,13 +2,13 @@
 
 import { useMemo, useState } from "react";
 import {
-  BeeCalendarChart,
+  NQCalendarChart,
   Calendar,
   Tooltip as CalendarTooltip,
   Legend as CalendarLegend,
 } from "@/registry/charts/calendar-chart";
 import {
-  BeeHeatmapChart,
+  NQHeatmapChart,
   Heatmap,
   Tooltip as HeatmapTooltip,
   Legend as HeatmapLegend,
@@ -38,7 +38,7 @@ function MetricCard({ label, value, detail }: { label: string; value: string; de
   );
 }
 
-export function BeeExampleWorkloadDashboardChart() {
+export function NQExampleWorkloadDashboardChart() {
   const [view, setView] = useState<WorkloadView>("team");
   const [employee, setEmployee] = useState("Maya Chen");
 
@@ -120,7 +120,7 @@ export function BeeExampleWorkloadDashboardChart() {
 
       <div className="min-h-0 min-w-0 flex-1">
         {view === "team" ? (
-          <BeeHeatmapChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full">
+          <NQHeatmapChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full">
             <Heatmap
               dataKey="utilization"
               data={teamMatrix.cells}
@@ -132,9 +132,9 @@ export function BeeExampleWorkloadDashboardChart() {
             />
             <HeatmapLegend />
             <HeatmapTooltip />
-          </BeeHeatmapChart>
+          </NQHeatmapChart>
         ) : (
-          <BeeCalendarChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full">
+          <NQCalendarChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full">
             <Calendar
               dataKey="utilization"
               data={employeeCalendar.cells}
@@ -145,7 +145,7 @@ export function BeeExampleWorkloadDashboardChart() {
             />
             <CalendarLegend />
             <CalendarTooltip />
-          </BeeCalendarChart>
+          </NQCalendarChart>
         )}
       </div>
     </div>

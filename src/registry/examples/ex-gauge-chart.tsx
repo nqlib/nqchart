@@ -1,6 +1,6 @@
 "use client";
 
-import { BeeRadialChart, RadialBar, Tooltip } from "@/registry/charts/radial-chart";
+import { NQRadialChart, RadialBar, Tooltip } from "@/registry/charts/radial-chart";
 import { type ChartConfig } from "@/registry/ui/chart";
 
 /** `series` must match a key in `chartConfig` — that value selects the gradient. */
@@ -16,10 +16,10 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-/** KPI-style semi-circle gauge — `BeeRadialChart` with `variant="semi"`. */
-export function BeeExampleGaugeChart() {
+/** KPI-style semi-circle gauge — `NQRadialChart` with `variant="semi"`. */
+export function NQExampleGaugeChart() {
   return (
-    <BeeRadialChart
+    <NQRadialChart
       className="h-full w-full p-4"
       data={data}
       nameKey="series"
@@ -28,6 +28,6 @@ export function BeeExampleGaugeChart() {
     >
       <Tooltip />
       <RadialBar dataKey="value" />
-    </BeeRadialChart>
+    </NQRadialChart>
   );
 }

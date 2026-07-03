@@ -1,13 +1,13 @@
 # Architecture overview
 
-BeeCharts is a **shadcn-style chart registry** — installable React source under `src/registry/`, not a separate npm chart package.
+NQChart is a **shadcn-style chart registry** — installable React source under `src/registry/`, not a separate npm chart package.
 
 ## Stack (top → bottom)
 
 ```
 src/content/docs/          Fumadocs MDX (public reference)
 src/components/            Site UI only (docs chrome, landing)
-src/registry/charts/       Bee*Chart compound roots + child parts
+src/registry/charts/       NQ*Chart compound roots + child parts
 src/registry/ui/           Chart shell (ChartContainer, legend, tooltip)
 src/registry/echarts-core/ Compilers, hooks, tokens, color resolution
 echarts/core               Tree-shaken ECharts modules (echarts-init.ts)
@@ -15,7 +15,7 @@ echarts/core               Tree-shaken ECharts modules (echarts-init.ts)
 
 ## Data flow
 
-1. User composes `<BeeBarChart>` + children (`<Bar />`, `<Grid />`, …).
+1. User composes `<NQBarChart>` + children (`<Bar />`, `<Grid />`, …).
 2. Child parts register in `PartRegistryProvider`.
 3. `useCompiledOption` builds `CompileContext` from root props + registered parts.
 4. `compile-bar.ts` (etc.) returns a pure ECharts `option` object.
@@ -29,7 +29,7 @@ echarts/core               Tree-shaken ECharts modules (echarts-init.ts)
 | Docs | `/docs/<chart>` |
 | Agent markdown | `/llm/*.md`, `/llms.txt` |
 | MCP | `/mcp` (`search_docs`, `read_doc`) |
-| Agent skills | `/.well-known/agent-skills/beecharts/` |
+| Agent skills | `/.well-known/agent-skills/nqchart/` |
 
 ## Design principles
 

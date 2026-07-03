@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BeeHeatmapChart,
+  NQHeatmapChart,
   Heatmap,
   Tooltip,
   Legend,
@@ -31,9 +31,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BeeExampleHeatmapChart() {
+export function NQExampleHeatmapChart() {
   return (
-    <BeeHeatmapChart config={chartConfig} className="h-full w-full p-4">
+    <NQHeatmapChart config={chartConfig} className="h-full w-full p-4">
       <Heatmap
         dataKey="intensity"
         data={cells}
@@ -44,6 +44,6 @@ export function BeeExampleHeatmapChart() {
       />
       <Legend />
       <Tooltip />
-    </BeeHeatmapChart>
+    </NQHeatmapChart>
   );
 }

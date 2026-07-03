@@ -15,10 +15,10 @@ export type ChartLegendVariant =
   | "vertical-bar"
   | "horizontal-bar";
 
-export const BEE_CHART_LEGEND_MARKER = Symbol.for("beecharts.ChartLegend");
+export const NQ_CHART_LEGEND_MARKER = Symbol.for("nqchart.ChartLegend");
 
 /** Chart `<Legend />` must use this so `ChartPlotShell` renders it below the canvas. */
-export const CHART_LEGEND_LAYER_NAME = "BeeChartLegend";
+export const CHART_LEGEND_LAYER_NAME = "NQChartLegend";
 
 export function bindChartLegendLayer<T extends (...args: never[]) => unknown>(component: T): T {
   Object.assign(component, { displayName: CHART_LEGEND_LAYER_NAME });
@@ -157,7 +157,7 @@ export function ChartLegendContent({
   );
 }
 
-ChartLegendContent.displayName = "BeeChartLegendContent";
+ChartLegendContent.displayName = "NQChartLegendContent";
 
 const LEGEND_SERIES_TYPES = new Set([
   "bar",
@@ -182,7 +182,7 @@ function seriesKeysFromParts(parts: ChartPart[]) {
 }
 
 /** HTML legend rendered below the chart; hides built-in ECharts legend. */
-export function BeeChartLegend({
+export function NQChartLegend({
   variant = "rounded-square",
   align = "right",
   hideIcon,
@@ -218,7 +218,7 @@ export function BeeChartLegend({
   );
 }
 
-BeeChartLegend.displayName = "BeeChartLegend";
+NQChartLegend.displayName = "NQChartLegend";
 
 export function ChartLegend() {
   return null;

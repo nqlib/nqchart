@@ -4,7 +4,7 @@ description: Define labels, colors, and icons for each data series in your chart
 image: /og/chart-config.png
 ---
 
-The `chartConfig` is a central configuration object that every Bee Chart component accepts. It maps each data key in your dataset to its display metadata — **labels**, **colors** (with theme support), and optional **icons** that appear in tooltips and legends.
+The `chartConfig` is a central configuration object that every NQ Chart component accepts. It maps each data key in your dataset to its display metadata — **labels**, **colors** (with theme support), and optional **icons** that appear in tooltips and legends.
 
 ## Structure
 
@@ -134,7 +134,7 @@ This means you can provide just 2-3 gradient stops and they'll smoothly span any
 The chart config is validated at runtime. If you pass an empty `colors` object or one without a valid theme key, you'll get a clear error:
 
 ```plaintext
-[BeeCharts] Invalid chart config for "desktop": colors object must
+[NQChart] Invalid chart config for "desktop": colors object must
 have at least one theme key (light, dark). Received empty object or
 invalid keys.
 ```

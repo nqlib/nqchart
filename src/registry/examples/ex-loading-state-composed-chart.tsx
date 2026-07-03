@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BeeComposedChart,
+  NQComposedChart,
   Bar,
   Line,
   Grid,
@@ -15,9 +15,9 @@ import {
   TRAFFIC_MONTHLY_DATA,
 } from "@/registry/examples/example-shared";
 
-export function BeeExampleLoadingStateComposedChart() {
+export function NQExampleLoadingStateComposedChart() {
   return (
-    <BeeComposedChart
+    <NQComposedChart
       config={DUAL_SERIES_CHART_CONFIG}
       data={[...TRAFFIC_MONTHLY_DATA]}
       xDataKey="month"
@@ -31,6 +31,6 @@ export function BeeExampleLoadingStateComposedChart() {
       <Tooltip />
       <Bar dataKey="desktop" />
       <Line dataKey="mobile" curveType="monotone" />
-    </BeeComposedChart>
+    </NQComposedChart>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BeeComposedChart,
+  NQComposedChart,
   Bar,
   Line,
   Grid,
@@ -34,9 +34,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function BeeExampleParetoChart() {
+export function NQExampleParetoChart() {
   return (
-    <BeeComposedChart
+    <NQComposedChart
       config={chartConfig}
       data={data}
       xDataKey="cause"
@@ -50,6 +50,6 @@ export function BeeExampleParetoChart() {
       <Tooltip />
       <Bar dataKey="count" barProps={{ yAxisId: "left" }} />
       <Line dataKey="cumulative" lineProps={{ yAxisId: "right" }} />
-    </BeeComposedChart>
+    </NQComposedChart>
   );
 }

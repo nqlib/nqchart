@@ -70,7 +70,7 @@ export function indexToPlotPercent(
   return (index / (totalPoints - 1)) * 100;
 }
 
-/** Tighter horizontal grid when using the footer `BeeChartBrush` (not built-in dataZoom). */
+/** Tighter horizontal grid when using the footer `NQChartBrush` (not built-in dataZoom). */
 export function resolveCartesianGrid(
   parts: ChartPart[],
   externalBrush: boolean | undefined,

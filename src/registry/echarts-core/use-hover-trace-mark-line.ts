@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { EChartsType } from "echarts/core";
 import {
-  BEE_HOVER_TRACE_GRAPHIC_ID,
+  NQ_HOVER_TRACE_GRAPHIC_ID,
   buildHoverTraceGraphic,
   hoverTraceValueAt,
 } from "./hover-trace-bar";
@@ -17,7 +17,7 @@ function removeHoverTraceGraphic(chart: EChartsType, traceShown: { current: bool
 
   try {
     chart.setOption(
-      { graphic: [{ id: BEE_HOVER_TRACE_GRAPHIC_ID, $action: "remove" }] },
+      { graphic: [{ id: NQ_HOVER_TRACE_GRAPHIC_ID, $action: "remove" }] },
       { notMerge: false, lazyUpdate: false },
     );
   } catch {

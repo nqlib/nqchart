@@ -2,11 +2,11 @@ import type { EChartsOption } from "echarts";
 import type { EChartsType } from "echarts/core";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 
-export const BEE_HOVER_TRACE_GRAPHIC_ID = "bee-hover-trace";
+export const NQ_HOVER_TRACE_GRAPHIC_ID = "nq-hover-trace";
 
 /** ECharts series id for a hover-trace variant — parameterized by `dataKey` for reuse outside bar charts. */
 export function hoverTraceSeriesId(dataKey: string): string {
-  return `bee-hover-trace-${dataKey}`;
+  return `nq-hover-trace-${dataKey}`;
 }
 
 type GridRect = { x: number; y: number; width: number; height: number };
@@ -57,7 +57,7 @@ export function hoverTraceValueAt(
   return Number(rows[index]?.[dataKey] ?? 0);
 }
 
-/** Canvas-safe hover trace — dashed line, value pill, end dot (beecharts ReferenceLine parity). */
+/** Canvas-safe hover trace — dashed line, value pill, end dot (nqchart ReferenceLine parity). */
 export function buildHoverTraceGraphic(
   chart: EChartsType,
   categoryIndex: number,
@@ -82,12 +82,12 @@ export function buildHoverTraceGraphic(
   return [
     {
       type: "group",
-      id: BEE_HOVER_TRACE_GRAPHIC_ID,
+      id: NQ_HOVER_TRACE_GRAPHIC_ID,
       z: 100,
       children: [
         {
           type: "line",
-          id: `${BEE_HOVER_TRACE_GRAPHIC_ID}-line`,
+          id: `${NQ_HOVER_TRACE_GRAPHIC_ID}-line`,
           shape: { x1: dashX1, y1: yPx, x2: lineX2, y2: yPx },
           style: {
             stroke: chrome.foreground,
@@ -98,14 +98,14 @@ export function buildHoverTraceGraphic(
         },
         {
           type: "rect",
-          id: `${BEE_HOVER_TRACE_GRAPHIC_ID}-label-bg`,
+          id: `${NQ_HOVER_TRACE_GRAPHIC_ID}-label-bg`,
           shape: { x: pillX, y: pillY, width: labelWidth, height: pillHeight, r: 4 },
           style: { fill: chrome.foreground },
           transition: ["shape"],
         },
         {
           type: "text",
-          id: `${BEE_HOVER_TRACE_GRAPHIC_ID}-label`,
+          id: `${NQ_HOVER_TRACE_GRAPHIC_ID}-label`,
           style: {
             text: formatted,
             fill: chrome.background,
@@ -119,7 +119,7 @@ export function buildHoverTraceGraphic(
         },
         {
           type: "circle",
-          id: `${BEE_HOVER_TRACE_GRAPHIC_ID}-dot`,
+          id: `${NQ_HOVER_TRACE_GRAPHIC_ID}-dot`,
           shape: { cx: lineX2, cy: yPx, r: 3 },
           style: { fill: chrome.foreground },
           transition: ["shape"],

@@ -1,6 +1,6 @@
 "use client";
 
-import { BeePieChart, Pie, Tooltip, Legend } from "@/registry/charts/pie-chart";
+import { NQPieChart, Pie, Tooltip, Legend } from "@/registry/charts/pie-chart";
 import { type ChartConfig } from "@/registry/ui/chart";
 
 const data = [
@@ -19,9 +19,9 @@ const chartConfig = {
   other: { label: "Other", colors: { light: ["#6b7280"], dark: ["#9ca3af"] } },
 } satisfies ChartConfig;
 
-export function BeeExamplePieChart() {
+export function NQExamplePieChart() {
   return (
-    <BeePieChart
+    <NQPieChart
       className="h-full w-full p-4"
       data={data}
       nameKey="browser"
@@ -30,6 +30,6 @@ export function BeeExamplePieChart() {
       <Legend />
       <Tooltip />
       <Pie dataKey="visitors" nameKey="browser" innerRadius="40%" />
-    </BeePieChart>
+    </NQPieChart>
   );
 }

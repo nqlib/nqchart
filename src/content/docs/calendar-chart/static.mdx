@@ -3,7 +3,7 @@ title: Calendar Chart
 description: Day-level calendar heatmaps for workload, capacity, and activity tracking — powered by Apache ECharts
 image: /og/calendar-chart.png
 links:
-  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/calendar-chart.tsx
+  github: https://github.com/ctesibius/nqchart/blob/main/src/registry/charts/calendar-chart.tsx
   doc: https://echarts.apache.org/en/option.html#calendar
   api: https://echarts.apache.org/en/option.html#series-heatmap
 ---
@@ -18,7 +18,7 @@ links:
     <TabsTab value="manual">Manual</TabsTab>
   </TabsList>
   <TabsPanel value="cli">
-    <CliBlock commands={["@beecharts/calendar-chart", "@beecharts/chart-recipes"]} />
+    <CliBlock commands={["@nqchart/calendar-chart", "@nqchart/chart-recipes"]} />
   </TabsPanel>
   <TabsPanel value="manual">
     <Steps>
@@ -31,34 +31,34 @@ links:
       <Step>
         <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
          <StepDescription>
-          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          To use the chart, first create the folder `nqchart` and a subfolder called `charts` inside your `components` directory.
           Then, copy the following base calendar-chart code into a new file in that folder.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="calendar-chart"
-            title="components/beecharts/charts/calendar-chart.tsx"
+            title="components/nqchart/charts/calendar-chart.tsx"
           />
         </StepContent>
       </Step>
        <Step>
         <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
         <StepDescription>
-          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `nqchart` folder and paste the code there.
 
           Below is main chart component.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="chart"
-            title="components/beecharts/ui/chart.tsx"
+            title="components/nqchart/ui/chart.tsx"
           />
         </StepContent>
       </Step>
        <Step>
         <StepTitle>Add the chart-recipes helper.</StepTitle>
         <StepDescription>
-          Copy `chart-recipes.ts` into your project (or install `@beecharts/chart-recipes`) so you can map daily capacity and assignments with `prepareCalendarWorkloadCells()`.
+          Copy `chart-recipes.ts` into your project (or install `@nqchart/chart-recipes`) so you can map daily capacity and assignments with `prepareCalendarWorkloadCells()`.
         </StepDescription>
         <StepContent>
           <ComponentSource
@@ -73,15 +73,15 @@ links:
 
 ## Usage
 
-The calendar chart is composable. `<BeeCalendarChart>` is the container — pass a `chartConfig` whose keys match your utilization series. Map daily `availableHours` and `assignedHours` with `prepareCalendarWorkloadCells()`, then compose `<Calendar />` with the resulting cells. Add `<Tooltip />` and `<Legend />` when you want the shared BeeCharts chrome.
+The calendar chart is composable. `<NQCalendarChart>` is the container — pass a `chartConfig` whose keys match your utilization series. Map daily `availableHours` and `assignedHours` with `prepareCalendarWorkloadCells()`, then compose `<Calendar />` with the resulting cells. Add `<Tooltip />` and `<Legend />` when you want the shared NQChart chrome.
 
 ```tsx
 import {
-  BeeCalendarChart,
+  NQCalendarChart,
   Calendar,
   Tooltip,
   Legend,
-} from "@/components/beecharts/charts/calendar-chart";
+} from "@/components/nqchart/charts/calendar-chart";
 import { prepareCalendarWorkloadCells } from "@/lib/chart-recipes";
 ```
 
@@ -104,7 +104,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-<BeeCalendarChart config={chartConfig} className="h-80 w-full">
+<NQCalendarChart config={chartConfig} className="h-80 w-full">
   <Calendar
     dataKey="utilization"
     data={cells}
@@ -114,7 +114,7 @@ const chartConfig = {
   />
   <Legend />
   <Tooltip />
-</BeeCalendarChart>
+</NQCalendarChart>
 ```
 
 Each cell's `value` is **utilization %** — `assignedHours ÷ availableHours × 100`. Values above 100 indicate overbooking. The tooltip shows assigned, available, and utilization for each day.
@@ -123,9 +123,9 @@ Each cell's `value` is **utilization %** — `assignedHours ÷ availableHours ×
 
 | View | Chart | Best for |
 |------|-------|----------|
-| One person, one month | `BeeCalendarChart` | Spot overload days, PTO gaps, sprint rhythm |
-| Team × week | `BeeHeatmapChart` + `prepareTeamWorkloadMatrix()` | Compare who is over/under capacity across the same days |
-| Team × month (dense) | `BeeHeatmapChart` | Portfolio view when calendar tiles are too small |
+| One person, one month | `NQCalendarChart` | Spot overload days, PTO gaps, sprint rhythm |
+| Team × week | `NQHeatmapChart` + `prepareTeamWorkloadMatrix()` | Compare who is over/under capacity across the same days |
+| Team × month (dense) | `NQHeatmapChart` | Portfolio view when calendar tiles are too small |
 
 Managers typically monitor **assigned hours vs available hours per period**. Available comes from contracts, shifts, or PTO-adjusted capacity; assigned comes from project allocations, tickets, or scheduled work. Color encodes the ratio — not raw hours — so part-time and full-time staff are comparable.
 
@@ -153,7 +153,7 @@ Same metric across five team members for one work week. Rows are people; columns
 
 The chart is composed of a root container and declarative parts. Render the root, then compose the slots you need as children.
 
-<ApiHeading>BeeCalendarChart</ApiHeading>
+<ApiHeading>NQCalendarChart</ApiHeading>
 
 The root container. Owns `chartConfig`, the ECharts canvas, and the part registry that compiles calendar options.
 
@@ -202,8 +202,8 @@ Registers day cells and calendar layout with the ECharts compiler. Renders no DO
 
 <ApiHeading>Tooltip</ApiHeading>
 
-Enables the shared BeeCharts HTML tooltip layer. Built-in formatter shows date, assigned hours, available hours, and utilization %.
+Enables the shared NQChart HTML tooltip layer. Built-in formatter shows date, assigned hours, available hours, and utilization %.
 
 <ApiHeading>Legend</ApiHeading>
 
-Hides the built-in ECharts legend and reserves space for the shared BeeCharts legend chrome when composed.
+Hides the built-in ECharts legend and reserves space for the shared NQChart legend chrome when composed.

@@ -7,7 +7,7 @@ import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/ech
 import { compileRadarOption } from "@/registry/echarts-core/compile-radar";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import {
-  BeeChartLegend,
+  NQChartLegend,
   bindChartLegendLayer,
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
@@ -15,7 +15,7 @@ import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
-type BeeRadarChartProps<
+type NQRadarChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -31,10 +31,10 @@ function RadarChartCanvas<TData extends Record<string, unknown>>({ data }: { dat
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeeRadarChart<
+export function NQRadarChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
->({ config, data, children, className, isLoading }: BeeRadarChartProps<TData, TConfig>) {
+>({ config, data, children, className, isLoading }: NQRadarChartProps<TData, TConfig>) {
   const displayData = isLoading ? (getLoadingData(6) as unknown as TData[]) : data;
   return (
     <PartRegistryProvider>
@@ -78,7 +78,7 @@ export function Legend(props: { variant?: ChartLegendVariant; isClickable?: bool
   useRegisterPart({ type: "legend", id, variant: props.variant, isClickable: props.isClickable });
   const [selected, setSelected] = useState<string | null>(null);
   return (
-    <BeeChartLegend
+    <NQChartLegend
       variant={props.variant}
       isClickable={props.isClickable}
       selected={selected}

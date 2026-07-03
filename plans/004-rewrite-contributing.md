@@ -45,7 +45,7 @@ src/
   content/docs/   # MDX documentation pages (fumadocs)
   registry/       # THE PRODUCT: installable chart components
     echarts-core/ # engine: compilers, hooks, animation tokens, color resolution
-    charts/       # public chart components (BeeBarChart, BeePieChart, ...)
+    charts/       # public chart components (NQBarChart, NQPieChart, ...)
     ui/           # chart-adjacent UI shipped via registry (chart.tsx, legend, tooltip)
     examples/     # docs example components
     blocks/       # larger composed blocks

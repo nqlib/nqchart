@@ -6,7 +6,7 @@ import { absoluteUrl } from "@/lib/utils";
 import { source } from "@/lib/source";
 import { processMdxForLLMs } from "@/lib/llm";
 
-const CONSUMER_SKILL_DIR = join(process.cwd(), "skills/consumer/beecharts");
+const CONSUMER_SKILL_DIR = join(process.cwd(), "skills/consumer/nqchart");
 const AGENT_SKILLS_INDEX_PATH = join(
   process.cwd(),
   "public/.well-known/agent-skills/index.json",
@@ -72,9 +72,9 @@ export function generateLlmsTxt() {
   const chartDocs = pages.filter((page) => CHART_DOCS.has(page.url));
   const uiDocs = pages.filter((page) => page.url.startsWith("/docs/ui/"));
 
-  return `# BeeCharts Documentation
+  return `# NQChart Documentation
 
-> BeeCharts is an open-source composable chart library for React dashboards, built with shadcn/ui and Apache ECharts.
+> NQChart is an open-source composable chart library for React dashboards, built with shadcn/ui and Apache ECharts.
 
 ## Start Here
 ${renderLinks(startHere)}
@@ -110,9 +110,9 @@ ${content}`;
     }),
   );
 
-  return `# BeeCharts Full Documentation
+  return `# NQChart Full Documentation
 
-> Full markdown snapshot of the BeeCharts documentation generated from the same MDX source as beecharts.local.
+> Full markdown snapshot of the NQChart documentation generated from the same MDX source as nqchart.local.
 
 ${sections.join("\n\n---\n\n")}
 `;

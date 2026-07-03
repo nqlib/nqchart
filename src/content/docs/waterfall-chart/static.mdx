@@ -1,9 +1,9 @@
 ---
 title: Waterfall Chart
-description: Bridges, deltas, and totals stacked as one composable BeeChart
+description: Bridges, deltas, and totals stacked as one composable NQChart
 image: /og/waterfall-chart.png
 links:
-  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/waterfall-chart.tsx
+  github: https://github.com/ctesibius/nqchart/blob/main/src/registry/charts/waterfall-chart.tsx
   doc: https://echarts.apache.org/en/option.html#series-bar
   api: https://echarts.apache.org/en/option.html#series-bar
 ---
@@ -18,7 +18,7 @@ links:
     <TabsTab value="manual">Manual</TabsTab>
   </TabsList>
   <TabsPanel value="cli">
-    <CliBlock commands={["@beecharts/waterfall-chart"]} />
+    <CliBlock commands={["@nqchart/waterfall-chart"]} />
   </TabsPanel>
   <TabsPanel value="manual">
     <Steps>
@@ -31,48 +31,48 @@ links:
       <Step>
         <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
          <StepDescription>
-          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          To use the chart, first create the folder `nqchart` and a subfolder called `charts` inside your `components` directory.
           Then, copy the following base waterfall-chart code into a new file in that folder.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="waterfall-chart"
-            title="components/beecharts/charts/waterfall-chart.tsx"
+            title="components/nqchart/charts/waterfall-chart.tsx"
           />
         </StepContent>
       </Step>
        <Step>
         <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
         <StepDescription>
-          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `nqchart` folder and paste the code there.
 
           Below is main chart component.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="chart"
-            title="components/beecharts/ui/chart.tsx"
+            title="components/nqchart/ui/chart.tsx"
           />
         </StepContent>
       </Step>
        <Step>
         <StepTitle>Now, We need to add sub components.</StepTitle>
         <StepDescription>
-          Create a file called `tooltip.tsx` inside the `beecharts/ui` folder and paste the code there.
+          Create a file called `tooltip.tsx` inside the `nqchart/ui` folder and paste the code there.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="tooltip"
-            title="components/beecharts/ui/tooltip.tsx"
+            title="components/nqchart/ui/tooltip.tsx"
           />
         </StepContent>
         <StepDescription>
-          Now, create another file called `legend.tsx` inside the `beecharts/ui` folder and paste the code there.
+          Now, create another file called `legend.tsx` inside the `nqchart/ui` folder and paste the code there.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="legend"
-            title="components/beecharts/ui/legend.tsx"
+            title="components/nqchart/ui/legend.tsx"
           />
         </StepContent>
       </Step>
@@ -82,22 +82,22 @@ links:
 
 ## Usage
 
-The waterfall chart is composible on top of stacked `<Bar />` geometries (transparent “base” + visible segment). Provide rows with semantic `WaterfallType` (`start`, `increase`, `decrease`, `total`) encoded at `typeKey` (defaults to `"type"`), display names (`nameKey`), deltas (`valueKey`), gradients via `chartConfig`. Compose `<Grid />`, `<XAxis />`, `<YAxis />`, `<Bars />`, `<Tooltip />`, `<Legend />` as needed plus optional `backgroundVariant` on the root — remaining behavior is compiled into ECharts bar series options by BeeCharts; see <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>bar series docs</Link> when extending through `chartProps`.
+The waterfall chart is composible on top of stacked `<Bar />` geometries (transparent “base” + visible segment). Provide rows with semantic `WaterfallType` (`start`, `increase`, `decrease`, `total`) encoded at `typeKey` (defaults to `"type"`), display names (`nameKey`), deltas (`valueKey`), gradients via `chartConfig`. Compose `<Grid />`, `<XAxis />`, `<YAxis />`, `<Bars />`, `<Tooltip />`, `<Legend />` as needed plus optional `backgroundVariant` on the root — remaining behavior is compiled into ECharts bar series options by NQChart; see <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>bar series docs</Link> when extending through `chartProps`.
 
 ```tsx
 import {
-  BeeWaterfallChart,
+  NQWaterfallChart,
   Bars,
   Grid,
   XAxis,
   YAxis,
   Tooltip,
   Legend,
-} from "@/components/beecharts/charts/waterfall-chart";
+} from "@/components/nqchart/charts/waterfall-chart";
 ```
 
 ```tsx
-<BeeWaterfallChart
+<NQWaterfallChart
   config={chartConfig}
   data={rows}
   nameKey="name"
@@ -111,7 +111,7 @@ import {
   <Bars isClickable glowingBars={["product-a"]} />
   <Tooltip />
   <Legend isClickable />
-</BeeWaterfallChart>
+</NQWaterfallChart>
 ```
 
 ### Interactive Selection
@@ -119,7 +119,7 @@ import {
 Set `isClickable` on `<Bars />` and `<Legend />` as needed — `onSelectionChange` carries `{ dataKey, value } | null`, where `dataKey` aligns with names from `nameKey` and values reflect stacking math (`start` resets running totals, totals span full magnitude, deltas offset previous balance):
 
 ```tsx
-<BeeWaterfallChart
+<NQWaterfallChart
   config={chartConfig}
   data={rows}
   nameKey="name"
@@ -138,7 +138,7 @@ Set `isClickable` on `<Bars />` and `<Legend />` as needed — `onSelectionChang
   <Bars isClickable />
   <Legend isClickable />
   <Tooltip />
-</BeeWaterfallChart>
+</NQWaterfallChart>
 ```
 
 ### Loading State
@@ -154,10 +154,10 @@ Set `isClickable` on `<Bars />` and `<Legend />` as needed — `onSelectionChang
 
 ### Intro animation
 
-Bars grow in on first paint with a staggered motion.dev reveal (ECharts’ built-in bar animation is disabled, same as other Bee charts). Control order with `animationType` on the root — `"left-to-right"` (default), `"right-to-left"`, `"center-out"`, `"edges-in"`, or `"none"`. Respects the OS reduce-motion preference.
+Bars grow in on first paint with a staggered motion.dev reveal (ECharts’ built-in bar animation is disabled, same as other NQ charts). Control order with `animationType` on the root — `"left-to-right"` (default), `"right-to-left"`, `"center-out"`, `"edges-in"`, or `"none"`. Respects the OS reduce-motion preference.
 
 ```tsx
-<BeeWaterfallChart animationType="center-out" ...>
+<NQWaterfallChart animationType="center-out" ...>
 ```
 
 ### Glowing Bars
@@ -168,7 +168,7 @@ Bars grow in on first paint with a staggered motion.dev reveal (ECharts’ built
 
 The chart is composed of several parts. The props below are grouped by the component they belong to.
 
-<ApiHeading>BeeWaterfallChart</ApiHeading>
+<ApiHeading>NQWaterfallChart</ApiHeading>
 
 The root container bridging raw financial rows → cumulative stack-friendly records (`base` + `barValue`). Tracks selection highlighting, translucent reference line (`y={0}`), rounded rect edges, gradients, legends, glowing filters, shimmer skeleton overlays when `isLoading`.
 
@@ -216,7 +216,7 @@ The root container bridging raw financial rows → cumulative stack-friendly rec
     Staggered grow-in order on first render (motion.dev, not ECharts).
   </ApiRow>
   <ApiRow name="chartProps" type="ComponentProps<typeof BarChart>">
-    Additional ECharts options merged into the compiled `option` by BeeCharts; refer to <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>ECharts bar series</Link>.
+    Additional ECharts options merged into the compiled `option` by NQChart; refer to <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>ECharts bar series</Link>.
   </ApiRow>
 </ApiTable>
 
@@ -306,7 +306,7 @@ Per-bridge legends mirroring clickable selection state.
     Legend marker motifs.
   </ApiRow>
   <ApiRow name="align" type='"left" | "center" | "right"' default='"right"'>
-    Horizontal alignment (Bee waterfall defaults tighter to chart gutter).
+    Horizontal alignment (NQ waterfall defaults tighter to chart gutter).
   </ApiRow>
   <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"top"'>
     Vertical stacking.
@@ -322,6 +322,6 @@ Per-bridge legends mirroring clickable selection state.
 
 <ApiTable>
   <ApiRow name="WaterfallType" type='"start" | "increase" | "decrease" | "total"'>
-    Determines how `<BeeWaterfallChart />` maps each row onto transparent base offsets vs visible segments — `total` resets running sums to anchored bars, decreases invert direction while preserving stacked geometry, increases extend running totals, `start` seeds initial balances from absolute magnitudes.
+    Determines how `<NQWaterfallChart />` maps each row onto transparent base offsets vs visible segments — `total` resets running sums to anchored bars, decreases invert direction while preserving stacked geometry, increases extend running totals, `start` seeds initial balances from absolute magnitudes.
   </ApiRow>
 </ApiTable>

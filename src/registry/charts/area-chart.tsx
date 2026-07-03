@@ -8,14 +8,14 @@ import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registr
 import type { StackType } from "@/registry/echarts-core/parts/types";
 import { ChartBackground } from "@/registry/ui/background";
 import {
-  BeeChartLegend,
+  NQChartLegend,
   bindChartLegendLayer,
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
 import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/registry/ui/tooltip";
 import { useState } from "react";
 
-type BeeAreaChartProps<
+type NQAreaChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -41,10 +41,10 @@ type AreaChartCanvasProps<TData extends Record<string, unknown>> = {
 const { Chart: AreaChartInner } = createCartesianChart<
   Record<string, unknown>,
   Record<string, ChartConfig[string]>,
-  BeeAreaChartProps<Record<string, unknown>, Record<string, ChartConfig[string]>>,
+  NQAreaChartProps<Record<string, unknown>, Record<string, ChartConfig[string]>>,
   AreaChartCanvasProps<Record<string, unknown>>
 >({
-  displayName: "BeeAreaChart",
+  displayName: "NQAreaChart",
   compile: compileAreaOption,
   loadingVariant: "area",
   defaultLoadingPoints: 12,
@@ -67,10 +67,10 @@ const { Chart: AreaChartInner } = createCartesianChart<
   }),
 });
 
-export function BeeAreaChart<
+export function NQAreaChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
->(props: BeeAreaChartProps<TData, TConfig>) {
+>(props: NQAreaChartProps<TData, TConfig>) {
   return <AreaChartInner {...props} />;
 }
 
@@ -132,7 +132,7 @@ export function Legend(props: {
   useRegisterPart({ type: "legend", id, variant: props.variant, align: props.align, isClickable: props.isClickable });
   const [selected, setSelected] = useState<string | null>(null);
   return (
-    <BeeChartLegend
+    <NQChartLegend
       variant={props.variant}
       align={props.align}
       isClickable={props.isClickable}

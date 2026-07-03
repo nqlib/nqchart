@@ -9,7 +9,7 @@ import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import type { HeatmapCell } from "@/registry/lib/chart-recipes";
 import type { ReactNode } from "react";
 
-type BeeHeatmapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
+type NQHeatmapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
   children: ReactNode;
   className?: string;
@@ -21,12 +21,12 @@ function HeatmapChartCanvas() {
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
 }
 
-export function BeeHeatmapChart<TConfig extends Record<string, ChartConfig[string]>>({
+export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string]>>({
   config,
   children,
   className,
   isLoading,
-}: BeeHeatmapChartProps<TConfig>) {
+}: NQHeatmapChartProps<TConfig>) {
   return (
     <PartRegistryProvider>
       <ChartContainer config={config} className={className} isLoading={isLoading}>

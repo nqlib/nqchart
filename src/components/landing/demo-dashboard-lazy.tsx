@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 
 import { LazyMount } from "@/components/docs/charts/lazy-mount";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,11 +39,13 @@ function DemoDashboardSkeleton() {
 }
 
 function DemoDashboardLazyInner() {
-  const [captureMode, setCaptureMode] = useState(false);
-
-  useEffect(() => {
-    setCaptureMode(new URLSearchParams(window.location.search).get("capture") === "1");
-  }, []);
+  // Read the client-only capture flag once at mount via a lazy initializer,
+  // rather than syncing it in an effect (which forces a second render).
+  const [captureMode] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      new URLSearchParams(window.location.search).get("capture") === "1",
+  );
 
   if (captureMode) {
     return <DemoDashboard />;

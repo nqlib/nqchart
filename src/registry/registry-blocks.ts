@@ -1,13 +1,13 @@
 import type { Registry } from "shadcn/schema";
 
-const TARGET_BASE_PATH = "components/beecharts/blocks";
+const TARGET_BASE_PATH = "components/nqchart/blocks";
 
 export const blocks: Registry["items"] = [
   {
     name: "monospace-bar-chart",
     description: "Terminal-style bar chart with monospace KPI chrome (ECharts)",
     dependencies: ["echarts", "motion"],
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     type: "registry:block",
     files: [
       {
@@ -21,7 +21,7 @@ export const blocks: Registry["items"] = [
     name: "hover-trace-bar-chart",
     description: "Bar chart with KPI header trace (ECharts)",
     dependencies: ["echarts"],
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     type: "registry:block",
     files: [
       {
@@ -35,7 +35,7 @@ export const blocks: Registry["items"] = [
     name: "grid-bar-chart",
     description: "Stacked ghost grid bar chart (ECharts)",
     dependencies: ["echarts"],
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     type: "registry:block",
     files: [
       {
@@ -49,7 +49,7 @@ export const blocks: Registry["items"] = [
     name: "isometric-bar-chart",
     description: "Rounded bar chart block (ECharts)",
     dependencies: ["echarts"],
-    registryDependencies: ["@beecharts/bar-chart"],
+    registryDependencies: ["@nqchart/bar-chart"],
     type: "registry:block",
     files: [
       {

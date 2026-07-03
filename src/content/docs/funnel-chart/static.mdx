@@ -1,9 +1,9 @@
 ---
 title: Funnel Chart
-description: Stage-based funnel visuals built atop composable BeeCharts primitives
+description: Stage-based funnel visuals built atop composable NQChart primitives
 image: /og/funnel-chart.png
 links:
-  github: https://github.com/ctesibius/beecharts/blob/main/src/registry/charts/funnel-chart.tsx
+  github: https://github.com/ctesibius/nqchart/blob/main/src/registry/charts/funnel-chart.tsx
   doc: https://echarts.apache.org/en/option.html#series-bar
   api: https://echarts.apache.org/en/option.html#series-bar
 ---
@@ -18,7 +18,7 @@ links:
     <TabsTab value="manual">Manual</TabsTab>
   </TabsList>
   <TabsPanel value="cli">
-    <CliBlock commands={["@beecharts/funnel-chart"]} />
+    <CliBlock commands={["@nqchart/funnel-chart"]} />
   </TabsPanel>
   <TabsPanel value="manual">
     <Steps>
@@ -31,48 +31,48 @@ links:
       <Step>
         <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
          <StepDescription>
-          To use the chart, first create the folder `beecharts` and a subfolder called `charts` inside your `components` directory.
+          To use the chart, first create the folder `nqchart` and a subfolder called `charts` inside your `components` directory.
           Then, copy the following base funnel-chart code into a new file in that folder.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="funnel-chart"
-            title="components/beecharts/charts/funnel-chart.tsx"
+            title="components/nqchart/charts/funnel-chart.tsx"
           />
         </StepContent>
       </Step>
        <Step>
         <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
         <StepDescription>
-          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `beecharts` folder and paste the code there.
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `nqchart` folder and paste the code there.
 
           Below is main chart component.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="chart"
-            title="components/beecharts/ui/chart.tsx"
+            title="components/nqchart/ui/chart.tsx"
           />
         </StepContent>
       </Step>
        <Step>
         <StepTitle>Now, We need to add sub components.</StepTitle>
         <StepDescription>
-          Create a file called `tooltip.tsx` inside the `beecharts/ui` folder and paste the code there.
+          Create a file called `tooltip.tsx` inside the `nqchart/ui` folder and paste the code there.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="tooltip"
-            title="components/beecharts/ui/tooltip.tsx"
+            title="components/nqchart/ui/tooltip.tsx"
           />
         </StepContent>
         <StepDescription>
-          Now, create another file called `legend.tsx` inside the `beecharts/ui` folder and paste the code there.
+          Now, create another file called `legend.tsx` inside the `nqchart/ui` folder and paste the code there.
         </StepDescription>
         <StepContent>
           <ComponentSource
             name="legend"
-            title="components/beecharts/ui/legend.tsx"
+            title="components/nqchart/ui/legend.tsx"
           />
         </StepContent>
       </Step>
@@ -82,22 +82,22 @@ links:
 
 ## Usage
 
-The funnel chart is composible. `<BeeFunnelChart>` compiles a vertically laid out ECharts bar series with custom trapezoid shapes per stage (`stageKey`) and measured values (`valueKey`). Compose `<Grid />`, `<XAxis />`, `<YAxis />`, `<Stages />`, `<Tooltip />`, `<Legend />` as needed, and set optional `backgroundVariant` on the chart root — ECharts has no standalone funnel primitive, but additional options can pass through `chartProps` alongside the underlying <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>bar series</Link> escape hatch documented below.
+The funnel chart is composible. `<NQFunnelChart>` compiles a vertically laid out ECharts bar series with custom trapezoid shapes per stage (`stageKey`) and measured values (`valueKey`). Compose `<Grid />`, `<XAxis />`, `<YAxis />`, `<Stages />`, `<Tooltip />`, `<Legend />` as needed, and set optional `backgroundVariant` on the chart root — ECharts has no standalone funnel primitive, but additional options can pass through `chartProps` alongside the underlying <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>bar series</Link> escape hatch documented below.
 
 ```tsx
 import {
-  BeeFunnelChart,
+  NQFunnelChart,
   Stages,
   XAxis,
   YAxis,
   Grid,
   Tooltip,
   Legend,
-} from "@/components/beecharts/charts/funnel-chart";
+} from "@/components/nqchart/charts/funnel-chart";
 ```
 
 ```tsx
-<BeeFunnelChart
+<NQFunnelChart
   config={chartConfig}
   data={funnelRows}
   stageKey="stage"
@@ -110,7 +110,7 @@ import {
   <Grid />
   <Tooltip />
   <Legend isClickable />
-</BeeFunnelChart>
+</NQFunnelChart>
 ```
 
 ### Interactive Selection
@@ -118,7 +118,7 @@ import {
 Add `isClickable` to `<Stages />` (plus `<Legend />` when you want swatches clickable) then listen on `onSelectionChange` (`{ dataKey, value } | null`). `dataKey` matches rows’ `stageKey` string:
 
 ```tsx
-<BeeFunnelChart
+<NQFunnelChart
   config={chartConfig}
   data={funnelRows}
   stageKey="stage"
@@ -136,7 +136,7 @@ Add `isClickable` to `<Stages />` (plus `<Legend />` when you want swatches clic
   <Stages isClickable />
   <Legend isClickable />
   <Tooltip />
-</BeeFunnelChart>
+</NQFunnelChart>
 ```
 
 ### Loading State
@@ -155,7 +155,7 @@ Add `isClickable` to `<Stages />` (plus `<Legend />` when you want swatches clic
 Funnel stages expand from the center on first paint (motion.dev — ECharts built-in bar animation is off). Default `animationType="top-to-bottom"` staggers from the first stage downward. Also `"bottom-to-top"`, `"center-out"`, `"edges-in"`, or `"none"`. Honors reduce motion.
 
 ```tsx
-<BeeFunnelChart animationType="center-out" ...>
+<NQFunnelChart animationType="center-out" ...>
 ```
 
 ### Glowing Stages
@@ -166,7 +166,7 @@ Funnel stages expand from the center on first paint (motion.dev — ECharts buil
 
 The chart is composed of several parts. The props below are grouped by the component they belong to.
 
-<ApiHeading>BeeFunnelChart</ApiHeading>
+<ApiHeading>NQFunnelChart</ApiHeading>
 
 The root container wrapping a vertical `<BarChart>`. Holds stage metadata, synthesized loading rows when `isLoading`, max-value scaling shared by funnel shapes, and selection state surfaced to `<Stages />`/`<Legend />`.
 
@@ -211,7 +211,7 @@ The root container wrapping a vertical `<BarChart>`. Holds stage metadata, synth
     Staggered center-out grow for each trapezoid stage on first render.
   </ApiRow>
   <ApiRow name="chartProps" type="ComponentProps<typeof BarChart>">
-    Additional ECharts options merged into the compiled `option` by BeeCharts — sizing, responsiveness, `dataZoom`, margins, and more. Refer to <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>ECharts bar series</Link>; there is no dedicated funnel primitive, so this escape hatch doubles as funnel tuning.
+    Additional ECharts options merged into the compiled `option` by NQChart — sizing, responsiveness, `dataZoom`, margins, and more. Refer to <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>ECharts bar series</Link>; there is no dedicated funnel primitive, so this escape hatch doubles as funnel tuning.
   </ApiRow>
 </ApiTable>
 
@@ -224,17 +224,17 @@ Configuration slot mirrored by funnel renderer — determines whether polygons l
     Enables polygon click toggling. Selection dimming applies whenever a stage is selected (legend, default, or click).
   </ApiRow>
   <ApiRow name="glowingStages" type="string[]" default="[]">
-    Names matching `stageKey` values emitting glow filters akin to BeeBars.
+    Names matching `stageKey` values emitting glow filters akin to NQBars.
   </ApiRow>
 </ApiTable>
 
 <ApiHeading>XAxis</ApiHeading>
 
-Mirrors numeric scale even though BeeFunnel hides ticks by default to keep silhouette clean (`hide` maps to ECharts axis visibility).
+Mirrors numeric scale even though NQFunnel hides ticks by default to keep silhouette clean (`hide` maps to ECharts axis visibility).
 
 <ApiTable>
   <ApiRow name="hide" type="boolean" default="true">
-    Default hides axis line / ticks consistent with BeeFunnels marketing aesthetic.
+    Default hides axis line / ticks consistent with NQFunnels marketing aesthetic.
   </ApiRow>
   <ApiRow name="type" type='"number" | ...' default='"number"'>
     Forwarded verbatim to `<XAxis />` while loading states hide axes automatically.

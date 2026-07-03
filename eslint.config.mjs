@@ -14,6 +14,10 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     ".source/**",
     ".agents/**",
+    // Library build output — bundled JS, not source to lint.
+    "dist/**",
+    // Vendored tooling/skills, not project source.
+    ".claude/**",
   ]),
 ]);
 

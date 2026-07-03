@@ -157,7 +157,7 @@ function layoutBars(data: typeof chartData) {
   });
 }
 
-export function BeeIsometricBarChart() {
+export function NQIsometricBarChart() {
   const idPrefix = React.useId().replace(/:/g, "");
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
 

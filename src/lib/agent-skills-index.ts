@@ -19,11 +19,11 @@ export type AgentSkillsIndex = {
 };
 
 const CONSUMER_FALLBACK =
-  "Build dashboards with composable BeeCharts — install @beecharts/* via shadcn, compose Bee*Chart children, theme colors, BI recipes.";
+  "Build dashboards with composable NQChart — install @nqchart/* via shadcn, compose NQ*Chart children, theme colors, BI recipes.";
 const DEV_FALLBACK =
-  "Contribute to BeeCharts — engine, registry, examples, chart-recipes.";
+  "Contribute to NQChart — engine, registry, examples, chart-recipes.";
 const DOCS_FALLBACK =
-  "BeeCharts docs site — Fumadocs MDX, ComponentPreview, landing, agent HTTP routes.";
+  "NQChart docs site — Fumadocs MDX, ComponentPreview, landing, agent HTTP routes.";
 
 function readSkillDescription(skillDir: string, fallback: string): string {
   return parseSkillDescription(
@@ -38,31 +38,31 @@ export function buildAgentSkillsIndex(root = process.cwd()): AgentSkillsIndex {
     $schema: AGENT_SKILLS_SCHEMA,
     skills: [
       {
-        name: "beecharts",
+        name: "nqchart",
         type: "skill-md",
         description: readSkillDescription(
-          join(root, "skills/consumer/beecharts"),
+          join(root, "skills/consumer/nqchart"),
           CONSUMER_FALLBACK,
         ),
-        url: "/.well-known/agent-skills/beecharts/SKILL.md",
+        url: "/.well-known/agent-skills/nqchart/SKILL.md",
       },
       {
-        name: "beecharts-dev",
+        name: "nqchart-dev",
         type: "skill-md",
         description: readSkillDescription(
-          join(root, ".agents/skills/beecharts-dev"),
+          join(root, ".agents/skills/nqchart-dev"),
           DEV_FALLBACK,
         ),
-        url: "/.well-known/agent-skills/beecharts-dev/SKILL.md",
+        url: "/.well-known/agent-skills/nqchart-dev/SKILL.md",
       },
       {
-        name: "beecharts-docs",
+        name: "nqchart-docs",
         type: "skill-md",
         description: readSkillDescription(
-          join(root, ".agents/skills/beecharts-docs"),
+          join(root, ".agents/skills/nqchart-docs"),
           DOCS_FALLBACK,
         ),
-        url: "/.well-known/agent-skills/beecharts-docs/SKILL.md",
+        url: "/.well-known/agent-skills/nqchart-docs/SKILL.md",
       },
     ],
   };

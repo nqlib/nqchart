@@ -6,20 +6,20 @@ image: /og/backgrounds.png
 
 ## Usage
 
-Compose `ChartBackground` inside any `Bee*Chart` that uses the plot shell (line, bar, composed):
+Compose `ChartBackground` inside any `NQ*Chart` that uses the plot shell (line, bar, composed):
 
 ```tsx
-import { BeeLineChart, Line, XAxis, Legend, Tooltip } from "@beecharts/line-chart";
-import { ChartBackground } from "@beecharts/background";
+import { NQLineChart, Line, XAxis, Legend, Tooltip } from "@nqchart/line-chart";
+import { ChartBackground } from "@nqchart/background";
 
-<BeeLineChart data={data} config={chartConfig} className="h-full w-full p-4" xDataKey="month">
+<NQLineChart data={data} config={chartConfig} className="h-full w-full p-4" xDataKey="month">
   <ChartBackground variant="dots" />
   <XAxis dataKey="month" />
   <Legend />
   <Tooltip />
   <Line dataKey="desktop" />
   <Line dataKey="mobile" />
-</BeeLineChart>
+</NQLineChart>
 ```
 
 ### Background pattern vs chart grid

@@ -1,16 +1,16 @@
 ---
-name: beecharts-fixed-hover-focus-treemap-flicker-vanish
+name: nqchart-fixed-hover-focus-treemap-flicker-vanish
 description: >-
   Fixed: treemap hover flicker and hovered tile vanishing. emphasis.disabled, blur-only
   siblings, animationDurationUpdate 0, treemap-hover-focus.ts microtask repair.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: fix
 domain: hover-focus
 status: fixed
 fixed: "2026-06"
 tags: treemap, flicker, vanish, hover, blur, emphasis-disabled, animationDurationUpdate
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
@@ -30,7 +30,7 @@ metadata:
 ## Root cause
 
 1. ECharts treemap default **`animationDurationUpdate: 900ms`** re-layout on updates → flicker (mitigated at compile + `apply-chart-animation.ts`).
-2. **Native `handleGlobalMouseOverForHighDown`** and BeeCharts repair both run → race; blur not applied or double paint.
+2. **Native `handleGlobalMouseOverForHighDown`** and NQChart repair both run → race; blur not applied or double paint.
 3. Treemap **emphasis itemStyle** on bg/content replaces fill with **gap color** — emphasized leaf looks vanished. Contract only needs **normal = full color**, **blur = 0.2** on siblings.
 4. Adjacent tiles skip `mouseout` → stale states unless **full series sync** each hover.
 
@@ -38,11 +38,11 @@ metadata:
 
 | File | Change |
 |------|--------|
-| `src/registry/echarts-core/emphasis-presets.ts` | `treemapFocus()`: `itemFocus({ dimLabel: true })`, `stateAnimation.duration: 0`, `animationDurationUpdate: 0`, **`emphasis.disabled: true`** (disable native high-down; BeeCharts owns hover). |
+| `src/registry/echarts-core/emphasis-presets.ts` | `treemapFocus()`: `itemFocus({ dimLabel: true })`, `stateAnimation.duration: 0`, `animationDurationUpdate: 0`, **`emphasis.disabled: true`** (disable native high-down; NQChart owns hover). |
 | `src/registry/echarts-core/compile-treemap.ts` | Spread `treemapFocus()`; borders on series/`levels` only; no `colorSaturation` / `colorAlpha`; `sort: false`. |
 | `src/registry/echarts-core/apply-chart-animation.ts` | Treemap case keeps `animationDurationUpdate: 0`. |
 | `src/registry/echarts-core/treemap-hover-focus.ts` | Phase 1: `leaveEmphasis` + `leaveBlur` on **all** tiles. Phase 2: **`enterBlur` on non-hovered only** — hovered stays **normal** (not `enterEmphasis`). `scheduleTreemapHoverFocusRepair` coalesces via `queueMicrotask`. `resetTreemapHoverFocus` on globalout. |
-| `src/registry/echarts-core/use-bee-echarts.ts` | Treemap `mouseover` → `scheduleTreemapHoverFocusRepair`; `globalout` → `resetTreemapHoverFocus`. |
+| `src/registry/echarts-core/use-nq-echarts.ts` | Treemap `mouseover` → `scheduleTreemapHoverFocusRepair`; `globalout` → `resetTreemapHoverFocus`. |
 
 ## Wrong fixes (rejected by runtime evidence)
 

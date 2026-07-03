@@ -6,7 +6,7 @@
 
 ## Why this matters
 
-This repo (a Next.js app named `beecharts` — a shadcn-style chart registry built on Apache ECharts, plus a fumadocs docs site) has **zero automated tests**. CI (`.github/workflows/ci.yml`) runs only `pnpm audit`, `eslint`, `tsc --noEmit`, and `pnpm build`. The highest-value logic in the repo is purely functional and currently unprotected:
+This repo (a Next.js app named `nqchart` — a shadcn-style chart registry built on Apache ECharts, plus a fumadocs docs site) has **zero automated tests**. CI (`.github/workflows/ci.yml`) runs only `pnpm audit`, `eslint`, `tsc --noEmit`, and `pnpm build`. The highest-value logic in the repo is purely functional and currently unprotected:
 
 1. **Chart option compilers** in `src/registry/echarts-core/compile-*.ts` (~17 files). Each is a pure function `(ctx: CompileContext) => EChartsOption`. A regression here silently changes every user's rendered charts.
 2. **MDX→Markdown processing** in `src/lib/llm.ts` — 14+ chained regexes that power the `/llm/*.md` routes, `/llms.txt`, and the `/mcp` doc-search endpoint. One broken regex corrupts all agent-facing docs.

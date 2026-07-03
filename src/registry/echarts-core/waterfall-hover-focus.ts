@@ -105,7 +105,7 @@ export function resetWaterfallHoverFocus(instance: EChartsType): void {
   pendingRepairs.delete(instance);
   const model = (
     instance as unknown as {
-      eachSeries(fn: (s: WaterfallBarSeriesModel) => void): void;
+      getModel(): { eachSeries(fn: (s: WaterfallBarSeriesModel) => void): void };
     }
   ).getModel();
 

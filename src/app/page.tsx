@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import BeeChartWordmark from "@/assets/logos/beechart";
+import NQChartWordmark from "@/assets/logos/nqchart";
 import { Badge } from "@/components/ui/badge";
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { ChartGallery } from "@/components/landing/chart-gallery";
@@ -41,7 +41,7 @@ export default function Home() {
           <Badge variant="secondary" className="font-normal">
             Apache ECharts · shadcn registry
           </Badge>
-          <BeeChartWordmark
+          <NQChartWordmark
             width="280"
             height="60"
             className="text-foreground h-auto w-55 sm:w-70"
@@ -104,7 +104,7 @@ export default function Home() {
             </EnhancedButton>
             <EnhancedButton asChild variant="outline" size="lg">
               <Link
-                href="https://github.com/ctesibius/beecharts"
+                href="https://github.com/ctesibius/nqchart"
                 target="_blank"
                 rel="noreferrer"
               >

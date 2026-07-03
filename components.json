@@ -20,6 +20,6 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@beecharts": "https://beecharts.vercel.app/r/{name}.json"
+    "@nqchart": "https://nqchart.vercel.app/r/{name}.json"
   }
 }

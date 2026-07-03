@@ -1,16 +1,16 @@
 ---
-name: beecharts-fixed-hover-focus-scatter-symbol-blur
+name: nqchart-fixed-hover-focus-scatter-symbol-blur
 description: >-
   Fixed: scatter hovered dot dims and stale multi-focus. Symbol path blur, __highByOuter
   sync, per-row itemFocus, and scatter-hover-focus.ts runtime repair.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: fix
 domain: hover-focus
 status: fixed
 fixed: "2026-06"
 tags: scatter, symbol, hover, blur, emphasis, stale-focus, childAt
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
@@ -37,7 +37,7 @@ metadata:
 | File | Change |
 |------|--------|
 | `src/registry/echarts-core/scatter-hover-focus.ts` | `repairScatterHoverFocus`: loop **all** symbols — hovered path gets `leaveBlur` + `enterEmphasis`; others `leaveEmphasis` + `enterBlur`; `markChartStatesDirty`. `resetScatterHoverFocus` on globalout. |
-| `src/registry/echarts-core/use-bee-echarts.ts` | On scatter `mouseover`: double `requestAnimationFrame` → `repairScatterHoverFocus`. On `globalout`: `resetScatterHoverFocus`. |
+| `src/registry/echarts-core/use-nq-echarts.ts` | On scatter `mouseover`: double `requestAnimationFrame` → `repairScatterHoverFocus`. On `globalout`: `resetScatterHoverFocus`. |
 | `src/registry/echarts-core/compile-scatter.ts` | Single merged series; **per-row** `itemFocus()` on data objects (Symbol `hasItemOption` quirk); `stateAnimation: { duration: 0 }`. |
 | `src/registry/echarts-core/echarts-internals.d.ts` | Types for `echarts/lib/util/states.js` imports. |
 

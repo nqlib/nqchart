@@ -1,4 +1,4 @@
-# BeeCharts — documentation vault
+# NQChart — documentation vault
 
 Internal architecture and product notes for **maintainers**. Open in Obsidian (or any editor) and follow `[[wikilinks]]`.
 
@@ -17,14 +17,14 @@ Public API reference lives in **`src/content/docs/`** (Fumadocs at `/docs`).
 | Product backlog | [[product/roadmap]] |
 | Maintainer DoD | [[product/ai-contract]] |
 | Past bug fixes (search first) | `.agents/skills/fixed/index.md` |
-| Consumer agent skill | `skills/consumer/beecharts/` · `npx skills add ctesibius/beecharts --skill beecharts -y` |
+| Consumer agent skill | `skills/consumer/nqchart/` · `npx skills add ctesibius/nqchart --skill nqchart -y` |
 | Agent HTTP / MCP | [[meta/llm-usage]] |
 | Deploy / registry | [[meta/publishing]] |
 
 ## Layers
 
 - `src/registry/echarts-core/` — pure compile fns, hooks, color/animation tokens
-- `src/registry/charts/` — public `Bee*Chart` compound components
+- `src/registry/charts/` — public `NQ*Chart` compound components
 - `src/registry/ui/` — chart shell pieces shipped via registry
 - `src/registry/examples/` + `blocks/` — docs previews and CLI blocks
 - `src/components/` — **site-only** (docs chrome, landing); never imported by registry
@@ -35,4 +35,4 @@ Public API reference lives in **`src/content/docs/`** (Fumadocs at `/docs`).
 - **Executor plans** — `plans/README.md`
 - **Improvement roadmap** — `plan/IMPROVEMENT_PLAN.md`
 - **Repo agent router** — root `AGENTS.md`
-- **Contributor skills** — `.agents/skills/beecharts-dev/`, `.agents/skills/beecharts-docs/`, `.agents/skills/fixed/` (regression index)
+- **Contributor skills** — `.agents/skills/nqchart-dev/`, `.agents/skills/nqchart-docs/`, `.agents/skills/fixed/` (regression index)

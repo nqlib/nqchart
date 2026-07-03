@@ -1,6 +1,6 @@
 "use client";
 
-import { BeeRadialChart, RadialBar, Tooltip, Legend } from "@/registry/charts/radial-chart";
+import { NQRadialChart, RadialBar, Tooltip, Legend } from "@/registry/charts/radial-chart";
 import { normalizeGaugeValue } from "@/registry/lib/chart-recipes";
 import { type ChartConfig } from "@/registry/ui/chart";
 
@@ -26,9 +26,9 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 /** KPI dial + target needle — single row, `<RadialBar target={…} />`. */
-export function BeeExampleGaugeWithTargetChart() {
+export function NQExampleGaugeWithTargetChart() {
   return (
-    <BeeRadialChart
+    <NQRadialChart
       className="h-full w-full p-4"
       data={data}
       nameKey="series"
@@ -38,6 +38,6 @@ export function BeeExampleGaugeWithTargetChart() {
       <Tooltip />
       <Legend />
       <RadialBar dataKey="value" target={TARGET} />
-    </BeeRadialChart>
+    </NQRadialChart>
   );
 }

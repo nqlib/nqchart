@@ -46,14 +46,14 @@ export async function generateMetadata(props: {
       url,
       title,
       description,
-      siteName: "BeeCharts",
+      siteName: "NQChart",
       ...(ogImage && {
         images: [
           {
             url: ogImage,
             width: 1200,
             height: 630,
-            alt: `${title} — BeeCharts`,
+            alt: `${title} — NQChart`,
           },
         ],
       }),

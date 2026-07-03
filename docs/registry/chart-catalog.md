@@ -1,25 +1,25 @@
 # Chart catalog
 
-Canonical catalog for registry primitives, examples, and blocks. Full detail also in `.agents/skills/beecharts-dev/chart-catalog.md` (synced from maintainer skill).
+Canonical catalog for registry primitives, examples, and blocks. Full detail also in `.agents/skills/nqchart-dev/chart-catalog.md` (synced from maintainer skill).
 
 ## Primitives (the only chart modules)
 
 | Slug | Module | Notes |
 |------|--------|--------|
-| area-chart | `BeeAreaChart` | `showBrush`, `brushFormatLabel` |
-| line-chart | `BeeLineChart` | `showBrush` |
-| bar-chart | `BeeBarChart` | histogram, bullet, monospace/hover-trace variants |
-| composed-chart | `BeeComposedChart` | pareto + boxplot examples |
-| pie-chart | `BeePieChart` | |
-| radial-chart | `BeeRadialChart` | semi + gauge examples |
-| radar-chart | `BeeRadarChart` | |
-| scatter-chart | `BeeScatterChart` | bubble examples |
-| heatmap-chart | `BeeHeatmapChart` | grid intensity matrices |
-| calendar-chart | `BeeCalendarChart` | date-range calendar heat |
-| treemap-chart | `BeeTreemapChart` | |
-| waterfall-chart | `BeeWaterfallChart` | Bridge math |
-| funnel-chart | `BeeFunnelChart` | Stage layout |
-| sparkline-chart | `BeeSparklineChart` | Compact domain |
+| area-chart | `NQAreaChart` | `showBrush`, `brushFormatLabel` |
+| line-chart | `NQLineChart` | `showBrush` |
+| bar-chart | `NQBarChart` | histogram, bullet, monospace/hover-trace variants |
+| composed-chart | `NQComposedChart` | pareto + boxplot examples |
+| pie-chart | `NQPieChart` | |
+| radial-chart | `NQRadialChart` | semi + gauge examples |
+| radar-chart | `NQRadarChart` | |
+| scatter-chart | `NQScatterChart` | bubble examples |
+| heatmap-chart | `NQHeatmapChart` | grid intensity matrices |
+| calendar-chart | `NQCalendarChart` | date-range calendar heat |
+| treemap-chart | `NQTreemapChart` | |
+| waterfall-chart | `NQWaterfallChart` | Bridge math |
+| funnel-chart | `NQFunnelChart` | Stage layout |
+| sparkline-chart | `NQSparklineChart` | Compact domain |
 
 ## Library (`registry:lib`)
 
@@ -27,7 +27,7 @@ Canonical catalog for registry primitives, examples, and blocks. Full detail als
 |------|------|---------|
 | chart-recipes | `lib/chart-recipes.ts` | `binForHistogram`, `prepareParetoData`, `prepareBulletRow`, `prepareHeatmapCells`, `prepareCalendarWorkloadCells`, `prepareBoxPlotRow`, `normalizeGaugeValue`, `prepareGaugeRows` |
 
-CLI: `@beecharts/chart-recipes` — doc `/docs/chart-recipes`
+CLI: `@nqchart/chart-recipes` — doc `/docs/chart-recipes`
 
 ## Removed (do not reintroduce)
 

@@ -64,7 +64,7 @@ function tooltipShell(
 ) {
   const variant = tooltip?.variant ?? "default";
   const roundness = tooltip?.roundness ?? "lg";
-  return `<div class="bee-echarts-tooltip pointer-events-none text-foreground border-border/50 grid min-w-32 gap-1.5 border px-2.5 py-1.5 text-xs shadow-xl ${ROUNDNESS_CLASS[roundness]} ${VARIANT_CLASS[variant]}" data-chart="${chartId}">
+  return `<div class="nq-echarts-tooltip pointer-events-none text-foreground border-border/50 grid min-w-32 gap-1.5 border px-2.5 py-1.5 text-xs shadow-xl ${ROUNDNESS_CLASS[roundness]} ${VARIANT_CLASS[variant]}" data-chart="${chartId}">
     ${inner}
   </div>`;
 }

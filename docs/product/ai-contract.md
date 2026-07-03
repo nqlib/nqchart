@@ -2,7 +2,7 @@
 
 **WHAT to build** and **when it's done**. Layer rules: [[architecture/dependency-rules]]. Backlog: [[product/roadmap]].
 
-Do **not** use this contract for external app integration — use the consumer skill at `skills/consumer/beecharts/`.
+Do **not** use this contract for external app integration — use the consumer skill at `skills/consumer/nqchart/`.
 
 ## Definition of done (every PR)
 
@@ -11,7 +11,7 @@ Do **not** use this contract for external app integration — use the consumer s
 - [ ] `pnpm test` passes (if touching engine or llm)
 - [ ] `pnpm run audit:previews` passes (if touching registry or MDX previews)
 - [ ] `pnpm run audit:registry-boundary` passes (if touching registry)
-- [ ] `pnpm skill:validate` passes (if touching `skills/` or `.agents/skills/beecharts-*`)
+- [ ] `pnpm skill:validate` passes (if touching `skills/` or `.agents/skills/nqchart-*`)
 - [ ] `pnpm run registry:fresh` run and outputs committed (if registry manifests changed)
 - [ ] Light/dark spot-check on affected chart docs pages
 - [ ] Skills updated if public API or install flow changed (see `skills/README.md`)
@@ -22,7 +22,7 @@ Do **not** use this contract for external app integration — use the consumer s
 2. Add/update `src/registry/examples/ex-*.tsx`.
 3. Wire `<ComponentPreview />` in matching `src/content/docs/<chart>/static.mdx`.
 4. Run verification gates above.
-5. Update consumer skill if user-facing API changed (`skills/consumer/beecharts/`).
+5. Update consumer skill if user-facing API changed (`skills/consumer/nqchart/`).
 6. Run `pnpm sync:skills` before commit if consumer skill changed.
 
 ## Hard rules
@@ -31,12 +31,12 @@ Do **not** use this contract for external app integration — use the consumer s
 2. Registry must not import `src/components/**`.
 3. Compilers stay pure — no hooks in `compile-*.ts`.
 4. Examples on primitive doc pages only — no duplicate doc nav slugs.
-5. Do not edit synced copies under `.agents/skills/beecharts/` — edit `skills/consumer/beecharts/` and sync.
+5. Do not edit synced copies under `.agents/skills/nqchart/` — edit `skills/consumer/nqchart/` and sync.
 
 ## Skills routing
 
 | Task | Skill |
 |------|-------|
-| Engine, registry, examples | `.agents/skills/beecharts-dev/` |
-| MDX, landing, agent HTTP | `.agents/skills/beecharts-docs/` |
-| External app integration | `skills/consumer/beecharts/` (not for this repo) |
+| Engine, registry, examples | `.agents/skills/nqchart-dev/` |
+| MDX, landing, agent HTTP | `.agents/skills/nqchart-docs/` |
+| External app integration | `skills/consumer/nqchart/` (not for this repo) |

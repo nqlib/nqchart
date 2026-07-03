@@ -1,5 +1,5 @@
 /**
- * Single source of truth for BeeCharts ECharts animation timing and easing.
+ * Single source of truth for NQChart ECharts animation timing and easing.
  *
  * Retune every chart intro by changing {@link CHART_INTRO_DURATION_MS}.
  * Per-chart blocks below only override stagger / easing when the motion type
@@ -110,7 +110,7 @@ export const CHART_ANIMATION = {
   },
   /** Monospace bar — fold rAF + intro height share {@link CHART_INTRO_DURATION_MS}. */
   monospace: {
-    seriesId: "bee-monospace-bar",
+    seriesId: "nq-monospace-bar",
     collapsedScale: 0.1,
     expandedBandRatio: 0.72,
     collapseDelayMs: 700,
@@ -124,7 +124,7 @@ export const CHART_ANIMATION = {
   staggerCapMs: CHART_INTRO_DURATION_MS + 80,
 } as const;
 
-export const BEE_MONOSPACE_SERIES_ID = CHART_ANIMATION.monospace.seriesId;
+export const NQ_MONOSPACE_SERIES_ID = CHART_ANIMATION.monospace.seriesId;
 
 export function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;

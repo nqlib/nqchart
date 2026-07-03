@@ -52,7 +52,7 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
   const hasGrid = ctx.parts.some((p) => p.type === "grid");
   const stack =
     ctx.cartesian?.stackType === "stacked" || ctx.cartesian?.stackType === "percent"
-      ? "bee-area"
+      ? "nq-area"
       : undefined;
   const hasBrush = ctx.parts.some((p) => p.type === "brush");
 

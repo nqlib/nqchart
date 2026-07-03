@@ -9,17 +9,17 @@ import { Card, CardContent, CardHeader } from "@/components/ui/nqui-card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 
-import { BeeAreaChart, Area, Grid, XAxis, Tooltip } from "@/registry/charts/area-chart";
+import { NQAreaChart, Area, Grid, XAxis, Tooltip } from "@/registry/charts/area-chart";
 import {
-  BeeBarChart,
+  NQBarChart,
   Bar,
   Grid as BarGrid,
   XAxis as BarXAxis,
   Legend as BarLegend,
   Tooltip as BarTooltip,
 } from "@/registry/charts/bar-chart";
-import { BeePieChart, Pie, Tooltip as PieTooltip } from "@/registry/charts/pie-chart";
-import { BeeRadialChart, RadialBar, Tooltip as RadialTooltip } from "@/registry/charts/radial-chart";
+import { NQPieChart, Pie, Tooltip as PieTooltip } from "@/registry/charts/pie-chart";
+import { NQRadialChart, RadialBar, Tooltip as RadialTooltip } from "@/registry/charts/radial-chart";
 
 import {
   ACTIVATION_CONFIG,
@@ -131,7 +131,7 @@ export function DemoDashboard() {
             </Badge>
           </div>
           <p className="text-muted-foreground text-sm">
-            Recurring revenue and account health — every chart rendered with BeeCharts.
+            Recurring revenue and account health — every chart rendered with NQChart.
           </p>
         </div>
 
@@ -174,7 +174,7 @@ export function DemoDashboard() {
             bodyHeight="h-80"
             className="lg:col-span-2"
           >
-            <BeeAreaChart
+            <NQAreaChart
               data={MRR_MONTHLY}
               config={MRR_CONFIG}
               xDataKey="month"
@@ -185,7 +185,7 @@ export function DemoDashboard() {
               <XAxis dataKey="month" tickFormatter={formatMonthTickShort} />
               <Tooltip />
               <Area dataKey="mrr" />
-            </BeeAreaChart>
+            </NQAreaChart>
           </ChartCard>
 
           <ChartCard
@@ -194,7 +194,7 @@ export function DemoDashboard() {
             bodyHeight="h-80"
             center
           >
-            <BeeRadialChart
+            <NQRadialChart
               data={ACTIVATION_DATA}
               config={ACTIVATION_CONFIG}
               nameKey="series"
@@ -203,7 +203,7 @@ export function DemoDashboard() {
             >
               <RadialTooltip />
               <RadialBar dataKey="value" />
-            </BeeRadialChart>
+            </NQRadialChart>
           </ChartCard>
         </div>
       </div>
@@ -218,7 +218,7 @@ export function DemoDashboard() {
             bodyHeight="h-72"
             className="lg:col-span-2"
           >
-            <BeeBarChart
+            <NQBarChart
               data={MRR_MONTHLY}
               config={MRR_COMPONENTS_CONFIG}
               xDataKey="month"
@@ -232,7 +232,7 @@ export function DemoDashboard() {
               <BarTooltip />
               <Bar dataKey="new" />
               <Bar dataKey="expansion" />
-            </BeeBarChart>
+            </NQBarChart>
           </ChartCard>
 
           <ChartCard
@@ -241,7 +241,7 @@ export function DemoDashboard() {
             bodyHeight="h-72"
             center
           >
-            <BeePieChart
+            <NQPieChart
               data={PLAN_MIX}
               config={PLAN_MIX_CONFIG}
               nameKey="plan"
@@ -249,7 +249,7 @@ export function DemoDashboard() {
             >
               <PieTooltip />
               <Pie dataKey="accounts" nameKey="plan" innerRadius="45%" />
-            </BeePieChart>
+            </NQPieChart>
           </ChartCard>
         </div>
       </div>

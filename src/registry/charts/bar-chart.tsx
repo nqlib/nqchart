@@ -13,7 +13,7 @@ import { compileBarOption } from "@/registry/echarts-core/compile-bar";
 import { CHART_BAR_CORNER_RADIUS_PX } from "@/registry/echarts-core/chart-corner-radius";
 import { hoverTraceSeriesId } from "@/registry/echarts-core/hover-trace-bar";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
-import type { BeeChartEventHandlers } from "@/registry/echarts-core/use-bee-echarts";
+import type { NQChartEventHandlers } from "@/registry/echarts-core/use-nq-echarts";
 import type { BarLayout, StackType } from "@/registry/echarts-core/parts/types";
 import {
   createCartesianChart,
@@ -21,7 +21,7 @@ import {
 } from "@/registry/echarts-core/create-cartesian-chart";
 import { ChartBackground } from "@/registry/ui/background";
 import {
-  BeeChartLegend,
+  NQChartLegend,
   bindChartLegendLayer,
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
@@ -34,7 +34,7 @@ type ValidateConfigKeys<TData, TConfig> = {
   [K in keyof TConfig]: K extends keyof TData ? ChartConfig[string] : never;
 };
 
-type BeeBarChartProps<
+type NQBarChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -170,7 +170,7 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
     colorEpoch,
   });
 
-  const eventHandlers = useMemo<BeeChartEventHandlers | undefined>(() => {
+  const eventHandlers = useMemo<NQChartEventHandlers | undefined>(() => {
     if (!hasMonospace && !hasHoverTrace) return undefined;
     return {
       onSeriesMouseOver: (params) => {
@@ -234,10 +234,10 @@ function useBarPlotRectState(): CartesianPlotRectState {
 const { Chart: BarChartInner } = createCartesianChart<
   Record<string, unknown>,
   Record<string, ChartConfig[string]>,
-  BeeBarChartProps<Record<string, unknown>, Record<string, ChartConfig[string]>>,
+  NQBarChartProps<Record<string, unknown>, Record<string, ChartConfig[string]>>,
   BarChartCanvasProps<Record<string, unknown>>
 >({
-  displayName: "BeeBarChart",
+  displayName: "NQBarChart",
   compile: compileBarOption,
   loadingVariant: "bar",
   defaultLoadingPoints: 8,
@@ -273,10 +273,10 @@ const { Chart: BarChartInner } = createCartesianChart<
   }),
 });
 
-export function BeeBarChart<
+export function NQBarChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
->(props: BeeBarChartProps<TData, TConfig>) {
+>(props: NQBarChartProps<TData, TConfig>) {
   return <BarChartInner {...props} />;
 }
 
@@ -364,7 +364,7 @@ export function Legend({
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <BeeChartLegend
+    <NQChartLegend
       variant={variant}
       align={align}
       hideIcon={hideIcon}

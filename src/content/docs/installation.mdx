@@ -1,10 +1,10 @@
 ---
 title: Installation
-description: How to install BeeCharts and add chart primitives to your project
+description: How to install NQChart and add chart primitives to your project
 image: /og/og-image.png
 ---
 
-BeeCharts ships as a **shadcn-compatible registry** — not an npm package. The shadcn CLI copies chart source into your repo (typically `components/beecharts/`). Agent **skills** are separate: they install markdown guidance for Cursor, Claude Code, etc., and do **not** copy chart files.
+NQChart ships as a **shadcn-compatible registry** — not an npm package. The shadcn CLI copies chart source into your repo (typically `components/nqchart/`). Agent **skills** are separate: they install markdown guidance for Cursor, Claude Code, etc., and do **not** copy chart files.
 
 ## Steps
 <Steps>
@@ -33,20 +33,20 @@ BeeCharts ships as a **shadcn-compatible registry** — not an npm package. The 
   </Step>
 
   <Step>
-    <StepTitle>Add the BeeCharts registry namespace</StepTitle>
+    <StepTitle>Add the NQChart registry namespace</StepTitle>
     <StepContent>
       <StepDescription>
-        Register the `@beecharts` namespace in your project's `components.json` so `shadcn add @beecharts/…` resolves to this site. Skip if already configured.
+        Register the `@nqchart` namespace in your project's `components.json` so `shadcn add @nqchart/…` resolves to this site. Skip if already configured.
       </StepDescription>
       ```json
       {
         "registries": {
-          "@beecharts": "https://beecharts.vercel.app/r/{name}.json"
+          "@nqchart": "https://nqchart.vercel.app/r/{name}.json"
         }
       }
       ```
       <StepDescription className="mt-4">
-        Alternative: install by full URL without the namespace — `pnpm dlx shadcn@latest add https://beecharts.vercel.app/r/bar-chart.json`.
+        Alternative: install by full URL without the namespace — `pnpm dlx shadcn@latest add https://nqchart.vercel.app/r/bar-chart.json`.
       </StepDescription>
     </StepContent>
   </Step>
@@ -55,9 +55,9 @@ BeeCharts ships as a **shadcn-compatible registry** — not an npm package. The 
     <StepTitle>Add chart components (shadcn registry)</StepTitle>
     <StepContent>
       <StepDescription>
-        Add chart source with the **shadcn CLI**. Replace `{chart-name}` with your chart type (e.g. `area-chart`, `bar-chart`, `line-chart`, `pie-chart`). Registry dependencies (`@beecharts/chart`, `@beecharts/tooltip`, etc.) install automatically.
+        Add chart source with the **shadcn CLI**. Replace `{chart-name}` with your chart type (e.g. `area-chart`, `bar-chart`, `line-chart`, `pie-chart`). Registry dependencies (`@nqchart/chart`, `@nqchart/tooltip`, etc.) install automatically.
       </StepDescription>
-      <CliBlock commands={["@beecharts/{chart-name}"]} />
+      <CliBlock commands={["@nqchart/{chart-name}"]} />
     </StepContent>
   </Step>
 
@@ -67,7 +67,7 @@ BeeCharts ships as a **shadcn-compatible registry** — not an npm package. The 
       <StepDescription>
         For histogram, Pareto, heatmap, bullet, gauge, and box plot patterns, install the shared data helpers via the same shadcn registry. See [Chart recipes](/docs/chart-recipes) for usage.
       </StepDescription>
-      <CliBlock commands={["@beecharts/chart-recipes"]} />
+      <CliBlock commands={["@nqchart/chart-recipes"]} />
     </StepContent>
   </Step>
 
@@ -75,13 +75,13 @@ BeeCharts ships as a **shadcn-compatible registry** — not an npm package. The 
     <StepTitle>Optional — Agent skill (skills CLI)</StepTitle>
     <StepContent>
       <StepDescription>
-        **Not the same as chart install.** The [skills CLI](https://ui.shadcn.com/docs/skills) copies agent guidance into `.agents/skills/beecharts/` — when to pick each chart, compose children, theme colors, BI recipes, and the homepage demo pattern. It does **not** run `shadcn add` or copy React components.
+        **Not the same as chart install.** The [skills CLI](https://ui.shadcn.com/docs/skills) copies agent guidance into `.agents/skills/nqchart/` — when to pick each chart, compose children, theme colors, BI recipes, and the homepage demo pattern. It does **not** run `shadcn add` or copy React components.
 
-        Run from your **app project root** (not inside the beecharts repo). Use `--list` to see available skills. When **contributing to this repository**, use `beecharts-dev` and `beecharts-docs` (see root `AGENTS.md`) — not the consumer skill.
+        Run from your **app project root** (not inside the nqchart repo). Use `--list` to see available skills. When **contributing to this repository**, use `nqchart-dev` and `nqchart-docs` (see root `AGENTS.md`) — not the consumer skill.
       </StepDescription>
-      <SkillsBlock commands={["ctesibius/beecharts", "--skill", "beecharts", "-y"]} />
+      <SkillsBlock commands={["ctesibius/nqchart", "--skill", "nqchart", "-y"]} />
       <StepDescription className="mt-4">
-        Canonical skill source: `skills/consumer/beecharts/` in the repo. After install, agents load `.agents/skills/beecharts/`. HTTP: [/.well-known/agent-skills/beecharts/SKILL.md](https://beecharts.vercel.app/.well-known/agent-skills/beecharts/SKILL.md) · [llms.txt](https://beecharts.vercel.app/llms.txt)
+        Canonical skill source: `skills/consumer/nqchart/` in the repo. After install, agents load `.agents/skills/nqchart/`. HTTP: [/.well-known/agent-skills/nqchart/SKILL.md](https://nqchart.vercel.app/.well-known/agent-skills/nqchart/SKILL.md) · [llms.txt](https://nqchart.vercel.app/llms.txt)
       </StepDescription>
     </StepContent>
   </Step>

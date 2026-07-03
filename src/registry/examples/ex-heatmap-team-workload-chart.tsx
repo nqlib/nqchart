@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BeeHeatmapChart,
+  NQHeatmapChart,
   Heatmap,
   Tooltip,
   Legend,
@@ -18,9 +18,9 @@ const { cells, min, max, rowLabels, colLabels } = prepareTeamWorkloadMatrix(
   WORKLOAD_TEAM_ROWS,
 );
 
-export function BeeExampleHeatmapTeamWorkloadChart() {
+export function NQExampleHeatmapTeamWorkloadChart() {
   return (
-    <BeeHeatmapChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full p-4">
+    <NQHeatmapChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full p-4">
       <Heatmap
         dataKey="utilization"
         data={cells}
@@ -32,6 +32,6 @@ export function BeeExampleHeatmapTeamWorkloadChart() {
       />
       <Legend />
       <Tooltip />
-    </BeeHeatmapChart>
+    </NQHeatmapChart>
   );
 }

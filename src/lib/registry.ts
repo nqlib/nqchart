@@ -155,7 +155,7 @@ export function fixImport(content: string) {
       return `@/components/${component}`;
     }
     if (type.endsWith("ui")) {
-      return `@/components/beecharts/ui/${component}`;
+      return `@/components/nqchart/ui/${component}`;
     }
     if (type.endsWith("hooks")) {
       return `@/hooks/${component}`;
@@ -164,7 +164,7 @@ export function fixImport(content: string) {
       return `@/lib/${component}`;
     }
     if (type.endsWith("charts")) {
-      return `@/components/beecharts/charts/${component}`;
+      return `@/components/nqchart/charts/${component}`;
     }
 
     return match;

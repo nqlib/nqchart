@@ -18,7 +18,7 @@ type JsonRpcRequest = {
 const tools = [
   {
     name: "search_docs",
-    description: "Search BeeCharts documentation pages by title, description, and content.",
+    description: "Search NQChart documentation pages by title, description, and content.",
     inputSchema: {
       type: "object",
       properties: {
@@ -32,7 +32,7 @@ const tools = [
   },
   {
     name: "read_doc",
-    description: "Read one BeeCharts documentation page as markdown.",
+    description: "Read one NQChart documentation page as markdown.",
     inputSchema: {
       type: "object",
       properties: {
@@ -158,8 +158,8 @@ async function handleToolCall(request: JsonRpcRequest) {
 
 export function GET() {
   return Response.json({
-    name: "beecharts-docs",
-    description: "MCP endpoint for searching and reading BeeCharts documentation.",
+    name: "nqchart-docs",
+    description: "MCP endpoint for searching and reading NQChart documentation.",
     protocolVersion: "2025-06-18",
     transport: "streamable-http",
     url: absoluteUrl("/mcp"),
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
         protocolVersion: "2025-06-18",
         capabilities: { tools: {} },
         serverInfo: {
-          name: "beecharts-docs",
+          name: "nqchart-docs",
           version: "1.0.0",
         },
       });

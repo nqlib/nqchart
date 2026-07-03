@@ -1,6 +1,6 @@
 export async function fetchGithubStars(): Promise<number | null> {
   try {
-    const res = await fetch(`https://api.github.com/repos/nqlib/beecharts`, {
+    const res = await fetch(`https://api.github.com/repos/nqlib/nqchart`, {
       headers: {
         Accept: "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",

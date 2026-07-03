@@ -1,17 +1,17 @@
 ---
-name: beecharts-fixed
+name: nqchart-fixed
 description: >-
-  Searchable registry of past BeeCharts bug fixes by domain and symptom. Use when
+  Searchable registry of past NQChart bug fixes by domain and symptom. Use when
   fixing regressions, debugging hover/focus, compile-*, ECharts state, flicker, or
   dimming bugs in this repo — search index.md FIRST before inventing a new fix.
-skill: beecharts-fixed
+skill: nqchart-fixed
 kind: skill
 metadata:
-  author: beecharts
+  author: nqchart
   version: "1.0.0"
 ---
 
-# BeeCharts — fixed issues (maintainer)
+# NQChart — fixed issues (maintainer)
 
 Past fixes for this repository. **Do not guess** when a symptom matches an entry here.
 
@@ -32,7 +32,7 @@ Past fixes for this repository. **Do not guess** when a symptom matches an entry
 
 ## Related skills
 
-- Engine / compilers: [beecharts-dev](../beecharts-dev/SKILL.md)
+- Engine / compilers: [nqchart-dev](../nqchart-dev/SKILL.md)
 - Public hover contract: [hover-focus.mdx](../../../src/content/docs/hover-focus.mdx)
 - ECharts option shapes: [echarts-ai-skill](../echarts-ai-skill/SKILL.md)
 

@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BeeBarChart,
+  NQBarChart,
   Bar,
   Grid,
   Legend,
@@ -9,7 +9,7 @@ import {
   XAxis,
 } from "@/registry/charts/bar-chart";
 import {
-  BeeLineChart,
+  NQLineChart,
   Legend as LineLegend,
   Line,
   Tooltip as LineTooltip,
@@ -31,7 +31,7 @@ function UiLineChartShell({
   legendVariant?: ChartLegendVariant;
 }) {
   return (
-    <BeeLineChart
+    <NQLineChart
       data={[...TRAFFIC_MONTHLY_DATA]}
       config={DUAL_SERIES_CHART_CONFIG}
       className="h-full w-full p-4"
@@ -43,13 +43,13 @@ function UiLineChartShell({
       <LineTooltip />
       <Line dataKey="desktop" />
       <Line dataKey="mobile" curveType="monotone" />
-    </BeeLineChart>
+    </NQLineChart>
   );
 }
 
 function UiBarChartShell({ tooltipVariant }: { tooltipVariant: "default" | "frosted-glass" }) {
   return (
-    <BeeBarChart
+    <NQBarChart
       data={[...TRAFFIC_MONTHLY_DATA]}
       config={DUAL_SERIES_CHART_CONFIG}
       className="h-full w-full p-4"
@@ -61,72 +61,72 @@ function UiBarChartShell({ tooltipVariant }: { tooltipVariant: "default" | "fros
       <Tooltip variant={tooltipVariant} />
       <Bar dataKey="desktop" />
       <Bar dataKey="mobile" />
-    </BeeBarChart>
+    </NQBarChart>
   );
 }
 
 // Background examples
-export function BeeExampleBgDotsLineChart() {
+export function NQExampleBgDotsLineChart() {
   return <UiLineChartShell backgroundVariant="dots" />;
 }
-export function BeeExampleBgGraphPaperLineChart() {
+export function NQExampleBgGraphPaperLineChart() {
   return <UiLineChartShell backgroundVariant="graph-paper" />;
 }
-export function BeeExampleBgCrossHatchLineChart() {
+export function NQExampleBgCrossHatchLineChart() {
   return <UiLineChartShell backgroundVariant="cross-hatch" />;
 }
-export function BeeExampleBgDiagonalLinesLineChart() {
+export function NQExampleBgDiagonalLinesLineChart() {
   return <UiLineChartShell backgroundVariant="diagonal-lines" />;
 }
-export function BeeExampleBgPlusLineChart() {
+export function NQExampleBgPlusLineChart() {
   return <UiLineChartShell backgroundVariant="plus" />;
 }
-export function BeeExampleBgFallingTrianglesLineChart() {
+export function NQExampleBgFallingTrianglesLineChart() {
   return <UiLineChartShell backgroundVariant="falling-triangles" />;
 }
-export function BeeExampleBg4PointedStarLineChart() {
+export function NQExampleBg4PointedStarLineChart() {
   return <UiLineChartShell backgroundVariant="4-pointed-star" />;
 }
-export function BeeExampleBgTinyCheckersLineChart() {
+export function NQExampleBgTinyCheckersLineChart() {
   return <UiLineChartShell backgroundVariant="tiny-checkers" />;
 }
-export function BeeExampleBgOverlappingCirclesLineChart() {
+export function NQExampleBgOverlappingCirclesLineChart() {
   return <UiLineChartShell backgroundVariant="overlapping-circles" />;
 }
-export function BeeExampleBgWiggleLinesLineChart() {
+export function NQExampleBgWiggleLinesLineChart() {
   return <UiLineChartShell backgroundVariant="wiggle-lines" />;
 }
-export function BeeExampleBgBubblesLineChart() {
+export function NQExampleBgBubblesLineChart() {
   return <UiLineChartShell backgroundVariant="bubbles" />;
 }
 
 // Legend examples
-export function BeeExampleLegendSquareLineChart() {
+export function NQExampleLegendSquareLineChart() {
   return <UiLineChartShell legendVariant="square" />;
 }
-export function BeeExampleLegendCircleLineChart() {
+export function NQExampleLegendCircleLineChart() {
   return <UiLineChartShell legendVariant="circle" />;
 }
-export function BeeExampleLegendCircleOutlineLineChart() {
+export function NQExampleLegendCircleOutlineLineChart() {
   return <UiLineChartShell legendVariant="circle-outline" />;
 }
-export function BeeExampleLegendRoundedSquareLineChart() {
+export function NQExampleLegendRoundedSquareLineChart() {
   return <UiLineChartShell legendVariant="rounded-square" />;
 }
-export function BeeExampleLegendRoundedSquareOutlineLineChart() {
+export function NQExampleLegendRoundedSquareOutlineLineChart() {
   return <UiLineChartShell legendVariant="rounded-square-outline" />;
 }
-export function BeeExampleLegendVerticalBarLineChart() {
+export function NQExampleLegendVerticalBarLineChart() {
   return <UiLineChartShell legendVariant="vertical-bar" />;
 }
-export function BeeExampleLegendHorizontalBarLineChart() {
+export function NQExampleLegendHorizontalBarLineChart() {
   return <UiLineChartShell legendVariant="horizontal-bar" />;
 }
 
 // Tooltip examples
-export function BeeExampleTooltipDefaultBarChart() {
+export function NQExampleTooltipDefaultBarChart() {
   return <UiBarChartShell tooltipVariant="default" />;
 }
-export function BeeExampleTooltipFrostedGlassBarChart() {
+export function NQExampleTooltipFrostedGlassBarChart() {
   return <UiBarChartShell tooltipVariant="frosted-glass" />;
 }

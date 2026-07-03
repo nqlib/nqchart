@@ -8,14 +8,14 @@ import { CHART_BAR_CORNER_RADIUS_PX } from "@/registry/echarts-core/chart-corner
 import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { ChartBackground } from "@/registry/ui/background";
 import {
-  BeeChartLegend,
+  NQChartLegend,
   bindChartLegendLayer,
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
 import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/registry/ui/tooltip";
 import { useState } from "react";
 
-type BeeComposedChartProps<
+type NQComposedChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
 > = {
@@ -42,10 +42,10 @@ type ComposedChartCanvasProps<TData extends Record<string, unknown>> = {
 const { Chart: ComposedChartInner } = createCartesianChart<
   Record<string, unknown>,
   Record<string, ChartConfig[string]>,
-  BeeComposedChartProps<Record<string, unknown>, Record<string, ChartConfig[string]>>,
+  NQComposedChartProps<Record<string, unknown>, Record<string, ChartConfig[string]>>,
   ComposedChartCanvasProps<Record<string, unknown>>
 >({
-  displayName: "BeeComposedChart",
+  displayName: "NQComposedChart",
   compile: compileComposedOption,
   loadingVariant: "composed",
   defaultLoadingPoints: 8,
@@ -69,10 +69,10 @@ const { Chart: ComposedChartInner } = createCartesianChart<
   }),
 });
 
-export function BeeComposedChart<
+export function NQComposedChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
->(props: BeeComposedChartProps<TData, TConfig>) {
+>(props: NQComposedChartProps<TData, TConfig>) {
   return <ComposedChartInner {...props} />;
 }
 
@@ -207,7 +207,7 @@ export function Legend({
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <BeeChartLegend
+    <NQChartLegend
       variant={variant}
       align={align}
       hideIcon={hideIcon}

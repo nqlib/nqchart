@@ -4,6 +4,13 @@ import { compileTreemapOption } from "../compile-treemap";
 import type { TreemapNode } from "../parts/types";
 import { makeCtx } from "./make-ctx";
 
+// Shape of a treemap node AFTER compilation — the compiler injects itemStyle
+// onto each node, which the source TreemapNode (input shape) does not carry.
+type CompiledTreemapNode = {
+  itemStyle?: { borderWidth?: number; color?: string };
+  children?: CompiledTreemapNode[];
+};
+
 const TREE: TreemapNode[] = [
   {
     name: "Engineering",
@@ -32,10 +39,10 @@ describe("compileTreemapOption", () => {
         sort?: boolean;
         stateAnimation?: { duration?: number };
         animationDurationUpdate?: number;
-        emphasis?: { focus?: string; blurScope?: string };
+        emphasis?: { focus?: string; blurScope?: string; disabled?: boolean };
         blur?: { itemStyle?: { opacity?: number }; label?: { opacity?: number } };
         levels?: Array<{ colorSaturation?: unknown; colorAlpha?: unknown }>;
-        data?: Array<{ itemStyle?: { borderWidth?: number; color?: string } }>;
+        data?: Array<CompiledTreemapNode>;
       }>
     )[0]!;
 

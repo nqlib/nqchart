@@ -1,15 +1,15 @@
 "use client";
 
-import { BeeLineChart, Line, XAxis, Grid, Legend, Tooltip } from "@/registry/charts/line-chart";
+import { NQLineChart, Line, XAxis, Grid, Legend, Tooltip } from "@/registry/charts/line-chart";
 import {
   DUAL_SERIES_CHART_CONFIG,
   formatMonthTickShort,
   TRAFFIC_MONTHLY_DATA,
 } from "@/registry/examples/example-shared";
 
-export function BeeExampleLoadingStateLineChart() {
+export function NQExampleLoadingStateLineChart() {
   return (
-    <BeeLineChart
+    <NQLineChart
       data={[...TRAFFIC_MONTHLY_DATA]}
       config={DUAL_SERIES_CHART_CONFIG}
       className="h-full w-full p-4"
@@ -22,6 +22,6 @@ export function BeeExampleLoadingStateLineChart() {
       <Tooltip />
       <Line dataKey="desktop" />
       <Line dataKey="mobile" curveType="monotone" />
-    </BeeLineChart>
+    </NQLineChart>
   );
 }

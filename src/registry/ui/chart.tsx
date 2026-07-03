@@ -26,7 +26,7 @@ function validateChartConfigColors(config: ChartConfig): void {
 
       if (!hasValidThemeKey) {
         throw new Error(
-          `[BeeCharts] Invalid chart config for "${key}": colors object must have at least one theme key (${VALID_THEME_KEYS.join(", ")}).`,
+          `[NQChart] Invalid chart config for "${key}": colors object must have at least one theme key (${VALID_THEME_KEYS.join(", ")}).`,
         );
       }
     }

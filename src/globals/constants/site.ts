@@ -1,15 +1,15 @@
-export const SITE_NAME = "BeeCharts";
+export const SITE_NAME = "NQChart";
 
 export const SITE_AUTHOR = "Ctesibius";
 
-export const SITE_TITLE = "BeeCharts — Composable charts for BI dashboards";
+export const SITE_TITLE = "NQChart — Composable charts for BI dashboards";
 
 export const SITE_DESCRIPTION =
-  "BeeCharts is a composable React chart library for dashboards and analytics. Built with Apache ECharts, shadcn/ui, and compound Bee*Chart components for histograms, funnels, gauges, and more.";
+  "NQChart is a composable React chart library for dashboards and analytics. Built with Apache ECharts, shadcn/ui, and compound NQ*Chart components for histograms, funnels, gauges, and more.";
 
 export const SITE_KEYWORDS: string[] = [
-  "beecharts",
-  "bee charts",
+  "nqchart",
+  "nq charts",
   "charts",
   "react charts",
   "echarts",

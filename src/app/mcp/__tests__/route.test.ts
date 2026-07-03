@@ -108,7 +108,7 @@ describe("GET /mcp", () => {
       name: string;
       tools: Array<{ name: string }>;
     };
-    expect(body.name).toBe("beecharts-docs");
+    expect(body.name).toBe("nqchart-docs");
     expect(body.tools.length).toBe(2);
   });
 });

@@ -17,7 +17,7 @@ function isBackgroundLayer(child: ReactNode): child is ReactElement {
   return (
     isValidElement(child) &&
     typeof child.type !== "string" &&
-    (child.type as { displayName?: string }).displayName === "BeeChartBackground"
+    (child.type as { displayName?: string }).displayName === "NQChartBackground"
   );
 }
 
