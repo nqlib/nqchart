@@ -51,3 +51,6 @@ next-env.d.ts
 /public/r
 # local agent config
 .claude/
+
+# npm library build output
+/dist

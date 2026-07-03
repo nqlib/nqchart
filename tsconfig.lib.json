@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "incremental": false,
+    "outDir": "./dist/types",
+    "rootDir": "./src",
+    "plugins": []
+  },
+  "include": [
+    "src/lib/public.ts",
+    "src/registry/charts",
+    "src/registry/ui",
+    "src/registry/echarts-core"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/__tests__/**"
+  ]
+}
