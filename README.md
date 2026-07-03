@@ -1,6 +1,6 @@
 # NQChart
 
-**Composable React charts for dashboards and BI** — Apache ECharts engine, shadcn registry install, compound `NQ*Chart` API.
+**Composable React charts for dashboards and BI** — Apache ECharts engine, published as `@nqlib/nqchart`, compound `NQ*Chart` API.
 
 <p align="center">
   <picture>
@@ -26,8 +26,8 @@
 
 - **Compound components** — compose `<Bar />`, `<Grid />`, `<Legend />` as children, not a giant options object
 - **Theme-aware** — `ChartConfig` maps to CSS variables for light/dark
-- **You own the source** — install via shadcn registry into `components/nqchart/`
-- **BI recipes** — histogram, Pareto, bullet, heatmap, gauge on primitives + `chart-recipes`
+- **One npm install** — `@nqlib/nqchart` with per-chart subpath imports; ECharts/React/motion stay peer deps
+- **BI recipes** — histogram, Pareto, bullet, heatmap, gauge helpers via `@nqlib/nqchart/recipes`
 
 Inspired by the [evilcharts](https://github.com/ali-tas/evilcharts) UX, rebuilt on **ECharts** instead of Recharts.
 
@@ -53,30 +53,48 @@ Inspired by the [evilcharts](https://github.com/ali-tas/evilcharts) UX, rebuilt 
 
 ## Quick install
 
-Add the registry namespace to `components.json`:
+Install the package and its peers:
 
-```json
-{
-  "registries": {
-    "@nqchart": "https://nqchart.vercel.app/r/{name}.json"
-  }
+```bash
+npm i @nqlib/nqchart          # + peers:
+npm i react react-dom echarts motion
+```
+
+Import a chart family — the root plus its scoped children come from one subpath:
+
+```tsx
+import { NQBarChart, Bar, Grid, XAxis, YAxis, Tooltip, Legend } from "@nqlib/nqchart/bar-chart";
+import { type ChartConfig } from "@nqlib/nqchart";
+
+const config = {
+  desktop: { label: "Desktop", color: "var(--chart-1)" },
+} satisfies ChartConfig;
+
+export function Revenue({ data }: { data: { month: string; desktop: number }[] }) {
+  return (
+    <NQBarChart config={config} data={data} xDataKey="month" className="h-64 w-full p-4">
+      <Grid />
+      <XAxis dataKey="month" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="desktop" />
+    </NQBarChart>
+  );
 }
 ```
 
-Install a chart (peer deps: `echarts`, `motion`):
+BI data helpers: `import { binForHistogram, prepareParetoData } from "@nqlib/nqchart/recipes"`.
 
-```bash
-pnpm add echarts motion
-pnpm dlx shadcn@latest add @nqchart/bar-chart
-```
+> **Prefer to own the source?** The same components are also available via the shadcn registry
+> (`@nqchart` namespace at `https://nqchart.vercel.app/r/{name}.json`) — see the
+> [installation docs](src/content/docs/installation.mdx).
 
 Optional agent skill for Cursor / Claude Code:
 
 ```bash
 npx skills add nqlib/nqchart --skill nqchart -y
 ```
-
-Full steps: [installation docs](src/content/docs/installation.mdx).
 
 ## Primitives
 

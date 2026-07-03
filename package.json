@@ -1,6 +1,6 @@
 {
   "name": "@nqlib/nqchart",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packageManager": "pnpm@10.12.1",
   "scripts": {
     "postinstall": "fumadocs-mdx",
@@ -24,6 +24,8 @@
     "build:npm": "rm -rf dist && pnpm run build:lib && pnpm run build:types",
     "verify:publish": "node scripts/verify-publish.mjs",
     "publish:npm": "node scripts/publish-npm.mjs",
+    "prepack": "node scripts/strip-deps-for-publish.mjs prepack",
+    "postpack": "node scripts/strip-deps-for-publish.mjs postpack",
     "prepublishOnly": "pnpm run verify:publish"
   },
   "pnpm": {

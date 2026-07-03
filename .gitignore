@@ -54,3 +54,6 @@ next-env.d.ts
 
 # npm library build output
 /dist
+
+# transient publish manifest backup (prepack/postpack)
+package.json.publish-backup

@@ -9,6 +9,7 @@
  * broken package without erroring.
  */
 import { spawnSync } from "node:child_process";
+import { rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -73,6 +74,53 @@ function verifyTarball() {
   );
 }
 
+// The root package.json doubles as the Next.js app manifest (65 runtime deps).
+// prepack strips `dependencies` from the PUBLISHED manifest so consumers don't
+// pull the whole app. Verify that by packing a real tarball and reading the
+// package.json inside it — a dry-run can't show the packed manifest contents.
+function verifyPublishedManifest() {
+  const packResult = spawnSync("npm", ["pack", "--json"], {
+    cwd: root,
+    encoding: "utf8",
+    shell: process.platform === "win32",
+  });
+  if (packResult.status !== 0) {
+    console.error(packResult.stderr || "npm pack failed");
+    process.exit(packResult.status ?? 1);
+  }
+  const tarball = JSON.parse(packResult.stdout)[0].filename;
+  try {
+    const manifest = spawnSync(
+      "tar",
+      ["-xzOf", join(root, tarball), "package/package.json"],
+      { cwd: root, encoding: "utf8", shell: process.platform === "win32" },
+    );
+    if (manifest.status !== 0) {
+      console.error(manifest.stderr || "could not read package.json from tarball");
+      process.exit(manifest.status ?? 1);
+    }
+    const packed = JSON.parse(manifest.stdout);
+    const depCount = Object.keys(packed.dependencies ?? {}).length;
+    const peerCount = Object.keys(packed.peerDependencies ?? {}).length;
+    if (depCount > 0) {
+      console.error(
+        `verify:publish — published manifest still has ${depCount} dependencies; prepack strip did not run. Consumers would install the whole app.`,
+      );
+      process.exit(1);
+    }
+    if (peerCount === 0) {
+      console.error("verify:publish — published manifest has no peerDependencies; expected react/react-dom/echarts/motion.");
+      process.exit(1);
+    }
+    console.log(
+      `verify:publish — published manifest OK (0 dependencies, ${peerCount} peerDependencies)`,
+    );
+  } finally {
+    // Clean up the real tarball we created for inspection.
+    rmSync(join(root, tarball), { force: true });
+  }
+}
+
 console.log("verify:publish — running pre-publish checks\n");
 
 // 1. Build the library (JS bundle + .d.ts with alias rewrite).
@@ -86,5 +134,8 @@ run("node", [join(root, "scripts", "smoke-dist.mjs")]);
 
 // 4. Verify the publish tarball contents.
 verifyTarball();
+
+// 5. Verify the published manifest strips the app's dependencies.
+verifyPublishedManifest();
 
 console.log("\nverify:publish — all checks passed");
