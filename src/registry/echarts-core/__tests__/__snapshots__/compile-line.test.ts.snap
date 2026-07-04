@@ -13,11 +13,11 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
   "calendar": undefined,
   "dataZoom": undefined,
   "grid": {
-    "bottom": 48,
+    "bottom": 4,
     "containLabel": true,
-    "left": 48,
-    "right": 24,
-    "top": 24,
+    "left": 12,
+    "right": 12,
+    "top": 14,
   },
   "legend": undefined,
   "radar": undefined,
@@ -115,8 +115,8 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
     "splitLine": {
       "lineStyle": {
         "color": "#e5e5e5",
-        "opacity": 0.45,
-        "type": "dashed",
+        "opacity": 0.5,
+        "type": "dotted",
       },
     },
     "type": "category",
@@ -142,8 +142,8 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
     "splitLine": {
       "lineStyle": {
         "color": "#e5e5e5",
-        "opacity": 0.35,
-        "type": "dashed",
+        "opacity": 0.5,
+        "type": "dotted",
       },
       "show": false,
     },
