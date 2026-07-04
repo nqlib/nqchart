@@ -81,9 +81,12 @@ export function resolveCartesianGrid(
   const compact = Boolean(externalBrush) && !hasBuiltInBrush;
 
   return {
-    left: compact ? (horizontal ? 56 : 8) : horizontal && hasBuiltInBrush ? 72 : 48,
-    right: compact ? 8 : 24,
-    top: 24,
+    // With `containLabel: true` these are OUTER padding *beyond* the axis labels,
+    // so keep them tight — the plot fills the box and the axes sit near the edges
+    // instead of floating in a wide margin.
+    left: compact ? (horizontal ? 56 : 8) : horizontal && hasBuiltInBrush ? 72 : 12,
+    right: compact ? 8 : 12,
+    top: 14,
     bottom,
     containLabel: true,
   };

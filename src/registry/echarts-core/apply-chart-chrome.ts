@@ -44,9 +44,11 @@ function themeCartesianAxis(axis: AxisLike, chrome: ChartChromeColors): AxisLike
     },
     splitLine: {
       ...splitLine,
+      // Dotted value-tick guides read as a light "dot grid" that lands exactly on
+      // the axis numbers — unlike a decorative <Background> pattern, which can't.
       lineStyle: mergeLineStyle(splitLineStyle, chrome.splitLine, {
-        type: "dashed",
-        opacity: 0.45,
+        type: "dotted",
+        opacity: 0.5,
       }),
     },
     splitArea: splitArea.show

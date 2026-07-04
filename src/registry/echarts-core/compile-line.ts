@@ -42,7 +42,7 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
       type: "value",
       splitLine: {
         show: hasGrid,
-        lineStyle: { type: "dashed", opacity: 0.35 },
+        lineStyle: { type: "dotted", opacity: 0.5 },
       },
     },
     dataZoom: buildCategoryDataZoom(hasBrush, { chartVariant: "line" }),

@@ -3,6 +3,25 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.1.4 — 2026-07-04
+
+### Charts & engine
+
+- **Cartesian grid** — tighter default margins so plots fill preview containers; bottom padding reduced when no brush slider.
+- **Split lines** — value-axis guides use dotted lines aligned to tick values (light + line compilers).
+
+### Dependencies
+
+- **hono** — pnpm override to `>=4.12.25` (fixes [GHSA-88fw-hqm2-52qc](https://github.com/advisories/GHSA-88fw-hqm2-52qc) in dev tooling via `shadcn` → `@modelcontextprotocol/sdk`).
+
+### Design context
+
+- **PRODUCT.md** and **DESIGN.md** — strategic and visual system docs for agent-assisted UI work.
+- **`.impeccable/design.json`** — machine-readable design sidecar (tokens, components, rules).
+- **`impeccable` agent skill** under `.agents/skills/impeccable/`.
+
+---
+
 ## 0.1.1 — 2026-06-27
 
 ### Hover focus

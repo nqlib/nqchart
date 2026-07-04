@@ -104,6 +104,6 @@ export function buildHeatmapDataZoom(
   ];
 }
 
-export function gridBottomWithZoom(hasZoom: boolean, base = 48): number {
+export function gridBottomWithZoom(hasZoom: boolean, base = 4): number {
   return hasZoom ? base + DATA_ZOOM_SLIDER_HEIGHT + 4 : base;
 }

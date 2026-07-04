@@ -194,7 +194,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
       ...resolveCartesianGrid(
         ctx.parts,
         ctx.cartesian?.externalBrush,
-        horizontal ? (hasMonospace ? 32 : 48) : gridBottomWithZoom(hasBrush, hasMonospace ? 32 : 48),
+        horizontal ? (hasMonospace ? 32 : 4) : gridBottomWithZoom(hasBrush, hasMonospace ? 32 : 4),
         horizontal,
       ),
       ...(hasHoverTrace && !horizontal ? { left: 56 } : {}),
