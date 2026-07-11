@@ -11,6 +11,9 @@ export function compileSparklineOption(ctx: CompileContext): EChartsOption {
   const showFill = Boolean(fillSpark);
   const colorKey = lineSpark?.dataKey ?? fillSpark?.dataKey ?? "trend";
   const valueKey = ctx.valueDataKey ?? "value";
+  // Human label for the tooltip; falls back to nothing so we never surface the
+  // ECharts default series name ("series0").
+  const seriesLabel = ctx.config?.[colorKey]?.label?.toString();
   const color = ctx.resolveColor(colorKey, 0);
   const fillColor = resolveAreaFillColor(ctx.config, colorKey, ctx.resolveColor, 0);
   const values = ctx.data.map((row) => Number(row[valueKey] ?? 0));
@@ -31,6 +34,9 @@ export function compileSparklineOption(ctx: CompileContext): EChartsOption {
     series: [
       {
         type: "line",
+        // Without a name ECharts falls back to "series0" in the tooltip; use the
+        // config label (or the data key) so it resolves to a real entry.
+        name: seriesLabel ?? colorKey,
         data: values,
         smooth: true,
         showSymbol: false,
