@@ -37,6 +37,11 @@ export function compileSparklineOption(ctx: CompileContext): EChartsOption {
         // Without a name ECharts falls back to "series0" in the tooltip; use the
         // config label (or the data key) so it resolves to a real entry.
         name: seriesLabel ?? colorKey,
+        // Gradient areaStyle cannot tween (zrender interpolate1DArray throws on
+        // undefined color stops). Sparklines are decorative — skip intro/update motion.
+        animation: false,
+        stateAnimation: { duration: 0 },
+        animationDurationUpdate: 0,
         data: values,
         smooth: true,
         showSymbol: false,
