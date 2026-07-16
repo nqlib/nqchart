@@ -2,6 +2,9 @@
 
 import { useId, type FC } from "react";
 
+import { cn } from "@/lib/utils";
+import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
+
 export type BackgroundVariant =
   | "dots"
   /** Fine SVG crosshatch wallpaper — not the chart `<Grid />` axis lines. */
@@ -180,20 +183,45 @@ export const NQ_CHART_BACKGROUND_MARKER = Symbol.for("nqchart.ChartBackground");
 
 interface ChartBackgroundProps {
   variant: BackgroundVariant;
+  /**
+   * Injected by `ChartPlotShell` — the real, axis-bounded plot box measured from
+   * ECharts after layout. When present the pattern is clipped to it so it never
+   * bleeds under the axis labels. `null` for chart types with no cartesian grid
+   * (sparkline, pie, radial …), which correctly fill the whole plot area.
+   */
+  plotRect?: ChartPlotInsets | null;
 }
 
 /** SVG pattern layer behind the ECharts canvas. Compose inside `NQ*Chart`. */
-export function ChartBackground({ variant }: ChartBackgroundProps) {
+export function ChartBackground({ variant, plotRect = null }: ChartBackgroundProps) {
   const baseId = useId().replace(/:/g, "");
   const patternId = `${baseId}-bg-${variant}`;
   const maskId = `${baseId}-bg-edge-fade`;
   const filterId = `${baseId}-bg-blur`;
   const PatternComponent = PATTERN_MAP[variant];
 
+  // Inset the layer to the measured grid rect, so the pattern is physically clipped
+  // to the area between the axes. Percentages cannot work here: `containLabel` sizes
+  // the plot by measuring rendered axis-label text, so the box depends on the
+  // consumer's data and container size at runtime.
+  const style = plotRect
+    ? {
+        left: plotRect.left,
+        right: plotRect.right,
+        top: plotRect.top,
+        bottom: plotRect.bottom,
+      }
+    : undefined;
+
   return (
     <div
       data-nq-chart-background=""
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      className={cn(
+        "pointer-events-none absolute z-0 overflow-hidden",
+        // No grid to contain it (sparkline, pie, radial …) — fill the plot area.
+        !plotRect && "inset-0",
+      )}
+      style={style}
       aria-hidden
     >
       <svg width="100%" height="100%" className="text-border">
@@ -202,8 +230,16 @@ export function ChartBackground({ variant }: ChartBackgroundProps) {
           <filter id={filterId}>
             <feGaussianBlur stdDeviation="25" />
           </filter>
+          {/* Soft edge fade — now relative to the layer, which IS the plot box. */}
           <mask id={maskId} maskUnits="userSpaceOnUse">
-            <rect x="8%" y="20%" width="85%" height="60%" fill="white" filter={`url(#${filterId})`} />
+            <rect
+              x="4%"
+              y="4%"
+              width="92%"
+              height="92%"
+              fill="white"
+              filter={`url(#${filterId})`}
+            />
           </mask>
         </defs>
         <rect width="100%" height="100%" fill={`url(#${patternId})`} mask={`url(#${maskId})`} />

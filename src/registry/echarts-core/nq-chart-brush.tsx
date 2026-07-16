@@ -1,5 +1,6 @@
 "use client";
 
+import { SPRING } from "@/globals/constants/motion";
 import { cn } from "@/lib/utils";
 import type { EChartsOption } from "echarts";
 import {
@@ -17,8 +18,6 @@ import { toMiniPreviewOption } from "./to-mini-preview-option";
 import type { ChartBrushRange } from "./use-chart-brush";
 import { useCompiledOption, type CompileRootFields } from "./use-compiled-option";
 import type { CompileContext } from "./parts/types";
-
-const SPRING = { stiffness: 300, damping: 35, mass: 0.8 };
 
 type DragType = "left" | "right" | "middle";
 

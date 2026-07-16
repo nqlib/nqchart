@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import type { EChartsOption } from "echarts";
 import { useNQEcharts, type NQChartEventHandlers } from "./use-nq-echarts";
+import type { ChartPlotInsets } from "./chart-grid";
 import { subscribeThemeChange } from "./resolve-chart-colors";
 
 type EChartsHostProps = {
@@ -10,7 +11,7 @@ type EChartsHostProps = {
   className?: string;
   /** Bump when colors need re-resolve after theme toggle */
   colorEpoch?: number;
-  onPlotRect?: (insets: { left: number; right: number }) => void;
+  onPlotRect?: (insets: ChartPlotInsets) => void;
   eventHandlers?: NQChartEventHandlers;
   onChartInstance?: (instance: import("echarts/core").EChartsType | null) => void;
 };

@@ -166,6 +166,7 @@ const LEGEND_SERIES_TYPES = new Set([
   "scatter",
   "radar",
   "radialBar",
+  "whiskers",
 ]);
 
 type SeriesPart = Extract<ChartPart, { dataKey: string }>;

@@ -47,7 +47,7 @@ Import children from the **same family** as the root — each family defines its
 | `@nqlib/nqchart/pie-chart` | `NQPieChart`, `Pie`, `Tooltip`, `Legend` |
 | `@nqlib/nqchart/radial-chart` | `NQRadialChart`, `RadialBar`, `Tooltip`, `Legend` |
 | `@nqlib/nqchart/radar-chart` | `NQRadarChart`, `Radar`, `PolarAngleAxis`, `PolarGrid`, `Dot` |
-| `@nqlib/nqchart/scatter-chart` | `NQScatterChart`, `Scatter`, `Dot`, axes, `Tooltip`, `Legend` |
+| `@nqlib/nqchart/scatter-chart` | `NQScatterChart`, `Scatter`, `Grid`, axes, `Tooltip`, `Legend` |
 | `@nqlib/nqchart/heatmap-chart` | `NQHeatmapChart`, `Heatmap`, axes, `Tooltip`, `Legend` |
 | `@nqlib/nqchart/calendar-chart` | `NQCalendarChart`, `Calendar`, `Tooltip`, `Legend` |
 | `@nqlib/nqchart/treemap-chart` | `NQTreemapChart`, `Tiles`, `Tooltip`, `Legend` |
@@ -67,7 +67,7 @@ import {
   useChart,                // access chart context
   ChartTooltip, ChartTooltipContent,
   ChartLegend, ChartLegendContent,
-  ChartBackground,         // background variants on roots
+  ChartBackground,         // plot wallpaper — XOR with Grid (see background-and-grid.md)
   NQBrush, useNQBrush,     // zoom brush footer
   ChartLoadingSkeleton,
 } from "@nqlib/nqchart";

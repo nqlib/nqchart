@@ -6,7 +6,11 @@ image: /og/backgrounds.png
 
 ## Usage
 
-Compose `ChartBackground` inside any `NQ*Chart` that uses the plot shell (line, bar, composed):
+Backgrounds are **opt-in** — there is no default. A chart is bare until you compose
+one, and `variant` is required (there is no `"none"`).
+
+Compose `ChartBackground` inside a **cartesian** chart — `NQLineChart`, `NQBarChart`,
+`NQAreaChart`, `NQComposedChart` (and `NQSparklineChart`):
 
 ```tsx
 import { NQLineChart, Line, XAxis, Legend, Tooltip } from "@nqchart/line-chart";
@@ -22,6 +26,19 @@ import { ChartBackground } from "@nqchart/background";
 </NQLineChart>
 ```
 
+### Not available on pie, radar, radial, treemap, funnel, calendar
+
+Those charts have no x/y axes, so there is no plot area to contain a pattern — they
+intentionally don't export `Background`.
+
+### Contained by the axes
+
+The pattern is clipped to the **plot area between the x and y axis**, measured from
+the chart at runtime. It stays aligned no matter the container size or how wide your
+axis labels are (`1,000` vs `$1,250,000.00`), so it never bleeds under the labels.
+
+Sparkline is the exception: it has no visible axes, so its pattern fills the plot.
+
 ### Background pattern vs chart grid
 
 | API | What it is |
@@ -29,7 +46,10 @@ import { ChartBackground } from "@nqchart/background";
 | `<ChartBackground variant="graph-paper" />` | Decorative SVG wallpaper (small repeating squares) |
 | `<Grid />` | Optional **y-axis split lines** at value ticks (wide spacing) |
 
-Background previews omit `<Grid />` so split lines do not stack on the pattern. Add `<Grid />` when you want those value guides.
+**Use one, not both.** `<Grid />` is a functional value guide; the background is
+decoration. Stacking two pattern layers competes for the same space and makes values
+harder to read — the previews below omit `<Grid />` for that reason. Add `<Grid />`
+only when you want value guides *instead of* a pattern.
 
 ## Variants
 

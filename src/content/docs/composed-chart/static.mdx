@@ -152,7 +152,7 @@ Use `prepareParetoData()` from [Chart recipes](/docs/chart-recipes), then bar + 
 
 ### Box plot
 
-Stack `iqrFloor` + `iqr` bars with median markers (`<Line variant="points" />`) — data from `prepareBoxPlotRow()` per category. Hide the positioning floor from the legend (`showInLegend={false}` on `iqrFloor`). Whiskers (`min` / `max`) are optional; this recipe shows the IQR box and median only.
+Stack `iqrFloor` + `iqr` bars with median markers (`<Line variant="points" />`) and whiskers (`<Whiskers minKey q1Key q3Key maxKey />`) — data from `prepareBoxPlotRow()` per category. Hide the positioning floor from the legend (`showInLegend={false}` on `iqrFloor`). Whiskers draw min↔Q1 and Q3↔max stems with end caps.
 
 <ComponentPreview title="box plot" name="ex-boxplot-chart"  />
 

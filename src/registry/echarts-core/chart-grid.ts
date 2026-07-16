@@ -9,9 +9,20 @@ export type ChartGridInsets = {
   containLabel: boolean;
 };
 
+/**
+ * The real, post-layout plot box — distances from each edge of the ECharts
+ * container to the axis-bounded grid rect.
+ *
+ * Must come from ECharts at runtime (`coordinateSystem.getRect()`), never from
+ * static CSS: `containLabel: true` sizes the grid by *measuring rendered axis
+ * label text*, so the plot box depends on the consumer's data (`1,250,000` pushes
+ * it further in than `100`). Anything percentage-based drifts outside the axes.
+ */
 export type ChartPlotInsets = {
   left: number;
   right: number;
+  top: number;
+  bottom: number;
 };
 
 type AxisLike = { type?: string; boundaryGap?: boolean | [boolean, boolean] };

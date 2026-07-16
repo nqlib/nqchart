@@ -117,7 +117,7 @@ Backgrounds, legends, tooltips — usually paired with line or bar:
 
 | Category | Blocks |
 |----------|--------|
-| **Backgrounds** | `ex-bg-dots-line-chart`, `ex-bg-graph-paper-line-chart`, `ex-bg-cross-hatch-line-chart`, `ex-bg-diagonal-lines-line-chart`, `ex-bg-plus-line-chart`, `ex-bg-bubbles-line-chart`, … |
+| **Backgrounds** | `ex-bg-dots-line-chart`, `ex-bg-graph-paper-line-chart`, `ex-bg-cross-hatch-line-chart`, `ex-bg-diagonal-lines-line-chart`, `ex-bg-plus-line-chart`, `ex-bg-bubbles-line-chart`, … — wallpaper only; omit `<Grid />` ([background-and-grid.md](./background-and-grid.md)) |
 | **Legend** | `ex-legend-square-line-chart`, `ex-legend-circle-line-chart`, `ex-legend-vertical-bar-line-chart`, `ex-legend-horizontal-bar-line-chart`, … |
 | **Tooltip** | `ex-tooltip-default-bar-chart`, `ex-tooltip-frosted-glass-bar-chart` |
 

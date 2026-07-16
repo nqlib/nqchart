@@ -38,6 +38,33 @@ DoD: [docs/product/ai-contract.md](../../../docs/product/ai-contract.md).
 4. **No duplicate doc nav** — do not add `gauge-chart`, `histogram-chart`, etc. to `meta.json`.
 5. **Registry boundary** — `src/registry/**` must not import `src/components/**`. Run `pnpm run audit:registry-boundary`.
 6. **ECharts engine** — compilers are pure fns in `compile-*.ts` + `useCompiledOption`. No Recharts. For correct ECharts `option` shapes, consult the **[echarts-ai-skill](../echarts-ai-skill/SKILL.md)** reference (`examples/*.option.json`, `src/core/spec-to-option.ts`). Reference only — build via the compilers, **not** its CLI.
+7. **Grid & background SSOT** — see below. Cartesian charts share one grid contract; backgrounds clip to the measured plot rect.
+
+## Grid, axes & background (SSOT)
+
+**Grid insets** — every cartesian compiler uses `resolveCartesianGrid(...)`
+(`chart-grid.ts`). Do not hand-roll `grid: { left, right, top, bottom }`.
+
+The **only** legitimate deviation is reserving space for a *docked component*.
+`containLabel: true` measures **axis labels only** — never sliders or `visualMap`.
+Today the single exception is **heatmap** (vertical dataZoom slider at `left:0`,
+horizontal slider + `visualMap` at `bottom:0`); its bespoke insets carry a comment
+saying so. If you "unify" it, the y-labels collide with the slider. Any new deviation
+must be commented with which docked component needs the gutter.
+
+**Background** (`<ChartBackground />`) is **cartesian-only and opt-in** (no default;
+`variant` required). It clips to `ChartPlotInsets` — the real, post-layout grid rect
+from `coordinateSystem.getRect()`, surfaced via `onPlotRect` → `ChartPlotShell
+plotRect`. Never position it with CSS percentages: `containLabel` makes the plot box
+depend on the consumer's label text at runtime, so percentages drift outside the axes.
+
+A cartesian chart that renders `ChartPlotShell` must hold `plotAlign` state, pass
+`onPlotRect` to its canvas, and forward `plotRect` to the shell — otherwise a composed
+background falls back to full-bleed and escapes the axes.
+
+Charts with no grid (pie, radar, radial, treemap, funnel, calendar) must **not** export
+`Background`; `readPlotInsets` returns `null` for them. Sparkline is a deliberate
+full-bleed decorative exception.
 
 ## chart-recipes
 

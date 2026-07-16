@@ -4,15 +4,21 @@ Every chart follows the same mental model:
 
 ```
 <NQ*Chart config data …root props>
-  <Grid />           // cartesian charts
-  <XAxis /> <YAxis /> // cartesian
-  <Tooltip />
+  {/* Pick ONE chrome layer — see background-and-grid.md */}
+  <Grid />                    // value guides (default analytics)
+  {/* OR */}
+  <ChartBackground variant="dots" />  // decorative wallpaper
+
+  <XAxis /> <YAxis />         // cartesian
+  <Tooltip />                 // always compose for interactive charts
   <Legend />
-  <Series />         // Bar | Line | Area | Scatter | …
+  <Series />                  // Bar | Line | Area | Scatter | …
 </NQ*Chart>
 ```
 
 Import series and axes from the **same file** as the root (e.g. all from `bar-chart.tsx`).
+
+Wallpaper vs guides: **[background-and-grid.md](./background-and-grid.md)** (required reading before adding a pattern).
 
 ---
 
@@ -104,7 +110,10 @@ Use **dual Y axes** for Pareto:
 | `nameKey` | Slice label field |
 | `data` | Rows with value keys |
 
-**Children:** `Pie`, `Tooltip`, `Legend`, `Background`
+**Children:** `Pie`, `Tooltip`, `Legend`
+
+> No `Background` — pie has no x/y axes, so there is no plot area to contain a
+> pattern. Background is cartesian-only (see "Chart background" below).
 
 **Pie child:** `dataKey`, `innerRadius` (donut), padding/overlap props
 
@@ -193,13 +202,23 @@ Small height (`h-12`–`h-16`), `data` with value field.
 
 ## Chart background (`ChartBackground`)
 
-Compose inside `NQLineChart`, `NQBarChart`, `NQComposedChart`, `NQAreaChart`, `NQSparklineChart`:
+Full guide: **[background-and-grid.md](./background-and-grid.md)**.
+
+**Opt-in wallpaper, cartesian-only.** No default background — omit the component for a bare chart. `variant` is required (there is no `"none"`).
+
+Compose inside `NQLineChart`, `NQBarChart`, `NQComposedChart`, `NQAreaChart`,
+`NQScatterChart` (including bubble), `NQWaterfallChart`, `NQSparklineChart`.
+**Not available** on pie, radar, radial, treemap, funnel, or calendar.
 
 ```tsx
 import { ChartBackground } from "@nqlib/nqchart";
 
+// Wallpaper — omit <Grid />
 <ChartBackground variant="dots" />
 ```
+
+The pattern is clipped to the **plot area between the axes** — it never bleeds under
+the axis labels. (Sparkline has no visible axes, so its pattern fills the plot.)
 
 | Variant | Pattern |
 |---------|---------|
@@ -209,11 +228,15 @@ import { ChartBackground } from "@nqlib/nqchart";
 | `diagonal-lines` | Parallel diagonals |
 | `plus`, `bubbles`, `wiggle-lines`, … | See `/docs/ui/background` |
 
-**Do not confuse with `<Grid />`:** that child enables **y-axis split lines** (horizontal guides at value ticks, wide spacing). Background `graph-paper` is a **decorative wallpaper** behind the series.
+**Do not confuse with `<Grid />`:** that child enables **y-axis split lines** (horizontal guides at value ticks). Background patterns are decorative wallpaper.
+
+**Do not stack them.** If you compose a background, omit `<Grid />`. If you need value guides, omit `ChartBackground`.
 
 ---
 
 ## Tooltip & Legend variants
+
+**Always compose `<Tooltip />`** on interactive charts (including custom / block charts). Series alone do not provide hover chrome.
 
 Install or copy from examples:
 

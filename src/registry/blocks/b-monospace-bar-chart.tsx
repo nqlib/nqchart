@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { NQBarChart, Bar, XAxis } from "@/registry/charts/bar-chart";
+import { NQBarChart, Bar, Tooltip, XAxis } from "@/registry/charts/bar-chart";
 import { type ChartConfig } from "@/registry/ui/chart";
 import {
   formatMonthTickShort,
@@ -71,6 +71,7 @@ export function NQMonospaceBarChart() {
         className="min-h-0 flex-1"
       >
         <XAxis dataKey="month" tickFormatter={formatMonthTickShort} />
+        <Tooltip />
         <Bar dataKey="desktop" variant="monospace" radius={0} />
       </NQBarChart>
     </div>

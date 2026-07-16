@@ -1,13 +1,9 @@
 "use client";
 
-import { useEffect, useRef, type RefObject } from "react";
+import { useCallback, useEffect, useRef, type RefObject } from "react";
 import type { EChartsOption } from "echarts";
 import type { EChartsType } from "echarts/core";
 import { getEcharts } from "./echarts-init";
-
-// Call (don't just import) so the module registry — including the canvas renderer —
-// is guaranteed in the bundle despite `sideEffects: false`. See echarts-init.ts.
-const echarts = getEcharts();
 import { maxIntroDurationMs, optionHasAnimatedSeries } from "./apply-chart-animation";
 import { applyRolloutIntroReveal } from "./apply-rollout-intro";
 import type { ChartPlotInsets } from "./chart-grid";
@@ -25,6 +21,10 @@ import {
   scheduleWaterfallHoverFocusRepair,
 } from "./waterfall-hover-focus";
 
+// Call (don't just import) so the module registry — including the canvas renderer —
+// is guaranteed in the bundle despite `sideEffects: false`. See echarts-init.ts.
+const echarts = getEcharts();
+
 export type NQChartSeriesEvent = {
   componentType?: string;
   seriesType?: string;
@@ -36,12 +36,20 @@ export type NQChartEventHandlers = {
   onGlobalOut?: () => void;
 };
 
+/**
+ * The axis-bounded plot box, measured after ECharts lays out (so `containLabel`
+ * label measurement is already applied). Returns null for chart types with no
+ * cartesian grid (pie, radial, sankey, …) — they have no axes to contain.
+ */
 function readPlotInsets(instance: EChartsType): ChartPlotInsets | null {
   const width = instance.getWidth();
-  if (width <= 0) return null;
+  const height = instance.getHeight();
+  if (width <= 0 || height <= 0) return null;
 
   type GridModel = {
-    coordinateSystem?: { getRect?: () => { x: number; width: number } };
+    coordinateSystem?: {
+      getRect?: () => { x: number; y: number; width: number; height: number };
+    };
   };
   const inst = instance as unknown as {
     getModel(): { getComponent(name: string, idx: number): GridModel };
@@ -53,6 +61,8 @@ function readPlotInsets(instance: EChartsType): ChartPlotInsets | null {
   return {
     left: rect.x,
     right: Math.max(0, width - rect.x - rect.width),
+    top: rect.y,
+    bottom: Math.max(0, height - rect.y - rect.height),
   };
 }
 
@@ -137,6 +147,33 @@ export function useNQEcharts(
     eventHandlersRef.current = eventHandlers;
   });
 
+  // Plot insets are re-read after every setOption and every ResizeObserver tick,
+  // each time as a fresh object. Forwarding them verbatim re-renders the parent on
+  // every paint — and since consumers position layout off these insets, that can
+  // feed the ResizeObserver right back. Dedupe by value.
+  const onPlotRectRef = useRef(onPlotRect);
+  useEffect(() => {
+    onPlotRectRef.current = onPlotRect;
+  });
+  const lastInsetsRef = useRef<ChartPlotInsets | null>(null);
+  const reportPlotRect = useCallback((insets: ChartPlotInsets | null) => {
+    if (!insets) return;
+    const cb = onPlotRectRef.current;
+    if (!cb) return;
+    const prev = lastInsetsRef.current;
+    if (
+      prev &&
+      prev.left === insets.left &&
+      prev.right === insets.right &&
+      prev.top === insets.top &&
+      prev.bottom === insets.bottom
+    ) {
+      return;
+    }
+    lastInsetsRef.current = insets;
+    cb(insets);
+  }, []);
+
   const clearIntroTimer = () => {
     if (introTimerRef.current != null) {
       clearTimeout(introTimerRef.current);
@@ -146,6 +183,12 @@ export function useNQEcharts(
 
   const releaseIntroLock = (instance: EChartsType, el: HTMLElement) => {
     introLockRef.current = false;
+
+    // During intro, ResizeObserver only runs getZr().resize() so enter tweens
+    // aren't cancelled. Sync the full ECharts layout once the lock lifts —
+    // otherwise hover/reflow mid-intro leaves the plot clipped until remount.
+    instance.resize();
+    reportPlotRect(readPlotInsets(instance));
 
     const pending = pendingOptionRef.current;
     pendingOptionRef.current = null;
@@ -163,7 +206,7 @@ export function useNQEcharts(
       (plotInsets) => {
         structureKeyRef.current = pendingKey;
         stableKeyRef.current = pendingStableKey;
-        if (plotInsets && onPlotRect) onPlotRect(plotInsets);
+        reportPlotRect(plotInsets);
       },
     );
   };
@@ -213,6 +256,10 @@ export function useNQEcharts(
       eventHandlersRef.current?.onSeriesMouseOver?.(params as NQChartSeriesEvent);
     };
     const onGlobalOut = () => {
+      // Multi-chart pages leave append-body tooltips + axisPointers stuck unless
+      // we explicitly clear them — ECharts does not always do this on globalout.
+      instance.dispatchAction({ type: "hideTip" });
+      instance.dispatchAction({ type: "updateAxisPointer", currTrigger: "leave" });
       resetScatterHoverFocus(instance);
       resetTreemapHoverFocus(instance);
       resetFunnelHoverFocus(instance);
@@ -231,8 +278,7 @@ export function useNQEcharts(
         return;
       }
       instance.resize();
-      const insets = readPlotInsets(instance);
-      if (insets && onPlotRect) onPlotRect(insets);
+      reportPlotRect(readPlotInsets(instance));
     });
     ro.observe(el);
 
@@ -243,6 +289,7 @@ export function useNQEcharts(
       clearIntroTimer();
       instance.dispose();
       chartRef.current = null;
+      lastInsetsRef.current = null;
       introStartedRef.current = false;
       introLockRef.current = false;
       pendingOptionRef.current = null;
@@ -250,7 +297,7 @@ export function useNQEcharts(
       stableKeyRef.current = "";
       onChartInstance?.(null);
     };
-  }, [containerRef, onPlotRect, onChartInstance]);
+  }, [containerRef, reportPlotRect, onChartInstance]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -290,7 +337,7 @@ export function useNQEcharts(
           { notMerge: true, replaceSeries: true },
           (plotInsets) => {
             startIntroLock(instance, el, option);
-            if (plotInsets && onPlotRect) onPlotRect(plotInsets);
+            reportPlotRect(plotInsets);
           },
         );
         return;
@@ -302,7 +349,7 @@ export function useNQEcharts(
         option,
         { replaceSeries },
         (plotInsets) => {
-          if (plotInsets && onPlotRect) onPlotRect(plotInsets);
+          reportPlotRect(plotInsets);
         },
       );
     });

@@ -2,6 +2,7 @@
 
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
+import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileScatterOption } from "@/registry/echarts-core/compile-scatter";
@@ -22,9 +23,13 @@ type NQScatterChartProps<TConfig extends Record<string, ChartConfig[string]>> = 
   isLoading?: boolean;
 };
 
-function ScatterChartCanvas() {
+function ScatterChartCanvas({
+  onPlotRect,
+}: {
+  onPlotRect?: (insets: ChartPlotInsets) => void;
+}) {
   const { option, colorEpoch } = useCompiledOption(compileScatterOption, { data: [] });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  return <EChartsHost option={option} colorEpoch={colorEpoch} onPlotRect={onPlotRect} />;
 }
 
 export function NQScatterChart<TConfig extends Record<string, ChartConfig[string]>>({
@@ -33,10 +38,19 @@ export function NQScatterChart<TConfig extends Record<string, ChartConfig[string
   className,
   isLoading,
 }: NQScatterChartProps<TConfig>) {
+  // Scatter is cartesian (x/y axes), so a composed <Background /> must clip to the
+  // measured grid rect — otherwise the pattern spills past the axes.
+  const [plotAlign, setPlotAlign] = useState<ChartPlotInsets | null>(null);
+
   return (
     <PartRegistryProvider>
       <ChartContainer config={config} className={className} isLoading={isLoading}>
-        <ChartPlotShell isLoading={isLoading} loadingVariant="scatter" canvas={<ScatterChartCanvas />}>
+        <ChartPlotShell
+          isLoading={isLoading}
+          loadingVariant="scatter"
+          plotRect={plotAlign}
+          canvas={<ScatterChartCanvas onPlotRect={setPlotAlign} />}
+        >
           {children}
         </ChartPlotShell>
       </ChartContainer>

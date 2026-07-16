@@ -10,7 +10,7 @@ license: MIT
 compatibility: Requires React, echarts, and motion (peer deps).
 metadata:
   author: ctesibius/nqchart
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # NQChart (agent guide)
@@ -23,6 +23,7 @@ Read in order:
 |-----|----------|
 | [when-to-use.md](./when-to-use.md) | Picking chart type from user intent |
 | [install.md](./install.md) | `npm i @nqlib/nqchart`, peer deps, subpaths |
+| [background-and-grid.md](./background-and-grid.md) | Wallpaper vs value guides — **pick one** |
 | [colors.md](./colors.md) | Theme-aware `ChartConfig` (`chartConfigColor`, gradients) |
 | [demo-dashboard.md](./demo-dashboard.md) | Multi-chart SaaS dashboard like the homepage demo |
 | [components.md](./components.md) | Roots, parts, and props per chart |
@@ -44,6 +45,8 @@ Stop and verify before marking the task done:
 | Config | `chartConfig` keys match every series `dataKey` / slice `nameKey` |
 | Layout | Root has `className="h-full w-full p-4"` (sparklines: `h-12`–`h-16`) |
 | Theme | Colors use `chartConfigColor()` or explicit light/dark arrays |
+| Chrome | Wallpaper **or** `<Grid />` — never both ([background-and-grid.md](./background-and-grid.md)) |
+| Hover | Interactive charts include a composed `<Tooltip />` |
 | Render | Chart renders in light and dark mode |
 
 ---
@@ -78,17 +81,21 @@ User goal?
 
 1. **Install the package + peers** — `npm i @nqlib/nqchart` plus `react react-dom echarts motion`. See [install.md](./install.md).
 
-2. **Compose children** — Root holds `config`, `data`, layout props. Put `<Grid />`, axes, series, `<Tooltip />`, `<Legend />` inside the root.
+2. **Compose children** — Root holds `config`, `data`, layout props. Put axes, series, `<Tooltip />`, `<Legend />` inside the root. Add `<Grid />` **or** `<ChartBackground />`, not both.
 
 3. **`chartConfig` drives colors** — Keys must match series `dataKey` / `nameKey`. Use [colors.md](./colors.md) (`chartConfigColor` or explicit light/dark hex).
 
 4. **Size the container** — `className="h-full w-full p-4"` (or fixed `h-64 w-full`) on the root. Sparklines often use `h-12`–`h-16`.
 
-5. **Loading** — `isLoading` on the root; copy `ex-loading-state-*` from [examples.md](./examples.md).
+5. **Wallpaper XOR Grid** — Decorative patterns via `<ChartBackground variant="…" />` (scatter/bubble included). Value guides via `<Grid />`. Never stack them — see [background-and-grid.md](./background-and-grid.md).
 
-6. **Legend toggle** — `<Legend isClickable />` lets users hide series. Legend manages its own selection state.
+6. **Always compose `<Tooltip />`** for interactive charts (including custom blocks). Hover UI does not appear from series alone.
 
-7. **Product dashboards** — Follow [demo-dashboard.md](./demo-dashboard.md) for the homepage layout (area + gauge + stacked bar + pie).
+7. **Loading** — `isLoading` on the root; copy `ex-loading-state-*` from [examples.md](./examples.md).
+
+8. **Legend toggle** — `<Legend isClickable />` lets users hide series. Legend manages its own selection state.
+
+9. **Product dashboards** — Follow [demo-dashboard.md](./demo-dashboard.md) for the homepage layout (area + gauge + stacked bar + pie).
 
 ---
 
@@ -136,7 +143,7 @@ All from the root `@nqlib/nqchart` (no separate install — one package):
 | `ChartConfig`, `useChart` | Config type + chart context |
 | `ChartTooltip`, `ChartTooltipContent` | Backing the per-chart `Tooltip` child |
 | `ChartLegend`, `ChartLegendContent` | Backing the per-chart `Legend` child |
-| `ChartBackground` | Background variants on roots |
+| `ChartBackground` | Plot wallpaper — use **instead of** `<Grid />` ([background-and-grid.md](./background-and-grid.md)) |
 | `NQBrush`, `useNQBrush` | Zoom brush footer on bar/line/area/composed |
 | `ChartLoadingSkeleton` | Loading placeholder |
 

@@ -165,6 +165,36 @@ export function Line({
   return null;
 }
 
+/** Box-plot whiskers — stems from min↔Q1 and Q3↔max with end caps. */
+export function Whiskers({
+  minKey,
+  q1Key,
+  q3Key,
+  maxKey,
+  dataKey = "whiskers",
+  showInLegend = true,
+}: {
+  minKey: string;
+  q1Key: string;
+  q3Key: string;
+  maxKey: string;
+  dataKey?: string;
+  showInLegend?: boolean;
+}) {
+  const id = usePartId();
+  useRegisterPart({
+    type: "whiskers",
+    id,
+    minKey,
+    q1Key,
+    q3Key,
+    maxKey,
+    dataKey,
+    showInLegend,
+  });
+  return null;
+}
+
 export function Tooltip({
   variant,
   roundness,

@@ -1,5 +1,7 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { gridBottomWithZoom } from "./category-data-zoom";
+import { resolveCartesianGrid } from "./chart-grid";
 import { itemFocus } from "./emphasis-presets";
 import type { ChartPart, CompileContext, ScatterSeriesPart } from "./parts/types";
 
@@ -73,9 +75,15 @@ export function compileScatterOption(ctx: CompileContext): EChartsOption {
       : [];
 
   const base: EChartsOption = {
-    grid: { left: 56, right: 24, top: 24, bottom: 48, containLabel: true },
+    // Same grid contract as line/bar/area/composed/waterfall — one framing for every
+    // cartesian chart. `containLabel` already measures the axis labels, so the outer
+    // padding stays tight instead of floating the plot in a wide margin.
+    grid: resolveCartesianGrid(ctx.parts, undefined, gridBottomWithZoom(false)),
     tooltip: { trigger: "item" },
-    xAxis: { type: "value", splitLine: { show: hasGrid } },
+    // Same `<Grid />` contract as bar/area/line/composed: horizontal value guides only.
+    // Value×value plots used to enable both axes, which read as a graph-paper lattice
+    // and looked like a decorative Background on the catalog page.
+    xAxis: { type: "value", splitLine: { show: false } },
     yAxis: { type: "value", splitLine: { show: hasGrid } },
     series,
   };

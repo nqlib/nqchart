@@ -2,6 +2,11 @@
 
 import * as React from "react";
 import { motion } from "motion/react";
+import {
+  DURATION_DRAMATIC_MS,
+  DURATION_STANDARD_MS,
+  EASE_OUT,
+} from "@/globals/constants/motion";
 import { type ChartConfig, ChartContainer } from "@/registry/ui/chart";
 
 const chartData = [
@@ -76,9 +81,10 @@ function IsoBar({ x, y, width, height, index, payload, maxValue, idPrefix, hover
         scaleX: isHovered ? 1.06 : 1,
       }}
       transition={{
-        duration: isHovered || dimmed ? 0.2 : 0.7,
+        duration:
+          (isHovered || dimmed ? DURATION_STANDARD_MS : DURATION_DRAMATIC_MS) / 1000,
         delay: hoveredIndex === null ? index * 0.08 : 0,
-        ease: [0.16, 1, 0.3, 1],
+        ease: EASE_OUT,
       }}
       style={{ transformBox: "fill-box", transformOrigin: "50% 100%" }}
     >

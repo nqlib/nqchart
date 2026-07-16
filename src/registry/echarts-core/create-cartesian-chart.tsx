@@ -167,6 +167,7 @@ export function createCartesianChart<
           <ChartPlotShell
             isLoading={isLoading}
             loadingVariant={loadingVariant}
+            plotRect={plotAlign}
             canvas={<Canvas {...canvasElementProps} />}
           >
             {children}

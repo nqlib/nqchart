@@ -2,12 +2,14 @@
 
 import { type ChartConfig, ChartContainer } from "@/registry/ui/chart";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
+import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileHeatmapOption } from "@/registry/echarts-core/compile-heatmap";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import type { HeatmapCell } from "@/registry/lib/chart-recipes";
 import type { ReactNode } from "react";
+import { useState } from "react";
 
 type NQHeatmapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
@@ -16,9 +18,13 @@ type NQHeatmapChartProps<TConfig extends Record<string, ChartConfig[string]>> = 
   isLoading?: boolean;
 };
 
-function HeatmapChartCanvas() {
+function HeatmapChartCanvas({
+  onPlotRect,
+}: {
+  onPlotRect?: (insets: ChartPlotInsets) => void;
+}) {
   const { option, colorEpoch } = useCompiledOption(compileHeatmapOption, { data: [] });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  return <EChartsHost option={option} colorEpoch={colorEpoch} onPlotRect={onPlotRect} />;
 }
 
 export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string]>>({
@@ -27,13 +33,18 @@ export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string
   className,
   isLoading,
 }: NQHeatmapChartProps<TConfig>) {
+  // Heatmap is cartesian (x/y category axes) — clip a composed <Background /> to the
+  // measured grid rect so it stays inside the axes.
+  const [plotAlign, setPlotAlign] = useState<ChartPlotInsets | null>(null);
+
   return (
     <PartRegistryProvider>
       <ChartContainer config={config} className={className} isLoading={isLoading}>
         <ChartPlotShell
           isLoading={isLoading}
           loadingVariant="heatmap"
-          canvas={<HeatmapChartCanvas />}
+          plotRect={plotAlign}
+          canvas={<HeatmapChartCanvas onPlotRect={setPlotAlign} />}
         >
           {children}
         </ChartPlotShell>

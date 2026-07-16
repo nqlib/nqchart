@@ -88,6 +88,7 @@ export function NQWaterfallChart<
         <ChartPlotShell
           isLoading={isLoading}
           loadingVariant="waterfall"
+          plotRect={plotAlign}
           canvas={
             <WaterfallChartCanvas
               data={chartData}

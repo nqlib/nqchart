@@ -51,6 +51,10 @@ function configKeyFromDisplayName(name: string, config: ChartConfig): string {
 
 function formatValue(value: unknown): string {
   if (typeof value === "number") return value.toLocaleString();
+  // Radar item tooltips pass the full indicator vector — join, don't take [0].
+  if (Array.isArray(value) && value.every((v) => typeof v === "number")) {
+    return value.map((v) => (v as number).toLocaleString()).join(" · ");
+  }
   if (Array.isArray(value) && typeof value[0] === "number") {
     return value[0].toLocaleString();
   }
@@ -103,13 +107,34 @@ function formatItemTooltipHtml(
 }
 
 function inferTooltipTrigger(option: EChartsOption): "axis" | "item" {
+  // compile-* already sets the correct trigger — prefer it so HTML Tooltip
+  // registration does not overwrite item charts (radar/scatter/treemap/…) with axis.
+  const existing = option.tooltip;
+  if (
+    existing &&
+    !Array.isArray(existing) &&
+    (existing.trigger === "item" || existing.trigger === "axis")
+  ) {
+    return existing.trigger;
+  }
+
   const series = Array.isArray(option.series)
     ? option.series
     : option.series
       ? [option.series]
       : [];
   const types = series.map((s) => (s as { type?: string })?.type);
-  if (types.some((t) => t === "pie" || t === "gauge" || t === "funnel")) {
+  if (
+    types.some(
+      (t) =>
+        t === "pie" ||
+        t === "gauge" ||
+        t === "funnel" ||
+        t === "radar" ||
+        t === "treemap" ||
+        t === "scatter",
+    )
+  ) {
     return "item";
   }
   if (option.polar && types.some((t) => t === "bar")) {

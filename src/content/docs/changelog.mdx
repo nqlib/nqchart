@@ -3,6 +3,39 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.1.7 — 2026-07-16
+
+### Background & grid
+
+- **`ChartBackground` clips to the real plot rect** — the wallpaper now takes its box from ECharts at runtime (`coordinateSystem.getRect()`) instead of static CSS. `containLabel: true` sizes the grid by *measuring rendered axis label text*, so the plot box depends on the consumer's data — `1,250,000` pushes it further in than `100`. Anything percentage-based drifted outside the axes.
+- **`ChartPlotInsets` gains `top` / `bottom`** — previously `left` / `right` only.
+- **Background XOR Grid** — wallpaper and `<Grid />` are two chrome layers that were never meant to stack; together they render a pattern under wide dotted guides that read as a second, inconsistent grid. Documented as a rule in the new `background-and-grid.md` skill, including which chart families expose a plot rect (cartesian only — not `pie`, `radar`, `radial`, `treemap`, `funnel`, `calendar`).
+
+### Composed chart
+
+- **`Whiskers` part** — box-plot whiskers for `@nqlib/nqchart/composed-chart`: stems from min↔Q1 and Q3↔max with end caps, driven by `minKey` / `q1Key` / `q3Key` / `maxKey`. Participates in the legend like any other series.
+
+### Motion
+
+- **Motion tokens mirror the nqui scale** — instant / micro / quick / standard and friends, with chart intros kept on their own duration. Values are *copied* from `@nqlib/nqui`'s `motion.css`, not imported, so nqchart stays free of an `@nqlib/nqui` dependency.
+
+---
+
+## 0.1.6 — 2026-07-15
+
+### Hover & tooltip
+
+- **Tooltip trigger** — preserve compiler-selected `item` / `axis` triggers during option merge; infer `item` for radar, treemap, and scatter.
+- **Radar tooltip** — format vector values as joined numbers instead of raw arrays.
+- **`globalout`** — dispatch `hideTip` on chart exit so append-to-body tooltips do not linger.
+- **Tooltip chrome** — `pointer-events: none`, zero transition, and cursor offset to reduce hover glitter.
+
+### Public API
+
+- Export **`ChartContainer`**, **`ChartStyle`**, and **`getColorsCount`** from `@nqlib/nqchart` root.
+
+---
+
 ## 0.1.5 — 2026-07-10
 
 ### Charts & engine

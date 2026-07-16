@@ -12,8 +12,16 @@ const DEFAULT_CORNER_RADIUS = CHART_CORNER_RADIUS_PX;
 const DEFAULT_BAR_SIZE = 14;
 const RADIAL_TRACK_SERIES_ID = "__radial_track__";
 
+/**
+ * Full-ring / full-petal tracks behind data bars.
+ *
+ * Must share `stack` with the ring/petal series. A separate unstacked track
+ * stack competes for category-band width in ECharts polar layout (`barPolar`):
+ * in compact cards the track claims `barWidth` first and data arcs collapse to
+ * hairlines. Same-stack + zero values + native `showBackground` draws tracks at
+ * the data bars' width without a second column.
+ */
 function buildConcentricTrackSeries(
-  angleMax: number,
   rowCount: number,
   barSize: number,
   cornerRadius: number,
@@ -23,28 +31,32 @@ function buildConcentricTrackSeries(
     type: "bar" as const,
     id: RADIAL_TRACK_SERIES_ID,
     coordinateSystem: "polar" as const,
+    /** Same stack as ring series — one shared band width. */
+    stack: "ring",
     silent: true,
     animation: false,
     z: 1,
     barWidth: barSize,
+    barMinAngle: 0,
     roundCap: true,
+    showBackground: true,
+    backgroundStyle: {
+      color: trackColor,
+      opacity: 0.35,
+      borderRadius: cornerRadius,
+    },
     tooltip: { show: false },
     emphasis: { disabled: true },
     select: { disabled: true },
     blur: { itemStyle: { opacity: HOVER_DIM_OPACITY } },
     data: Array.from({ length: rowCount }, () => ({
-      value: angleMax,
-      itemStyle: {
-        color: trackColor,
-        opacity: 0.35,
-        borderRadius: cornerRadius,
-      },
+      value: 0,
+      itemStyle: { color: "transparent", opacity: 0, borderRadius: cornerRadius },
     })),
   };
 }
 
 function buildRoseTrackSeries(
-  radiusMax: number,
   rowCount: number,
   categories: string[],
   barSize: number | undefined,
@@ -55,23 +67,27 @@ function buildRoseTrackSeries(
     type: "bar" as const,
     id: RADIAL_TRACK_SERIES_ID,
     coordinateSystem: "polar" as const,
+    stack: "petal",
     silent: true,
     animation: false,
     z: 1,
     ...(barSize != null ? { barWidth: barSize } : {}),
+    barMinAngle: 0,
     roundCap: true,
+    showBackground: true,
+    backgroundStyle: {
+      color: trackColor,
+      opacity: 0.35,
+      borderRadius: cornerRadius,
+    },
     tooltip: { show: false },
     emphasis: { disabled: true },
     select: { disabled: true },
     blur: { itemStyle: { opacity: HOVER_DIM_OPACITY } },
     data: Array.from({ length: rowCount }, (_, i) => ({
-      value: radiusMax,
+      value: 0,
       name: categories[i],
-      itemStyle: {
-        color: trackColor,
-        opacity: 0.35,
-        borderRadius: cornerRadius,
-      },
+      itemStyle: { color: "transparent", opacity: 0, borderRadius: cornerRadius },
     })),
   };
 }
@@ -218,8 +234,9 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
       splitLine: { show: false },
     },
     series: [
+      // Track first so its zero values sit at the stack base; rings paint on top.
       ...(showBackground
-        ? [buildConcentricTrackSeries(angleMax, ringSeries.length, barSize, cornerRadius, trackColor)]
+        ? [buildConcentricTrackSeries(ringSeries.length, barSize, cornerRadius, trackColor)]
         : []),
       ...ringSeries,
     ],
@@ -319,7 +336,7 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
     },
     series: [
       ...(showBackground
-        ? [buildRoseTrackSeries(radiusMax, petalSeries.length, categories, barSize, cornerRadius, trackColor)]
+        ? [buildRoseTrackSeries(petalSeries.length, categories, barSize, cornerRadius, trackColor)]
         : []),
       ...petalSeries,
     ],

@@ -18,6 +18,9 @@ export {
   useChart,
   getLoadingData,
   getPayloadConfigFromPayload,
+  ChartContainer,
+  ChartStyle,
+  getColorsCount,
   type ChartConfig,
 } from "@/registry/ui/chart";
 

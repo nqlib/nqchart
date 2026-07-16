@@ -47,6 +47,19 @@ export type LineSeriesPart = {
   showInLegend?: boolean;
 };
 
+/** Box-plot whiskers: vertical stems min↔Q1 and Q3↔max with end caps. */
+export type WhiskersPart = {
+  type: "whiskers";
+  id: string;
+  minKey: string;
+  q1Key: string;
+  q3Key: string;
+  maxKey: string;
+  /** Config / legend key. */
+  dataKey: string;
+  showInLegend?: boolean;
+};
+
 export type AreaSeriesPart = {
   type: "area";
   id: string;
@@ -228,6 +241,7 @@ export type ChartPart =
   | YAxisPart
   | BarSeriesPart
   | LineSeriesPart
+  | WhiskersPart
   | AreaSeriesPart
   | ScatterSeriesPart
   | RadarSeriesPart

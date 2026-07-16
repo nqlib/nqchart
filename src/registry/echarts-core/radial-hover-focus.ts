@@ -15,6 +15,10 @@ type RadialBarSeriesModel = {
   getData(): RadialBarData;
 };
 
+type BarSeriesView = {
+  _backgroundEls?: Array<unknown | null | undefined>;
+};
+
 const NEEDS_STATUS_UPDATE = "__needsUpdateStatus";
 
 type PendingRepair = {
@@ -37,6 +41,15 @@ function getChartModel(instance: EChartsType) {
       };
     }
   ).getModel();
+}
+
+function getSeriesView(instance: EChartsType, series: RadialBarSeriesModel): BarSeriesView | null {
+  const view = (
+    instance as unknown as {
+      getViewOfSeriesModel?(model: RadialBarSeriesModel): BarSeriesView | null;
+    }
+  ).getViewOfSeriesModel?.(series);
+  return view ?? null;
 }
 
 function seriesOpt(series: RadialBarSeriesModel, key: string): unknown {
@@ -67,6 +80,22 @@ function focusedCategoryIndex(series: RadialBarSeriesModel): number | null {
   return null;
 }
 
+/** Track marks are native `showBackground` sectors on the silent track series. */
+function forEachTrackBackground(
+  instance: EChartsType,
+  apply: (el: unknown, dataIndex: number) => void,
+): void {
+  getChartModel(instance).eachSeries((series) => {
+    if (!isRadialTrackSeries(series)) return;
+    const backgrounds = getSeriesView(instance, series)?._backgroundEls;
+    if (!backgrounds) return;
+    for (let dataIndex = 0; dataIndex < backgrounds.length; dataIndex++) {
+      const el = backgrounds[dataIndex];
+      if (el) apply(el, dataIndex);
+    }
+  });
+}
+
 function forEachRingOrTrackGraphic(
   instance: EChartsType,
   apply: (series: RadialBarSeriesModel, seriesIndex: number, dataIndex: number, el: unknown) => void,
@@ -79,6 +108,9 @@ function forEachRingOrTrackGraphic(
       if (!el) continue;
       apply(series, seriesIndex, dataIndex, el);
     }
+  });
+  forEachTrackBackground(instance, (el, dataIndex) => {
+    apply({ subType: "bar" } as RadialBarSeriesModel, -1, dataIndex, el);
   });
 }
 
@@ -102,32 +134,28 @@ export function repairRadialHoverFocus(instance: EChartsType, hoveredSeriesIndex
   });
 
   getChartModel(instance).eachSeries((series, seriesIndex) => {
-    if (isRadialRingSeries(series)) {
-      const data = series.getData();
-      for (let dataIndex = 0; dataIndex < data.count(); dataIndex++) {
-        const el = data.getItemGraphicEl(dataIndex);
-        if (!el) continue;
-
-        if (seriesIndex === hoveredSeriesIndex) {
-          leaveBlur(el);
-          enterEmphasis(el);
-        } else {
-          leaveEmphasis(el);
-          enterBlur(el);
-        }
-      }
-      return;
-    }
-
-    if (!isRadialTrackSeries(series)) return;
-
+    if (!isRadialRingSeries(series)) return;
     const data = series.getData();
     for (let dataIndex = 0; dataIndex < data.count(); dataIndex++) {
-      if (dataIndex === focusIndex) continue;
       const el = data.getItemGraphicEl(dataIndex);
       if (!el) continue;
-      enterBlur(el);
+
+      if (seriesIndex === hoveredSeriesIndex) {
+        leaveBlur(el);
+        enterEmphasis(el);
+      } else {
+        leaveEmphasis(el);
+        enterBlur(el);
+      }
     }
+  });
+
+  forEachTrackBackground(instance, (el, dataIndex) => {
+    if (dataIndex === focusIndex) {
+      leaveBlur(el);
+      return;
+    }
+    enterBlur(el);
   });
 
   markChartStatesDirty(instance);

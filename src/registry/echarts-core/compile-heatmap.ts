@@ -31,6 +31,12 @@ export function compileHeatmapOption(ctx: CompileContext): EChartsOption {
 
   const base: EChartsOption = {
     tooltip: { position: "top" },
+    // Deliberate exception to `resolveCartesianGrid` — do NOT "unify" this.
+    // `containLabel` reserves room for axis *labels* only, never for docked
+    // components, and heatmap docks three of them: the vertical dataZoom slider
+    // (left: 0, width: 16), the horizontal dataZoom slider (bottom: 0, height: 16)
+    // and the `visualMap` colour bar (bottom: 0). These insets are that reserved
+    // space; the shared tight padding makes the y-labels collide with the slider.
     grid: {
       left: enableZoom ? 56 : 64,
       right: 24,

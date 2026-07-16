@@ -71,4 +71,47 @@ describe("compileRadialOption", () => {
       expect(ring.animationDurationUpdate).toBe(0);
     }
   });
+
+  it("keeps track on the same stack as rings so polar band width is shared", () => {
+    const option = compileRadialOption(
+      makeCtx({
+        parts: [radialBarPart],
+        nameKey: "browser",
+        data: [
+          { browser: "chrome", visitors: 275 },
+          { browser: "safari", visitors: 200 },
+          { browser: "firefox", visitors: 187 },
+          { browser: "edge", visitors: 173 },
+          { browser: "other", visitors: 90 },
+        ],
+        radial: { radialVariant: "full" },
+        config: {
+          chrome: { label: "Chrome" },
+          safari: { label: "Safari" },
+          firefox: { label: "Firefox" },
+          edge: { label: "Edge" },
+          other: { label: "Other" },
+        },
+      }),
+    );
+
+    const series = option.series as Array<{
+      id?: string;
+      stack?: string;
+      showBackground?: boolean;
+      barWidth?: number;
+      data?: unknown[];
+    }>;
+    const track = series.find((s) => s.id === "__radial_track__");
+    const rings = series.filter((s) => s.id !== "__radial_track__");
+
+    expect(track?.stack).toBe("ring");
+    expect(track?.showBackground).toBe(true);
+    expect(track?.barWidth).toBe(14);
+    expect(rings).toHaveLength(5);
+    for (const ring of rings) {
+      expect(ring.stack).toBe("ring");
+      expect(ring.barWidth).toBe(14);
+    }
+  });
 });

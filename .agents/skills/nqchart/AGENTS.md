@@ -12,11 +12,12 @@ Start at [SKILL.md](./SKILL.md).
 
 1. [when-to-use.md](./when-to-use.md) — goal → chart type
 2. [install.md](./install.md) — `npm i @nqlib/nqchart`, peer deps, subpaths
-3. [colors.md](./colors.md) — theme tokens and `ChartConfig`
-4. [demo-dashboard.md](./demo-dashboard.md) — homepage SaaS dashboard pattern
-5. [components.md](./components.md) — roots and child parts
-6. [recipes.md](./recipes.md) — histogram, pareto, gauge, heatmap, calendar
-7. [examples.md](./examples.md) — `ex-*` and block names to browse in docs
+3. [background-and-grid.md](./background-and-grid.md) — wallpaper **or** Grid, not both
+4. [colors.md](./colors.md) — theme tokens and `ChartConfig`
+5. [demo-dashboard.md](./demo-dashboard.md) — homepage SaaS dashboard pattern
+6. [components.md](./components.md) — roots and child parts
+7. [recipes.md](./recipes.md) — histogram, pareto, gauge, heatmap, calendar
+8. [examples.md](./examples.md) — `ex-*` and block names to browse in docs
 
 Docs site: `/docs/chart-recipes` for all BI helpers; primitives under `/docs/<chart>`.
 
@@ -42,6 +43,8 @@ Import charts per family, e.g. `import { NQBarChart, Bar } from "@nqlib/nqchart/
 - `chartConfig` keys match `dataKey`
 - Size with `className` on the chart root
 - Theme colors via `chartConfigColor()` or explicit light/dark arrays — see [colors.md](./colors.md)
+- Wallpaper **or** `<Grid />` — never both — see [background-and-grid.md](./background-and-grid.md)
+- Always compose `<Tooltip />` on interactive charts
 
 **Not for repo maintainers** — use `.agents/skills/nqchart-dev/` and `.agents/skills/nqchart-docs/` instead.
 

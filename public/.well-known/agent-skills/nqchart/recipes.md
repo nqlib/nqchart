@@ -57,7 +57,7 @@ const data = [row].map((r) => ({
 }));
 ```
 
-Stack `<Bar dataKey="iqrFloor" showInLegend={false} />` + `<Bar dataKey="iqr" />` + `<Line dataKey="median" variant="points" />` — see `ex-boxplot-chart`.
+Stack `<Bar dataKey="iqrFloor" showInLegend={false} />` + `<Bar dataKey="iqr" />` + `<Whiskers minKey q1Key q3Key maxKey />` + `<Line dataKey="median" variant="points" />` — see `ex-boxplot-chart`.
 
 ---
 
