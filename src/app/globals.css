@@ -152,12 +152,6 @@
 :root {
   --button-gradient: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), transparent);
   --button-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.15) inset, 0 1px 1px 0 rgba(0, 0, 0, 0.075);
-  /* NQ logo accent — warm gold abdomen, paired with --primary on head/stinger. */
-  --logo-gold: oklch(0.8 0.16 85);
-}
-
-.dark {
-  --logo-gold: oklch(0.82 0.16 85);
 }
 
 @layer base {
