@@ -22,6 +22,10 @@
 
 ---
 
+## Latest (0.1.8)
+
+Hover during a multi-series area/line intro no longer clips bands or sticks the dashed axis cursor — `introLock` silences zrender hit-testing and clears tip / axisPointer / emphasis on leave. Full notes: [Changelog](src/content/docs/changelog.mdx) · [Hover focus](src/content/docs/hover-focus.mdx).
+
 ## Why NQChart
 
 - **Compound components** — compose `<Bar />`, `<Grid />`, `<Legend />` as children, not a giant options object

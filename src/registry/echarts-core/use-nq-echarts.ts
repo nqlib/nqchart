@@ -181,14 +181,51 @@ export function useNQEcharts(
     }
   };
 
+  /** Hide tip + axis cursor — ECharts often leaves these stuck after interrupted intros. */
+  const clearHoverChrome = (instance: EChartsType) => {
+    instance.dispatchAction({ type: "hideTip" });
+    instance.dispatchAction({ type: "updateAxisPointer", currTrigger: "leave" });
+    // Index-focus area/line can keep emphasis/blur after leave; downplay resets it.
+    instance.dispatchAction({ type: "downplay" });
+  };
+
+  const setZrSilent = (instance: EChartsType, silent: boolean) => {
+    (instance.getZr() as unknown as { silent: boolean }).silent = silent;
+  };
+
   const releaseIntroLock = (instance: EChartsType, el: HTMLElement) => {
     introLockRef.current = false;
+    // Re-enable hit-testing after the L→R enter tween finishes.
+    setZrSilent(instance, false);
+    clearHoverChrome(instance);
 
     // During intro, ResizeObserver only runs getZr().resize() so enter tweens
     // aren't cancelled. Sync the full ECharts layout once the lock lifts —
     // otherwise hover/reflow mid-intro leaves the plot clipped until remount.
     instance.resize();
     reportPlotRect(readPlotInsets(instance));
+
+    // Snap any enter geometry that was cancelled before silent engaged (partial
+    // area bands + a frozen vertical cut that looks like a stuck axisPointer).
+    const current = instance.getOption() as EChartsOption;
+    const series = Array.isArray(current.series)
+      ? current.series
+      : current.series
+        ? [current.series]
+        : [];
+    if (series.length) {
+      instance.setOption(
+        {
+          series: series.map((s) => ({
+            ...(typeof s === "object" && s ? s : {}),
+            animation: false,
+            animationDuration: 0,
+            animationDurationUpdate: 0,
+          })),
+        },
+        { lazyUpdate: false },
+      );
+    }
 
     const pending = pendingOptionRef.current;
     pendingOptionRef.current = null;
@@ -216,6 +253,10 @@ export function useNQEcharts(
     if (introMs <= 0) return;
 
     introLockRef.current = true;
+    // AxisPointer/emphasis mid-intro cancels unfinished enter tweens and clips
+    // later series at the cursor (stuck dashed line + truncated area bands).
+    setZrSilent(instance, true);
+    clearHoverChrome(instance);
     clearIntroTimer();
     introTimerRef.current = setTimeout(() => {
       introTimerRef.current = null;
@@ -258,8 +299,7 @@ export function useNQEcharts(
     const onGlobalOut = () => {
       // Multi-chart pages leave append-body tooltips + axisPointers stuck unless
       // we explicitly clear them — ECharts does not always do this on globalout.
-      instance.dispatchAction({ type: "hideTip" });
-      instance.dispatchAction({ type: "updateAxisPointer", currTrigger: "leave" });
+      clearHoverChrome(instance);
       resetScatterHoverFocus(instance);
       resetTreemapHoverFocus(instance);
       resetFunnelHoverFocus(instance);

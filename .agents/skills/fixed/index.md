@@ -14,7 +14,7 @@ metadata:
 
 **Agents:** When the user asks to fix a bug, **search this file first** (domain table, then semantic table). Open the fix note before changing code.
 
-Last updated: 2026-06-27
+Last updated: 2026-07-18
 
 ---
 
@@ -24,7 +24,7 @@ Problem areas → domain overview → individual fix notes.
 
 | Domain | Symptoms (short) | Domain doc | Fix notes |
 |--------|------------------|------------|-----------|
-| **hover-focus** | Hover dims wrong mark; flicker; tile/point vanishes; stale bright siblings; `__highByOuter` | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md) |
+| **hover-focus** | Hover dims wrong mark; flicker; tile/point vanishes; stale bright siblings; `__highByOuter`; **intro clip + stuck axisPointer** | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md), [intro axisPointer clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
 
 <!-- Add rows when new domains appear: animation, tooltip, compile-bar, registry-boundary, … -->
 
@@ -47,6 +47,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | waterfall stacked bar blur; __wf_values__ emphasis.disabled | waterfall | [hover-focus-waterfall-blur](./fixes/hover-focus-waterfall-blur.md) |
 | radial hover dims hovered ring; rose petal flicker; stale bright rings | radial | [hover-focus-radial-blur](./fixes/hover-focus-radial-blur.md) |
 | polar bar series focus gap flicker; radial emphasis.disabled | radial | [hover-focus-radial-blur](./fixes/hover-focus-radial-blur.md) |
+| hover during intro; area series clipped mid chart; stuck dashed vertical line; axisPointer frozen; animation stopped on hover | area / line intro | [hover-focus-intro-axis-pointer-clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
+| introLock; getZr().silent; updateAxisPointer leave mid-rollout | use-nq-echarts | [hover-focus-intro-axis-pointer-clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
 | item focus opacity 0.2 on focused mark; emphasis state wrong | item-focus charts | Start [hover-focus domain](./domains/hover-focus.md), then chart-specific fix |
 | `repairScatterHoverFocus` / `repairTreemapHoverFocus` / `repairFunnelHoverFocus` / `repairWaterfallHoverFocus` / `repairRadialHoverFocus` | echarts-core runtime | See scatter, treemap, funnel, waterfall, or radial fix note above |
 

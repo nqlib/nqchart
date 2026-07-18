@@ -3,6 +3,17 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.1.8 — 2026-07-18
+
+### Hover & intro
+
+- **Intro × axisPointer** — hovering during a staggered area/line L→R enter could cancel unfinished tweens (clipped bands) and leave a stuck dashed axis cursor. During `introLock`, zrender hit-testing is silenced (`getZr().silent = true`) and tip / axisPointer are cleared; on release and `globalout`, tip + axisPointer leave + `downplay` run again.
+- **Post-intro snap** — after the lock lifts, series are set with `animation: false` so any interrupted enter geometry finishes as full paths (most visible on multi-series stacked areas).
+
+See the fixed note `hover-focus-intro-axis-pointer-clip` and [hover-focus](/docs/hover-focus).
+
+---
+
 ## 0.1.7 — 2026-07-16
 
 ### Background & grid
