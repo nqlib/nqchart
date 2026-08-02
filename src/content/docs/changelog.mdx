@@ -3,6 +3,38 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.2.0 — 2026-08-02
+
+### Labels & brush
+
+- **Category axis collision** — bar (including histogram) and other category axes use `interval: 0` + `hideOverlap: true` so tick labels hide by view size instead of stacking on narrow cards.
+- **Brush range labels** — footer brush handle labels stay visible at rest (not only while dragging).
+- **Horizontal bar + brush** — when `layout="horizontal"`, the brush mini-preview compiles as vertical categories so the filter window aligns with category bands along X.
+
+### Funnel
+
+- **`connection="pipe"`** — smooth S-curve ribbon between stages; `orient="horizontal" | "vertical"`; optional `turnRadius`.
+- Native funnel **`orient="horizontal"`** for left→right trapezoids.
+
+### Radial & gauge
+
+- Ring / rose / gauge label layout improvements (collision, orientation, leader clipping). See fixed notes under labels + radial skills.
+
+### Packaging
+
+- Optional peer `@nqlib/nqui` for shared chrome tokens.
+- Docs: npm install path documented alongside the shadcn registry.
+
+---
+
+## 0.1.9 — 2026-08-02
+
+### Funnel API
+
+- Published funnel **pipe** connection and **orient** props for consumers on npm (types + runtime). Prefer **0.2.0** for the full label/brush polish.
+
+---
+
 ## 0.1.8 — 2026-07-18
 
 ### Hover & intro

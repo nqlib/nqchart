@@ -1,12 +1,81 @@
 ---
 title: Installation
-description: How to install NQChart and add chart primitives to your project
+description: Install NQChart from npm or the shadcn registry
 image: /og/og-image.png
 ---
 
-NQChart ships as a **shadcn-compatible registry** — not an npm package. The shadcn CLI copies chart source into your repo (typically `components/nqchart/`). Agent **skills** are separate: they install markdown guidance for Cursor, Claude Code, etc., and do **not** copy chart files.
+NQChart ships two ways:
 
-## Steps
+1. **npm package** `@nqlib/nqchart` — versioned dependency (recommended for apps and this showcase).
+2. **shadcn-compatible registry** — CLI copies chart source into your repo (typically `components/nqchart/`).
+
+Agent **skills** are separate: they install markdown guidance for Cursor / Claude Code and do **not** copy chart files.
+
+## Option A — npm (recommended)
+
+<Steps>
+  <Step>
+    <StepTitle>Install the package and peers</StepTitle>
+    <StepContent>
+      <StepDescription>
+        Add `@nqlib/nqchart` plus the runtime peers ECharts and Motion expect.
+      </StepDescription>
+      <CommandBlock commands={["@nqlib/nqchart", "echarts", "motion"]} />
+      <StepDescription className="mt-4">
+        Current line: **0.2.0**. Peer React 18/19. Optional peer `@nqlib/nqui` when you want shared chrome tokens.
+      </StepDescription>
+    </StepContent>
+  </Step>
+
+  <Step>
+    <StepTitle>Import a chart entry</StepTitle>
+    <StepContent>
+      <StepDescription>
+        Each family has a subpath entry. Compose children the same way as registry installs.
+      </StepDescription>
+```tsx
+import {
+  NQBarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Grid,
+  Tooltip,
+  Legend,
+} from "@nqlib/nqchart/bar-chart";
+import type { ChartConfig } from "@nqlib/nqchart";
+
+const config = {
+  desktop: {
+    label: "Desktop",
+    colors: { light: ["#047857"], dark: ["#10b981"] },
+  },
+} satisfies ChartConfig;
+
+export function TrafficBars({ data }: { data: Array<{ month: string; desktop: number }> }) {
+  return (
+    <NQBarChart data={data} config={config} xDataKey="month" className="h-72 w-full">
+      <Grid />
+      <XAxis dataKey="month" />
+      <YAxis />
+      <Legend />
+      <Tooltip />
+      <Bar dataKey="desktop" />
+    </NQBarChart>
+  );
+}
+```
+      <StepDescription className="mt-4">
+        Other entries: `@nqlib/nqchart/line-chart`, `area-chart`, `funnel-chart`, `radial-chart`, … Recipes: `@nqlib/nqchart/recipes`.
+      </StepDescription>
+    </StepContent>
+  </Step>
+</Steps>
+
+## Option B — shadcn registry
+
+Use this when you want chart source owned inside your app (forkable copies).
+
 <Steps>
   <Step>
     <StepTitle>Install Apache ECharts</StepTitle>
@@ -36,7 +105,7 @@ NQChart ships as a **shadcn-compatible registry** — not an npm package. The sh
     <StepTitle>Add the NQChart registry namespace</StepTitle>
     <StepContent>
       <StepDescription>
-        Register the `@nqchart` namespace in your project's `components.json` so `shadcn add @nqchart/…` resolves to this site. Skip if already configured.
+        Register the `@nqchart` namespace in your project's `components.json` so `shadcn add @nqchart/…` resolves. Skip if already configured.
       </StepDescription>
       ```json
       {
@@ -46,43 +115,38 @@ NQChart ships as a **shadcn-compatible registry** — not an npm package. The sh
       }
       ```
       <StepDescription className="mt-4">
-        Alternative: install by full URL without the namespace — `pnpm dlx shadcn@latest add https://nqchart.vercel.app/r/bar-chart.json`.
+        Alternative: install by full URL — `pnpm dlx shadcn@latest add https://nqchart.vercel.app/r/bar-chart.json`.
       </StepDescription>
     </StepContent>
   </Step>
   
   <Step>
-    <StepTitle>Add chart components (shadcn registry)</StepTitle>
+    <StepTitle>Add chart components</StepTitle>
     <StepContent>
       <StepDescription>
-        Add chart source with the **shadcn CLI**. Replace `{chart-name}` with your chart type (e.g. `area-chart`, `bar-chart`, `line-chart`, `pie-chart`). Registry dependencies (`@nqchart/chart`, `@nqchart/tooltip`, etc.) install automatically.
+        Replace `{chart-name}` with your chart type (e.g. `area-chart`, `bar-chart`, `line-chart`, `pie-chart`). Registry dependencies (`@nqchart/chart`, `@nqchart/tooltip`, etc.) install automatically.
       </StepDescription>
       <CliBlock commands={["@nqchart/{chart-name}"]} />
     </StepContent>
   </Step>
 
   <Step>
-    <StepTitle>Optional — Chart recipes (BI data helpers)</StepTitle>
+    <StepTitle>Optional — Chart recipes</StepTitle>
     <StepContent>
       <StepDescription>
-        For histogram, Pareto, heatmap, bullet, gauge, and box plot patterns, install the shared data helpers via the same shadcn registry. See [Chart recipes](/docs/chart-recipes) for usage.
+        For histogram, Pareto, heatmap, bullet, gauge, and box plot patterns, install the shared data helpers. See [Chart recipes](/docs/chart-recipes) for usage.
       </StepDescription>
       <CliBlock commands={["@nqchart/chart-recipes"]} />
     </StepContent>
   </Step>
-
-  <Step>
-    <StepTitle>Optional — Agent skill (skills CLI)</StepTitle>
-    <StepContent>
-      <StepDescription>
-        **Not the same as chart install.** The [skills CLI](https://ui.shadcn.com/docs/skills) copies agent guidance into `.agents/skills/nqchart/` — when to pick each chart, compose children, theme colors, BI recipes, and the homepage demo pattern. It does **not** run `shadcn add` or copy React components.
-
-        Run from your **app project root** (not inside the nqchart repo). Use `--list` to see available skills. When **contributing to this repository**, use `nqchart-dev` and `nqchart-docs` (see root `AGENTS.md`) — not the consumer skill.
-      </StepDescription>
-      <SkillsBlock commands={["ctesibius/nqchart", "--skill", "nqchart", "-y"]} />
-      <StepDescription className="mt-4">
-        Canonical skill source: `skills/consumer/nqchart/` in the repo. After install, agents load `.agents/skills/nqchart/`. HTTP: [/.well-known/agent-skills/nqchart/SKILL.md](https://nqchart.vercel.app/.well-known/agent-skills/nqchart/SKILL.md) · [llms.txt](https://nqchart.vercel.app/llms.txt)
-      </StepDescription>
-    </StepContent>
-  </Step>
 </Steps>
+
+## Optional — Agent skill
+
+**Not the same as chart install.** The [skills CLI](https://ui.shadcn.com/docs/skills) copies agent guidance into `.agents/skills/nqchart/` — when to pick each chart, compose children, theme colors, and BI recipes. It does **not** run `shadcn add` or copy React components.
+
+Run from your **app project root**. Use `--list` to see available skills.
+
+<SkillsBlock commands={["ctesibius/nqchart", "--skill", "nqchart", "-y"]} />
+
+Canonical skill source: `skills/consumer/nqchart/` in the repo. HTTP: [/.well-known/agent-skills/nqchart/SKILL.md](https://nqchart.vercel.app/.well-known/agent-skills/nqchart/SKILL.md) · [llms.txt](https://nqchart.vercel.app/llms.txt)

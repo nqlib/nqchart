@@ -84,7 +84,9 @@ links:
 
 ## Usage
 
-The bar chart is composible. `<NQBarChart>` is the container, and you compose only the parts you need — `<Grid>`, `<XAxis>`, `<YAxis>`, `<Legend>`, `<Tooltip>`, and one or more `<Bar>` — as its children. Each `<Bar>` carries its own `variant`, `radius`, `glowing`, `bufferBar`, and `isClickable`, so a single chart can mix fill styles and make only some series interactive.
+The bar chart is composable. `<NQBarChart>` is the container, and you compose only the parts you need — `<Grid>`, `<XAxis>`, `<YAxis>`, `<Legend>`, `<Tooltip>`, and one or more `<Bar>` — as its children. Each `<Bar>` carries its own `variant`, `radius`, `glowing`, `bufferBar`, and `isClickable`, so a single chart can mix fill styles and make only some series interactive.
+
+Category axis labels use collision hiding (`hideOverlap`) so dense previews stay readable. The optional brush footer shows range labels at rest; for `layout="horizontal"`, the brush mini-preview maps categories along X so filtering lines up with the window.
 
 ```tsx
 import {
@@ -154,7 +156,7 @@ Isometric bars with beveled faces and a highlighted peak — see [Bar blocks](/d
 
 ### Histogram
 
-Bin numeric samples with `binForHistogram()` from [Chart recipes](/docs/chart-recipes), then render with `variant="histogram"` on `<NQBarChart />` (touching bins, square corners).
+Bin numeric samples with `binForHistogram()` from [Chart recipes](/docs/chart-recipes), then render with `variant="histogram"` on `<NQBarChart />` (touching bins, square corners). Long bin labels truncate and hide overlaps when the plot is narrow — widen the card to show more ticks.
 
 <ComponentPreview title="histogram" name="ex-histogram-chart"  />
 
@@ -221,7 +223,7 @@ The root container. It owns the data, the shared selection state, the loading sk
     Number of bars to display in the loading skeleton.
   </ApiRow>
   <ApiRow name="showBrush" type="boolean" default="false">
-    When enabled, displays a brush control below the chart for selecting and zooming into a range of data.
+    When enabled, displays a brush control below the chart for selecting a category range. Handle labels stay visible at rest. Horizontal layouts use a vertical category mini-preview so the window matches category bands.
   </ApiRow>
   <ApiRow name="xDataKey" type="keyof TData & string">
     The data key used for the x-axis. Only needed by the brush footer — the axis itself reads its key from `<XAxis dataKey="…" />`.

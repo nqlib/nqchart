@@ -4,22 +4,35 @@ description: NQChart is an open-source composable chart library for React dashbo
 image: /og/og-image.png
 ---
 
-NQChart is a composable chart library for BI dashboards and analytics products. Install primitives via the shadcn registry, compose `NQ*Chart` children, and ship histograms, funnels, gauges, and more — powered by <Link href="https://echarts.apache.org/" _blank={true}>Apache ECharts</Link> and <Link href="https://ui.shadcn.com" _blank={true}>shadcn/ui</Link>.
+NQChart is a composable chart library for BI dashboards and analytics products. Install via **npm** (`@nqlib/nqchart`) or the **shadcn registry**, compose `NQ*Chart` children, and ship histograms, funnels, gauges, and more — powered by <Link href="https://echarts.apache.org/" _blank={true}>Apache ECharts</Link> and design tokens that align with <Link href="https://ui.shadcn.com" _blank={true}>shadcn/ui</Link> / nqui.
 
-## The problem
+## Quick start
 
-NQChart is built by Ctesibius. Most chart libraries are flexible but visually generic — teams copy default styles and dashboards end up looking the same.
+1. [Install](/docs/nqchart/installation) `@nqlib/nqchart` (or add charts from the registry).
+2. Browse [Components](/docs/nqchart/components) or jump to a primitive ([Bar](/docs/nqchart/bar-chart/static), [Funnel](/docs/nqchart/funnel-chart/static), [Radial](/docs/nqchart/radial-chart/static)).
+3. Use [Chart recipes](/docs/nqchart/chart-recipes) for histogram, Pareto, bullet, and gauge helpers.
+4. See the [Changelog](/docs/nqchart/changelog) for what shipped in **0.2.0**.
 
-NQChart pairs a design-first compound API with ECharts under the hood: opinionated defaults, handcrafted motion, and BI recipes for the chart types product teams actually need.
+Live gallery: open **Charts** in this showcase (`/charts`).
 
 ## Why NQChart?
 
-The name comes from the nq mark — a hexagonal body on a chart grid. The idea is simple:
+Most chart libraries are flexible but visually generic — teams copy default styles and dashboards end up looking the same. NQChart pairs a design-first compound API with ECharts under the hood: opinionated defaults, handcrafted motion, and BI recipes for the chart types product teams actually need.
 
 - **Composable primitives** — `NQBarChart`, `NQLineChart`, and siblings with child parts, not boolean props on one mega chart
 - **BI-ready recipes** — histogram, Pareto, waterfall, funnel, gauge helpers in `chart-recipes`
-- **ECharts engine** — canvas performance and rich chart types, with shadcn-aligned tokens and tooltips
+- **ECharts engine** — canvas performance and rich chart types, with token-aligned tooltips and chrome
+- **Responsive labels** — category ticks use collision hiding (`hideOverlap`) so dense cards stay readable; radial/gauge use the same idea on dials
+
+## Install paths
+
+| Path | Best for | Entry |
+|------|----------|--------|
+| **npm** `@nqlib/nqchart` | Apps that want a versioned dependency (this showcase) | `import { NQBarChart } from "@nqlib/nqchart/bar-chart"` |
+| **shadcn registry** | Copying chart source into your repo | `pnpm dlx shadcn@latest add @nqchart/bar-chart` |
+
+Both share the same compound API. Details in [Installation](/docs/nqchart/installation).
 
 ## Built on Apache ECharts
 
-NQChart keeps the compound component API from the original design exploration and swaps the rendering engine to ECharts for dashboard-scale performance, richer series types, and consistent animation tokens across every primitive.
+NQChart keeps a compound component API and compiles to ECharts options for dashboard-scale performance, richer series types, and consistent animation tokens across every primitive.
