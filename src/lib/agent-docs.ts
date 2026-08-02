@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { buildAgentSkillsIndex } from "@/lib/agent-skills-index";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/site-config";
 import { source } from "@/lib/source";
 import { processMdxForLLMs } from "@/lib/llm";
 

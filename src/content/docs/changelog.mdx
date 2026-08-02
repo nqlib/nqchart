@@ -3,6 +3,15 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.2.1 — 2026-08-02
+
+### Packaging
+
+- **No `process` in the npm bundle** — docs `SITE_URL` / `absoluteUrl` moved to `src/lib/site-config.ts` so `cn()` no longer pulls `NEXT_PUBLIC_APP_URL` into registry chunks. Lib build inlines `process.env.NODE_ENV`; `check:dist` fails the publish gate if any `process.env.` remains in `dist`.
+- **Canonical site** — default origin is `https://www.nqlib.com` (showcase docs at `/docs/nqchart`).
+
+---
+
 ## 0.2.0 — 2026-08-02
 
 ### Labels & brush

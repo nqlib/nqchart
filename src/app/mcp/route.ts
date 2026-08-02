@@ -1,6 +1,6 @@
 import { getAgentDocPages } from "@/lib/agent-docs";
 import { processMdxForLLMs } from "@/lib/llm";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/site-config";
 
 export const dynamic = "force-static";
 export const revalidate = false;

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/site-config";
 import { source } from "@/lib/source";
 
 export const dynamic = "force-static";

@@ -2,7 +2,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
 import { JetBrains_Mono, Geist, Inter } from "next/font/google";
 import type { Metadata, Viewport } from "next";
-import { cn, SITE_URL } from "@/lib/utils";
+import { SITE_URL } from "@/lib/site-config";
+import { cn } from "@/lib/utils";
 import {
   SITE_AUTHOR,
   SITE_DESCRIPTION,

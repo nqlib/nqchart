@@ -6,7 +6,7 @@ import { findNeighbour } from "fumadocs-core/page-tree";
 import { mdxComponents } from "@/components/docs/mdx";
 import { processMdxForLLMs } from "@/lib/llm";
 import { notFound } from "next/navigation";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl } from "@/lib/site-config";
 import { LinkIcon } from "lucide-react";
 import { source } from "@/lib/source";
 import type { Metadata } from "next";

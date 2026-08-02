@@ -46,6 +46,11 @@ for (const family of CHART_FAMILIES) {
 
 export default defineConfig({
   plugins: [react()],
+  // Library consumers (CDN, Workers, Deno) often have no `process` shim.
+  // Inline NODE_ENV so validate-data-keys and similar never emit `process.env.*`.
+  define: {
+    "process.env.NODE_ENV": JSON.stringify("production"),
+  },
   // Do NOT copy the Next.js app's public/ dir into the library dist/. Vite's
   // publicDir defaults to "public", which would dump og images, registry JSON,
   // and svgs into the npm tarball. This is a library build — assets ship via
