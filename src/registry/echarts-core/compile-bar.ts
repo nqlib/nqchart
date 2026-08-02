@@ -21,6 +21,7 @@ import {
   hoverTraceSeriesId,
 } from "./hover-trace-bar";
 import { categoryValues, getXKey } from "./cartesian-series";
+import { normalizeStackPercent } from "./stack-percent";
 import type { BarSeriesPart, CompileContext } from "./parts/types";
 
 type BarPointItemStyle = {
@@ -29,21 +30,6 @@ type BarPointItemStyle = {
   borderWidth?: number | [number, number, number, number];
   borderColor?: string;
 };
-
-function normalizeStackPercent(
-  data: Record<string, unknown>[],
-  keys: string[],
-): Record<string, unknown>[] {
-  return data.map((row) => {
-    const total = keys.reduce((sum, key) => sum + Number(row[key] ?? 0), 0);
-    if (total <= 0) return row;
-    const next = { ...row };
-    for (const key of keys) {
-      next[key] = (Number(row[key] ?? 0) / total) * 100;
-    }
-    return next;
-  });
-}
 
 function groupStackRoles(
   bars: BarSeriesPart[],
@@ -82,7 +68,7 @@ function buildBarDataPoints(
 ) {
   const r = isHistogram
     ? (bar.radius != null ? bar.radius : 0)
-    : resolveBarRadius(bar.radius, ctx.cartesian?.barRadius);
+    : resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
   const strokeColor = ctx.resolveColor(bar.dataKey, 0);
   const fillColor = resolveAreaFillColor(ctx.config, bar.dataKey, ctx.resolveColor, 0);
   const color = barVariantFill(bar.variant, strokeColor, horizontal, fillColor);
@@ -121,21 +107,26 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
   const rows =
     ctx.cartesian?.stackType === "percent" ? normalizeStackPercent(ctx.data, barKeys) : ctx.data;
 
+  const hasMonospace = bars.some((bar) => bar.variant === "monospace");
+  const hasHoverTrace = bars.some((bar) => bar.variant === "hover-trace");
+  const isHistogram = ctx.cartesian?.variant === "histogram";
+
+  // Match radial: try every tick, then let ECharts drop collisions by view size.
   const categoryAxis = {
     type: "category" as const,
     data: categories,
     axisLine: { show: true },
     axisTick: { show: false },
-    ...(ctx.cartesian?.variant === "histogram"
-      ? {
-          axisLabel: {
-            interval: 0,
-            hideOverlap: false,
+    axisLabel: {
+      interval: 0,
+      hideOverlap: true,
+      ...(isHistogram
+        ? {
             width: 56,
             overflow: "truncate" as const,
-          },
-        }
-      : {}),
+          }
+        : {}),
+    },
   };
   const valueAxis = {
     type: "value" as const,
@@ -144,10 +135,6 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
     max: ctx.cartesian?.stackType === "percent" ? 100 : undefined,
     axisLabel: ctx.cartesian?.stackType === "percent" ? { formatter: "{value}%" } : undefined,
   };
-
-  const hasMonospace = bars.some((bar) => bar.variant === "monospace");
-  const hasHoverTrace = bars.some((bar) => bar.variant === "hover-trace");
-  const isHistogram = ctx.cartesian?.variant === "histogram";
   const stackRoles = groupStackRoles(bars, rows, stack);
   const histogramLayout = isHistogram
     ? { barCategoryGap: 0, barGap: 0, barWidth: "100%" as const }

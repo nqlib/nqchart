@@ -1,7 +1,7 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { barBorderRadius } from "./bar-radius";
-import { CHART_BAR_CORNER_RADIUS_PX } from "./chart-corner-radius";
+import { resolveChartBarCornerRadius } from "./chart-corner-radius";
 import { waterfallColumnFocus } from "./emphasis-presets";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
@@ -73,7 +73,7 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
           value: v,
           itemStyle: {
             color: colors[i],
-            borderRadius: barBorderRadius(CHART_BAR_CORNER_RADIUS_PX, false),
+            borderRadius: barBorderRadius(resolveChartBarCornerRadius(ctx.chartId), false),
           },
         })),
       },

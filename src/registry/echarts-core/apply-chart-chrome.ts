@@ -1,6 +1,7 @@
 import type { EChartsOption } from "echarts";
 import type { ChartChromeColors } from "./resolve-chart-chrome";
-import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
+import { resolveCanvasChartChrome, resolveChartFontFamily } from "./resolve-chart-chrome";
+import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
 
 type AxisLike = Record<string, unknown>;
 
@@ -332,11 +333,20 @@ export function applyChartChromeToOption(
 ): EChartsOption {
   const chrome = resolveCanvasChartChrome(chartId);
   const hasHtmlTooltip = options?.hasHtmlTooltip ?? false;
+  const fontFamily = resolveChartFontFamily(chartId);
 
   return {
     ...option,
     backgroundColor: "transparent",
-    textStyle: { color: chrome.foreground, ...(option.textStyle as Record<string, unknown> | undefined) },
+    // Root textStyle is the cascade point: ECharts inherits fontFamily/fontSize
+    // from here into every label that doesn't set its own, so bridging
+    // `--font-sans` once here fixes all chart text at the same time.
+    textStyle: {
+      color: chrome.foreground,
+      fontFamily,
+      fontSize: CHART_TYPOGRAPHY.axis.fontSize,
+      ...(option.textStyle as Record<string, unknown> | undefined),
+    },
     xAxis: themeAxes(option.xAxis, chrome) as EChartsOption["xAxis"],
     yAxis: themeAxes(option.yAxis, chrome) as EChartsOption["yAxis"],
     angleAxis: themeAxes(option.angleAxis, chrome) as EChartsOption["angleAxis"],

@@ -1,8 +1,15 @@
 # AI working contract (maintainers)
 
-**WHAT to build** and **when it's done**. Layer rules: [[architecture/dependency-rules]]. Backlog: [[product/roadmap]].
+**WHAT to build** and **when it's done**. Layer rules: [[architecture/dependency-rules]]. Backlog: [[product/roadmap]]. Intake / plan-before-code: [[product/agentic-coding-guideline]].
 
 Do **not** use this contract for external app integration — use the consumer skill at `skills/consumer/nqchart/`.
+
+## Before coding (features)
+
+1. Classify size via [[product/agentic-coding-guideline]] decision ladder.
+2. Features → home in `plans/` (approved) before editing `src/`.
+3. Bugs → search `.agents/skills/fixed/index.md` first.
+4. Skim `memory/INDEX.md` when prior decisions might apply.
 
 ## Definition of done (every PR)
 
@@ -32,6 +39,8 @@ Do **not** use this contract for external app integration — use the consumer s
 3. Compilers stay pure — no hooks in `compile-*.ts`.
 4. Examples on primitive doc pages only — no duplicate doc nav slugs.
 5. Do not edit synced copies under `.agents/skills/nqchart/` — edit `skills/consumer/nqchart/` and sync.
+6. No feature-sized change without a `plans/` row (see agentic guideline).
+7. Bug lessons → `fixed` skill; non-derivable decisions → `memory/` (write rarely).
 
 ## Skills routing
 
@@ -39,4 +48,6 @@ Do **not** use this contract for external app integration — use the consumer s
 |------|-------|
 | Engine, registry, examples | `.agents/skills/nqchart-dev/` |
 | MDX, landing, agent HTTP | `.agents/skills/nqchart-docs/` |
+| Bugs / regressions | `.agents/skills/fixed/` |
+| Shared memory recall/write | `.agents/skills/memory/` |
 | External app integration | `skills/consumer/nqchart/` (not for this repo) |

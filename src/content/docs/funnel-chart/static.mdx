@@ -4,8 +4,8 @@ description: Stage-based funnel visuals built atop composable NQChart primitives
 image: /og/funnel-chart.png
 links:
   github: https://github.com/ctesibius/nqchart/blob/main/src/registry/charts/funnel-chart.tsx
-  doc: https://echarts.apache.org/en/option.html#series-bar
-  api: https://echarts.apache.org/en/option.html#series-bar
+  doc: https://echarts.apache.org/en/option.html#series-funnel
+  api: https://echarts.apache.org/en/option.html#series-funnel
 ---
 
 <ComponentPreview title="Basic Chart" name="ex-funnel-chart"  />
@@ -82,7 +82,7 @@ links:
 
 ## Usage
 
-The funnel chart is composible. `<NQFunnelChart>` compiles a vertically laid out ECharts bar series with custom trapezoid shapes per stage (`stageKey`) and measured values (`valueKey`). Compose `<Grid />`, `<XAxis />`, `<YAxis />`, `<Stages />`, `<Tooltip />`, `<Legend />` as needed, and set optional `backgroundVariant` on the chart root — ECharts has no standalone funnel primitive, but additional options can pass through `chartProps` alongside the underlying <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>bar series</Link> escape hatch documented below.
+The funnel chart is composable. `<NQFunnelChart>` compiles an ECharts <Link href="https://echarts.apache.org/en/option.html#series-funnel" _blank>`series-funnel`</Link> from ordered stage rows (`stageKey`) and values (`valueKey`). Default layout is vertical trapezoids; set `orient="horizontal"` for left→right stages, or `connection="pipe"` for a smooth S-curve ribbon (horizontal by default, or `orient="vertical"`). Compose `<Stages />`, `<Tooltip />`, and `<Legend />` as needed.
 
 ```tsx
 import {
@@ -150,13 +150,31 @@ Add `isClickable` to `<Stages />` (plus `<Legend />` when you want swatches clic
 
 ## Examples
 
-### Intro animation
+### Horizontal (trapezoid)
 
-Funnel stages expand from the center on first paint (motion.dev — ECharts built-in bar animation is off). Default `animationType="top-to-bottom"` staggers from the first stage downward. Also `"bottom-to-top"`, `"center-out"`, `"edges-in"`, or `"none"`. Honors reduce motion.
+Native ECharts funnel laid out left→right. Stage edges stay straight diagonals.
+
+<ComponentPreview title="horizontal" name="ex-horizontal-funnel-chart" />
+
+### Pipe (smooth ribbon)
+
+Ribbon with tight S-curve fillets **only at joins between levels** (outer ends are square; previous level stays flat until near the edge). Defaults horizontal; set `orient="vertical"` for top→bottom. Optional `turnRadius` (px half-width of each join — keep small, e.g. `6`).
 
 ```tsx
-<NQFunnelChart animationType="center-out" ...>
+<NQFunnelChart data={rows} config={config} connection="pipe">
+  <Stages connection="pipe" turnRadius={6} />
+  <Tooltip />
+</NQFunnelChart>
+
+<NQFunnelChart data={rows} config={config} connection="pipe" orient="vertical">
+  <Stages connection="pipe" orient="vertical" turnRadius={6} />
+  <Tooltip />
+</NQFunnelChart>
 ```
+
+<ComponentPreview title="pipe (horizontal)" name="ex-pipe-funnel-chart" />
+
+<ComponentPreview title="pipe (vertical)" name="ex-vertical-pipe-funnel-chart" />
 
 ### Glowing Stages
 
@@ -168,63 +186,69 @@ The chart is composed of several parts. The props below are grouped by the compo
 
 <ApiHeading>NQFunnelChart</ApiHeading>
 
-The root container wrapping a vertical `<BarChart>`. Holds stage metadata, synthesized loading rows when `isLoading`, max-value scaling shared by funnel shapes, and selection state surfaced to `<Stages />`/`<Legend />`.
+Root container. Compiles ECharts `series-funnel` (or a custom pipe series when `connection="pipe"`). Holds stage metadata and synthesized loading rows when `isLoading`.
 
 <ApiTable>
   <ApiRow name="config" type="Record<string, ChartConfig[string]>" required>
-    Keys must correspond to serialized `stageKey` values (`string`) so gradients + legend labels resolve per funnel stage color stop.
+    Keys must match `stageKey` values so colors and legend labels resolve per stage.
   </ApiRow>
   <ApiRow name="data" type="TData[]" required>
-    Rows with `stageKey` + numeric `valueKey` fields typed as literals for inference (`TData extends Record<string, unknown>`).
+    Rows with `stageKey` + numeric `valueKey` fields.
   </ApiRow>
-  <ApiRow name="stageKey" type='keyof TData & string' required>
-    Categorical funnel stage identifier surfaced on `<YAxis />` ticks and gradients.
+  <ApiRow name="stageKey" type="string" default='"stage"'>
+    Field name for the stage identifier.
   </ApiRow>
-  <ApiRow name="valueKey" type='keyof TData & string' required>
-    Numeric throughput used to scale each trapezoid width plus tooltip payload.
+  <ApiRow name="valueKey" type="string" default='"value"'>
+    Field name for numeric throughput (scales stage size).
   </ApiRow>
   <ApiRow name="children" type="ReactNode" required>
-    `<Grid />`, `<XAxis />`, `<YAxis />`, `<Stages />`, `<Tooltip />`, `<Legend />`, plus optional root `backgroundVariant`, and escapes through additional ECharts options via `chartProps`.
+    `<Stages />`, `<Tooltip />`, `<Legend />`, and optional axis stubs.
   </ApiRow>
   <ApiRow name="className" type="string">
     Additional wrapper classes forwarded to `<ChartContainer />`.
   </ApiRow>
-  <ApiRow name="stageGap" type="number" default="6">
-    Vertical gutter between stacked funnel polygons inside each category band.
+  <ApiRow name="orient" type='"vertical" | "horizontal"'>
+    Flow direction. Native funnel defaults `vertical`; pipe defaults `horizontal` when unset. Both support pipe.
   </ApiRow>
-  <ApiRow name="backgroundVariant" type="BackgroundVariant">
-    Draws `<ChartBackground />` beneath the funnel (same pattern as bar and scatter charts).
+  <ApiRow name="connection" type='"seamless" | "default" | "segmented" | "pipe"' default='"default"'>
+    Stage join style. `pipe` switches to the smooth S-curve ribbon renderer.
   </ApiRow>
-  <ApiRow name="defaultSelectedStage" type="string | null" default="null">
-    Pre-select matching `stageKey` string (`null` clears).
+  <ApiRow name="taper" type='"soft" | "default" | "steep"' default='"default"'>
+    How gradually native funnel stage sizes taper (`minSize`). Unused for `pipe`.
   </ApiRow>
-  <ApiRow name="onSelectionChange" type="(selection: { dataKey: string; value: number } | null) => void">
-    Fires when clickable legend / stage polygons toggle visibility focus.
+  <ApiRow name="stageGap" type="number">
+    Pixel gap between stages — overrides the `connection` preset gap. Unused for `pipe`.
+  </ApiRow>
+  <ApiRow name="turnRadius" type="number">
+    Pipe mode: half-width of the S-curve level-change zone in px. Omit for half-a-stage-width transitions.
   </ApiRow>
   <ApiRow name="isLoading" type="boolean" default="false">
-    Swaps rendered rows with motion-shimmer placeholders while preserving axes + tooltip wiring.
-  </ApiRow>
-  <ApiRow name="loadingStages" type="number" default="5">
-    Count of synthesized placeholder polygons while `isLoading` is active.
-  </ApiRow>
-  <ApiRow name="animationType" type='"none" | "top-to-bottom" | "bottom-to-top" | "center-out" | "edges-in"' default='"top-to-bottom"'>
-    Staggered center-out grow for each trapezoid stage on first render.
-  </ApiRow>
-  <ApiRow name="chartProps" type="ComponentProps<typeof BarChart>">
-    Additional ECharts options merged into the compiled `option` by NQChart — sizing, responsiveness, `dataZoom`, margins, and more. Refer to <Link href="https://echarts.apache.org/en/option.html#series-bar" _blank>ECharts bar series</Link>; there is no dedicated funnel primitive, so this escape hatch doubles as funnel tuning.
+    Swaps rendered rows with shimmer placeholders while awaiting data.
   </ApiRow>
 </ApiTable>
 
 <ApiHeading>Stages</ApiHeading>
 
-Configuration slot mirrored by funnel renderer — determines whether polygons listen for clicks / glow defs.
+Style slot for connection, taper, orient, and turn radius (same props as the root; child values win when set).
 
 <ApiTable>
-  <ApiRow name="isClickable" type="boolean" default="false">
-    Enables polygon click toggling. Selection dimming applies whenever a stage is selected (legend, default, or click).
+  <ApiRow name="connection" type='"seamless" | "default" | "segmented" | "pipe"'>
+    Stage join preset. `pipe` = smooth horizontal ribbon.
   </ApiRow>
-  <ApiRow name="glowingStages" type="string[]" default="[]">
-    Names matching `stageKey` values emitting glow filters akin to NQBars.
+  <ApiRow name="orient" type='"vertical" | "horizontal"'>
+    Native funnel orientation.
+  </ApiRow>
+  <ApiRow name="taper" type='"soft" | "default" | "steep"'>
+    Native funnel size taper.
+  </ApiRow>
+  <ApiRow name="stageGap" type="number">
+    Pixel gap override for native funnel.
+  </ApiRow>
+  <ApiRow name="turnRadius" type="number">
+    Pipe S-curve half-width in px.
+  </ApiRow>
+  <ApiRow name="isClickable" type="boolean" default="false">
+    Reserved for stage click selection (legend still handles clickable swatches).
   </ApiRow>
 </ApiTable>
 

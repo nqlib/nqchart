@@ -17,7 +17,15 @@ import {
   type TooltipRoundness,
   type TooltipVariant,
 } from "@/registry/ui/tooltip";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+
+/** Bucket CSS px so ResizeObserver does not recompile on every pixel. */
+const VIEWPORT_BUCKET_PX = 16;
+
+function bucketViewport(width: number, height: number) {
+  const round = (n: number) => Math.max(VIEWPORT_BUCKET_PX, Math.round(n / VIEWPORT_BUCKET_PX) * VIEWPORT_BUCKET_PX);
+  return { width: round(width), height: round(height) };
+}
 
 type RadialVariant = "full" | "semi";
 type RadialLayout = "concentric" | "rose";
@@ -36,6 +44,11 @@ type NQRadialChartProps<
   layout?: RadialLayout;
   innerRadius?: number | string;
   outerRadius?: number | string;
+  /**
+   * Polar start angle in degrees (0 = 3 o'clock, 90 = 12 o'clock).
+   * Defaults: `90` for `full`, `180` for `semi`. Sweep stays full/half clockwise.
+   */
+  startAngle?: number;
   min?: number;
   max?: number;
   isLoading?: boolean;
@@ -48,6 +61,7 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
   layout,
   innerRadius,
   outerRadius,
+  startAngle,
   min,
   max,
 }: {
@@ -57,20 +71,45 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
   layout?: RadialLayout;
   innerRadius?: number | string;
   outerRadius?: number | string;
+  startAngle?: number;
   min?: number;
   max?: number;
 }) {
+  const hostWrapRef = useRef<HTMLDivElement>(null);
+  const [viewport, setViewport] = useState<{ width: number; height: number } | undefined>();
+
+  useEffect(() => {
+    const el = hostWrapRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const box = entries[0]?.contentRect;
+      if (!box || box.width <= 0 || box.height <= 0) return;
+      const next = bucketViewport(box.width, box.height);
+      setViewport((prev) =>
+        prev?.width === next.width && prev?.height === next.height ? prev : next,
+      );
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const { option, colorEpoch } = useCompiledOption(compileRadialOption, {
     data,
     nameKey,
+    viewport,
     radial: {
       radialVariant: variant === "semi" ? "semi" : "full",
       radialLayout: layout ?? "concentric",
       radialInnerRadius: innerRadius,
       radialOuterRadius: outerRadius,
+      radialStartAngle: startAngle,
     },
   });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  return (
+    <div ref={hostWrapRef} className="min-h-0 h-full w-full min-w-0 flex-1">
+      <EChartsHost option={option} colorEpoch={colorEpoch} />
+    </div>
+  );
 }
 
 export function NQRadialChart<
@@ -86,6 +125,7 @@ export function NQRadialChart<
   layout = "concentric",
   innerRadius,
   outerRadius,
+  startAngle,
   min,
   max,
   isLoading = false,
@@ -111,6 +151,7 @@ export function NQRadialChart<
               layout={layout}
               innerRadius={innerRadius}
               outerRadius={outerRadius}
+              startAngle={startAngle}
               min={min}
               max={max}
             />
@@ -130,7 +171,6 @@ export function RadialBar({
   cornerRadius,
   barSize,
   showBackground,
-  glowingBars,
   isClickable,
   showLabels,
 }: {
@@ -141,7 +181,6 @@ export function RadialBar({
   cornerRadius?: number;
   barSize?: number;
   showBackground?: boolean;
-  glowingBars?: string[];
   isClickable?: boolean;
   showLabels?: boolean;
 }) {
@@ -156,7 +195,6 @@ export function RadialBar({
           cornerRadius,
           barSize,
           showBackground,
-          glowingBars,
           isClickable,
           showLabels,
         },

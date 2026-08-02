@@ -5,7 +5,7 @@ Two audiences — do not mix them.
 | Audience | Location | Install |
 |----------|----------|---------|
 | **Consumers** — apps integrating `@nqchart/*` | [`consumer/nqchart/`](consumer/nqchart/SKILL.md) | `npx skills add ctesibius/nqchart --skill nqchart -y` |
-| **Contributors** — this repository | [`.agents/skills/nqchart-dev/`](../.agents/skills/nqchart-dev/SKILL.md), [`.agents/skills/nqchart-docs/`](../.agents/skills/nqchart-docs/SKILL.md), [`.agents/skills/fixed/`](../.agents/skills/fixed/SKILL.md) | Already active when working in this repo |
+| **Contributors** — this repository | [`.agents/skills/nqchart-dev/`](../.agents/skills/nqchart-dev/SKILL.md), [`.agents/skills/nqchart-docs/`](../.agents/skills/nqchart-docs/SKILL.md), [`.agents/skills/fixed/`](../.agents/skills/fixed/SKILL.md), [`.agents/skills/memory/`](../.agents/skills/memory/SKILL.md), [`.agents/skills/no-box-glow/`](../.agents/skills/no-box-glow/SKILL.md) | Already active when working in this repo |
 
 ## Two install paths (consumers)
 
@@ -35,7 +35,7 @@ HTTP discovery: `/.well-known/agent-skills/nqchart/SKILL.md`
 | **Who** | Teams building apps with NQChart | Maintainers changing engine, registry, docs site |
 | **Focus** | Chart type → shadcn install → compose children → BI recipes | Layer boundaries, registry pipeline, MDX previews, DoD |
 | **Success** | Chart type chosen, deps installed, chartConfig keys match dataKey, renders light/dark | Roadmap DoD: lint, tsc, test, audit:previews, registry:fresh |
-| **Docs** | `skills/consumer/nqchart/` | `.agents/skills/nqchart-dev/`, `.agents/skills/nqchart-docs/`, `.agents/skills/fixed/`, `docs/` vault |
+| **Docs** | `skills/consumer/nqchart/` | `.agents/skills/nqchart-dev/`, `.agents/skills/nqchart-docs/`, `.agents/skills/fixed/`, `.agents/skills/memory/`, `.agents/skills/no-box-glow/`, `docs/` vault, `plans/`, `memory/` |
 
 Consumer skill does **not** cover monorepo architecture or registry internals.  
 Development skills do **not** cover how to integrate the library in an external app.

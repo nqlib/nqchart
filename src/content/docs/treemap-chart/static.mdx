@@ -82,7 +82,7 @@ links:
 
 ## Usage
 
-The treemap chart is composible. `<NQTreemapChart>` is the container: you pass hierarchical or flat tile data (`TreemapNode[]`) plus a `chartConfig` whose keys match each tile’s display name (`nameKey`). Compose `<Tiles />` with behavior flags (`isClickable`, `glowingTiles`, `showLabels`), then `<Tooltip />` and `<Legend />`, optionally with `backgroundVariant` on the root — only the slots you need.
+The treemap chart is composible. `<NQTreemapChart>` is the container: you pass hierarchical or flat tile data (`TreemapNode[]`) plus a `chartConfig` whose keys match each tile’s display name (`nameKey`). Compose `<Tiles />` with behavior flags (`isClickable`, `showLabels`), then `<Tooltip />` and `<Legend />`, optionally with `backgroundVariant` on the root — only the slots you need.
 
 ```tsx
 import {
@@ -95,7 +95,7 @@ import {
 
 ```tsx
 <NQTreemapChart config={chartConfig} data={treemapData} backgroundVariant="dots">
-  <Tiles isClickable glowingTiles={["mobile"]} showLabels />
+  <Tiles isClickable showLabels />
   <Tooltip />
   <Legend isClickable />
 </NQTreemapChart>
@@ -131,12 +131,6 @@ Add `isClickable` on `<Tiles />` (and on `<Legend />`) so clicks select a tile. 
     The treemap chart supports loading state. Pass `isLoading` to show an animated skeleton while data is being fetched.
   </AlertContent>
 </Alert>
-
-## Examples
-
-### Glowing Tiles
-
-<ComponentPreview title="glowing" name="ex-glowing-treemap-chart"  />
 
 ## API Reference
 
@@ -190,14 +184,11 @@ The root container. It owns hierarchical data (`TreemapNode[]`), shared tile sel
 
 <ApiHeading>Tiles</ApiHeading>
 
-A configuration slot consumed by `<NQTreemapChart />` — renders nothing alone. Toggle click behavior, glowing filters, and in-tile labels for every rectangle.
+A configuration slot consumed by `<NQTreemapChart />` — renders nothing alone. Toggle click behavior and in-tile labels for every rectangle.
 
 <ApiTable>
   <ApiRow name="isClickable" type="boolean" default="false">
     When true, tile clicks toggle selection. Dimming applies whenever a tile is selected (legend, default, or click).
-  </ApiRow>
-  <ApiRow name="glowingTiles" type="string[]" default="[]">
-    Tile names (`nameKey` values) rendered with feathered glow filters sourced from defs.
   </ApiRow>
   <ApiRow name="showLabels" type="boolean" default="true">
     Auto labels inside tiles large enough (&gt; 36×20 px guard) sourced from chart config labels when present.

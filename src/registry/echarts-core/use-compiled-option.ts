@@ -22,6 +22,7 @@ export type CompileRootFields<TData extends Record<string, unknown> = Record<str
   cartesian?: CartesianCompileConfig;
   radial?: RadialCompileConfig;
   funnel?: FunnelCompileConfig;
+  viewport?: { width: number; height: number };
 };
 
 function buildCompileContext<TData extends Record<string, unknown>>(
@@ -38,6 +39,7 @@ function buildCompileContext<TData extends Record<string, unknown>>(
     cartesian: root.cartesian,
     radial: root.radial,
     funnel: root.funnel,
+    viewport: root.viewport,
   };
 }
 
@@ -65,12 +67,13 @@ export function useCompiledOption<TData extends Record<string, unknown>>(
     cartesian,
     radial,
     funnel,
+    viewport,
   } = root;
 
   const option = useMemo(() => {
     validateDataKeys(data, parts, xDataKey ? [xDataKey] : []);
     const ctx = buildCompileContext(
-      { data, xDataKey, nameKey, valueKey, valueDataKey, cartesian, radial, funnel },
+      { data, xDataKey, nameKey, valueKey, valueDataKey, cartesian, radial, funnel, viewport },
       { config, parts, chartId, resolveColor },
     );
     return compile(ctx);
@@ -91,11 +94,14 @@ export function useCompiledOption<TData extends Record<string, unknown>>(
     radial?.radialLayout,
     radial?.radialInnerRadius,
     radial?.radialOuterRadius,
+    radial?.radialStartAngle,
     funnel?.stageKey,
     funnel?.valueKey,
     funnel?.stageGap,
     funnel?.funnelConnection,
     funnel?.funnelTaper,
+    viewport?.width,
+    viewport?.height,
     parts,
     chartId,
     resolveColor,

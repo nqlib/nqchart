@@ -4,7 +4,6 @@ import { type ChartConfig } from "@/registry/ui/chart";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { createCartesianChart } from "@/registry/echarts-core/create-cartesian-chart";
 import { compileComposedOption } from "@/registry/echarts-core/compile-composed";
-import { CHART_BAR_CORNER_RADIUS_PX } from "@/registry/echarts-core/chart-corner-radius";
 import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { ChartBackground } from "@/registry/ui/background";
 import {
@@ -49,7 +48,9 @@ const { Chart: ComposedChartInner } = createCartesianChart<
   compile: compileComposedOption,
   loadingVariant: "composed",
   defaultLoadingPoints: 8,
-  defaults: { isLoading: false, showBrush: true, barRadius: CHART_BAR_CORNER_RADIUS_PX },
+  // `barRadius` intentionally unset — see NQBarChart: a default here would
+  // short-circuit the compile-time `--radius-sm` lookup.
+  defaults: { isLoading: false, showBrush: true },
   getLoadingPoints: ({ loadingBars }) => loadingBars ?? 8,
   getRootFields: ({ barRadius }, xKey) => ({
     xDataKey: xKey,

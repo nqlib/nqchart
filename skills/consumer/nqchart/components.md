@@ -176,9 +176,27 @@ Data rows use waterfall-specific `type` / value fields (see `ex-waterfall-chart`
 
 ## Funnel (`NQFunnelChart`)
 
-**Children:** `Tooltip`, `Legend`, `Grid`, `XAxis`, `YAxis`
+**Children:** `Stages`, `Tooltip`, `Legend`, `XAxis`, `YAxis`
 
 Stage rows with ordered values (see `ex-funnel-chart`).
+
+- `orient="horizontal"` — native left→right trapezoid funnel
+- `connection="pipe"` — S-curve joins **between levels only** (square outer ends); `turnRadius` optional; defaults horizontal, supports `orient="vertical"`
+- Also on `<Stages />`: `connection`, `orient`, `taper`, `stageGap`, `turnRadius`
+
+```tsx
+<NQFunnelChart data={rows} config={config} connection="pipe">
+  <Stages connection="pipe" turnRadius={6} />
+  <Tooltip />
+</NQFunnelChart>
+
+<NQFunnelChart data={rows} config={config} connection="pipe" orient="vertical">
+  <Stages connection="pipe" orient="vertical" turnRadius={6} />
+  <Tooltip />
+</NQFunnelChart>
+```
+
+See `ex-horizontal-funnel-chart`, `ex-pipe-funnel-chart`, `ex-vertical-pipe-funnel-chart`.
 
 ---
 

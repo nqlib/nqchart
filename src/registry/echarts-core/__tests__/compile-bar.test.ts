@@ -38,9 +38,35 @@ describe("compileBarOption", () => {
     );
 
     const xAxis = option.xAxis as { type: string };
-    const yAxis = option.yAxis as { type: string };
+    const yAxis = option.yAxis as {
+      type: string;
+      axisLabel?: { interval?: number; hideOverlap?: boolean };
+    };
     expect(xAxis.type).toBe("value");
     expect(yAxis.type).toBe("category");
+    expect(yAxis.axisLabel?.interval).toBe(0);
+    expect(yAxis.axisLabel?.hideOverlap).toBe(true);
+  });
+
+  it("enables category label collision hiding for histograms", () => {
+    const option = compileBarOption(
+      makeCtx({
+        parts: [{ type: "bar", id: "count", dataKey: "count" }],
+        cartesian: { variant: "histogram" },
+        xDataKey: "bin",
+        data: [
+          { bin: "0–10", count: 2 },
+          { bin: "10–20", count: 4 },
+        ],
+      }),
+    );
+
+    const xAxis = option.xAxis as {
+      axisLabel?: { interval?: number; hideOverlap?: boolean; overflow?: string };
+    };
+    expect(xAxis.axisLabel?.interval).toBe(0);
+    expect(xAxis.axisLabel?.hideOverlap).toBe(true);
+    expect(xAxis.axisLabel?.overflow).toBe("truncate");
   });
 
   it("coerces missing dataKey values to 0", () => {
@@ -57,7 +83,7 @@ describe("compileBarOption", () => {
     expect(series[0]?.data[0]?.value).toBe(0);
   });
 
-  it("normalizes stacked percent layout to 100", () => {
+  it("normalizes stacked percent values to 0–100", () => {
     const option = compileBarOption(
       makeCtx({
         parts: [
@@ -66,11 +92,21 @@ describe("compileBarOption", () => {
         ],
         cartesian: { stackType: "percent" },
         xDataKey: "month",
-        data: [{ month: "Jan", a: 25, b: 75 }],
+        data: [{ month: "Jan", a: 186, b: 80 }],
       }),
     );
 
     const yAxis = option.yAxis as { max?: number };
     expect(yAxis.max).toBe(100);
+
+    const series = option.series as Array<{ data: Array<{ value: number }> }>;
+    // 186+80=266 → ~69.92 / ~30.08
+    expect(series[0]?.data[0]?.value).toBeCloseTo((186 / 266) * 100, 5);
+    expect(series[1]?.data[0]?.value).toBeCloseTo((80 / 266) * 100, 5);
+    expect((series[0]?.data[0]?.value ?? 0) + (series[1]?.data[0]?.value ?? 0)).toBeCloseTo(
+      100,
+      5,
+    );
   });
 });
+

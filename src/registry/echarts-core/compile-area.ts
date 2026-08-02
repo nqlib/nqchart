@@ -7,6 +7,7 @@ import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom"
 import { areaVerticalFill, withAlpha } from "./color-alpha";
 import { categoryValues, getXKey, LINE_MARKER } from "./cartesian-series";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
+import { normalizeStackPercent } from "./stack-percent";
 import type { AreaSeriesPart, CompileContext } from "./parts/types";
 
 function isGlowing(variant?: string) {
@@ -55,6 +56,9 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
       ? "nq-area"
       : undefined;
   const hasBrush = ctx.parts.some((p) => p.type === "brush");
+  const areaKeys = areas.map((area) => area.dataKey);
+  const rows =
+    ctx.cartesian?.stackType === "percent" ? normalizeStackPercent(ctx.data, areaKeys) : ctx.data;
 
   const series = areas.map((area) => {
     const color = ctx.resolveColor(area.dataKey, 0);
@@ -68,7 +72,7 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
       stack,
       smooth: area.curveType === "monotone" || area.curveType === "bump",
       step: area.curveType === "step" ? ("end" as const) : undefined,
-      data: ctx.data.map((row) => Number(row[area.dataKey] ?? 0)),
+      data: rows.map((row) => Number(row[area.dataKey] ?? 0)),
       areaStyle,
       lineStyle: {
         color,

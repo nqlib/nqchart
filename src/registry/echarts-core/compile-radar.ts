@@ -3,7 +3,9 @@ import { getColorsCount } from "@/registry/ui/chart";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { itemFocus } from "./emphasis-presets";
 import { radarAreaFill } from "./color-alpha";
+import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
+import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 import type { ChartPart, CompileContext, RadarSeriesPart } from "./parts/types";
 
 function getAngleKey(ctx: CompileContext): string {
@@ -52,12 +54,25 @@ export function compileRadarOption(ctx: CompileContext): EChartsOption {
   const gridVariant = gridPart?.variant;
   const splitLine = gridVariant === "circle" ? { lineStyle: { type: "dashed" as const } } : undefined;
 
+  const chrome = resolveCanvasChartChrome(ctx.chartId);
+
   const base: EChartsOption = {
     tooltip: { trigger: "item" },
     legend: seriesData.length > 1 ? { bottom: 0 } : undefined,
     radar: {
       indicator: indicators,
       splitLine,
+      // ECharts defaults the polar radius to 75% and then draws axis names
+      // *outside* it, reserving no room — so the top/bottom names clip on short
+      // containers. Pull the web in to leave a label-height margin all round.
+      // (Cartesian charts get this for free via `containLabel`; polar has no
+      // equivalent, so the radius has to be explicit.)
+      radius: "65%",
+      center: ["50%", "50%"],
+      axisName: {
+        color: chrome.muted,
+        ...CHART_TYPOGRAPHY.markLabel,
+      },
     },
     series: [
       {

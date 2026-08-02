@@ -30,11 +30,13 @@ type DragState = {
 function useBrushDrag({
   range,
   totalPoints,
+  boundaryGap,
   plotRef,
   commit,
 }: {
   range: ChartBrushRange;
   totalPoints: number;
+  boundaryGap: boolean;
   plotRef: React.RefObject<HTMLDivElement | null>;
   commit: (next: ChartBrushRange, mode?: DragType) => void;
 }) {
@@ -44,11 +46,11 @@ function useBrushDrag({
   const toIndexDelta = useCallback(
     (px: number) => {
       if (!plotRef.current || totalPoints <= 1) return 0;
-      return Math.round(
-        (px / plotRef.current.getBoundingClientRect().width) * (totalPoints - 1),
-      );
+      // Band axes: one index ≈ 1/n of plot width. Point axes: n-1 gaps across full width.
+      const span = boundaryGap ? totalPoints : totalPoints - 1;
+      return Math.round((px / plotRef.current.getBoundingClientRect().width) * span);
     },
-    [totalPoints, plotRef],
+    [totalPoints, boundaryGap, plotRef],
   );
 
   const onPointerDown = useCallback(
@@ -265,15 +267,17 @@ export function NQChartBrush<TData extends Record<string, unknown>>({
     [clampRange, onChange],
   );
 
-  const { isDragging, bind } = useBrushDrag({
+  const { bind } = useBrushDrag({
     range: internalRange,
     totalPoints,
+    boundaryGap,
     plotRef,
     commit,
   });
 
-  const leftPct = indexToPlotPercent(internalRange.startIndex, totalPoints, boundaryGap);
-  const rightPct = indexToPlotPercent(internalRange.endIndex, totalPoints, boundaryGap);
+  // Band edges so the window frames whole groups (not mid-cluster).
+  const leftPct = indexToPlotPercent(internalRange.startIndex, totalPoints, boundaryGap, "start");
+  const rightPct = indexToPlotPercent(internalRange.endIndex, totalPoints, boundaryGap, "end");
 
   const leftTarget = useMotionValue(leftPct);
   const rightTarget = useMotionValue(rightPct);
@@ -337,14 +341,14 @@ export function NQChartBrush<TData extends Record<string, unknown>>({
           side="left"
           position={leftPosition}
           label={showLabels ? getLabel(internalRange.startIndex) : undefined}
-          showLabel={isDragging}
+          showLabel={showLabels}
           bind={bind}
         />
         <BrushHandle
           side="right"
           position={rightPosition}
           label={showLabels ? getLabel(internalRange.endIndex) : undefined}
-          showLabel={isDragging}
+          showLabel={showLabels}
           bind={bind}
         />
         </div>

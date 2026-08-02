@@ -1431,6 +1431,57 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: {"exportName":"NQExampleFunnelChart"},
   },
+  "ex-horizontal-funnel-chart": {
+    name: "ex-horizontal-funnel-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/funnel-chart"],
+    files: [{
+      path: "@/registry/examples/ex-doc-charts.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
+      return { default: mod.default || mod["NQExampleHorizontalFunnelChart"] }
+    }),
+    categories: undefined,
+    meta: {"exportName":"NQExampleHorizontalFunnelChart"},
+  },
+  "ex-pipe-funnel-chart": {
+    name: "ex-pipe-funnel-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/funnel-chart"],
+    files: [{
+      path: "@/registry/examples/ex-doc-charts.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
+      return { default: mod.default || mod["NQExamplePipeFunnelChart"] }
+    }),
+    categories: undefined,
+    meta: {"exportName":"NQExamplePipeFunnelChart"},
+  },
+  "ex-vertical-pipe-funnel-chart": {
+    name: "ex-vertical-pipe-funnel-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/funnel-chart"],
+    files: [{
+      path: "@/registry/examples/ex-doc-charts.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
+      return { default: mod.default || mod["NQExampleVerticalPipeFunnelChart"] }
+    }),
+    categories: undefined,
+    meta: {"exportName":"NQExampleVerticalPipeFunnelChart"},
+  },
   "ex-glowing-bubble-chart": {
     name: "ex-glowing-bubble-chart",
     description: "",
@@ -1482,23 +1533,6 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: {"exportName":"NQExampleGlowingRadarChart"},
   },
-  "ex-glowing-radial-chart": {
-    name: "ex-glowing-radial-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@nqchart/radial-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["NQExampleGlowingRadialChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"NQExampleGlowingRadialChart"},
-  },
   "ex-glowing-scatter-chart": {
     name: "ex-glowing-scatter-chart",
     description: "",
@@ -1532,23 +1566,6 @@ export const Index: Record<string, any> = {
     }),
     categories: undefined,
     meta: {"exportName":"NQExampleGlowingSparklineChart"},
-  },
-  "ex-glowing-treemap-chart": {
-    name: "ex-glowing-treemap-chart",
-    description: "",
-    type: "registry:block",
-    registryDependencies: ["@nqchart/treemap-chart"],
-    files: [{
-      path: "@/registry/examples/ex-doc-charts.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/examples/ex-doc-charts.tsx")
-      return { default: mod.default || mod["NQExampleGlowingTreemapChart"] }
-    }),
-    categories: undefined,
-    meta: {"exportName":"NQExampleGlowingTreemapChart"},
   },
   "ex-glowing-waterfall-chart": {
     name: "ex-glowing-waterfall-chart",

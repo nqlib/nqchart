@@ -1,5 +1,7 @@
 /** Design-token colors for axes, grids, and ECharts chrome — resolved from the chart container. */
 
+import { CHART_FONT_FAMILY_FALLBACK } from "./chart-typography-tokens";
+
 export type ChartChromeColors = {
   foreground: string;
   background: string;
@@ -58,6 +60,33 @@ export function resolveChartChrome(chartId: string): ChartChromeColors {
     popover: readCssVar(el, "--popover", fallback.popover),
     popoverForeground: readCssVar(el, "--popover-foreground", fallback.popoverForeground),
   };
+}
+
+/**
+ * Live-bridge the host's `--font-sans` onto the canvas.
+ *
+ * ECharts cannot inherit CSS font-family, so chart text would otherwise render
+ * in the canvas default (plain sans-serif) while DOM text beside it renders in
+ * Inter — the mismatch this resolves. Same container-scoped lookup as the color
+ * tokens above, so a themed subtree wins over `:root`.
+ */
+export function resolveChartFontFamily(chartId: string): string {
+  if (typeof document === "undefined") {
+    return CHART_FONT_FAMILY_FALLBACK;
+  }
+
+  const el =
+    document.querySelector(`[data-chart="${chartId}"]`) ?? document.documentElement;
+  const fontSans = readCssVar(el, "--font-sans", "");
+  if (fontSans) {
+    // `--font-sans` may omit a generic fallback (nqui ships "'Inter Variable', sans-serif",
+    // but a host may set just a family name). Append the stack so canvas never
+    // falls back to the UA default mid-render.
+    return /sans-serif|serif|monospace|system-ui/i.test(fontSans)
+      ? fontSans
+      : `${fontSans}, ${CHART_FONT_FAMILY_FALLBACK}`;
+  }
+  return CHART_FONT_FAMILY_FALLBACK;
 }
 
 /** SSR / canvas fallbacks — hex mirrors globals.css design tokens (see comments). */

@@ -96,18 +96,29 @@ export type FunnelPart = {
 };
 
 /** Controls spacing and taper between funnel stages. */
-export type FunnelConnection = "seamless" | "default" | "segmented";
+export type FunnelConnection = "seamless" | "default" | "segmented" | "pipe";
 export type FunnelTaper = "soft" | "default" | "steep";
+export type FunnelOrient = "vertical" | "horizontal";
 
 export type FunnelStylePart = {
   type: "funnelStyle";
   id: string;
-  /** Stage spacing preset — use `stageGap` for exact pixels. */
+  /** Stage spacing preset — use `stageGap` for exact pixels. `pipe` = smooth S-curve ribbon. */
   connection?: FunnelConnection;
-  /** Width taper between top and bottom stages. */
+  /** Width taper between top and bottom stages (native funnel only). */
   taper?: FunnelTaper;
-  /** Pixel gap override (wins over `connection` gap). */
+  /** Pixel gap override (wins over `connection` gap; ignored for `pipe`). */
   stageGap?: number;
+  /** Flow direction. Pipe defaults horizontal when unset; supports vertical too. */
+  orient?: FunnelOrient;
+  /**
+   * Pipe mode: half-width of the S-curve join zone in px (radius lives only
+   * between levels; outer ends stay square). Omit for a tight ~8% fillet
+   * (capped). Keep small — large values read as shoulders into the prior stage.
+   */
+  turnRadius?: number;
+  /** Pipe mode: draw stage name + value above the ribbon (default true). */
+  showLabels?: boolean;
 };
 
 export type WaterfallRow = {
@@ -133,7 +144,6 @@ export type TreemapNode = {
 export type TreemapStylePart = {
   type: "treemapStyle";
   id: string;
-  glowingTiles?: string[];
   showLabels?: boolean;
   isClickable?: boolean;
 };
@@ -160,7 +170,6 @@ export type RadialBarPart = {
   cornerRadius?: number;
   barSize?: number;
   showBackground?: boolean;
-  glowingBars?: string[];
   isClickable?: boolean;
   showLabels?: boolean;
 };
@@ -284,6 +293,11 @@ export type RadialCompileConfig = {
   radialLayout?: "concentric" | "rose";
   radialInnerRadius?: number | string;
   radialOuterRadius?: number | string;
+  /**
+   * Polar start angle in degrees (ECharts: 0 = 3 o'clock, 90 = 12 o'clock).
+   * Defaults: full `90`, semi `180`. Sweep stays 360° / 180° clockwise.
+   */
+  radialStartAngle?: number;
 };
 
 /** Funnel stage wiring and visual presets. */
@@ -294,6 +308,9 @@ export type FunnelCompileConfig = {
   stageGap?: number;
   funnelConnection?: FunnelConnection;
   funnelTaper?: FunnelTaper;
+  orient?: FunnelOrient;
+  turnRadius?: number;
+  showLabels?: boolean;
 };
 
 export type CompileContext<TData extends Record<string, unknown> = Record<string, unknown>> = {
@@ -309,4 +326,9 @@ export type CompileContext<TData extends Record<string, unknown> = Record<string
   cartesian?: CartesianCompileConfig;
   radial?: RadialCompileConfig;
   funnel?: FunnelCompileConfig;
+  /**
+   * Host canvas size in CSS px. Used by compilers that thin labels when the
+   * view is too small (gauge axis ticks). Omitted → card-sized default.
+   */
+  viewport?: { width: number; height: number };
 };

@@ -1277,6 +1277,54 @@
       }
     },
     {
+      "name": "ex-horizontal-funnel-chart",
+      "registryDependencies": [
+        "@nqchart/funnel-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "NQExampleHorizontalFunnelChart"
+      }
+    },
+    {
+      "name": "ex-pipe-funnel-chart",
+      "registryDependencies": [
+        "@nqchart/funnel-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "NQExamplePipeFunnelChart"
+      }
+    },
+    {
+      "name": "ex-vertical-pipe-funnel-chart",
+      "registryDependencies": [
+        "@nqchart/funnel-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-doc-charts.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "exportName": "NQExampleVerticalPipeFunnelChart"
+      }
+    },
+    {
       "name": "ex-glowing-bubble-chart",
       "registryDependencies": [
         "@nqchart/scatter-chart"
@@ -1325,22 +1373,6 @@
       }
     },
     {
-      "name": "ex-glowing-radial-chart",
-      "registryDependencies": [
-        "@nqchart/radial-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "NQExampleGlowingRadialChart"
-      }
-    },
-    {
       "name": "ex-glowing-scatter-chart",
       "registryDependencies": [
         "@nqchart/scatter-chart"
@@ -1370,22 +1402,6 @@
       ],
       "meta": {
         "exportName": "NQExampleGlowingSparklineChart"
-      }
-    },
-    {
-      "name": "ex-glowing-treemap-chart",
-      "registryDependencies": [
-        "@nqchart/treemap-chart"
-      ],
-      "type": "registry:block",
-      "files": [
-        {
-          "path": "src/registry/examples/ex-doc-charts.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "meta": {
-        "exportName": "NQExampleGlowingTreemapChart"
       }
     },
     {

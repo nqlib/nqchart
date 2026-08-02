@@ -90,6 +90,26 @@ export function Revenue({ data }: { data: { month: string; desktop: number }[] }
 
 BI data helpers: `import { binForHistogram, prepareParetoData } from "@nqlib/nqchart/recipes"`.
 
+### Design tokens (nqui)
+
+NQChart is built to sit inside [`@nqlib/nqui`](https://www.npmjs.com/package/@nqlib/nqui) and reads
+its design tokens at runtime from the chart container's computed style:
+
+| Token | Used for |
+| --- | --- |
+| `--foreground`, `--muted-foreground`, `--border`, `--background`, `--popover*` | axes, grid lines, labels, tooltips |
+| `--font-sans` | all canvas text (ECharts can't inherit CSS fonts) |
+| `--radius` | bar / treemap / radial corner radii |
+
+nqui is an **optional** peer: without it, charts fall back to a shadcn-compatible neutral palette,
+an Inter-first font stack, and `--radius: 0.45rem`. Define those variables yourself and NQChart
+matches whatever design system you're using.
+
+Motion is aligned to nqui's `motion.css` vocabulary — entrances use its `--ease-out`
+curve, morphs use `--ease-in-out`, and `prefers-reduced-motion` disables animation
+entirely. Retune every chart intro from `CHART_INTRO_DURATION_MS` (default 700ms) in
+`chart-animation-tokens.ts`.
+
 > **Prefer to own the source?** The same components are also available via the shadcn registry
 > (`@nqchart` namespace at `https://nqchart.vercel.app/r/{name}.json`) — see the
 > [installation docs](src/content/docs/installation.mdx).

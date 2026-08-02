@@ -1,4 +1,7 @@
-import { CHART_BAR_CORNER_RADIUS_PX } from "./chart-corner-radius";
+import {
+  CHART_BAR_CORNER_RADIUS_PX,
+  resolveChartBarCornerRadius,
+} from "./chart-corner-radius";
 
 /** Default top-rounded bar corners — nqui `--radius-sm` at 16px root. */
 export const DEFAULT_BAR_RADIUS = CHART_BAR_CORNER_RADIUS_PX;
@@ -72,12 +75,20 @@ export function barItemBorderRadius(
   return barBorderRadius(radius, horizontal);
 }
 
+/**
+ * Explicit part radius wins, then an explicit chart-level `barRadius`, then
+ * the live `--radius-sm` for this chart's subtree. Pass `chartId` on render
+ * paths so a host that retunes `--radius` gets matching corners; without it
+ * this falls back to the static build-time constant.
+ */
 export function resolveBarRadius(
   partRadius: number | undefined,
   chartRadius: number | undefined,
+  chartId?: string,
 ): number {
   if (partRadius != null) return partRadius;
   if (chartRadius != null) return chartRadius;
+  if (chartId != null) return resolveChartBarCornerRadius(chartId);
   return DEFAULT_BAR_RADIUS;
 }
 

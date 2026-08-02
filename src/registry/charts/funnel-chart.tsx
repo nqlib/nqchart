@@ -5,14 +5,18 @@ import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileFunnelOption } from "@/registry/echarts-core/compile-funnel";
-import type { FunnelConnection, FunnelTaper } from "@/registry/echarts-core/parts/types";
+import type {
+  FunnelConnection,
+  FunnelOrient,
+  FunnelTaper,
+} from "@/registry/echarts-core/parts/types";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import { NQChartLegend } from "@/registry/ui/legend";
 import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
-export type { FunnelConnection, FunnelTaper };
+export type { FunnelConnection, FunnelOrient, FunnelTaper };
 
 type NQFunnelChartProps<
   TData extends Record<string, unknown>,
@@ -27,10 +31,19 @@ type NQFunnelChartProps<
   isLoading?: boolean;
   /** Pixel gap between stages — overrides the `connection` preset when set. */
   stageGap?: number;
-  /** How stages connect visually (`seamless` = no dividers). */
+  /** How stages connect visually (`pipe` = smooth S-curve ribbon). */
   connection?: FunnelConnection;
-  /** How gradually stage widths taper top → bottom. */
+  /** How gradually stage widths taper top → bottom (native funnel only). */
   taper?: FunnelTaper;
+  /**
+   * Flow direction. Native funnel defaults `vertical`; pipe defaults
+   * `horizontal` when unset. Pipe supports both.
+   */
+  orient?: FunnelOrient;
+  /** Pipe mode: half-width of the S-curve level-change zone in px. */
+  turnRadius?: number;
+  /** Pipe mode: draw stage name + value above the ribbon. */
+  showLabels?: boolean;
 };
 
 function FunnelChartCanvas<TData extends Record<string, unknown>>({
@@ -40,6 +53,9 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   stageGap,
   connection,
   taper,
+  orient,
+  turnRadius,
+  showLabels,
 }: {
   data: TData[];
   stageKey?: string;
@@ -47,6 +63,9 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   stageGap?: number;
   connection?: FunnelConnection;
   taper?: FunnelTaper;
+  orient?: FunnelOrient;
+  turnRadius?: number;
+  showLabels?: boolean;
 }) {
   const { option, colorEpoch } = useCompiledOption(compileFunnelOption, {
     data,
@@ -56,6 +75,9 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
       stageGap,
       funnelConnection: connection,
       funnelTaper: taper,
+      orient,
+      turnRadius,
+      showLabels,
     },
   });
   return <EChartsHost option={option} colorEpoch={colorEpoch} />;
@@ -75,6 +97,9 @@ export function NQFunnelChart<
   stageGap,
   connection,
   taper,
+  orient,
+  turnRadius,
+  showLabels,
 }: NQFunnelChartProps<TData, TConfig>) {
   const displayData = isLoading ? (getLoadingData(4) as unknown as TData[]) : data;
   return (
@@ -91,6 +116,9 @@ export function NQFunnelChart<
               stageGap={stageGap}
               connection={connection}
               taper={taper}
+              orient={orient}
+              turnRadius={turnRadius}
+              showLabels={showLabels}
             />
           }
         >
@@ -113,10 +141,13 @@ type StagesProps = {
   connection?: FunnelConnection;
   taper?: FunnelTaper;
   stageGap?: number;
+  orient?: FunnelOrient;
+  turnRadius?: number;
+  showLabels?: boolean;
 };
 
 export function Stages(_props: StagesProps = {}) {
-  const { connection, taper, stageGap } = _props;
+  const { connection, taper, stageGap, orient, turnRadius, showLabels } = _props;
   const id = usePartId();
   useRegisterPart({
     type: "funnelStyle",
@@ -124,6 +155,9 @@ export function Stages(_props: StagesProps = {}) {
     connection,
     taper,
     stageGap,
+    orient,
+    turnRadius,
+    showLabels,
   });
   return null;
 }

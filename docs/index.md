@@ -16,6 +16,9 @@ Public API reference lives in **`src/content/docs/`** (Fumadocs at `/docs`).
 | BI data helpers | [[engine/chart-recipes]] |
 | Product backlog | [[product/roadmap]] |
 | Maintainer DoD | [[product/ai-contract]] |
+| **Agent intake / plan-before-code** | [[product/agentic-coding-guideline]] |
+| Change design (plans) | `plans/README.md` |
+| Shared memory (on demand) | `memory/INDEX.md` · write policy `memory/skills.md` |
 | Past bug fixes (search first) | `.agents/skills/fixed/index.md` |
 | Consumer agent skill | `skills/consumer/nqchart/` · `npx skills add ctesibius/nqchart --skill nqchart -y` |
 | Agent HTTP / MCP | [[meta/llm-usage]] |
@@ -32,7 +35,8 @@ Public API reference lives in **`src/content/docs/`** (Fumadocs at `/docs`).
 ## Related
 
 - **Public docs site** — `src/content/docs/` (not this vault)
-- **Executor plans** — `plans/README.md`
+- **Change design / executor plans** — `plans/README.md` (required for features)
 - **Improvement roadmap** — `plan/IMPROVEMENT_PLAN.md`
-- **Repo agent router** — root `AGENTS.md`
-- **Contributor skills** — `.agents/skills/nqchart-dev/`, `.agents/skills/nqchart-docs/`, `.agents/skills/fixed/` (regression index)
+- **Repo agent router** — root `AGENTS.md` · `CLAUDE.md`
+- **Shared memory** — `memory/` (not bug fixes — those are `fixed`)
+- **Contributor skills** — `.agents/skills/nqchart-dev/`, `.agents/skills/nqchart-docs/`, `.agents/skills/fixed/`, `.agents/skills/memory/`

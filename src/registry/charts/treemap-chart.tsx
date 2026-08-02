@@ -51,21 +51,15 @@ function RegisterTreemap({ tree }: { tree: TreemapNode[] }) {
 
 type TilesProps = {
   isClickable?: boolean;
-  glowingTiles?: string[];
   showLabels?: boolean;
 };
 
-export function Tiles({
-  isClickable = false,
-  glowingTiles = [],
-  showLabels = true,
-}: TilesProps = {}) {
+export function Tiles({ isClickable = false, showLabels = true }: TilesProps = {}) {
   const id = usePartId();
   useRegisterPart({
     type: "treemapStyle",
     id,
     isClickable,
-    glowingTiles,
     showLabels,
   });
   return null;

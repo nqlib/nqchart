@@ -71,13 +71,38 @@ export function extractCategoryBoundaryGap(option: EChartsOption): boolean {
   return false;
 }
 
+/**
+ * Map a category index to a plot-width percent.
+ *
+ * With `boundaryGap` (bar-style bands), categories occupy equal slabs:
+ * - `start` → left edge of the band (left brush handle)
+ * - `end` → right edge of the band (right brush handle)
+ * - `center` → band midpoint (legacy / marker alignment)
+ *
+ * Without `boundaryGap` (line/area points), all edges collapse to the point.
+ */
 export function indexToPlotPercent(
   index: number,
   totalPoints: number,
   boundaryGap: boolean,
+  edge: "start" | "center" | "end" = "center",
 ): number {
-  if (totalPoints <= 1) return 0;
-  if (boundaryGap) return ((index + 0.5) / totalPoints) * 100;
+  if (totalPoints <= 0) return 0;
+  if (totalPoints === 1) {
+    if (boundaryGap) {
+      if (edge === "end") return 100;
+      if (edge === "center") return 50;
+      return 0;
+    }
+    return 0;
+  }
+
+  if (boundaryGap) {
+    if (edge === "start") return (index / totalPoints) * 100;
+    if (edge === "end") return ((index + 1) / totalPoints) * 100;
+    return ((index + 0.5) / totalPoints) * 100;
+  }
+
   return (index / (totalPoints - 1)) * 100;
 }
 

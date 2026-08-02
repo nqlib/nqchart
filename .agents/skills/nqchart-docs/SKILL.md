@@ -68,6 +68,7 @@ After editing consumer skill: `pnpm sync:skills` (updates `.agents/skills/nqchar
 - `src/content/docs/installation.mdx` — shadcn + skills CLI steps
 - `src/components/docs/mdx/components/skills-block.tsx` — install UI
 - `skills/README.md` — audience split for maintainers
+- **Glow / shadow on TOC or chrome** — [.agents/skills/no-box-glow/SKILL.md](../no-box-glow/SKILL.md) (ask when unclear; no decorative box glow)
 
 ## Dev commands
 

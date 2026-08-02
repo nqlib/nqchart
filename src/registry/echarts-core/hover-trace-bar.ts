@@ -1,6 +1,7 @@
 import type { EChartsOption } from "echarts";
 import type { EChartsType } from "echarts/core";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
+import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
 
 export const NQ_HOVER_TRACE_GRAPHIC_ID = "nq-hover-trace";
 
@@ -109,9 +110,7 @@ export function buildHoverTraceGraphic(
           style: {
             text: formatted,
             fill: chrome.background,
-            fontSize: 11,
-            fontWeight: 600,
-            fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+            ...CHART_TYPOGRAPHY.traceValue,
           },
           x: pillX + 6,
           y: yPx,

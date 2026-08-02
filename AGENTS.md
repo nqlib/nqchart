@@ -2,12 +2,30 @@
 
 Architecture and skill routing for agents working in this repository.
 
+**Claude Code:** start at [`CLAUDE.md`](./CLAUDE.md) (points here).
+
 ## TL;DR
 
 - **Product** = shadcn registry under `src/registry/` (not npm packages)
 - **Public docs** = `src/content/docs/` (Fumadocs at `/docs`)
 - **Internal vault** = `docs/` (maintainer architecture + roadmap)
+- **Change design** = `plans/` (required for features)
+- **Shared memory** = `memory/` (on demand; write rarely)
 - **Registry must not import** `src/components/**`
+
+## Sequence of execution (anti-drift)
+
+Do **not** skip ahead into `src/` for feature-sized work.
+
+1. **Orient** — this file → load **1–3** skill/docs files (do not bulk-read the vault).
+2. **Recall** — skim [`memory/INDEX.md`](memory/INDEX.md) when prior decisions might apply.
+3. **Intake** — classify chore / bug / feature ([guideline](docs/product/agentic-coding-guideline.md)).
+4. **Plan** — features need [`plans/`](plans/README.md) (existing or new from `_template.md`) **approved before** source edits.
+5. **Implement** — only the plan / bug scope; blueprint first if design is wrong.
+6. **Verify** — DoD in [`docs/product/ai-contract.md`](docs/product/ai-contract.md).
+7. **Record** — bugs → [`.agents/skills/fixed/`](.agents/skills/fixed/SKILL.md); durable decisions → `memory/` (bar in [`memory/skills.md`](memory/skills.md)).
+
+Full ladder + exemptions: [`docs/product/agentic-coding-guideline.md`](docs/product/agentic-coding-guideline.md).
 
 ## Which skill to use
 
@@ -17,7 +35,9 @@ Architecture and skill routing for agents working in this repository.
 | Changing **engine, registry, examples** | [.agents/skills/nqchart-dev/SKILL.md](.agents/skills/nqchart-dev/SKILL.md) |
 | **Fixing bugs / regressions** (search past fixes first) | [.agents/skills/fixed/index.md](.agents/skills/fixed/index.md) |
 | Changing **docs site, landing, agent HTTP** | [.agents/skills/nqchart-docs/SKILL.md](.agents/skills/nqchart-docs/SKILL.md) |
-| Understanding **architecture / backlog** | [docs/index.md](docs/index.md) |
+| **Glow / shadow / bloom on UI chrome** (TOC diamond, etc.) | [.agents/skills/no-box-glow/SKILL.md](.agents/skills/no-box-glow/SKILL.md) — ask when unclear; no decorative box glow |
+| **Remember / recall** durable project facts | [.agents/skills/memory/SKILL.md](.agents/skills/memory/SKILL.md) → [`memory/INDEX.md`](memory/INDEX.md) |
+| Understanding **architecture / backlog / intake** | [docs/index.md](docs/index.md) · [agentic guideline](docs/product/agentic-coding-guideline.md) |
 
 Do **not** use the consumer skill when contributing to this repo.
 
@@ -68,4 +88,4 @@ Full DoD: [docs/product/ai-contract.md](docs/product/ai-contract.md).
 
 ## Trigger phrases
 
-NQChart, `@nqchart`, registry, compile-*, chart-recipes, ComponentPreview, fumadocs, llms.txt, MCP, shadcn registry, hover flicker, scatter dim, treemap vanish, fixed skill.
+NQChart, `@nqchart`, registry, compile-*, chart-recipes, ComponentPreview, fumadocs, llms.txt, MCP, shadcn registry, hover flicker, scatter dim, treemap vanish, fixed skill, plan before code, memory/.

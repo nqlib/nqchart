@@ -1,8 +1,23 @@
-# Plans index — nqchart improvement program
+# Plans index — change design (NQChart)
 
-Written by an advisor session on **2026-06-10** against commit **`f43ccf9`** (branch `landing-redesign-and-theme`). Each plan is self-contained: an executor needs no other context. Plans were selected non-interactively as the top findings by leverage (impact ÷ effort, weighted by confidence) — the user did not pick a subset; adjust if priorities differ.
+**Change-design SSOT** for feature-sized work. Agents: read
+[`docs/product/agentic-coding-guideline.md`](../docs/product/agentic-coding-guideline.md) —
+**plan before `src/` edits** for features; chores/bugs exempt.
 
-Related artifact: `../IMPROVEMENT_PLAN.md` (an earlier design/architecture review from the previous session). Plans 005 and 006 formalize items from it into executor-grade specs; its remaining items appear under "Deferred candidates" below.
+| Role | Path |
+|------|------|
+| New plan template | [`_template.md`](./_template.md) |
+| Product backlog | [`docs/product/roadmap.md`](../docs/product/roadmap.md) |
+| DoD | [`docs/product/ai-contract.md`](../docs/product/ai-contract.md) |
+
+Next id = highest `NNN` below + 1. Add a row when you create a plan; keep **Status** in sync.
+
+---
+
+## Historical program (001–006)
+
+Written by an advisor session on **2026-06-10** against commit **`f43ccf9`**. Each plan is
+self-contained. Related: `../plan/IMPROVEMENT_PLAN.md`.
 
 ## Status
 
@@ -14,6 +29,7 @@ Related artifact: `../IMPROVEMENT_PLAN.md` (an earlier design/architecture revie
 | 004 | [Rewrite CONTRIBUTING.md (pnpm + ECharts reality)](004-rewrite-contributing.md) | docs | M | DONE |
 | 005 | [Landing: lazy-load the 4-chart demo dashboard](005-landing-lazy-demo-dashboard.md) | performance | S–M | DONE |
 | 006 | [Landing/docs a11y quick wins](006-landing-a11y-quick-wins.md) | a11y | S–M | DONE |
+| 007 | [Funnel: horizontal orient + smooth pipe connections](007-funnel-horizontal-pipe.md) | engine / funnel | L | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 
@@ -27,6 +43,7 @@ Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) 
 005 (landing perf) independent
 006 (a11y)        independent; trivial overlap with 005 in src/app/page.tsx — if run
                   concurrently, expect a 1-line merge in the hero section
+007 (funnel)      independent; Phase A (orient) then Phase B (pipe custom series)
 ```
 
 No plan here is risky enough to require 001 first, but **001 must land before any engine refactor** (chart factory, CompileContext narrowing) is attempted.

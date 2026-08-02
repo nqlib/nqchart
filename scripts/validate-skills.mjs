@@ -13,6 +13,8 @@ const skillRoots = [
   join(root, ".agents/skills/nqchart-dev"),
   join(root, ".agents/skills/nqchart-docs"),
   join(root, ".agents/skills/fixed"),
+  join(root, ".agents/skills/memory"),
+  join(root, ".agents/skills/no-box-glow"),
 ];
 
 const fixedSkillRoot = join(root, ".agents/skills/fixed");

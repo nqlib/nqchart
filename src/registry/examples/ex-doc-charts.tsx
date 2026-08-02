@@ -10,7 +10,7 @@ import { NQTreemapChart, Tiles, Tooltip as TreemapTooltip } from "@/registry/cha
 import { NQSparklineChart, Fill, Sparkline, Tooltip as SparkTooltip } from "@/registry/charts/sparkline-chart";
 import { NQRadialChart, RadialBar, Tooltip as RadialTooltip, Legend as RadialLegend } from "@/registry/charts/radial-chart";
 import { formatMonthTickShort, TRAFFIC_MONTHLY_DATA, DUAL_SERIES_CHART_CONFIG } from "@/registry/examples/example-shared";
-import { SCATTER_DESKTOP, SCATTER_MOBILE, RADAR_SKILLS_DATA, FUNNEL_DATA, FUNNEL_CONFIG, WATERFALL_DATA, WATERFALL_CONFIG, TREEMAP_DATA, TREEMAP_CONFIG, SPARKLINE_DATA, SPARKLINE_CONFIG, BROWSER_DATA, BROWSER_CONFIG, BROWSER_GRADIENT_CONFIG } from "@/registry/examples/example-datasets";
+import { SCATTER_DESKTOP, SCATTER_MOBILE, RADAR_SKILLS_DATA, FUNNEL_DATA, FUNNEL_CONFIG, FUNNEL_PIPE_DATA, FUNNEL_PIPE_CONFIG, WATERFALL_DATA, WATERFALL_CONFIG, TREEMAP_DATA, TREEMAP_CONFIG, SPARKLINE_DATA, SPARKLINE_CONFIG, BROWSER_DATA, BROWSER_CONFIG, BROWSER_GRADIENT_CONFIG } from "@/registry/examples/example-datasets";
 
 export function NQExampleAnimatedDashedStrokeAreaChart() {
   return (
@@ -142,6 +142,50 @@ export function NQExampleFunnelChart() {
   );
 }
 
+export function NQExampleHorizontalFunnelChart() {
+  return (
+    <NQFunnelChart
+      data={FUNNEL_DATA}
+      config={FUNNEL_CONFIG}
+      className="h-full w-full p-4"
+      orient="horizontal"
+    >
+      <Stages orient="horizontal" />
+      <FunnelLegend isClickable />
+      <FunnelTooltip />
+    </NQFunnelChart>
+  );
+}
+
+export function NQExamplePipeFunnelChart() {
+  return (
+    <NQFunnelChart
+      data={FUNNEL_PIPE_DATA}
+      config={FUNNEL_PIPE_CONFIG}
+      className="h-full w-full p-4"
+      connection="pipe"
+    >
+      <Stages connection="pipe" turnRadius={6} />
+      <FunnelTooltip />
+    </NQFunnelChart>
+  );
+}
+
+export function NQExampleVerticalPipeFunnelChart() {
+  return (
+    <NQFunnelChart
+      data={FUNNEL_PIPE_DATA}
+      config={FUNNEL_PIPE_CONFIG}
+      className="h-full w-full p-4"
+      connection="pipe"
+      orient="vertical"
+    >
+      <Stages connection="pipe" orient="vertical" turnRadius={6} />
+      <FunnelTooltip />
+    </NQFunnelChart>
+  );
+}
+
 export function NQExampleGlowingBubbleChart() {
   return (
     <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
@@ -168,17 +212,6 @@ export function NQExampleGlowingRadarChart() {
   );
 }
 
-export function NQExampleGlowingRadialChart() {
-  return (
-    <NQRadialChart data={BROWSER_DATA} config={BROWSER_CONFIG} nameKey="browser" variant="full" className="h-full w-full p-4">
-      <RadialLegend isClickable />
-      <RadialTooltip />
-      <RadialBar dataKey="visitors" glowingBars={["chrome", "safari", "firefox"]} />
-    </NQRadialChart>
-  );
-}
-
-
 export function NQExampleGlowingScatterChart() {
   return (
     <NQScatterChart config={DUAL_SERIES_CHART_CONFIG} className="h-full w-full p-4">
@@ -194,15 +227,6 @@ export function NQExampleGlowingSparklineChart() {
     <NQSparklineChart data={SPARKLINE_DATA} config={SPARKLINE_CONFIG} valueDataKey="value" className="h-full w-full p-4">
       <Fill dataKey="trend" /><Sparkline dataKey="trend" /><SparkTooltip />
     </NQSparklineChart>
-  );
-}
-
-export function NQExampleGlowingTreemapChart() {
-  return (
-    <NQTreemapChart data={TREEMAP_DATA} config={TREEMAP_CONFIG} className="h-full w-full p-4">
-      <Tiles glowingTiles={["Frontend", "Sales"]} showLabels />
-      <TreemapTooltip />
-    </NQTreemapChart>
   );
 }
 

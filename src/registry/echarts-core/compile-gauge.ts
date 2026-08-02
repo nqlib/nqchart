@@ -1,9 +1,18 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import type { CompileContext, GaugePart } from "./parts/types";
+import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
+import {
+  formatGaugeAxisLabel,
+  GAUGE_SPLIT_NUMBER,
+  resolveGaugeLabelLayout,
+} from "./gauge-axis-labels";
 
 /** KPI dial — tooltip-only hover (no dim); see hover-focus.mdx. */
 const GAUGE_EMPHASIS = { disabled: true as const };
+
+/** Semi-dial sweep used by NQChart gauges (startAngle 180 → endAngle 0). */
+const GAUGE_SWEEP_DEG = 180;
 
 export function compileGaugeOption(ctx: CompileContext): EChartsOption {
   const gauges = ctx.parts.filter((p): p is GaugePart => p.type === "gauge");
@@ -29,6 +38,16 @@ export function compileGaugeOption(ctx: CompileContext): EChartsOption {
   const max = gauge?.max ?? 100;
   const color = ctx.resolveColor(seriesKey, 0);
   const colorEnd = ctx.resolveColor(seriesKey, 1) ?? color;
+  const splitNumber = GAUGE_SPLIT_NUMBER;
+  const labelLayout = resolveGaugeLabelLayout({
+    width: ctx.viewport?.width,
+    height: ctx.viewport?.height,
+    sweepDeg: GAUGE_SWEEP_DEG,
+    splitNumber,
+    min,
+    max,
+  });
+  const { stride: labelStride, fontSize: labelFontSize } = labelLayout;
 
   const series: EChartsOption["series"] = [
     {
@@ -37,6 +56,9 @@ export function compileGaugeOption(ctx: CompileContext): EChartsOption {
       endAngle: 0,
       min,
       max,
+      splitNumber,
+      // Layout token in `id` so resize updates replaceSeries (formatters are dropped by JSON.stringify).
+      id: `__gauge_dial_s${labelStride}_f${labelFontSize}__`,
       progress: { show: true, width: 12 },
       axisLine: {
         lineStyle: {
@@ -44,17 +66,24 @@ export function compileGaugeOption(ctx: CompileContext): EChartsOption {
           color: [[1, colorEnd]],
         },
       },
+      axisLabel: {
+        show: true,
+        ...CHART_TYPOGRAPHY.axis,
+        fontSize: labelFontSize,
+        formatter: (raw: number) =>
+          formatGaugeAxisLabel(raw, { min, max, splitNumber, stride: labelStride }),
+      },
       pointer: { show: true },
       title: {
         // Pin the series name below the value so the two never overlap.
         // Gauge's default title offset sits over the dial / detail text.
         offsetCenter: [0, "78%"],
-        fontSize: 12,
+        ...CHART_TYPOGRAPHY.displayCaption,
       },
       detail: {
         valueAnimation: true,
         formatter: "{value}",
-        fontSize: 20,
+        ...CHART_TYPOGRAPHY.display,
         offsetCenter: [0, "38%"],
       },
       data: [{ value, name: ctx.config[seriesKey]?.label?.toString() ?? seriesKey }],

@@ -4,10 +4,10 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
 {
   "angleAxis": undefined,
   "animation": true,
-  "animationDuration": 1200,
-  "animationDurationUpdate": 600,
-  "animationEasing": "cubicOut",
-  "animationEasingUpdate": "cubicOut",
+  "animationDuration": 700,
+  "animationDurationUpdate": 350,
+  "animationEasing": "cubic-bezier(0.16,1,0.3,1)",
+  "animationEasingUpdate": "cubic-bezier(0.16,1,0.3,1)",
   "animationThreshold": 4000,
   "backgroundColor": "transparent",
   "calendar": undefined,
@@ -26,10 +26,10 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
     {
       "animation": true,
       "animationDelay": 0,
-      "animationDuration": 1200,
+      "animationDuration": 700,
       "animationDurationUpdate": 0,
-      "animationEasing": "cubicInOut",
-      "animationEasingUpdate": "cubicOut",
+      "animationEasing": "cubic-bezier(0.4,0,0.2,1)",
+      "animationEasingUpdate": "cubic-bezier(0.16,1,0.3,1)",
       "blur": {
         "itemStyle": {
           "opacity": 0.2,
@@ -73,6 +73,8 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
   ],
   "textStyle": {
     "color": "#171717",
+    "fontFamily": "'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif",
+    "fontSize": 12,
   },
   "tooltip": {
     "backgroundColor": "transparent",

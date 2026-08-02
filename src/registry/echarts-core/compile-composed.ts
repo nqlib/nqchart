@@ -42,7 +42,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const yAxisIndexFor = (yAxisId?: string) => (yAxisId === "right" ? rightAxisIndex : 0);
 
   const barSeries = bars.map((bar) => {
-    const r = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius);
+    const r = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
     const color = ctx.resolveColor(bar.dataKey, 0);
     return {
       type: "bar" as const,

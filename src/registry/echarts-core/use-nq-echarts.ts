@@ -68,15 +68,19 @@ function readPlotInsets(instance: EChartsType): ChartPlotInsets | null {
 
 type SeriesLike = { type?: string; data?: unknown; name?: string; links?: unknown };
 
+type SeriesLikeWithId = SeriesLike & { id?: string | number };
+
 function seriesStructureKey(option: EChartsOption): string {
   const series = option.series
     ? (Array.isArray(option.series) ? option.series : [option.series])
     : [];
-  return (series as SeriesLike[])
+  return (series as SeriesLikeWithId[])
     .map((s) => {
       const dataLen = Array.isArray(s.data) ? s.data.length : 0;
       const linksLen = Array.isArray(s.links) ? s.links.length : 0;
-      return `${s.type ?? ""}:${s.name ?? ""}:${dataLen}:${linksLen}`;
+      // Include `id` so gauge label-layout tokens (`__gauge_dial_s*_f*__`) force
+      // replaceMerge — setOption merge does not reliably replace axisLabel.formatter.
+      return `${s.type ?? ""}:${s.id ?? ""}:${s.name ?? ""}:${dataLen}:${linksLen}`;
     })
     .join("|");
 }

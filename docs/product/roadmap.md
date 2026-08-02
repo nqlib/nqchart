@@ -1,6 +1,6 @@
 # Product roadmap
 
-Steering backlog for maintainers and AI agents. Executor plans: `plans/README.md`. Deep review: `plan/IMPROVEMENT_PLAN.md`.
+Steering backlog for maintainers and AI agents. Change design: `plans/README.md`. Intake rules: [[product/agentic-coding-guideline]]. Deep review: `plan/IMPROVEMENT_PLAN.md`.
 
 ## Completed (plans 001–006)
 

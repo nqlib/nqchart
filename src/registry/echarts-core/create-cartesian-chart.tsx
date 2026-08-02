@@ -135,6 +135,19 @@ export function createCartesianChart<
     const chartData = showBrush && !isLoading ? visibleData : displayData;
     const externalBrush = showBrush && !isLoading;
     const { plotAlign, onPlotRect, canvasProps } = usePlotRectState();
+    const rootFields = getRootFields(merged, xKey);
+    // Brush indexes categories along X. Horizontal main charts put categories on Y,
+    // so force a vertical mini-preview so the window lines up with category bands.
+    const brushRootFields =
+      rootFields.cartesian?.layout === "horizontal"
+        ? {
+            ...rootFields,
+            cartesian: {
+              ...rootFields.cartesian,
+              layout: "vertical" as const,
+            },
+          }
+        : rootFields;
 
     const canvasElementProps = mapCanvasProps(merged, {
       chartData,
@@ -155,7 +168,7 @@ export function createCartesianChart<
               <NQChartBrush
                 data={displayData}
                 compile={compile}
-                rootFields={getRootFields(merged, xKey)}
+                rootFields={brushRootFields}
                 xDataKey={xKey}
                 formatLabel={brushFormatLabel}
                 plotAlign={plotAlign}

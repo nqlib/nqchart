@@ -113,19 +113,28 @@ export function resolveAreaFillColor(
   return resolved.startsWith("var(") ? resolveColor(key, index) : resolved;
 }
 
-/** Subscribe to `.dark` class toggles on `<html>`. */
+/**
+ * Subscribe to theme changes on `<html>`.
+ *
+ * Watches `class` (the `.dark` toggle) and `style`: hosts that retune tokens
+ * at runtime write them as inline custom properties on the root element, and
+ * canvas marks can only pick those up by recompiling the option.
+ */
 export function subscribeThemeChange(onChange: () => void): () => void {
   if (typeof document === "undefined") return () => {};
 
   const observer = new MutationObserver((records) => {
     for (const record of records) {
-      if (record.attributeName === "class") {
+      if (record.attributeName === "class" || record.attributeName === "style") {
         onChange();
         break;
       }
     }
   });
 
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class", "style"],
+  });
   return () => observer.disconnect();
 }

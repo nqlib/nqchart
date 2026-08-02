@@ -50,6 +50,38 @@ export const FUNNEL_CONFIG = {
   paid: { label: "Paid", colors: chartConfigColor(4) },
 } satisfies ChartConfig;
 
+/** Hiring pipeline — horizontal pipe funnel demo (job progression). */
+export const FUNNEL_PIPE_DATA = [
+  { stage: "posted", value: 255 },
+  { stage: "engaged", value: 248 },
+  { stage: "application", value: 234 },
+  { stage: "offer", value: 205 },
+  { stage: "hired", value: 55 },
+];
+
+export const FUNNEL_PIPE_CONFIG = {
+  posted: {
+    label: "Posted",
+    colors: { light: ["#dbeafe"], dark: ["#1e3a5f"] },
+  },
+  engaged: {
+    label: "Engaged",
+    colors: { light: ["#bfdbfe"], dark: ["#1e40af"] },
+  },
+  application: {
+    label: "Application",
+    colors: { light: ["#93c5fd"], dark: ["#2563eb"] },
+  },
+  offer: {
+    label: "Offer",
+    colors: { light: ["#60a5fa"], dark: ["#3b82f6"] },
+  },
+  hired: {
+    label: "Hired",
+    colors: { light: ["#2563eb"], dark: ["#60a5fa"] },
+  },
+} satisfies ChartConfig;
+
 export const WATERFALL_DATA = [
   { name: "opening", value: 120, type: "start" },
   { name: "product-a", value: 45, type: "increase" },
