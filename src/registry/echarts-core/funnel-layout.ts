@@ -1,6 +1,7 @@
 import type {
   FunnelConnection,
   FunnelOrient,
+  FunnelSort,
   FunnelStylePart,
   FunnelTaper,
 } from "./parts/types";
@@ -39,6 +40,7 @@ export const FUNNEL_TAPER = {
 export type ResolvedFunnelLayout = {
   connection: FunnelConnection;
   orient: FunnelOrient;
+  sort: FunnelSort;
   gap: number;
   borderWidth: number;
   minSize: string;
@@ -57,6 +59,8 @@ export function resolveFunnelLayout(
   // Explicit orient wins. Pipe defaults horizontal; native funnel defaults vertical.
   const orient: FunnelOrient =
     style?.orient ?? ctx.funnel?.orient ?? (isPipe ? "horizontal" : "vertical");
+  // Data order by default — value sort reorders pipeline stages when mid-stages grow.
+  const sort: FunnelSort = style?.sort ?? ctx.funnel?.sort ?? "none";
   const preset = FUNNEL_CONNECTION[connection];
   const gap = style?.stageGap ?? ctx.funnel?.stageGap ?? preset.gap;
   const borderWidth = preset.borderWidth;
@@ -66,6 +70,7 @@ export function resolveFunnelLayout(
   return {
     connection,
     orient,
+    sort,
     gap,
     borderWidth,
     minSize: FUNNEL_TAPER[taper],

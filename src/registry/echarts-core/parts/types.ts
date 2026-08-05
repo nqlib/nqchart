@@ -99,6 +99,8 @@ export type FunnelPart = {
 export type FunnelConnection = "seamless" | "default" | "segmented" | "pipe";
 export type FunnelTaper = "soft" | "default" | "steep";
 export type FunnelOrient = "vertical" | "horizontal";
+/** ECharts `series-funnel.sort`. Default `none` keeps `data` array order. */
+export type FunnelSort = "ascending" | "descending" | "none";
 
 export type FunnelStylePart = {
   type: "funnelStyle";
@@ -111,6 +113,11 @@ export type FunnelStylePart = {
   stageGap?: number;
   /** Flow direction. Pipe defaults horizontal when unset; supports vertical too. */
   orient?: FunnelOrient;
+  /**
+   * Stage order for native funnel. Default `none` preserves `data` order.
+   * Unused for `pipe` (custom series already follows data order).
+   */
+  sort?: FunnelSort;
   /**
    * Pipe mode: half-width of the S-curve join zone in px (radius lives only
    * between levels; outer ends stay square). Omit for a tight ~8% fillet
@@ -309,6 +316,8 @@ export type FunnelCompileConfig = {
   funnelConnection?: FunnelConnection;
   funnelTaper?: FunnelTaper;
   orient?: FunnelOrient;
+  /** Native funnel stage order. Default `none` preserves `data` order. */
+  sort?: FunnelSort;
   turnRadius?: number;
   showLabels?: boolean;
 };

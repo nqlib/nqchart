@@ -210,6 +210,9 @@ Root container. Compiles ECharts `series-funnel` (or a custom pipe series when `
   <ApiRow name="orient" type='"vertical" | "horizontal"'>
     Flow direction. Native funnel defaults `vertical`; pipe defaults `horizontal` when unset. Both support pipe.
   </ApiRow>
+  <ApiRow name="sort" type='"ascending" | "descending" | "none"' default='"none"'>
+    Native funnel stage order. Default `none` keeps the `data` array order (pipeline stages stay put when a mid-stage outgrows an earlier one). Unused for `pipe`.
+  </ApiRow>
   <ApiRow name="connection" type='"seamless" | "default" | "segmented" | "pipe"' default='"default"'>
     Stage join style. `pipe` switches to the smooth S-curve ribbon renderer.
   </ApiRow>
@@ -237,6 +240,9 @@ Style slot for connection, taper, orient, and turn radius (same props as the roo
   </ApiRow>
   <ApiRow name="orient" type='"vertical" | "horizontal"'>
     Native funnel orientation.
+  </ApiRow>
+  <ApiRow name="sort" type='"ascending" | "descending" | "none"'>
+    Native funnel stage order (wins over root when set).
   </ApiRow>
   <ApiRow name="taper" type='"soft" | "default" | "steep"'>
     Native funnel size taper.

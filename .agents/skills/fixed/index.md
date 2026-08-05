@@ -14,7 +14,7 @@ metadata:
 
 **Agents:** When the user asks to fix a bug, **search this file first** (domain table, then semantic table). Open the fix note before changing code.
 
-Last updated: 2026-08-01
+Last updated: 2026-08-05
 
 ---
 
@@ -28,6 +28,7 @@ Problem areas → domain overview → individual fix notes.
 | **labels** | Floating leader lines; truncated / missing rose names; labelLine stubs; radial ring names upside-down; polar clip; gauge tick pile-up; **vertical pipe funnel names clipped** | [domains/labels.md](./domains/labels.md) | [rose leader clip](./fixes/labels-rose-leader-clip.md), [radial ring orientation / clip](./fixes/labels-radial-ring-orientation-clip.md), [gauge axis overlap](./fixes/labels-gauge-axis-overlap.md), [funnel pipe vertical clip](./fixes/labels-funnel-pipe-vertical-clip.md) |
 | **cartesian-stack** | Percent stack empty plot; series off-scale above yAxis.max 100; chrome paints, bands missing | [domains/cartesian-stack.md](./domains/cartesian-stack.md) | [area percent empty](./fixes/cartesian-stack-area-percent-empty.md) |
 | **brush** | Footer slider splits bar groups; handle mid-cluster; range framing | [domains/brush.md](./domains/brush.md) | [band-edge handles](./fixes/brush-band-edge-handles.md) |
+| **funnel-order** | Pipeline stages jump when values cross; hardcoded descending sort | [domains/funnel-order.md](./domains/funnel-order.md) | [sort none / sort prop](./fixes/funnel-order-sort-none.md) |
 
 <!-- Add rows when new domains appear: animation, tooltip, compile-bar, registry-boundary, … -->
 
@@ -64,6 +65,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | normalizeStackPercent missing on area; percent max 100 raw values | area / bar | [cartesian-stack-area-percent-empty](./fixes/cartesian-stack-area-percent-empty.md) |
 | brush splits green/red; handle mid group; slider between Desktop Mobile; filter mid-cluster | brush / bar | [brush-band-edge-handles](./fixes/brush-band-edge-handles.md) |
 | indexToPlotPercent center; boundaryGap brush left right edges | brush | [brush-band-edge-handles](./fixes/brush-band-edge-handles.md) |
+| funnel stages reorder; On Deck jumps above Opportunities; sort descending hardcoded | funnel | [funnel-order-sort-none](./fixes/funnel-order-sort-none.md) |
+| FunnelSort; sort none; pipeline stage order follows data | funnel | [funnel-order-sort-none](./fixes/funnel-order-sort-none.md) |
 | item focus opacity 0.2 on focused mark; emphasis state wrong | item-focus charts | Start [hover-focus domain](./domains/hover-focus.md), then chart-specific fix |
 | `repairScatterHoverFocus` / `repairTreemapHoverFocus` / `repairFunnelHoverFocus` / `repairWaterfallHoverFocus` / `repairRadialHoverFocus` | echarts-core runtime | See scatter, treemap, funnel, waterfall, or radial fix note above |
 
@@ -84,7 +87,9 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/use-nq-echarts.ts` (mouseover / globalout) | hover-focus |
 | `src/registry/echarts-core/compile-scatter.ts` | hover-focus |
 | `src/registry/echarts-core/compile-treemap.ts` | hover-focus |
-| `src/registry/echarts-core/compile-funnel.ts` | hover-focus, labels |
+| `src/registry/echarts-core/compile-funnel.ts` | hover-focus, labels, funnel-order |
+| `src/registry/echarts-core/funnel-layout.ts` | funnel-order |
+| `src/registry/charts/funnel-chart.tsx` | funnel-order |
 | `src/registry/echarts-core/compile-waterfall.ts` | hover-focus |
 | `src/registry/echarts-core/compile-radial-bar.ts` | hover-focus, labels |
 | `src/registry/echarts-core/compile-gauge.ts` | labels |

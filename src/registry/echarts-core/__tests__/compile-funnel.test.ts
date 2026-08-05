@@ -110,6 +110,50 @@ describe("compileFunnelOption", () => {
     expect(series.orient).toBe("horizontal");
   });
 
+  it("defaults sort to none so stage order follows data, not values", () => {
+    const option = compileFunnelOption(
+      makeCtx({
+        data: [
+          { stage: "Opportunities", value: 10 },
+          { stage: "On Deck", value: 40 },
+          { stage: "Interview", value: 5 },
+        ],
+        config: { Opportunities: {}, "On Deck": {}, Interview: {} },
+        parts: [{ type: "funnel", id: "funnel-1", stageKey: "stage", valueKey: "value" }],
+      }),
+    );
+    const series = (
+      option.series as Array<{
+        sort?: string;
+        data?: Array<{ name?: string; value?: number }>;
+      }>
+    )[0]!;
+    expect(series.sort).toBe("none");
+    expect(series.data?.map((d) => d.name)).toEqual([
+      "Opportunities",
+      "On Deck",
+      "Interview",
+    ]);
+  });
+
+  it("honors sort=descending when value ranking is desired", () => {
+    const option = compileFunnelOption(
+      makeCtx({
+        data: [
+          { stage: "Opportunities", value: 10 },
+          { stage: "On Deck", value: 40 },
+        ],
+        config: { Opportunities: {}, "On Deck": {} },
+        parts: [
+          { type: "funnel", id: "funnel-1", stageKey: "stage", valueKey: "value" },
+          { type: "funnelStyle", id: "style-1", sort: "descending" },
+        ],
+      }),
+    );
+    const series = (option.series as Array<{ sort?: string }>)[0]!;
+    expect(series.sort).toBe("descending");
+  });
+
   it("compiles a custom pipe series when connection=pipe", () => {
     const option = compileFunnelOption(
       makeCtx({

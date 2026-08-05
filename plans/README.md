@@ -30,6 +30,7 @@ self-contained. Related: `../plan/IMPROVEMENT_PLAN.md`.
 | 005 | [Landing: lazy-load the 4-chart demo dashboard](005-landing-lazy-demo-dashboard.md) | performance | S–M | DONE |
 | 006 | [Landing/docs a11y quick wins](006-landing-a11y-quick-wins.md) | a11y | S–M | DONE |
 | 007 | [Funnel: horizontal orient + smooth pipe connections](007-funnel-horizontal-pipe.md) | engine / funnel | L | DONE |
+| 008 | [Funnel: `sort` prop + data-order default](008-funnel-sort-prop.md) | engine / funnel | S | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 

@@ -181,8 +181,9 @@ Data rows use waterfall-specific `type` / value fields (see `ex-waterfall-chart`
 Stage rows with ordered values (see `ex-funnel-chart`).
 
 - `orient="horizontal"` — native left→right trapezoid funnel
+- `sort` — native funnel only; default `"none"` keeps `data` order (use `"descending"` to rank by value)
 - `connection="pipe"` — S-curve joins **between levels only** (square outer ends); `turnRadius` optional; defaults horizontal, supports `orient="vertical"`
-- Also on `<Stages />`: `connection`, `orient`, `taper`, `stageGap`, `turnRadius`
+- Also on `<Stages />`: `connection`, `orient`, `sort`, `taper`, `stageGap`, `turnRadius`
 
 ```tsx
 <NQFunnelChart data={rows} config={config} connection="pipe">

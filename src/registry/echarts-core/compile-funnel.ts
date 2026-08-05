@@ -149,7 +149,7 @@ export function compileFunnelOption(ctx: CompileContext): EChartsOption {
   const style = ctx.parts.find((p): p is FunnelStylePart => p.type === "funnelStyle");
   const stageKey = funnel?.stageKey ?? ctx.funnel?.stageKey ?? "stage";
   const valueKey = funnel?.valueKey ?? ctx.funnel?.valueKey ?? "value";
-  const { gap, borderWidth, minSize, orient, isPipe, turnRadius, showLabels } =
+  const { gap, borderWidth, minSize, orient, sort, isPipe, turnRadius, showLabels } =
     resolveFunnelLayout(ctx, style);
 
   if (isPipe) {
@@ -191,7 +191,7 @@ export function compileFunnelOption(ctx: CompileContext): EChartsOption {
         width: "88%",
         minSize,
         maxSize: "100%",
-        sort: "descending",
+        sort,
         gap,
         orient,
         funnelAlign: "center",

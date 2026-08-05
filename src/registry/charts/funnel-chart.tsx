@@ -8,6 +8,7 @@ import { compileFunnelOption } from "@/registry/echarts-core/compile-funnel";
 import type {
   FunnelConnection,
   FunnelOrient,
+  FunnelSort,
   FunnelTaper,
 } from "@/registry/echarts-core/parts/types";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
@@ -16,7 +17,7 @@ import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { ReactNode } from "react";
 import { useState } from "react";
 
-export type { FunnelConnection, FunnelOrient, FunnelTaper };
+export type { FunnelConnection, FunnelOrient, FunnelSort, FunnelTaper };
 
 type NQFunnelChartProps<
   TData extends Record<string, unknown>,
@@ -40,6 +41,11 @@ type NQFunnelChartProps<
    * `horizontal` when unset. Pipe supports both.
    */
   orient?: FunnelOrient;
+  /**
+   * Native funnel stage order. Default `none` keeps `data` array order.
+   * Unused for `pipe`.
+   */
+  sort?: FunnelSort;
   /** Pipe mode: half-width of the S-curve level-change zone in px. */
   turnRadius?: number;
   /** Pipe mode: draw stage name + value above the ribbon. */
@@ -54,6 +60,7 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   connection,
   taper,
   orient,
+  sort,
   turnRadius,
   showLabels,
 }: {
@@ -64,6 +71,7 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   connection?: FunnelConnection;
   taper?: FunnelTaper;
   orient?: FunnelOrient;
+  sort?: FunnelSort;
   turnRadius?: number;
   showLabels?: boolean;
 }) {
@@ -76,6 +84,7 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
       funnelConnection: connection,
       funnelTaper: taper,
       orient,
+      sort,
       turnRadius,
       showLabels,
     },
@@ -98,6 +107,7 @@ export function NQFunnelChart<
   connection,
   taper,
   orient,
+  sort,
   turnRadius,
   showLabels,
 }: NQFunnelChartProps<TData, TConfig>) {
@@ -117,6 +127,7 @@ export function NQFunnelChart<
               connection={connection}
               taper={taper}
               orient={orient}
+              sort={sort}
               turnRadius={turnRadius}
               showLabels={showLabels}
             />
@@ -142,12 +153,13 @@ type StagesProps = {
   taper?: FunnelTaper;
   stageGap?: number;
   orient?: FunnelOrient;
+  sort?: FunnelSort;
   turnRadius?: number;
   showLabels?: boolean;
 };
 
 export function Stages(_props: StagesProps = {}) {
-  const { connection, taper, stageGap, orient, turnRadius, showLabels } = _props;
+  const { connection, taper, stageGap, orient, sort, turnRadius, showLabels } = _props;
   const id = usePartId();
   useRegisterPart({
     type: "funnelStyle",
@@ -156,6 +168,7 @@ export function Stages(_props: StagesProps = {}) {
     taper,
     stageGap,
     orient,
+    sort,
     turnRadius,
     showLabels,
   });
