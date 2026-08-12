@@ -33,6 +33,11 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
       },
       "data": [
         {
+          "__nq_datum": {
+            "name": "a",
+            "value": 1,
+          },
+          "__nq_seriesKey": "a",
           "itemStyle": {
             "color": "color(a,0)",
           },
@@ -40,6 +45,11 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
           "value": 1,
         },
         {
+          "__nq_datum": {
+            "name": "b",
+            "value": 2,
+          },
+          "__nq_seriesKey": "b",
           "itemStyle": {
             "color": "color(b,0)",
           },
@@ -49,6 +59,7 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
       ],
       "emphasis": {
         "blurScope": "series",
+        "disabled": true,
         "focus": "self",
         "itemStyle": {
           "opacity": 1,
@@ -74,6 +85,9 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
         0,
         "70%",
       ],
+      "stateAnimation": {
+        "duration": 0,
+      },
       "type": "pie",
     },
   ],
@@ -83,13 +97,10 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
     "fontSize": 12,
   },
   "tooltip": {
-    "backgroundColor": "transparent",
+    "backgroundColor": "#ffffff",
     "borderColor": "#e5e5e5",
-    "borderWidth": 0,
     "confine": true,
     "enterable": false,
-    "extraCssText": "box-shadow:none;pointer-events:none!important;",
-    "padding": 0,
     "position": [Function],
     "textStyle": {
       "color": "#171717",

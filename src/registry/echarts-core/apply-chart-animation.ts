@@ -101,6 +101,8 @@ function seriesIntroAnimation(series: SeriesLike, seriesIndex: number): SeriesLi
         animationDuration: CHART_ANIMATION.pie.duration,
         animationEasing: CHART_ANIMATION.pie.easing,
         animationDelay: createStaggerDelay(CHART_ANIMATION.pie.staggerMs),
+        // Keep hover updates instant — pieFocus sets 0; re-assert after merge.
+        animationDurationUpdate: 0,
       };
     case "gauge":
       return {

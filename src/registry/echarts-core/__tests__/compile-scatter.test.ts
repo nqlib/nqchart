@@ -38,12 +38,16 @@ describe("compileScatterOption", () => {
 
     const series = option.series as Array<{
       type?: string;
+      id?: string;
+      name?: string;
       stateAnimation?: { duration?: number };
       data?: Array<{
         name?: string;
         value?: [number, number];
         symbolSize?: number;
         itemStyle?: { color?: string };
+        __nq_seriesKey?: string;
+        __nq_datum?: Record<string, number>;
         emphasis?: {
           focus?: string;
           blurScope?: string;
@@ -55,6 +59,7 @@ describe("compileScatterOption", () => {
 
     expect(series).toHaveLength(1);
     expect(series[0]?.type).toBe("scatter");
+    expect(series[0]?.id).toBe("__nq_scatter__");
     expect(series[0]?.stateAnimation?.duration).toBe(0);
     expect(series[0]?.data).toHaveLength(4);
     expect(series[0]?.data?.[0]).toMatchObject({
@@ -62,6 +67,8 @@ describe("compileScatterOption", () => {
       value: [120, 260],
       symbolSize: 8,
       itemStyle: { color: "color(desktop,0)" },
+      __nq_seriesKey: "desktop",
+      __nq_datum: { x: 120, y: 260 },
       emphasis: {
         focus: "self",
         blurScope: "series",
@@ -74,7 +81,20 @@ describe("compileScatterOption", () => {
       value: [140, 180],
       symbolSize: 14,
       itemStyle: { color: "color(mobile,0)" },
+      __nq_seriesKey: "mobile",
     });
+  });
+
+  it("sets series id/name to dataKey for a single scatter part", () => {
+    const option = compileScatterOption(
+      makeCtx({
+        parts: [desktopPart],
+        config: { desktop: { label: "Desktop" } },
+      }),
+    );
+    const series = option.series as Array<{ id?: string; name?: string }>;
+    expect(series[0]?.id).toBe("desktop");
+    expect(series[0]?.name).toBe("desktop");
   });
 
   it("adds per-point glow emphasis for glowing variants", () => {

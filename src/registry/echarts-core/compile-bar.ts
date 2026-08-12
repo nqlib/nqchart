@@ -20,9 +20,15 @@ import { buildMonospaceCustomSeries } from "./compile-monospace-bar";
 import {
   hoverTraceSeriesId,
 } from "./hover-trace-bar";
-import { categoryValues, getXKey } from "./cartesian-series";
+import { categoryValues, getXKey, seriesValue } from "./cartesian-series";
 import { normalizeStackPercent } from "./stack-percent";
-import type { BarSeriesPart, CompileContext } from "./parts/types";
+import type { BarSeriesPart, CompileContext, XAxisPart, YAxisPart } from "./parts/types";
+import {
+  applyAxisPartToOption,
+  buildValueYAxes,
+  resolveYAxisIndex,
+} from "./cartesian-axes";
+import { seriesLabelOption } from "./series-labels";
 
 type BarPointItemStyle = {
   color: unknown;
@@ -76,7 +82,7 @@ function buildBarDataPoints(
   const roles = effectiveStack ? stackRoles.get(bar.dataKey) : undefined;
 
   return rows.map((row, dataIndex) => {
-    const value = Number(row[bar.dataKey] ?? 0);
+    const value = seriesValue(row[bar.dataKey]);
     const role = roles?.[dataIndex];
     const borderRadius = barItemBorderRadius(bar.variant, role, r, horizontal);
     const gapStyle = role != null ? stackSegmentGapStyle(role, horizontal) : {};
@@ -96,6 +102,8 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
   const xKey = getXKey(ctx);
   const categories = categoryValues(ctx, xKey);
   const bars = ctx.parts.filter((p): p is BarSeriesPart => p.type === "bar");
+  const yAxes = ctx.parts.filter((p): p is YAxisPart => p.type === "yAxis");
+  const xAxisPart = ctx.parts.find((p): p is XAxisPart => p.type === "xAxis");
   const hasGrid = ctx.parts.some((p) => p.type === "grid");
   const hasBrush = ctx.parts.some((p) => p.type === "brush");
   const horizontal = ctx.cartesian?.layout === "horizontal";
@@ -112,28 +120,35 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
   const isHistogram = ctx.cartesian?.variant === "histogram";
 
   // Match radial: try every tick, then let ECharts drop collisions by view size.
-  const categoryAxis = {
-    type: "category" as const,
-    data: categories,
-    axisLine: { show: true },
-    axisTick: { show: false },
-    axisLabel: {
-      interval: 0,
-      hideOverlap: true,
-      ...(isHistogram
-        ? {
-            width: 56,
-            overflow: "truncate" as const,
-          }
-        : {}),
+  const categoryAxis = applyAxisPartToOption(
+    {
+      type: "category" as const,
+      data: categories,
+      axisLine: { show: true },
+      axisTick: { show: false },
+      axisLabel: {
+        interval: 0,
+        hideOverlap: true,
+        ...(isHistogram
+          ? {
+              width: 56,
+              overflow: "truncate" as const,
+            }
+          : {}),
+      },
     },
-  };
-  const valueAxis = {
+    xAxisPart,
+    "category",
+  );
+  const valueAxes = buildValueYAxes({
+    yAxes,
+    hasGrid,
+    percent: ctx.cartesian?.stackType === "percent",
+  });
+  const valueAxis = valueAxes[0] ?? {
     type: "value" as const,
     axisLine: { show: false },
     splitLine: { show: hasGrid },
-    max: ctx.cartesian?.stackType === "percent" ? 100 : undefined,
-    axisLabel: ctx.cartesian?.stackType === "percent" ? { formatter: "{value}%" } : undefined,
   };
   const stackRoles = groupStackRoles(bars, rows, stack);
   const histogramLayout = isHistogram
@@ -157,8 +172,10 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
         id: hoverTraceSeriesId(bar.dataKey),
         name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
         triggerEvent: true,
+        yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
         data: buildBarDataPoints(bar, ctx, rows, stack, horizontal, stackRoles, isHistogram) as BarSeriesOption["data"],
         stack: bar.stackId ?? stack,
+        label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
         ...columnFocus,
         ...histogramLayout,
         ...stackedLayout,
@@ -167,28 +184,40 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
 
     return {
       type: "bar" as const,
+      id: bar.dataKey,
       name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
+      yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
       data: buildBarDataPoints(bar, ctx, rows, stack, horizontal, stackRoles, isHistogram) as BarSeriesOption["data"],
       stack: bar.stackId ?? stack,
+      label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
       ...columnFocus,
       ...histogramLayout,
       ...stackedLayout,
     };
   });
 
+  const grid = {
+    ...resolveCartesianGrid(
+      ctx.parts,
+      ctx.cartesian?.externalBrush,
+      horizontal ? (hasMonospace ? 32 : 4) : gridBottomWithZoom(hasBrush, hasMonospace ? 32 : 4),
+      horizontal,
+    ),
+    ...(hasHoverTrace && !horizontal ? { left: 56 } : {}),
+  };
+  if (yAxes.some((y) => y.orientation === "right") && !ctx.cartesian?.externalBrush && !horizontal) {
+    grid.right = 56;
+  }
+
   const base: EChartsOption = {
-    grid: {
-      ...resolveCartesianGrid(
-        ctx.parts,
-        ctx.cartesian?.externalBrush,
-        horizontal ? (hasMonospace ? 32 : 4) : gridBottomWithZoom(hasBrush, hasMonospace ? 32 : 4),
-        horizontal,
-      ),
-      ...(hasHoverTrace && !horizontal ? { left: 56 } : {}),
-    },
+    grid,
     tooltip: { trigger: hasMonospace || hasHoverTrace ? "item" : "axis" },
-    xAxis: horizontal ? valueAxis : categoryAxis,
-    yAxis: horizontal ? categoryAxis : valueAxis,
+    xAxis: (horizontal ? valueAxis : categoryAxis) as EChartsOption["xAxis"],
+    yAxis: (horizontal
+      ? categoryAxis
+      : yAxes.length > 1
+        ? valueAxes
+        : valueAxis) as EChartsOption["yAxis"],
     dataZoom: buildCategoryDataZoom(hasBrush, {
       axisDim: horizontal ? "y" : "x",
       chartVariant: "bar",

@@ -4,7 +4,8 @@
  */
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { itemFocus } from "./emphasis-presets";
+import { pieFocus } from "./emphasis-presets";
+import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 import type { CompileContext, PieSeriesPart } from "./parts/types";
 import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
@@ -22,6 +23,9 @@ export function compilePieOption(ctx: CompileContext): EChartsOption {
       name: ctx.config[seriesKey]?.label?.toString() ?? seriesKey,
       value: Number(row[valueKey] ?? row[seriesKey] ?? 0),
       itemStyle: { color: ctx.resolveColor(seriesKey, 0) },
+      // Raw slice id + source row — display `name` may be a config label.
+      [NQ_SERIES_KEY]: seriesKey,
+      [NQ_DATUM]: row,
     };
   });
 
@@ -45,7 +49,7 @@ export function compilePieOption(ctx: CompileContext): EChartsOption {
           formatter: "{b}",
         },
         labelLine: { show: pie?.showLabels ?? true, length: 10, length2: 8 },
-        ...itemFocus({ dimLabel: true }),
+        ...pieFocus(),
       },
     ],
   };

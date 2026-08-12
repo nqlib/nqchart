@@ -7,9 +7,10 @@ Do **not** use this contract for external app integration — use the consumer s
 ## Before coding (features)
 
 1. Classify size via [[product/agentic-coding-guideline]] decision ladder.
-2. Features → home in `plans/` (approved) before editing `src/`.
-3. Bugs → search `.agents/skills/fixed/index.md` first.
-4. Skim `memory/INDEX.md` when prior decisions might apply.
+2. Features → **story (ST)** + home in `plans/` (approved) before editing `src/`.
+3. Programs → **epic (EP)** in `docs/product/epics/` (see [[product/README]]).
+4. Bugs → search `.agents/skills/fixed/index.md` first.
+5. Skim `memory/INDEX.md` when prior decisions might apply.
 
 ## Definition of done (every PR)
 
@@ -39,8 +40,10 @@ Do **not** use this contract for external app integration — use the consumer s
 3. Compilers stay pure — no hooks in `compile-*.ts`.
 4. Examples on primitive doc pages only — no duplicate doc nav slugs.
 5. Do not edit synced copies under `.agents/skills/nqchart/` — edit `skills/consumer/nqchart/` and sync.
-6. No feature-sized change without a `plans/` row (see agentic guideline).
+6. No feature-sized change without a `plans/` row (see agentic guideline). Prefer an EP/ST
+   record for anything a consumer repo might cite.
 7. Bug lessons → `fixed` skill; non-derivable decisions → `memory/` (write rarely).
+8. Specs / public-surface update when the API promise moves ([[product/specs]]).
 
 ## Skills routing
 

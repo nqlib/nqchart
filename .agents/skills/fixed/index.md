@@ -14,7 +14,7 @@ metadata:
 
 **Agents:** When the user asks to fix a bug, **search this file first** (domain table, then semantic table). Open the fix note before changing code.
 
-Last updated: 2026-08-05
+Last updated: 2026-08-11
 
 ---
 
@@ -24,11 +24,12 @@ Problem areas → domain overview → individual fix notes.
 
 | Domain | Symptoms (short) | Domain doc | Fix notes |
 |--------|------------------|------------|-----------|
-| **hover-focus** | Hover dims wrong mark; flicker; tile/point vanishes; stale bright siblings; `__highByOuter`; **intro clip + stuck axisPointer** | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md), [intro axisPointer clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
+| **hover-focus** | Hover dims wrong mark; flicker; tile/point vanishes; stale bright siblings; `__highByOuter`; **intro clip + stuck axisPointer** | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [pie blur / flicker](./fixes/hover-focus-pie-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md), [intro axisPointer clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
 | **labels** | Floating leader lines; truncated / missing rose names; labelLine stubs; radial ring names upside-down; polar clip; gauge tick pile-up; **vertical pipe funnel names clipped** | [domains/labels.md](./domains/labels.md) | [rose leader clip](./fixes/labels-rose-leader-clip.md), [radial ring orientation / clip](./fixes/labels-radial-ring-orientation-clip.md), [gauge axis overlap](./fixes/labels-gauge-axis-overlap.md), [funnel pipe vertical clip](./fixes/labels-funnel-pipe-vertical-clip.md) |
 | **cartesian-stack** | Percent stack empty plot; series off-scale above yAxis.max 100; chrome paints, bands missing | [domains/cartesian-stack.md](./domains/cartesian-stack.md) | [area percent empty](./fixes/cartesian-stack-area-percent-empty.md) |
 | **brush** | Footer slider splits bar groups; handle mid-cluster; range framing | [domains/brush.md](./domains/brush.md) | [band-edge handles](./fixes/brush-band-edge-handles.md) |
 | **funnel-order** | Pipeline stages jump when values cross; hardcoded descending sort | [domains/funnel-order.md](./domains/funnel-order.md) | [sort none / sort prop](./fixes/funnel-order-sort-none.md) |
+| **api-surface** | TS rejects a prop the runtime already wires; standalone props omit factory fields | [domains/api-surface.md](./domains/api-surface.md) | [standalone props drop inherited](./fixes/api-surface-standalone-props-drop-inherited.md) |
 
 <!-- Add rows when new domains appear: animation, tooltip, compile-bar, registry-boundary, … -->
 
@@ -47,6 +48,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | treemap multiple tiles bright; blur not applied; normal:18 blur:0 | treemap | [hover-focus-treemap-flicker-vanish](./fixes/hover-focus-treemap-flicker-vanish.md) |
 | funnel hover dims hovered stage; funnel flicker; stale bright stages | funnel | [hover-focus-funnel-blur](./fixes/hover-focus-funnel-blur.md) |
 | funnel adjacent stage skip mouseout; funnel emphasis.disabled | funnel | [hover-focus-funnel-blur](./fixes/hover-focus-funnel-blur.md) |
+| pie hover dims hovered slice; pie flicker; stale bright wedges | pie | [hover-focus-pie-blur](./fixes/hover-focus-pie-blur.md) |
+| pie adjacent wedge skip mouseout; pie emphasis.disabled | pie | [hover-focus-pie-blur](./fixes/hover-focus-pie-blur.md) |
 | waterfall hover dims hovered column; waterfall flicker; stale bright bars | waterfall | [hover-focus-waterfall-blur](./fixes/hover-focus-waterfall-blur.md) |
 | waterfall stacked bar blur; __wf_values__ emphasis.disabled | waterfall | [hover-focus-waterfall-blur](./fixes/hover-focus-waterfall-blur.md) |
 | radial hover dims hovered ring; rose petal flicker; stale bright rings | radial | [hover-focus-radial-blur](./fixes/hover-focus-radial-blur.md) |
@@ -67,6 +70,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | indexToPlotPercent center; boundaryGap brush left right edges | brush | [brush-band-edge-handles](./fixes/brush-band-edge-handles.md) |
 | funnel stages reorder; On Deck jumps above Opportunities; sort descending hardcoded | funnel | [funnel-order-sort-none](./fixes/funnel-order-sort-none.md) |
 | FunnelSort; sort none; pipeline stage order follows data | funnel | [funnel-order-sort-none](./fixes/funnel-order-sort-none.md) |
+| onMarkClick excess property; composed props omit click; standalone props drop inherited | line / area / composed | [api-surface-standalone-props-drop-inherited](./fixes/api-surface-standalone-props-drop-inherited.md) |
+| check:api; CartesianChartBaseProps; dist/types probe fails onMarkClick | api / types | [api-surface-standalone-props-drop-inherited](./fixes/api-surface-standalone-props-drop-inherited.md) |
 | item focus opacity 0.2 on focused mark; emphasis state wrong | item-focus charts | Start [hover-focus domain](./domains/hover-focus.md), then chart-specific fix |
 | `repairScatterHoverFocus` / `repairTreemapHoverFocus` / `repairFunnelHoverFocus` / `repairWaterfallHoverFocus` / `repairRadialHoverFocus` | echarts-core runtime | See scatter, treemap, funnel, waterfall, or radial fix note above |
 
@@ -81,6 +86,7 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/scatter-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/treemap-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/funnel-hover-focus.ts` | hover-focus |
+| `src/registry/echarts-core/pie-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/waterfall-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/radial-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/emphasis-presets.ts` | hover-focus |
@@ -88,6 +94,7 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/compile-scatter.ts` | hover-focus |
 | `src/registry/echarts-core/compile-treemap.ts` | hover-focus |
 | `src/registry/echarts-core/compile-funnel.ts` | hover-focus, labels, funnel-order |
+| `src/registry/echarts-core/compile-pie.ts` | hover-focus |
 | `src/registry/echarts-core/funnel-layout.ts` | funnel-order |
 | `src/registry/charts/funnel-chart.tsx` | funnel-order |
 | `src/registry/echarts-core/compile-waterfall.ts` | hover-focus |
@@ -99,6 +106,9 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/stack-percent.ts` | cartesian-stack |
 | `src/registry/echarts-core/chart-grid.ts` | brush |
 | `src/registry/echarts-core/nq-chart-brush.tsx` | brush |
+| `src/registry/charts/{line,area,composed}-chart.tsx` (props types) | api-surface |
+| `scripts/check-api.mjs` | api-surface |
+| `src/registry/echarts-core/create-cartesian-chart.tsx` (`CartesianChartBaseProps`) | api-surface |
 
 ---
 

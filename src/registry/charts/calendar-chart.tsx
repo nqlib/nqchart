@@ -7,18 +7,59 @@ import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/ech
 import { compileCalendarOption } from "@/registry/echarts-core/compile-calendar";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import type { CalendarCell } from "@/registry/lib/chart-recipes";
-import type { ReactNode } from "react";
+import { usePartsSnapshot } from "@/registry/echarts-core/part-registry";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
+import type { CalendarPart } from "@/registry/echarts-core/parts/types";
+import type { EChartsType } from "echarts/core";
+import type { ReactNode, Ref } from "react";
 
 type NQCalendarChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
   children: ReactNode;
   className?: string;
   isLoading?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 };
 
-function CalendarChartCanvas() {
+function CalendarChartCanvas({
+  onMarkClick,
+  onChartReady,
+  chartRef,
+}: {
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
+}) {
   const { option, colorEpoch } = useCompiledOption(compileCalendarOption, { data: [] });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  // Cells live on the `<Calendar>` part rather than the root, so the rows a
+  // click resolves against have to be read back out of the registry.
+  const parts = usePartsSnapshot();
+  const cells = (parts.find((p): p is CalendarPart => p.type === "calendar")?.cells ??
+    []) as unknown as Record<string, unknown>[];
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady,
+    chartRef,
+    data: cells,
+    // A day is identified by its date; the value is the cell's own measure.
+    xDataKey: "date",
+    valueKey: "value",
+  });
+  return (
+    <EChartsHost
+      option={withMarkPointerCursor(option, pointerEnabled)}
+      colorEpoch={colorEpoch}
+      eventHandlers={eventHandlers}
+      onChartInstance={onChartInstance}
+    />
+  );
 }
 
 export function NQCalendarChart<TConfig extends Record<string, ChartConfig[string]>>({
@@ -26,6 +67,9 @@ export function NQCalendarChart<TConfig extends Record<string, ChartConfig[strin
   children,
   className,
   isLoading,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: NQCalendarChartProps<TConfig>) {
   return (
     <PartRegistryProvider>
@@ -33,7 +77,13 @@ export function NQCalendarChart<TConfig extends Record<string, ChartConfig[strin
         <ChartPlotShell
           isLoading={isLoading}
           loadingVariant="calendar"
-          canvas={<CalendarChartCanvas />}
+          canvas={
+            <CalendarChartCanvas
+              onMarkClick={onMarkClick}
+              onChartReady={onChartReady}
+              chartRef={chartRef}
+            />
+          }
         >
           {children}
         </ChartPlotShell>

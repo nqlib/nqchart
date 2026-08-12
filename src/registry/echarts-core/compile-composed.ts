@@ -3,16 +3,24 @@ import { applyChartUiToOption } from "./apply-chart-ui";
 import { cartesianColumnFocus, cartesianLineFocus } from "./emphasis-presets";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
 import { barBorderRadius, resolveBarRadius } from "./bar-radius";
-import { categoryValues, getXKey, LINE_MARKER } from "./cartesian-series";
+import {
+  applyAxisPartToOption,
+  buildValueYAxes,
+  resolveYAxisIndex,
+} from "./cartesian-axes";
+import { categoryValues, getXKey, seriesValue, LINE_MARKER } from "./cartesian-series";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
+import { buildAreaSeries } from "./compile-area";
 import type {
   BarSeriesPart,
   CompileContext,
   LineSeriesPart,
   WhiskersPart,
+  XAxisPart,
   YAxisPart,
 } from "./parts/types";
+import { seriesLabelOption } from "./series-labels";
 
 export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const gapColor = resolveCanvasGapColor(ctx.chartId);
@@ -22,38 +30,27 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const lines = ctx.parts.filter((p): p is LineSeriesPart => p.type === "line");
   const whiskers = ctx.parts.filter((p): p is WhiskersPart => p.type === "whiskers");
   const yAxes = ctx.parts.filter((p): p is YAxisPart => p.type === "yAxis");
+  const xAxisPart = ctx.parts.find((p): p is XAxisPart => p.type === "xAxis");
   const hasGrid = ctx.parts.some((p) => p.type === "grid");
   const hasBrush = ctx.parts.some((p) => p.type === "brush");
 
-  const yAxisList = yAxes.length
-    ? yAxes.map((ya, i) => ({
-        type: "value" as const,
-        name: ya.unit ?? "",
-        position: (ya.orientation === "right" ? "right" : "left") as "left" | "right",
-        min: ya.domain?.[0],
-        max: ya.domain?.[1],
-        splitLine: { show: i === 0 && hasGrid },
-      }))
-    : [{ type: "value" as const, splitLine: { show: hasGrid } }];
-
-  // A series may ask for the right axis; only honor it when a second axis exists,
-  // otherwise yAxisIndex would point at a missing axis and ECharts renders nowhere.
-  const rightAxisIndex = yAxisList.length > 1 ? 1 : 0;
-  const yAxisIndexFor = (yAxisId?: string) => (yAxisId === "right" ? rightAxisIndex : 0);
+  const yAxisList = buildValueYAxes({ yAxes, hasGrid });
 
   const barSeries = bars.map((bar) => {
     const r = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
     const color = ctx.resolveColor(bar.dataKey, 0);
     return {
       type: "bar" as const,
+      id: bar.dataKey,
       name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
-      yAxisIndex: yAxisIndexFor(bar.yAxisId),
+      yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
       stack: bar.stackId,
-      data: ctx.data.map((row) => Number(row[bar.dataKey] ?? 0)),
+      data: ctx.data.map((row) => seriesValue(row[bar.dataKey])),
       itemStyle: {
         color,
         borderRadius: barBorderRadius(r, false),
       },
+      label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
       ...cartesianColumnFocus(color),
     };
   });
@@ -63,9 +60,10 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     const markersOnly = line.variant === "points";
     return {
       type: "line" as const,
+      id: line.dataKey,
       name: ctx.config[line.dataKey]?.label?.toString() ?? line.dataKey,
-      yAxisIndex: yAxisIndexFor(line.yAxisId),
-      data: ctx.data.map((row) => Number(row[line.dataKey] ?? 0)),
+      yAxisIndex: resolveYAxisIndex(line.yAxisId, yAxes),
+      data: ctx.data.map((row) => seriesValue(row[line.dataKey])),
       smooth: !markersOnly && line.curveType === "monotone",
       showLine: !markersOnly,
       triggerLineEvent: true,
@@ -74,6 +72,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       showSymbol: true,
       symbol: markersOnly ? "rect" : LINE_MARKER.symbol,
       symbolSize: markersOnly ? [16, 3] : LINE_MARKER.symbolSize,
+      label: seriesLabelOption(line.showLabels, line.labelFormatter),
       ...cartesianLineFocus({
         color,
         lineWidth: markersOnly ? 0 : 3,
@@ -83,11 +82,14 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     };
   });
 
+  const areaSeries = buildAreaSeries(ctx);
+
   const whiskerSeries = whiskers.map((w) => {
     const dataKey = w.dataKey ?? "whiskers";
     const color = ctx.resolveColor(dataKey, 0);
     return {
       type: "custom" as const,
+      id: dataKey,
       name: ctx.config[dataKey]?.label?.toString() ?? "Whiskers",
       clip: true,
       encode: { x: 0, y: [1, 2, 3, 4] },
@@ -151,16 +153,22 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     grid.right = 56;
   }
 
+  const xAxis = applyAxisPartToOption(
+    { type: "category", data: categories },
+    xAxisPart,
+    "category",
+  );
+
   const base: EChartsOption = {
     grid,
     tooltip: {
       trigger: "axis",
       axisPointer: { type: "shadow" },
     },
-    xAxis: { type: "category", data: categories },
+    xAxis: xAxis as EChartsOption["xAxis"],
     yAxis: yAxisList,
     dataZoom: buildCategoryDataZoom(hasBrush, { chartVariant: "composed" }),
-    series: [...barSeries, ...lineSeries, ...whiskerSeries] as EChartsOption["series"],
+    series: [...barSeries, ...lineSeries, ...areaSeries, ...whiskerSeries] as EChartsOption["series"],
   };
 
   return applyChartUiToOption(ctx, base);

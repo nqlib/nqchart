@@ -1,5 +1,6 @@
 import type { ChartConfig } from "@/registry/ui/chart";
 import { getColorsCount } from "@/registry/ui/chart";
+import { configKeyFromDisplayName } from "./config-key-from-display-name";
 import type { TooltipPart } from "./parts/types";
 import type { EChartsOption } from "echarts";
 
@@ -39,14 +40,6 @@ function indicatorStyle(dataKey: string, colorsCount: number) {
     return `var(--color-${dataKey}-${i}) ${offset}%`;
   }).join(", ");
   return `background:linear-gradient(to right,${stops})`;
-}
-
-function configKeyFromDisplayName(name: string, config: ChartConfig): string {
-  if (name in config) return name;
-  for (const [key, entry] of Object.entries(config)) {
-    if (entry.label?.toString() === name) return key;
-  }
-  return name;
 }
 
 function formatValue(value: unknown): string {
@@ -143,15 +136,16 @@ function inferTooltipTrigger(option: EChartsOption): "axis" | "item" {
   return "axis";
 }
 
+/**
+ * Placement and behaviour that every tooltip wants, card or not.
+ *
+ * Deliberately excludes anything about how the box *looks*: see
+ * {@link htmlCardChrome}.
+ */
 function sharedTooltipOptions() {
   return {
     confine: true,
-    padding: 0,
-    borderWidth: 0,
-    backgroundColor: "transparent" as const,
     enterable: false,
-    // HTML tooltips sit over the canvas — pointer-events must stay off or hover flickers.
-    extraCssText: "box-shadow:none;pointer-events:none!important;",
     transitionDuration: 0,
     // Offset away from cursor so tooltip DOM never sits under the pointer.
     position: (
@@ -176,9 +170,29 @@ function sharedTooltipOptions() {
   };
 }
 
+/**
+ * Strips ECharts' own tooltip box so our HTML card is the only thing visible.
+ *
+ * This must be applied *only* when a formatter is actually drawing that card.
+ * Applied without one — which is what a chart with no `<Tooltip />` part used to
+ * get — it leaves ECharts' default text floating with no background, no padding
+ * and no shadow, and it also defeats `themeNativeTooltip`, which only fills in a
+ * background when none is set and therefore preserved `"transparent"`.
+ */
+function htmlCardChrome() {
+  return {
+    padding: 0,
+    borderWidth: 0,
+    backgroundColor: "transparent" as const,
+    // HTML tooltips sit over the canvas — pointer-events must stay off or hover flickers.
+    extraCssText: "box-shadow:none;pointer-events:none!important;",
+  };
+}
+
 function mergeStableTooltip(
   option: EChartsOption,
   overrides: Record<string, unknown>,
+  { htmlCard }: { htmlCard: boolean },
 ): EChartsOption {
   const existing = option.tooltip;
   if (Array.isArray(existing)) return option;
@@ -187,6 +201,7 @@ function mergeStableTooltip(
   const merged = {
     ...(existing ?? {}),
     ...sharedTooltipOptions(),
+    ...(htmlCard ? htmlCardChrome() : {}),
     ...overrides,
   } as EChartsOption["tooltip"];
 
@@ -246,7 +261,9 @@ export function applyTooltipToOption(
   }
 
   if (!tooltipPart) {
-    return mergeStableTooltip(option, {});
+    // No `<Tooltip />` declared: keep ECharts' own box and let
+    // `themeNativeTooltip` give it the popover colours.
+    return mergeStableTooltip(option, {}, { htmlCard: false });
   }
 
   const trigger = inferTooltipTrigger(option);
@@ -257,7 +274,7 @@ export function applyTooltipToOption(
       : (params: TooltipAxisParams | TooltipAxisParams[]) =>
           formatAxisTooltipHtml(params, config, tooltipPart, chartId);
 
-  return mergeStableTooltip(option, { trigger, formatter });
+  return mergeStableTooltip(option, { trigger, formatter }, { htmlCard: true });
 }
 
 export function hideBuiltInLegend(option: EChartsOption): EChartsOption {

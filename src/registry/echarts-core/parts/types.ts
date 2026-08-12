@@ -4,14 +4,20 @@ export type StackType = "default" | "stacked" | "percent";
 export type BarLayout = "vertical" | "horizontal";
 
 export type GridPart = { type: "grid"; id: string; show?: boolean };
+export type NQScale = "linear" | "log" | "time" | "category";
+
 export type XAxisPart = {
   type: "xAxis";
   id: string;
   dataKey?: string;
   hide?: boolean;
-  tickFormatter?: (value: unknown) => string;
+  tickFormatter?: (value: unknown, index?: number) => string;
   domain?: [number, number];
   ticks?: number[];
+  scale?: NQScale;
+  reversed?: boolean;
+  labelRotate?: number;
+  labelInterval?: number | "auto";
 };
 export type YAxisPart = {
   type: "yAxis";
@@ -22,6 +28,11 @@ export type YAxisPart = {
   orientation?: "left" | "right";
   domain?: [number, number];
   unit?: string;
+  tickFormatter?: (value: unknown, index?: number) => string;
+  scale?: NQScale;
+  reversed?: boolean;
+  labelRotate?: number;
+  labelInterval?: number | "auto";
 };
 export type BarSeriesPart = {
   type: "bar";
@@ -34,6 +45,8 @@ export type BarSeriesPart = {
   radius?: number;
   /** When false, omitted from the HTML `<Legend />` (series still renders). */
   showInLegend?: boolean;
+  showLabels?: boolean;
+  labelFormatter?: (value: unknown) => string;
 };
 export type LineSeriesPart = {
   type: "line";
@@ -45,6 +58,8 @@ export type LineSeriesPart = {
   /** `points` — markers only (box-plot median ticks). */
   variant?: string;
   showInLegend?: boolean;
+  showLabels?: boolean;
+  labelFormatter?: (value: unknown) => string;
 };
 
 /** Box-plot whiskers: vertical stems min↔Q1 and Q3↔max with end caps. */
@@ -66,6 +81,11 @@ export type AreaSeriesPart = {
   dataKey: string;
   curveType?: "linear" | "monotone" | "step" | "bump";
   variant?: string;
+  yAxisId?: string;
+  stackId?: string;
+  showInLegend?: boolean;
+  showLabels?: boolean;
+  labelFormatter?: (value: unknown) => string;
 };
 
 export type ScatterSeriesPart = {
@@ -76,6 +96,30 @@ export type ScatterSeriesPart = {
   xKey?: string;
   yKey?: string;
   variant?: string;
+  yAxisId?: string;
+};
+
+export type ReferenceLinePart = {
+  type: "referenceLine";
+  id: string;
+  y?: number;
+  x?: string | number;
+  yAxisId?: string;
+  label?: string;
+  labelPosition?: "start" | "middle" | "end";
+  variant?: "solid" | "dashed" | "dotted";
+  tone?: "neutral" | "accent" | "positive" | "warning" | "critical";
+};
+
+export type ReferenceBandPart = {
+  type: "referenceBand";
+  id: string;
+  y?: [number, number];
+  x?: [string | number, string | number];
+  yAxisId?: string;
+  label?: string;
+  tone?: "neutral" | "accent" | "positive" | "warning" | "critical";
+  opacity?: number;
 };
 
 export type RadarSeriesPart = {
@@ -249,6 +293,13 @@ export type LegendPart = {
   isClickable?: boolean;
   align?: "left" | "center" | "right";
   hide?: boolean;
+  /**
+   * The focused series key, controlled or uncontrolled. Registered as part
+   * state so the selection reaches the compiler — without it the legend can
+   * only restyle itself, and clicking an entry dims the label while the plot
+   * carries on as if nothing happened.
+   */
+  selected?: string | null;
 };
 
 export type ChartPart =
@@ -260,6 +311,8 @@ export type ChartPart =
   | WhiskersPart
   | AreaSeriesPart
   | ScatterSeriesPart
+  | ReferenceLinePart
+  | ReferenceBandPart
   | RadarSeriesPart
   | PolarAngleAxisPart
   | PolarGridPart

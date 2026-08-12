@@ -16,8 +16,17 @@ import type { NQChartEventHandlers } from "@/registry/echarts-core/use-nq-echart
 import type { BarLayout, StackType } from "@/registry/echarts-core/parts/types";
 import {
   createCartesianChart,
+  type CartesianChartBaseProps,
   type CartesianPlotRectState,
 } from "@/registry/echarts-core/create-cartesian-chart";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import { useChartInstanceRef } from "@/registry/echarts-core/chart-instance-context";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
+import type { NQScale } from "@/registry/echarts-core/parts/types";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
 import { ChartBackground } from "@/registry/ui/background";
 import {
   NQChartLegend,
@@ -26,7 +35,7 @@ import {
 } from "@/registry/ui/legend";
 import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/registry/ui/tooltip";
 import { useChart } from "@/registry/ui/chart";
-import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState, type Ref } from "react";
 import type { EChartsType } from "echarts/core";
 
 type ValidateConfigKeys<TData, TConfig> = {
@@ -36,18 +45,11 @@ type ValidateConfigKeys<TData, TConfig> = {
 type NQBarChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
-> = {
+> = Omit<CartesianChartBaseProps<TData, TConfig>, "config"> & {
   config: TConfig & ValidateConfigKeys<TData, TConfig>;
-  data: TData[];
-  children: ReactNode;
-  className?: string;
   stackType?: StackType;
   layout?: BarLayout;
-  xDataKey?: keyof TData & string;
-  isLoading?: boolean;
   loadingBars?: number;
-  showBrush?: boolean;
-  brushFormatLabel?: (value: unknown, index: number) => string;
   /** Default corner radius (px) for every `<Bar />`. */
   barRadius?: number;
   /** Chart layout preset — `histogram` uses touching bins with square corners. */
@@ -58,6 +60,8 @@ type NQBarChartProps<
 
 type BarChartCanvasProps<TData extends Record<string, unknown>> = {
   data: TData[];
+  fullData?: TData[];
+  indexOffset?: number;
   xDataKey?: string;
   layout?: BarLayout;
   stackType?: StackType;
@@ -67,10 +71,15 @@ type BarChartCanvasProps<TData extends Record<string, unknown>> = {
   onPlotRect?: (insets: ChartPlotInsets) => void;
   chartReadyEpoch: number;
   onHoverTraceChange?: (index: number | null) => void;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 };
 
 function BarChartCanvas<TData extends Record<string, unknown>>({
   data,
+  fullData,
+  indexOffset = 0,
   xDataKey,
   layout,
   stackType,
@@ -80,21 +89,20 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
   onPlotRect,
   chartReadyEpoch,
   onHoverTraceChange,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: BarChartCanvasProps<TData>) {
   const { chartId } = useChart();
   const parts = usePartsSnapshot();
+  const runtimeRef = useChartInstanceRef();
   const monospaceBar = parts.find((p) => p.type === "bar" && p.variant === "monospace");
   const hoverTraceBar = parts.find((p) => p.type === "bar" && p.variant === "hover-trace");
   const hoverTraceSeriesIdValue =
     hoverTraceBar?.type === "bar" ? hoverTraceSeriesId(hoverTraceBar.dataKey) : "";
   const hasMonospace = Boolean(monospaceBar);
   const hasHoverTrace = Boolean(hoverTraceBar);
-  const chartRef = useRef<EChartsType | null>(null);
   const [chartInstanceEpoch, setChartInstanceEpoch] = useState(0);
-  const handleChartInstance = useCallback((instance: EChartsType | null) => {
-    chartRef.current = instance;
-    if (instance) setChartInstanceEpoch((epoch) => epoch + 1);
-  }, []);
   const [monospaceHoveredIndex, setMonospaceHoveredIndex] = useState<number | null>(null);
   const [hoverTraceIndex, setHoverTraceIndex] = useState<number | null>(null);
   const onHoverTraceChangeRef = useRef(onHoverTraceChange);
@@ -136,7 +144,7 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
   useEffect(() => () => clearHoverTraceHideTimer(), [clearHoverTraceHideTimer]);
 
   useMonospaceFoldAnimation({
-    chartRef,
+    chartRef: runtimeRef,
     enabled: hasMonospace,
     dataKey: monospaceBar?.type === "bar" ? monospaceBar.dataKey : "",
     rows: data,
@@ -157,19 +165,7 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
 
   const { option, colorEpoch } = useCompiledOption(compileBarOption, compileRoot);
 
-  useHoverTraceMarkLine({
-    chartRef,
-    chartId,
-    enabled: hasHoverTrace,
-    dataKey: hoverTraceBar?.type === "bar" ? hoverTraceBar.dataKey : "",
-    rows: data,
-    hoveredIndex: hoverTraceIndex,
-    chartReadyEpoch,
-    chartInstanceEpoch,
-    colorEpoch,
-  });
-
-  const eventHandlers = useMemo<NQChartEventHandlers | undefined>(() => {
+  const extraHandlers = useMemo<NQChartEventHandlers | undefined>(() => {
     if (!hasMonospace && !hasHoverTrace) return undefined;
     return {
       onSeriesMouseOver: (params) => {
@@ -203,13 +199,41 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
     scheduleHoverTraceHide,
   ]);
 
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady: (instance) => {
+      runtimeRef.current = instance;
+      setChartInstanceEpoch((epoch) => epoch + 1);
+      onChartReady?.(instance);
+    },
+    chartRef,
+    data: (fullData ?? data) as Record<string, unknown>[],
+    xDataKey,
+    indexOffset,
+    extraHandlers,
+  });
+
+  useHoverTraceMarkLine({
+    chartRef: runtimeRef,
+    chartId,
+    enabled: hasHoverTrace,
+    dataKey: hoverTraceBar?.type === "bar" ? hoverTraceBar.dataKey : "",
+    rows: data,
+    hoveredIndex: hoverTraceIndex,
+    chartReadyEpoch,
+    chartInstanceEpoch,
+    colorEpoch,
+  });
+
+  const painted = withMarkPointerCursor(option, pointerEnabled);
+
   return (
     <EChartsHost
-      option={option}
+      option={painted}
       colorEpoch={colorEpoch}
       onPlotRect={onPlotRect}
       eventHandlers={eventHandlers}
-      onChartInstance={handleChartInstance}
+      onChartInstance={onChartInstance}
     />
   );
 }
@@ -260,9 +284,22 @@ const { Chart: BarChartInner } = createCartesianChart<
   usePlotRectState: useBarPlotRectState,
   mapCanvasProps: (
     { layout, stackType, barRadius, variant, onHoverTraceChange },
-    { chartData, xKey, externalBrush, onPlotRect, canvasProps },
+    {
+      chartData,
+      fullData,
+      brushStartIndex,
+      xKey,
+      externalBrush,
+      onPlotRect,
+      canvasProps,
+      onMarkClick,
+      onChartReady,
+      chartRef,
+    },
   ) => ({
     data: chartData,
+    fullData,
+    indexOffset: brushStartIndex,
     xDataKey: xKey,
     layout,
     stackType,
@@ -271,6 +308,9 @@ const { Chart: BarChartInner } = createCartesianChart<
     externalBrush,
     onPlotRect,
     onHoverTraceChange,
+    onMarkClick,
+    onChartReady,
+    chartRef,
     chartReadyEpoch: canvasProps.chartReadyEpoch as number,
   }),
 });
@@ -293,18 +333,67 @@ export function Grid() {
 export function XAxis({
   dataKey,
   tickFormatter,
+  scale,
+  reversed,
+  labelRotate,
+  labelInterval,
 }: {
   dataKey?: string;
-  tickFormatter?: (value: unknown) => string;
+  tickFormatter?: (value: unknown, index?: number) => string;
+  scale?: NQScale;
+  reversed?: boolean;
+  labelRotate?: number;
+  labelInterval?: number | "auto";
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "xAxis", id, dataKey, tickFormatter });
+  useRegisterPart({
+    type: "xAxis",
+    id,
+    dataKey,
+    tickFormatter,
+    scale,
+    reversed,
+    labelRotate,
+    labelInterval,
+  });
   return null;
 }
 
-export function YAxis() {
+export function YAxis({
+  yAxisId,
+  orientation,
+  domain,
+  unit,
+  tickFormatter,
+  scale,
+  reversed,
+  labelRotate,
+  labelInterval,
+}: {
+  yAxisId?: string;
+  orientation?: "left" | "right";
+  domain?: [number, number];
+  unit?: string;
+  tickFormatter?: (value: unknown, index?: number) => string;
+  scale?: NQScale;
+  reversed?: boolean;
+  labelRotate?: number;
+  labelInterval?: number | "auto";
+}) {
   const id = usePartId();
-  useRegisterPart({ type: "yAxis", id });
+  useRegisterPart({
+    type: "yAxis",
+    id,
+    yAxisId,
+    orientation,
+    domain,
+    unit,
+    tickFormatter,
+    scale,
+    reversed,
+    labelRotate,
+    labelInterval,
+  });
   return null;
 }
 
@@ -313,14 +402,30 @@ export function Bar({
   variant = "default",
   radius,
   stackId,
+  yAxisId,
+  showLabels,
+  labelFormatter,
 }: {
   dataKey: string;
   variant?: string;
   radius?: number;
   stackId?: string;
+  yAxisId?: string;
+  showLabels?: boolean;
+  labelFormatter?: (value: unknown) => string;
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "bar", id, dataKey, variant, radius, stackId });
+  useRegisterPart({
+    type: "bar",
+    id,
+    dataKey,
+    variant,
+    radius,
+    stackId,
+    yAxisId,
+    showLabels,
+    labelFormatter,
+  });
   return null;
 }
 
@@ -354,16 +459,22 @@ export function Legend({
   isClickable = false,
   hideIcon,
   className,
+  selected: selectedProp,
+  onSelectChange,
 }: {
   variant?: ChartLegendVariant;
   align?: "left" | "center" | "right";
   isClickable?: boolean;
   hideIcon?: boolean;
   className?: string;
+  selected?: string | null;
+  onSelectChange?: (selected: string | null) => void;
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "legend", id, variant, align, isClickable });
-  const [selected, setSelected] = useState<string | null>(null);
+  const [uncontrolled, setUncontrolled] = useState<string | null>(null);
+  const selected = selectedProp !== undefined ? selectedProp : uncontrolled;
+  useRegisterPart({ type: "legend", id, variant, align, isClickable, selected });
+  const setSelected = onSelectChange ?? setUncontrolled;
 
   return (
     <NQChartLegend
@@ -377,5 +488,7 @@ export function Legend({
     />
   );
 }
+
+export { ReferenceLine, ReferenceBand } from "@/registry/echarts-core/chart-parts";
 
 bindChartLegendLayer(Legend);

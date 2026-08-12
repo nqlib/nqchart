@@ -183,6 +183,30 @@ The root container. It owns the data, the shared selection state, the loading sk
   <ApiRow name="showBrush" type="boolean" default="false">
     When enabled, displays a brush control below the chart for selecting and zooming into a range of data.
   </ApiRow>
+  <ApiRow name="onMarkClick" type="(event: NQMarkEvent) => void">
+    Fires when a mark is clicked or activated with keyboard Enter. Payload includes raw `category`, `seriesKey` (config dataKey), `datum`, `index`, and modifiers.
+  </ApiRow>
+  <ApiRow name="onBrushChange" type="(range: ChartBrushRange) => void">
+    Fires while the brush range changes. Prefer this over the older `NQBrushRange` alias in new code.
+  </ApiRow>
+  <ApiRow name="onChartReady" type="(instance: EChartsType) => void">
+    Escape hatch when the ECharts instance is ready. Prefer typed props when possible.
+  </ApiRow>
+  <ApiRow name="chartRef" type="Ref&lt;ChartHandle | null&gt;">
+    Imperative handle with `toDataURL()` (themed PNG/SVG) and `getInstance()`.
+  </ApiRow>
+  <ApiRow name="isEmpty" type="boolean">
+    Force the empty plate. Default: derived from `data.length === 0`.
+  </ApiRow>
+  <ApiRow name="emptyState" type="ReactNode">
+    Custom empty plate content.
+  </ApiRow>
+  <ApiRow name="error" type="ReactNode">
+    Error plate — visually distinct from empty; replaces the chart.
+  </ApiRow>
+  <ApiRow name="a11yTable" type="boolean" default="true">
+    Visually hidden data table for screen readers.
+  </ApiRow>
   <ApiRow name="xDataKey" type="keyof TData & string">
     The data key used for the x-axis. Only needed by the brush footer — the axis itself reads its key from `<XAxis dataKey="…" />`.
   </ApiRow>
@@ -191,9 +215,6 @@ The root container. It owns the data, the shared selection state, the loading sk
   </ApiRow>
   <ApiRow name="brushFormatLabel" type="(value: unknown, index: number) => string">
     Custom formatter for the brush axis labels.
-  </ApiRow>
-  <ApiRow name="onBrushChange" type="(range: NQBrushRange) => void">
-    Callback invoked when the user changes the brush selection range.
   </ApiRow>
   <ApiRow name="chartProps" type="ComponentProps<typeof LineChart>">
     Additional ECharts options merged into the compiled `option` by NQChart. Read the <Link href="https://echarts.apache.org/en/option.html#series-line" _blank>ECharts LineChart documentation</Link> for available props.
@@ -299,9 +320,6 @@ The series legend. When the chart is clickable, each entry toggles selection of 
   </ApiRow>
   <ApiRow name="align" type='"left" | "center" | "right"' default='"right"'>
     Horizontal placement of the legend.
-  </ApiRow>
-  <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"top"'>
-    Vertical placement of the legend.
   </ApiRow>
   <ApiRow name="isClickable" type="boolean" default="false">
     Lets each legend entry toggle selection of its series.

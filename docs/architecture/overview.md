@@ -1,6 +1,10 @@
 # Architecture overview
 
-NQChart is a **shadcn-style chart registry** — installable React source under `src/registry/`, not a separate npm chart package.
+Canonical system write-up: **[[architecture/system]]**.  
+Layer model (compound · compile · host): **[[architecture/layers]]**.  
+Public surface: **[[architecture/public-surface]]**.
+
+NQChart is a **shadcn-style chart registry** — installable React source under `src/registry/`, also published as `@nqlib/nqchart`.
 
 ## Stack (top → bottom)
 
@@ -21,21 +25,13 @@ echarts/core               Tree-shaken ECharts modules (echarts-init.ts)
 4. `compile-bar.ts` (etc.) returns a pure ECharts `option` object.
 5. `EChartsHost` renders via `echarts/core` with SSR-safe color resolution.
 
-## Public entry points
-
-| Surface | Path |
-|---------|------|
-| Registry JSON | `public/r/{name}.json` |
-| Docs | `/docs/<chart>` |
-| Agent markdown | `/llm/*.md`, `/llms.txt` |
-| MCP | `/mcp` (`search_docs`, `read_doc`) |
-| Agent skills | `/.well-known/agent-skills/nqchart/` |
-
 ## Design principles
+
+See [[product/philosophy]]. Short form:
 
 - **Compound components** — no monolithic `type="bar"` API
 - **Primitives + chart-recipes** — BI shapes are data helpers, not duplicate chart modules
 - **`chartConfig` keys match `dataKey`**
-- **Theme colors** via `chartConfigColor()` or explicit light/dark arrays
+- **Events, not selection state** — boards own cross-filter state
 
 See [[architecture/dependency-rules]] for import boundaries.

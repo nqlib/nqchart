@@ -208,6 +208,18 @@ The root container. It owns the data, the shared selection state, the loading sk
   <ApiRow name="showBrush" type="boolean" default="false">
     When enabled, displays a brush control below the chart for selecting and zooming into a range of data.
   </ApiRow>
+  <ApiRow name="onMarkClick" type="(event: NQMarkEvent) => void">
+    Fires when a mark is clicked (or Enter after keyboard focus). `category` is the raw datum field.
+  </ApiRow>
+  <ApiRow name="onBrushChange" type="(range: ChartBrushRange) => void">
+    Fires while the brush range changes. Prefer this over the older `NQBrushRange` name.
+  </ApiRow>
+  <ApiRow name="onChartReady" type="(instance: EChartsType) => void">
+    Escape hatch — unsupported ECharts instance access.
+  </ApiRow>
+  <ApiRow name="chartRef" type="Ref&lt;ChartHandle | null&gt;">
+    Imperative handle: `getInstance()`, `toDataURL()` (PNG/SVG with themed background).
+  </ApiRow>
   <ApiRow name="xDataKey" type="keyof TData & string">
     The data key used for the x-axis. Only needed by the brush footer — the axis itself reads its key from `<XAxis dataKey="…" />`.
   </ApiRow>
@@ -216,9 +228,6 @@ The root container. It owns the data, the shared selection state, the loading sk
   </ApiRow>
   <ApiRow name="brushFormatLabel" type="(value: unknown, index: number) => string">
     Custom formatter for the brush axis labels.
-  </ApiRow>
-  <ApiRow name="onBrushChange" type="(range: NQBrushRange) => void">
-    Callback invoked when the user changes the brush selection range.
   </ApiRow>
   <ApiRow name="chartProps" type="ComponentProps<typeof ComposedChart>">
     Additional ECharts options merged into the compiled `option` by NQChart. Read the <Link href="https://echarts.apache.org/en/option.html#series" _blank>ECharts ComposedChart documentation</Link> for available props.
@@ -353,10 +362,13 @@ The series legend. When `isClickable` is set, each entry toggles selection of it
   <ApiRow name="align" type='"left" | "center" | "right"' default='"right"'>
     Horizontal placement of the legend.
   </ApiRow>
-  <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"top"'>
-    Vertical placement of the legend.
-  </ApiRow>
   <ApiRow name="isClickable" type="boolean" default="false">
     Lets each legend entry toggle selection of its series.
+  </ApiRow>
+  <ApiRow name="selected" type="string | null">
+    Controlled single-select series key. Pass with `onSelectChange`.
+  </ApiRow>
+  <ApiRow name="onSelectChange" type="(selected: string | null) => void">
+    Controlled legend selection callback.
   </ApiRow>
 </ApiTable>

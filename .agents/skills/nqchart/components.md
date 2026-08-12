@@ -33,9 +33,41 @@ Wallpaper vs guides: **[background-and-grid.md](./background-and-grid.md)** (req
 | `xDataKey` | Category/time field on X (bar/line/area/composed) |
 | `className` | Size — usually `h-full w-full p-4` |
 | `isLoading` | Skeleton shimmer |
+| `isEmpty` / `emptyState` | Empty plate (default when `data.length === 0`) |
+| `error` | Error plate instead of the plot |
+| `a11yTable` / `a11yLabel` / `a11ySummary` | Visually hidden data table (default on) |
+| `onMarkClick` | Mark click / keyboard Enter → `{ category, seriesKey, datum, value, index, modifiers }` |
+| `onBrushChange` | Brush range `{ startIndex, endIndex }` |
+| `onChartReady` | Escape hatch — ECharts instance (**unsupported** surface) |
+| `chartRef` | `{ getInstance(), toDataURL() }` for PNG/SVG export |
 | `backgroundVariant` | Legacy root prop — prefer `<ChartBackground variant="…" />` (see below) |
 | `showBrush` | Zoom range footer (bar, line, area, composed). Set `false` on KPI blocks. |
 | `brushFormatLabel` | Shorten category labels in brush footer |
+
+**Cross-filter example:**
+
+```tsx
+<NQBarChart
+  config={config}
+  data={data}
+  xDataKey="month"
+  onMarkClick={(e) => {
+    // shift/ctrl extend selection on a BI board
+    toggleFilter(e.category, { extend: e.modifiers.shift || e.modifiers.ctrl });
+  }}
+>
+  <Grid />
+  <XAxis dataKey="month" />
+  <YAxis tickFormatter={(v) => `$${v}`} />
+  <Bar dataKey="sales" />
+  <Tooltip />
+  <Legend selected={selectedSeries} onSelectChange={setSelectedSeries} isClickable />
+  <ReferenceLine y={budgetCap} label="Budget" tone="warning" />
+</NQBarChart>
+```
+
+Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from `@nqlib/nqchart`.
+`ReferenceLine` / `ReferenceBand` from the same chart subpath as the root.
 
 ### Bar-only
 
@@ -49,7 +81,7 @@ Wallpaper vs guides: **[background-and-grid.md](./background-and-grid.md)** (req
 
 **Children:** `Bar`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`
 
-**Bar child:** `dataKey`, `variant`, `radius`, `stackId`
+**Bar child:** `dataKey`, `variant`, `radius`, `stackId`, `yAxisId`, `showLabels`, `labelFormatter`
 
 | `Bar` variant | Effect |
 |---------------|--------|
@@ -60,7 +92,11 @@ Wallpaper vs guides: **[background-and-grid.md](./background-and-grid.md)** (req
 | `"hover-trace"` | Vertical trace line + root `onHoverTraceChange` (see `hover-trace-bar-chart`) |
 | `"histogram"` | Used via root `variant="histogram"` + recipe data |
 
-**Legend:** `<Legend isClickable />` toggles series visibility (legend owns selection state).
+**YAxis:** `yAxisId`, `orientation`, `domain`, `unit`, `tickFormatter`, `scale` (`linear` \| `log` \| `time` \| `category`), `reversed`, `labelRotate`, `labelInterval`
+
+**Legend:** `<Legend isClickable selected onSelectChange />` — uncontrolled by default; pass both for controlled (single-select).
+
+**Annotations:** `<ReferenceLine y={n} />` / `<ReferenceBand y={[lo, hi]} />` (tones: `neutral` \| `accent` \| `positive` \| `warning` \| `critical`).
 
 ### Line-only
 
@@ -76,16 +112,49 @@ Wallpaper vs guides: **[background-and-grid.md](./background-and-grid.md)** (req
 
 ### Composed
 
-**Children:** `Bar`, `Line`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`
+**Children:** `Bar`, `Line`, `Area`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`, `ReferenceLine`, `ReferenceBand`
+
+Bind series to a second axis with flat `yAxisId` (preferred). `barProps` / `lineProps` `{ yAxisId }` still work but are deprecated.
+
+```tsx
+<YAxis yAxisId="left" />
+<YAxis yAxisId="right" orientation="right" tickFormatter={(v) => `${v}%`} />
+<Bar dataKey="count" yAxisId="left" />
+<Line dataKey="cumulative" yAxisId="right" />
+<Area dataKey="band" yAxisId="left" />
+```
 
 Use **dual Y axes** for Pareto:
 
 ```tsx
 <YAxis yAxisId="left" />
 <YAxis yAxisId="right" orientation="right" domain={[0, 100]} unit="%" />
-<Bar dataKey="count" barProps={{ yAxisId: "left" }} />
-<Line dataKey="cumulative" lineProps={{ yAxisId: "right" }} />
+<Bar dataKey="count" yAxisId="left" />
+<Line dataKey="cumulative" yAxisId="right" />
 ```
+
+**Cross-filter on composed** (same `onMarkClick` as bar — required for mixed mark boards):
+
+```tsx
+<NQComposedChart
+  config={config}
+  data={data}
+  xDataKey="month"
+  onMarkClick={(e) => setFilter(String(e.category))}
+  onBrushChange={(r) => setBrush(r)}
+>
+  <Grid />
+  <XAxis dataKey="month" />
+  <YAxis yAxisId="left" tickFormatter={(v) => `$${v}`} />
+  <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => `${v}%`} />
+  <Tooltip />
+  <Legend selected={selected} onSelectChange={setSelected} isClickable />
+  <Bar dataKey="planned" yAxisId="left" />
+  <Line dataKey="otd" yAxisId="right" />
+</NQComposedChart>
+```
+
+Import from `@nqlib/nqchart/composed-chart`. See `ex-mark-click-budget-chart` for the bar-only pattern; the event shape is identical on line, area, and composed.
 
 ---
 

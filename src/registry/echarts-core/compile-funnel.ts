@@ -7,6 +7,7 @@ import {
   resolveCanvasGapColor,
   resolveCanvasTileLabelColor,
 } from "./resolve-chart-chrome";
+import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
 import type {
   CompileContext,
   FunnelOrient,
@@ -30,6 +31,8 @@ type PipeDatum = {
   name: string;
   value: number;
   itemStyle: { color: string };
+  [NQ_SERIES_KEY]: string;
+  [NQ_DATUM]: Record<string, unknown>;
 };
 
 /**
@@ -67,6 +70,8 @@ function compilePipeSeries(
       name: ctx.config[key]?.label?.toString() ?? key,
       value: Number(row[valueKey] ?? 0),
       itemStyle: { color: ctx.resolveColor(key, 0) },
+      [NQ_SERIES_KEY]: key,
+      [NQ_DATUM]: row,
     };
   });
 
@@ -176,6 +181,8 @@ export function compileFunnelOption(ctx: CompileContext): EChartsOption {
         borderColor: gapColor,
         borderWidth,
       },
+      [NQ_SERIES_KEY]: key,
+      [NQ_DATUM]: row,
     };
   });
 

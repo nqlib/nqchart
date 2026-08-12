@@ -1,0 +1,23 @@
+---
+description: >-
+  Avoid box-shadow / box blur / glow by default. Ask when glow/shadow design
+  context is unclear. Prefer shape-aware effects if glow is approved.
+  Full skill: .agents/skills/no-box-glow/SKILL.md
+alwaysApply: true
+---
+
+# No decorative box glow (ask when unclear)
+
+**Load** [`.agents/skills/no-box-glow/SKILL.md`](../../.agents/skills/no-box-glow/SKILL.md) when designing glow, bloom, soft light, or decorative shadow.
+
+## Default
+
+**Do not** add decorative `box-shadow`, soft box blurs, or glow for polish (AABB haze looks ugly on rotated marks).
+
+Allowed without asking: design-system elevation, focus rings, borders/radius, and intentional **`ex-glowing-*`** chart recipes (ECharts series light).
+
+## When glow/shadow context is unclear
+
+**Ask the user first** — what shape glows, soft vs sharp, shape-outline vs rectangular chip.
+
+If approved: SVG `feGaussianBlur` / `drop-shadow` on the real geometry; keep glow **outside** `mask` / `overflow: hidden`. Never `box-shadow` on a rotated diamond/chip.

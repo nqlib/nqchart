@@ -4,6 +4,7 @@ import { applyChartAnimationToOption } from "./apply-chart-animation";
 import { applyChartChromeToOption } from "./apply-chart-chrome";
 import { applyTooltipToOption, hideBuiltInLegend } from "./echarts-tooltip";
 import type { CompileContext, LegendPart, TooltipPart } from "./parts/types";
+import { withReferenceMarks } from "./reference-marks";
 
 export function applyChartUiToOption(
   ctx: CompileContext,
@@ -12,7 +13,8 @@ export function applyChartUiToOption(
   const tooltipPart = ctx.parts.find((p): p is TooltipPart => p.type === "tooltip");
   const legendPart = ctx.parts.find((p): p is LegendPart => p.type === "legend");
 
-  let next = applyChartChromeToOption(ctx.chartId, option, {
+  let next = withReferenceMarks(ctx, option);
+  next = applyChartChromeToOption(ctx.chartId, next, {
     hasHtmlTooltip: Boolean(tooltipPart && !tooltipPart.hide),
   });
   next = applyTooltipToOption(next, ctx.config as ChartConfig, ctx.chartId, tooltipPart);

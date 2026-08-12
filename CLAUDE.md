@@ -9,6 +9,7 @@ Then:
 |------|------|
 | Feature / intake / plan-before-code | [`docs/product/agentic-coding-guideline.md`](./docs/product/agentic-coding-guideline.md) |
 | DoD | [`docs/product/ai-contract.md`](./docs/product/ai-contract.md) |
-| Architecture vault | [`docs/index.md`](./docs/index.md) |
+| Architecture vault | [`docs/README.md`](./docs/README.md) · [`docs/index.md`](./docs/index.md) |
+| Product EP/ST | [`docs/product/README.md`](./docs/product/README.md) |
 | Bug / regression | [`.agents/skills/fixed/index.md`](./.agents/skills/fixed/index.md) |
 | Shared memory (on demand) | [`memory/INDEX.md`](./memory/INDEX.md) |

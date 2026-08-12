@@ -29,8 +29,8 @@ describe("compileAreaOption", () => {
       }),
     );
 
-    const yAxis = option.yAxis as { max?: number };
-    expect(yAxis.max).toBe(100);
+    const yAxis = Array.isArray(option.yAxis) ? option.yAxis[0] : option.yAxis;
+    expect((yAxis as { max?: number }).max).toBe(100);
 
     const series = option.series as Array<{ stack?: string; data: number[] }>;
     expect(series[0]?.stack).toBe("nq-area");

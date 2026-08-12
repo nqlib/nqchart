@@ -1,0 +1,17 @@
+---
+description: Anti-drift intake — plan before feature code; bugs search fixed first; memory on demand
+alwaysApply: true
+---
+
+# Agent intake (NQChart)
+
+Before feature-sized `src/` edits:
+
+1. Read root `AGENTS.md` sequence (orient → recall → intake → product → plan → implement → verify → record).
+2. Features need a home in `plans/` (see `plans/README.md` + `plans/_template.md`) **approved before** coding. Chat-only plans are not enough.
+3. Programs / citeable work: epic + story under `docs/product/epics/` (see `docs/product/README.md`). EP/ST = *what/why*; `plans/` = *how*.
+4. Bugs: search `.agents/skills/fixed/index.md` first; record new fixes there, not in `memory/`.
+5. Durable non-code decisions: `memory/INDEX.md` / `memory/skills.md` (write rarely).
+6. Full ladder: `docs/product/agentic-coding-guideline.md`.
+
+Exempt: chores, typos, and small one-file fixes with no API/behavior contract change.

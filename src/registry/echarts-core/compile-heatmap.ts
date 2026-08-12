@@ -63,6 +63,9 @@ export function compileHeatmapOption(ctx: CompileContext): EChartsOption {
     series: [
       {
         type: "heatmap",
+        // Series id is how the rest of the library identifies a series, and a
+        // click without one maps to an empty `seriesKey` and gets dropped.
+        id: colorKey,
         data,
         label: { show: false },
         ...itemFocus(),

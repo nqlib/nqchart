@@ -5,6 +5,7 @@ import { resolveChartBarCornerRadius } from "./chart-corner-radius";
 import { waterfallColumnFocus } from "./emphasis-presets";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
+import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
 import type { CompileContext, WaterfallPart, WaterfallRow } from "./parts/types";
 
 export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
@@ -55,6 +56,7 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
     series: [
       {
         type: "bar",
+        id: "__wf_placeholder__",
         name: "__wf_placeholder__",
         stack: "wf",
         silent: true,
@@ -66,6 +68,7 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
       },
       {
         type: "bar",
+        id: "__wf_values__",
         name: "__wf_values__",
         stack: "wf",
         ...waterfallColumnFocus(),
@@ -75,6 +78,8 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
             color: colors[i],
             borderRadius: barBorderRadius(resolveChartBarCornerRadius(ctx.chartId), false),
           },
+          [NQ_SERIES_KEY]: valueKey,
+          [NQ_DATUM]: rows[i] as Record<string, unknown>,
         })),
       },
     ],

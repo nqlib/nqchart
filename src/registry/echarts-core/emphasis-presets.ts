@@ -209,5 +209,13 @@ export function funnelFocus() {
   };
 }
 
+/**
+ * Pie slices — same adjacent-segment race as funnel (native high-down + blur sync).
+ * NQChart owns hover in `pie-hover-focus.ts`.
+ */
+export function pieFocus() {
+  return funnelFocus();
+}
+
 /** Minimum arc sweep (degrees) so short radial bars stay hoverable. */
 export const RADIAL_BAR_MIN_ANGLE = 8;

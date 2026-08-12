@@ -48,8 +48,8 @@ export function NQExampleParetoChart() {
       <YAxis yAxisId="right" orientation="right" domain={[0, 100]} unit="%" />
       <Legend />
       <Tooltip />
-      <Bar dataKey="count" barProps={{ yAxisId: "left" }} />
-      <Line dataKey="cumulative" lineProps={{ yAxisId: "right" }} />
+      <Bar dataKey="count" yAxisId="left" />
+      <Line dataKey="cumulative" yAxisId="right" />
     </NQComposedChart>
   );
 }

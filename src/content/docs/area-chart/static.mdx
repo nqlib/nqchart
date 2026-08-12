@@ -238,6 +238,30 @@ The root container. It owns the data, the shared selection state, the loading sk
   <ApiRow name="showBrush" type="boolean" default="false">
     Renders a zoom brush below the chart.
   </ApiRow>
+  <ApiRow name="onMarkClick" type="(event: NQMarkEvent) => void">
+    Fires when a mark is clicked or activated with keyboard Enter. Payload includes raw `category`, `seriesKey` (config dataKey), `datum`, `index`, and modifiers.
+  </ApiRow>
+  <ApiRow name="onBrushChange" type="(range: ChartBrushRange) => void">
+    Fires while the brush range changes.
+  </ApiRow>
+  <ApiRow name="onChartReady" type="(instance: EChartsType) => void">
+    Escape hatch when the ECharts instance is ready.
+  </ApiRow>
+  <ApiRow name="chartRef" type="Ref&lt;ChartHandle | null&gt;">
+    Imperative handle with `toDataURL()` (themed PNG/SVG) and `getInstance()`.
+  </ApiRow>
+  <ApiRow name="isEmpty" type="boolean">
+    Force the empty plate. Default: derived from `data.length === 0`.
+  </ApiRow>
+  <ApiRow name="emptyState" type="ReactNode">
+    Custom empty plate content.
+  </ApiRow>
+  <ApiRow name="error" type="ReactNode">
+    Error plate — visually distinct from empty; replaces the chart.
+  </ApiRow>
+  <ApiRow name="a11yTable" type="boolean" default="true">
+    Visually hidden data table for screen readers.
+  </ApiRow>
   <ApiRow name="xDataKey" type="keyof TData & string">
     X-axis key — only needed by the brush footer.
   </ApiRow>
@@ -246,9 +270,6 @@ The root container. It owns the data, the shared selection state, the loading sk
   </ApiRow>
   <ApiRow name="brushFormatLabel" type="(value: unknown, index: number) => string">
     Formats the brush axis labels.
-  </ApiRow>
-  <ApiRow name="onBrushChange" type="(range: NQBrushRange) => void">
-    Fires when the brush selection range changes.
   </ApiRow>
   <ApiRow name="chartProps" type="ComponentProps<typeof AreaChart>">
     Escape hatch for additional ECharts options compiled by NQChart. See the <Link href="https://echarts.apache.org/en/option.html#series-line" _blank>ECharts area series documentation</Link>.
@@ -351,9 +372,6 @@ The series legend. When `isClickable` is set, each entry toggles selection of it
   </ApiRow>
   <ApiRow name="align" type='"left" | "center" | "right"' default='"right"'>
     Horizontal placement of the legend.
-  </ApiRow>
-  <ApiRow name="verticalAlign" type='"top" | "middle" | "bottom"' default='"top"'>
-    Vertical placement of the legend.
   </ApiRow>
   <ApiRow name="isClickable" type="boolean" default="false">
     Lets each legend entry toggle selection of its series.

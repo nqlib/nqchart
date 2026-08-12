@@ -403,6 +403,24 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "ex-mark-click-budget-chart": {
+    name: "ex-mark-click-budget-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/bar-chart"],
+    files: [{
+      path: "@/registry/examples/ex-mark-click-budget-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-mark-click-budget-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-mark-click-budget-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "ex-loading-state-bar-chart": {
     name: "ex-loading-state-bar-chart",
     description: "",

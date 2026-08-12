@@ -1,12 +1,27 @@
 "use client";
 
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
+import {
+  ChartA11yTable,
+  deriveSeriesKeysFromConfig,
+} from "@/registry/echarts-core/chart-a11y";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import {
+  ChartInstanceProvider,
+  useChartInstanceRef,
+} from "@/registry/echarts-core/chart-instance-context";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compilePieOption } from "@/registry/echarts-core/compile-pie";
 import { segmentKeysFromData } from "@/registry/echarts-core/segment-keys";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
+import { useKeyboardMarkNav } from "@/registry/echarts-core/use-keyboard-mark-nav";
 import {
   NQChartLegend,
   bindChartLegendLayer,
@@ -17,7 +32,8 @@ import {
   type TooltipRoundness,
   type TooltipVariant,
 } from "@/registry/ui/tooltip";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, type Ref, useMemo, useState } from "react";
+import type { EChartsType } from "echarts/core";
 
 type NQPieChartProps<
   TData extends Record<string, unknown>,
@@ -29,42 +45,181 @@ type NQPieChartProps<
   className?: string;
   nameKey?: keyof TData & string;
   isLoading?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
+  isEmpty?: boolean;
+  emptyState?: ReactNode;
+  error?: ReactNode;
+  a11yTable?: boolean;
+  a11yLabel?: string;
+  a11ySummary?: string;
 };
 
 function PieChartCanvas<TData extends Record<string, unknown>>({
   data,
   nameKey,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: {
   data: TData[];
   nameKey?: string;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 }) {
   const { option, colorEpoch } = useCompiledOption(compilePieOption, { data, nameKey });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  const runtimeRef = useChartInstanceRef();
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady,
+    chartRef,
+    data: data as Record<string, unknown>[],
+    nameKey,
+  });
+
+  return (
+    <EChartsHost
+      option={withMarkPointerCursor(option, pointerEnabled)}
+      colorEpoch={colorEpoch}
+      eventHandlers={eventHandlers}
+      onChartInstance={(instance) => {
+        runtimeRef.current = instance;
+        onChartInstance(instance);
+      }}
+    />
+  );
 }
 
 export function NQPieChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
->({ config, data, children, className, nameKey, isLoading }: NQPieChartProps<TData, TConfig>) {
+>({
+  config,
+  data,
+  children,
+  className,
+  nameKey,
+  isLoading,
+  onMarkClick,
+  onChartReady,
+  chartRef,
+  isEmpty: isEmptyProp,
+  emptyState,
+  error,
+  a11yTable = true,
+  a11yLabel,
+  a11ySummary,
+}: NQPieChartProps<TData, TConfig>) {
   const resolvedNameKey = (nameKey ?? Object.keys(data[0] ?? {})[0] ?? "name") as string;
   const displayData = isLoading ? (getLoadingData(5) as unknown as TData[]) : data;
   const segmentKeys = useMemo(
     () => segmentKeysFromData(displayData, resolvedNameKey),
     [displayData, resolvedNameKey],
   );
+  const derivedEmpty =
+    isEmptyProp ?? (!isLoading && !error && Array.isArray(data) && data.length === 0);
+  const seriesKeys = deriveSeriesKeysFromConfig(
+    config,
+    data as Record<string, unknown>[],
+    resolvedNameKey,
+  );
 
   return (
     <PartRegistryProvider>
-      <ChartContainer config={config} className={className} segmentKeys={segmentKeys} isLoading={isLoading}>
-        <ChartPlotShell
-          isLoading={isLoading}
-          loadingVariant="pie"
-          canvas={<PieChartCanvas data={displayData} nameKey={resolvedNameKey} />}
-        >
-          {children}
-        </ChartPlotShell>
-      </ChartContainer>
+      <ChartInstanceProvider>
+        <ChartContainer config={config} className={className} segmentKeys={segmentKeys} isLoading={isLoading}>
+          <PiePlotBody
+            isLoading={isLoading}
+            canvas={
+              <PieChartCanvas
+                data={displayData}
+                nameKey={resolvedNameKey}
+                onMarkClick={onMarkClick}
+                onChartReady={onChartReady}
+                chartRef={chartRef}
+              />
+            }
+            isEmpty={derivedEmpty}
+            emptyState={emptyState}
+            error={error}
+            a11yTable={
+              a11yTable && !isLoading && !error ? (
+                <ChartA11yTable
+                  config={config}
+                  data={data as Record<string, unknown>[]}
+                  seriesKeys={seriesKeys}
+                  categoryKey={resolvedNameKey}
+                  label={a11yLabel}
+                  summary={a11ySummary}
+                />
+              ) : null
+            }
+            onMarkClick={onMarkClick}
+            data={displayData as Record<string, unknown>[]}
+            seriesKeys={seriesKeys}
+            nameKey={resolvedNameKey}
+          >
+            {children}
+          </PiePlotBody>
+        </ChartContainer>
+      </ChartInstanceProvider>
     </PartRegistryProvider>
+  );
+}
+
+function PiePlotBody({
+  children,
+  canvas,
+  isLoading,
+  isEmpty,
+  emptyState,
+  error,
+  a11yTable,
+  onMarkClick,
+  data,
+  seriesKeys,
+  nameKey,
+}: {
+  children: ReactNode;
+  canvas: ReactNode;
+  isLoading?: boolean;
+  isEmpty?: boolean;
+  emptyState?: ReactNode;
+  error?: ReactNode;
+  a11yTable?: ReactNode;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  data: Record<string, unknown>[];
+  seriesKeys: string[];
+  nameKey?: string;
+}) {
+  const chartInstanceRef = useChartInstanceRef();
+  const keyboardProps = useKeyboardMarkNav({
+    enabled: Boolean(onMarkClick),
+    categoryCount: data.length,
+    seriesKeys: seriesKeys.length ? seriesKeys : ["value"],
+    data,
+    xDataKey: nameKey,
+    nameKey,
+    mode: "pie",
+    onMarkClick,
+    chartInstanceRef,
+  });
+
+  return (
+    <ChartPlotShell
+      isLoading={isLoading}
+      loadingVariant="pie"
+      canvas={canvas}
+      isEmpty={isEmpty}
+      emptyState={emptyState}
+      error={error}
+      a11yTable={a11yTable}
+      canvasWrapperProps={keyboardProps}
+    >
+      {children}
+    </ChartPlotShell>
   );
 }
 
@@ -116,16 +271,22 @@ export function Legend({
   isClickable = false,
   hideIcon,
   className,
+  selected: selectedProp,
+  onSelectChange,
 }: {
   variant?: ChartLegendVariant;
   align?: "left" | "center" | "right";
   isClickable?: boolean;
   hideIcon?: boolean;
   className?: string;
+  selected?: string | null;
+  onSelectChange?: (selected: string | null) => void;
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "legend", id, variant, align, isClickable });
-  const [selected, setSelected] = useState<string | null>(null);
+  const [uncontrolled, setUncontrolled] = useState<string | null>(null);
+  const selected = selectedProp !== undefined ? selectedProp : uncontrolled;
+  useRegisterPart({ type: "legend", id, variant, align, isClickable, selected });
+  const setSelected = onSelectChange ?? setUncontrolled;
 
   return (
     <NQChartLegend

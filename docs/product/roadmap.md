@@ -1,33 +1,48 @@
 # Product roadmap
 
-Steering backlog for maintainers and AI agents. Change design: `plans/README.md`. Intake rules: [[product/agentic-coding-guideline]]. Deep review: `plan/IMPROVEMENT_PLAN.md`.
+Steering backlog for maintainers and AI agents.
 
-## Completed (plans 001–006)
+- **Capability record:** [[product/README]] (epics & stories)
+- **Change design:** `plans/README.md`
+- **Intake:** [[product/agentic-coding-guideline]]
+- **API promise:** [[product/specs]]
+- **Deep review scrap:** `plan/IMPROVEMENT_PLAN.md`
 
-- Vitest baseline (engine compilers + llm pipeline)
-- MCP JSON-RPC parse error handling
-- Lockfile / dependency hygiene (pnpm)
-- CONTRIBUTING rewrite
-- Landing demo dashboard lazy-load
-- Landing/docs a11y quick wins
+## Active / recent
 
-Also completed in full-roadmap pass: cartesian chart factory, color-token migration, motion/TOC tokens, OG route, registry boundary audit, ECharts patch notes (`patches/README.md`).
+| Program | Status |
+|---------|--------|
+| [EP-004 BI readiness](epics/EP-004-bi-readiness/epic.md) | **done** (009–015; 0.3.0; SecoLab Phase 4 manual) |
+| [EP-005 Distribution & docs-truth](epics/EP-005-distribution/epic.md) | planned |
+| [EP-006 Engine hardening](epics/EP-006-engine-hardening/epic.md) | planned |
 
-## Deferred (optional follow-ups)
+## Completed foundations
 
-1. **Narrowed per-chart `CompileContext` types** — `CartesianCompileContext` vs `RadialCompileContext` so `tsc` rejects cross-domain field reads in compilers. Requires test baseline (001) before large refactors.
-2. **ECharts 6.x upgrade** — npm latest is 6.1.0; dedicated migration needed. Stay on 5.6.x until then.
-3. **next-themes patch audit** — re-check when upgrading past 0.4.6 (`patches/next-themes@0.4.6.patch`).
-4. **Dead public prop cleanup** — remove or wire `isClickable`, `glowing`, `bufferBar` on bar parts.
-5. **Hover-trace / monospace generalization** — parameterize by `seriesId` for radial/composed reuse.
-6. **Install command package-manager switcher** — pnpm/npm/bun/yarn toggle on landing.
-7. **Per-chart ECharts module registration** — modest bundle win; breaks standalone registry file story. Document as known limitation.
+- EP-001 Registry foundation & compound API
+- EP-002 Docs site, skills, agent HTTP
+- EP-003 Chart craft (hover, motion, funnel 007–008)
+- Plans 001–008 (tests, MCP, hygiene, CONTRIBUTING, landing, funnel)
+
+Also completed in full-roadmap pass: cartesian chart factory, color-token migration,
+motion/TOC tokens, OG route, registry boundary audit, ECharts patch notes
+(`patches/README.md`).
+
+## Deferred (mapped into EP-005 / EP-006)
+
+1. **Docs-truth lint** — props in MDX/skill must exist in `dist/types/` (EP-005 / ST-014).
+2. **Narrowed `CompileContext` types** — cartesian vs radial (EP-006 / ST-016).
+3. **ECharts 6.x upgrade** — stay on 5.6.x until ST-017 (EP-006).
+4. **next-themes patch audit** — EP-006 / ST-018.
+5. **Dead public prop cleanup** — EP-006 / ST-019.
+6. **Hover-trace / monospace generalization** — parameterize by `seriesId`.
+7. **Install command package-manager switcher** on landing.
+8. **Per-chart ECharts module registration** — known limitation; not planned as a goal.
 
 ## Explicitly not planned
 
-- npm package publish for `@nqchart/*` (shadcn registry distribution)
 - CMS for landing demo data
-- Engine rewrite (architecture is sound)
+- Engine rewrite (architecture is sound — see [[architecture/layers]])
 - Auth/rate-limiting on `/mcp` (public docs)
+- Multi-select legend / cross-chart brush (consumer concerns; see specs Out of contract)
 
-Pick the first unblocked item when starting new work. Update [[product/ai-contract]] DoD applies to all changes.
+Pick the first unblocked story when starting new work. DoD: [[product/ai-contract]].

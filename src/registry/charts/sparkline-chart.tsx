@@ -8,7 +8,14 @@ import { compileSparklineOption } from "@/registry/echarts-core/compile-sparklin
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import { ChartBackground, type BackgroundVariant } from "@/registry/ui/background";
 import { ChartTooltip } from "@/registry/ui/tooltip";
-import type { ReactNode } from "react";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
+import type { EChartsType } from "echarts/core";
+import type { ReactNode, Ref } from "react";
 
 type NQSparklineChartProps<
   TData extends Record<string, unknown>,
@@ -18,23 +25,51 @@ type NQSparklineChartProps<
   data: TData[];
   children: ReactNode;
   className?: string;
+  /** Field a click reports as `category`. Sparklines often have no visible axis. */
+  xDataKey?: keyof TData & string;
   valueDataKey?: string;
   backgroundVariant?: BackgroundVariant;
   isLoading?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 };
 
 function SparklineChartCanvas<TData extends Record<string, unknown>>({
   data,
+  xDataKey,
   valueDataKey,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: {
   data: TData[];
+  xDataKey?: string;
   valueDataKey?: string;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 }) {
   const { option, colorEpoch } = useCompiledOption(compileSparklineOption, {
     data,
     valueDataKey,
   });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady,
+    chartRef,
+    data: data as Record<string, unknown>[],
+    xDataKey,
+    valueKey: valueDataKey,
+  });
+  return (
+    <EChartsHost
+      option={withMarkPointerCursor(option, pointerEnabled)}
+      colorEpoch={colorEpoch}
+      eventHandlers={eventHandlers}
+      onChartInstance={onChartInstance}
+    />
+  );
 }
 
 export function NQSparklineChart<
@@ -45,9 +80,13 @@ export function NQSparklineChart<
   data,
   children,
   className,
+  xDataKey,
   valueDataKey = "value",
   backgroundVariant,
   isLoading,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: NQSparklineChartProps<TData, TConfig>) {
   return (
     <PartRegistryProvider>
@@ -55,7 +94,16 @@ export function NQSparklineChart<
         <ChartPlotShell
           isLoading={isLoading}
           loadingVariant="sparkline"
-          canvas={<SparklineChartCanvas data={data} valueDataKey={valueDataKey} />}
+          canvas={
+            <SparklineChartCanvas
+              data={data}
+              xDataKey={xDataKey}
+              valueDataKey={valueDataKey}
+              onMarkClick={onMarkClick}
+              onChartReady={onChartReady}
+              chartRef={chartRef}
+            />
+          }
         >
           {backgroundVariant ? <ChartBackground variant={backgroundVariant} /> : null}
           {children}
@@ -81,9 +129,7 @@ export function EndDot() {
   return null;
 }
 
-export function ReferenceBand() {
-  return null;
-}
+export { ReferenceBand } from "@/registry/echarts-core/chart-parts";
 
 export function Tooltip() {
   return <ChartTooltip hideLabel />;

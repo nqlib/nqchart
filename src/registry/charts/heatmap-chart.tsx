@@ -8,7 +8,16 @@ import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/ech
 import { compileHeatmapOption } from "@/registry/echarts-core/compile-heatmap";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import type { HeatmapCell } from "@/registry/lib/chart-recipes";
-import type { ReactNode } from "react";
+import { usePartsSnapshot } from "@/registry/echarts-core/part-registry";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
+import type { HeatmapPart } from "@/registry/echarts-core/parts/types";
+import type { EChartsType } from "echarts/core";
+import type { ReactNode, Ref } from "react";
 import { useState } from "react";
 
 type NQHeatmapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
@@ -16,15 +25,48 @@ type NQHeatmapChartProps<TConfig extends Record<string, ChartConfig[string]>> = 
   children: ReactNode;
   className?: string;
   isLoading?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 };
 
 function HeatmapChartCanvas({
   onPlotRect,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: {
   onPlotRect?: (insets: ChartPlotInsets) => void;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 }) {
   const { option, colorEpoch } = useCompiledOption(compileHeatmapOption, { data: [] });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} onPlotRect={onPlotRect} />;
+  // Cells live on the `<Heatmap>` part rather than the root.
+  const parts = usePartsSnapshot();
+  const cells = (parts.find((p): p is HeatmapPart => p.type === "heatmap")?.cells ??
+    []) as unknown as Record<string, unknown>[];
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady,
+    chartRef,
+    data: cells,
+    // A cell sits at a row and a column. Rows are the series — that is how the
+    // config already keys colour — so a click on Wed/3pm reads as
+    // `seriesKey: "Wed"`, `category: "3pm"`.
+    nameKey: "row",
+    xDataKey: "col",
+    valueKey: "value",
+  });
+  return (
+    <EChartsHost
+      option={withMarkPointerCursor(option, pointerEnabled)}
+      colorEpoch={colorEpoch}
+      onPlotRect={onPlotRect}
+      eventHandlers={eventHandlers}
+      onChartInstance={onChartInstance}
+    />
+  );
 }
 
 export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string]>>({
@@ -32,6 +74,9 @@ export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string
   children,
   className,
   isLoading,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: NQHeatmapChartProps<TConfig>) {
   // Heatmap is cartesian (x/y category axes) — clip a composed <Background /> to the
   // measured grid rect so it stays inside the axes.
@@ -44,7 +89,14 @@ export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string
           isLoading={isLoading}
           loadingVariant="heatmap"
           plotRect={plotAlign}
-          canvas={<HeatmapChartCanvas onPlotRect={setPlotAlign} />}
+          canvas={
+            <HeatmapChartCanvas
+              onPlotRect={setPlotAlign}
+              onMarkClick={onMarkClick}
+              onChartReady={onChartReady}
+              chartRef={chartRef}
+            />
+          }
         >
           {children}
         </ChartPlotShell>

@@ -12,7 +12,16 @@ import {
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
 import { ChartTooltip } from "@/registry/ui/tooltip";
-import type { ReactNode } from "react";
+import { usePartsSnapshot } from "@/registry/echarts-core/part-registry";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
+import type { PolarAngleAxisPart } from "@/registry/echarts-core/parts/types";
+import type { EChartsType } from "echarts/core";
+import type { ReactNode, Ref } from "react";
 import { useState } from "react";
 
 type NQRadarChartProps<
@@ -24,17 +33,63 @@ type NQRadarChartProps<
   children: ReactNode;
   className?: string;
   isLoading?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 };
 
-function RadarChartCanvas<TData extends Record<string, unknown>>({ data }: { data: TData[] }) {
+function RadarChartCanvas<TData extends Record<string, unknown>>({
+  data,
+  onMarkClick,
+  onChartReady,
+  chartRef,
+}: {
+  data: TData[];
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
+}) {
   const { option, colorEpoch } = useCompiledOption(compileRadarOption, { data });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  const parts = usePartsSnapshot();
+  const angleKey = parts.find(
+    (p): p is PolarAngleAxisPart => p.type === "polarAngleAxis",
+  )?.dataKey;
+  /*
+   * ECharts reports a radar click at series level — it does not say which spoke
+   * was nearest — so `category` is the angle-axis field of the clicked row and
+   * `seriesKey` is the series' dataKey. Consumers wanting a single axis should
+   * read `datum`, which carries the whole row.
+   */
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady,
+    chartRef,
+    data: data as Record<string, unknown>[],
+    xDataKey: angleKey,
+  });
+  return (
+    <EChartsHost
+      option={withMarkPointerCursor(option, pointerEnabled)}
+      colorEpoch={colorEpoch}
+      eventHandlers={eventHandlers}
+      onChartInstance={onChartInstance}
+    />
+  );
 }
 
 export function NQRadarChart<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
->({ config, data, children, className, isLoading }: NQRadarChartProps<TData, TConfig>) {
+>({
+  config,
+  data,
+  children,
+  className,
+  isLoading,
+  onMarkClick,
+  onChartReady,
+  chartRef,
+}: NQRadarChartProps<TData, TConfig>) {
   const displayData = isLoading ? (getLoadingData(6) as unknown as TData[]) : data;
   return (
     <PartRegistryProvider>
@@ -42,7 +97,14 @@ export function NQRadarChart<
         <ChartPlotShell
           isLoading={isLoading}
           loadingVariant="radar"
-          canvas={<RadarChartCanvas data={displayData} />}
+          canvas={
+            <RadarChartCanvas
+              data={displayData}
+              onMarkClick={onMarkClick}
+              onChartReady={onChartReady}
+              chartRef={chartRef}
+            />
+          }
         >
           {children}
         </ChartPlotShell>
@@ -73,14 +135,35 @@ export function Tooltip() {
   return <ChartTooltip />;
 }
 
-export function Legend(props: { variant?: ChartLegendVariant; isClickable?: boolean }) {
+export function Legend({
+  variant,
+  isClickable,
+  align,
+  hideIcon,
+  className,
+  selected: selectedProp,
+  onSelectChange,
+}: {
+  variant?: ChartLegendVariant;
+  isClickable?: boolean;
+  align?: "left" | "center" | "right";
+  hideIcon?: boolean;
+  className?: string;
+  selected?: string | null;
+  onSelectChange?: (selected: string | null) => void;
+}) {
   const id = usePartId();
-  useRegisterPart({ type: "legend", id, variant: props.variant, isClickable: props.isClickable });
-  const [selected, setSelected] = useState<string | null>(null);
+  const [uncontrolled, setUncontrolled] = useState<string | null>(null);
+  const selected = selectedProp !== undefined ? selectedProp : uncontrolled;
+  useRegisterPart({ type: "legend", id, variant, isClickable, align, selected });
+  const setSelected = onSelectChange ?? setUncontrolled;
   return (
     <NQChartLegend
-      variant={props.variant}
-      isClickable={props.isClickable}
+      variant={variant}
+      isClickable={isClickable}
+      align={align}
+      hideIcon={hideIcon}
+      className={className}
       selected={selected}
       onSelectChange={setSelected}
     />

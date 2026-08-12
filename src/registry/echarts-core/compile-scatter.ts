@@ -3,6 +3,7 @@ import { applyChartUiToOption } from "./apply-chart-ui";
 import { gridBottomWithZoom } from "./category-data-zoom";
 import { resolveCartesianGrid } from "./chart-grid";
 import { itemFocus } from "./emphasis-presets";
+import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
 import type { ChartPart, CompileContext, ScatterSeriesPart } from "./parts/types";
 
 function getAxisKey(ctx: CompileContext, axis: "xAxis" | "yAxis", fallback: string) {
@@ -13,6 +14,8 @@ function getAxisKey(ctx: CompileContext, axis: "xAxis" | "yAxis", fallback: stri
 /** Object-shaped scatter rows set `hasItemOption`; Symbol.js reads blur/focus per item, not series. */
 function scatterDataPoint(opts: {
   label: string;
+  seriesKey: string;
+  datum: Record<string, number>;
   x: number;
   y: number;
   color: string;
@@ -25,6 +28,8 @@ function scatterDataPoint(opts: {
     value: [opts.x, opts.y] as [number, number],
     symbolSize: opts.symbolSize,
     itemStyle: { color: opts.color },
+    [NQ_SERIES_KEY]: opts.seriesKey,
+    [NQ_DATUM]: opts.datum,
     blur: focus.blur,
     emphasis: {
       ...focus.emphasis,
@@ -45,6 +50,7 @@ export function compileScatterOption(ctx: CompileContext): EChartsOption {
 
   // One ECharts series for all `<Scatter />` parts. Focus/blur live on each data row
   // because SymbolDraw ignores series-level emphasis when `hasItemOption` is true.
+  // Identity for mark clicks is per-point `__nq_seriesKey` / `__nq_datum` (not seriesName).
   const data = scatters.flatMap((scatter) => {
     const color = ctx.resolveColor(scatter.dataKey, 0);
     const label = ctx.config[scatter.dataKey]?.label?.toString() ?? scatter.dataKey;
@@ -54,6 +60,8 @@ export function compileScatterOption(ctx: CompileContext): EChartsOption {
     return points.map((p) =>
       scatterDataPoint({
         label,
+        seriesKey: scatter.dataKey,
+        datum: p,
         x: Number(p[xKey] ?? p.x ?? 0),
         y: Number(p[yKey] ?? p.y ?? 0),
         color,
@@ -68,6 +76,9 @@ export function compileScatterOption(ctx: CompileContext): EChartsOption {
       ? [
           {
             type: "scatter" as const,
+            // Stable id so reference filters / cursor patching can identify this series.
+            id: scatters.length === 1 ? scatters[0]!.dataKey : "__nq_scatter__",
+            name: scatters.length === 1 ? scatters[0]!.dataKey : undefined,
             data,
             stateAnimation: { duration: 0 },
           },

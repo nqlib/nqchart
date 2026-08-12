@@ -7,8 +7,15 @@ import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/ech
 import { compileTreemapOption } from "@/registry/echarts-core/compile-treemap";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import type { TreemapNode } from "@/registry/echarts-core/parts/types";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { ChartTooltip } from "@/registry/ui/tooltip";
-import type { ReactNode } from "react";
+import type { EChartsType } from "echarts/core";
+import type { ReactNode, Ref } from "react";
 
 type NQTreemapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
@@ -16,11 +23,40 @@ type NQTreemapChartProps<TConfig extends Record<string, ChartConfig[string]>> = 
   children: ReactNode;
   className?: string;
   isLoading?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 };
 
-function TreemapChartCanvas() {
+function TreemapChartCanvas({
+  tree,
+  onMarkClick,
+  onChartReady,
+  chartRef,
+}: {
+  tree: TreemapNode[];
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
+}) {
   const { option, colorEpoch } = useCompiledOption(compileTreemapOption, { data: [] });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  // A tile's identity is its node name, exactly as a pie slice's is.
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady,
+    chartRef,
+    data: tree as unknown as Record<string, unknown>[],
+    nameKey: "name",
+    valueKey: "value",
+  });
+  return (
+    <EChartsHost
+      option={withMarkPointerCursor(option, pointerEnabled)}
+      colorEpoch={colorEpoch}
+      eventHandlers={eventHandlers}
+      onChartInstance={onChartInstance}
+    />
+  );
 }
 
 export function NQTreemapChart<TConfig extends Record<string, ChartConfig[string]>>({
@@ -29,12 +65,26 @@ export function NQTreemapChart<TConfig extends Record<string, ChartConfig[string
   children,
   className,
   isLoading,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: NQTreemapChartProps<TConfig>) {
   const tree = data as TreemapNode[];
   return (
     <PartRegistryProvider>
       <ChartContainer config={config} className={className} isLoading={isLoading}>
-        <ChartPlotShell isLoading={isLoading} loadingVariant="treemap" canvas={<TreemapChartCanvas />}>
+        <ChartPlotShell
+          isLoading={isLoading}
+          loadingVariant="treemap"
+          canvas={
+            <TreemapChartCanvas
+              tree={tree}
+              onMarkClick={onMarkClick}
+              onChartReady={onChartReady}
+              chartRef={chartRef}
+            />
+          }
+        >
           <RegisterTreemap tree={tree} />
           {children}
         </ChartPlotShell>

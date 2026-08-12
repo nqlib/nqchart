@@ -3,6 +3,22 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.3.0 — 2026-08-11
+
+### BI readiness (SecoLab ST-289 unblock)
+
+- **`onMarkClick`** on bar, line, area, composed, pie, scatter, waterfall, and funnel — raw `category`, series key, datum, modifiers (`shift` / `meta` / `alt` / `ctrl`).
+- **`onBrushChange`** + exported `useChartBrush` / `ChartBrushRange` on brush-capable roots (incl. waterfall).
+- **`onChartReady` / `chartRef`** — escape hatch + `toDataURL()` with themed PNG background.
+- **Axes** — `tickFormatter`, dual Y everywhere, flat `yAxisId`, `scale` / dense labels.
+- **Annotations** — `<ReferenceLine>` / `<ReferenceBand>`; `<Area>` in composed; series point labels.
+- **States / a11y** — empty/error plates, sr-only data table, keyboard mark nav when click is bound (incl. scatter).
+- **Stable series `id`** — compilers set `id: dataKey`; mark mapper prefers `seriesId` over display labels.
+- **Consumable types** — line / area / composed extend `CartesianChartBaseProps` (014). `pnpm run check:api` probes `dist/types` in `build:npm` (incl. waterfall/funnel).
+- Docs: removed undocumented `Legend.verticalAlign`; composed / line / area API list interaction props. Harness: `/bi-check`.
+
+---
+
 ## 0.2.2 — 2026-08-05
 
 ### Funnel

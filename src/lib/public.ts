@@ -64,3 +64,14 @@ export {
   useLoadingMaskId,
   generateEasedGradientStops,
 } from "@/registry/ui/loading-shimmer";
+
+export {
+  useChartBrush,
+  type ChartBrushRange,
+} from "@/registry/echarts-core/use-chart-brush";
+
+export type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
+
+export type { ChartHandle, ChartExportOpts } from "@/registry/echarts-core/chart-handle";
+
+export { ReferenceLine, ReferenceBand } from "@/registry/echarts-core/chart-parts";

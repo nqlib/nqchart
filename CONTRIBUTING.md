@@ -1,6 +1,6 @@
 # Contributing to NQChart
 
-Thanks for your interest in contributing! NQChart is a **shadcn-style chart registry** built on **Apache ECharts** — the deliverable is installable source under `src/registry/`, not a separate npm chart package.
+Thanks for your interest in contributing! NQChart is a **shadcn-style chart registry** built on **Apache ECharts**. Source of truth is `src/registry/`; it also publishes as **`@nqlib/nqchart`** on npm and as registry JSON on the docs site.
 
 ## Prerequisites
 
@@ -113,6 +113,16 @@ When changing public chart API or install flow, update `skills/consumer/nqchart/
 - One logical change per PR when possible.
 - Include screenshots for visual chart or landing changes.
 - Update `CONTRIBUTING.md` if you add or rename `package.json` scripts.
+
+## Release
+
+1. Bump `package.json` `version` and `src/content/docs/changelog.mdx`.
+2. Verify: `pnpm exec tsc --noEmit && pnpm test && pnpm run build:npm`.
+3. Commit on the release branch.
+4. Annotated tag: `git tag -a vX.Y.Z -m "nqchart X.Y.Z — …"` then `git push origin HEAD` and `git push origin vX.Y.Z`.
+5. **Optional, separate step:** `pnpm publish:npm` (OTP as needed). Tagging does not publish.
+
+Full notes: `docs/meta/publishing.md`.
 
 ## Questions
 

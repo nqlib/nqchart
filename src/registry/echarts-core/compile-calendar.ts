@@ -124,6 +124,9 @@ export function compileCalendarOption(ctx: CompileContext): EChartsOption {
     series: [
       {
         type: "heatmap",
+        // Series id is how the rest of the library identifies a series, and a
+        // click without one maps to an empty `seriesKey` and gets dropped.
+        id: part?.dataKey,
         coordinateSystem: "calendar",
         calendarIndex: 0,
         data,

@@ -44,6 +44,7 @@ Dedicated `.tsx` files — best starting points for primitives.
 | Block | Notes |
 |-------|-------|
 | `ex-bar-chart` | Default vertical, dual series |
+| `ex-mark-click-budget-chart` | `onMarkClick` cross-filter + `<ReferenceLine>` budget cap (bar; same API on line/area/composed) |
 | `ex-loading-state-bar-chart` | Skeleton |
 | `ex-stacked-type-bar-chart` | `stackType="stacked"` |
 | `ex-percent-type-bar-chart` | `stackType="percent"` |

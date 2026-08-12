@@ -8,8 +8,9 @@ Architecture and skill routing for agents working in this repository.
 
 - **Product** = shadcn registry under `src/registry/` (not npm packages)
 - **Public docs** = `src/content/docs/` (Fumadocs at `/docs`)
-- **Internal vault** = `docs/` (maintainer architecture + roadmap)
-- **Change design** = `plans/` (required for features)
+- **Internal vault** = `docs/` (architecture + product EP/ST + roadmap)
+- **Capability record** = `docs/product/epics/` (EP/ST — *what/why*)
+- **Change design** = `plans/` (required for features — *how*)
 - **Shared memory** = `memory/` (on demand; write rarely)
 - **Registry must not import** `src/components/**`
 
@@ -17,13 +18,14 @@ Architecture and skill routing for agents working in this repository.
 
 Do **not** skip ahead into `src/` for feature-sized work.
 
-1. **Orient** — this file → load **1–3** skill/docs files (do not bulk-read the vault).
+1. **Orient** — this file → [`docs/README.md`](docs/README.md) → load **1–3** skill/docs files (do not bulk-read the vault).
 2. **Recall** — skim [`memory/INDEX.md`](memory/INDEX.md) when prior decisions might apply.
 3. **Intake** — classify chore / bug / feature ([guideline](docs/product/agentic-coding-guideline.md)).
-4. **Plan** — features need [`plans/`](plans/README.md) (existing or new from `_template.md`) **approved before** source edits.
-5. **Implement** — only the plan / bug scope; blueprint first if design is wrong.
-6. **Verify** — DoD in [`docs/product/ai-contract.md`](docs/product/ai-contract.md).
-7. **Record** — bugs → [`.agents/skills/fixed/`](.agents/skills/fixed/SKILL.md); durable decisions → `memory/` (bar in [`memory/skills.md`](memory/skills.md)).
+4. **Product** — programs/features: epic + story in [`docs/product/`](docs/product/README.md) when consumers need a citeable id.
+5. **Plan** — features need [`plans/`](plans/README.md) (existing or new from `_template.md`) **approved before** source edits.
+6. **Implement** — only the story/plan / bug scope; blueprint first if design is wrong.
+7. **Verify** — DoD in [`docs/product/ai-contract.md`](docs/product/ai-contract.md).
+8. **Record** — story+plan status; bugs → [`.agents/skills/fixed/`](.agents/skills/fixed/SKILL.md); durable decisions → `memory/` (bar in [`memory/skills.md`](memory/skills.md)).
 
 Full ladder + exemptions: [`docs/product/agentic-coding-guideline.md`](docs/product/agentic-coding-guideline.md).
 
@@ -37,7 +39,7 @@ Full ladder + exemptions: [`docs/product/agentic-coding-guideline.md`](docs/prod
 | Changing **docs site, landing, agent HTTP** | [.agents/skills/nqchart-docs/SKILL.md](.agents/skills/nqchart-docs/SKILL.md) |
 | **Glow / shadow / bloom on UI chrome** (TOC diamond, etc.) | [.agents/skills/no-box-glow/SKILL.md](.agents/skills/no-box-glow/SKILL.md) — ask when unclear; no decorative box glow |
 | **Remember / recall** durable project facts | [.agents/skills/memory/SKILL.md](.agents/skills/memory/SKILL.md) → [`memory/INDEX.md`](memory/INDEX.md) |
-| Understanding **architecture / backlog / intake** | [docs/index.md](docs/index.md) · [agentic guideline](docs/product/agentic-coding-guideline.md) |
+| Understanding **architecture / backlog / intake** | [docs/README.md](docs/README.md) · [docs/index.md](docs/index.md) · [agentic guideline](docs/product/agentic-coding-guideline.md) · [epics](docs/product/README.md) |
 
 Do **not** use the consumer skill when contributing to this repo.
 

@@ -69,7 +69,7 @@ describe("compileBarOption", () => {
     expect(xAxis.axisLabel?.overflow).toBe("truncate");
   });
 
-  it("coerces missing dataKey values to 0", () => {
+  it("renders a missing dataKey as a gap, not a zero", () => {
     const option = compileBarOption(
       makeCtx({
         parts: [{ ...revenueBar, dataKey: "revenueee" }],
@@ -78,9 +78,29 @@ describe("compileBarOption", () => {
       }),
     );
 
-    const series = option.series as Array<{ data: Array<{ value: number }> }>;
-    // KNOWN-ISSUE: typo dataKey silently renders zeros instead of warning.
-    expect(series[0]?.data[0]?.value).toBe(0);
+    // A typo'd dataKey used to compile to 0, which draws a bar sitting on the
+    // axis — indistinguishable from a real zero and from a month where nothing
+    // was spent. `null` paints no bar at all, so the absence is visible.
+    const series = option.series as Array<{ data: Array<{ value: number | null }> }>;
+    expect(series[0]?.data[0]?.value).toBeNull();
+  });
+
+  it("renders an explicit null datum as a gap", () => {
+    const option = compileBarOption(
+      makeCtx({
+        parts: [revenueBar],
+        xDataKey: "month",
+        data: [
+          { month: "Jan", revenue: 120 },
+          { month: "Feb", revenue: null },
+          { month: "Mar", revenue: 0 },
+        ],
+      }),
+    );
+
+    const series = option.series as Array<{ data: Array<{ value: number | null }> }>;
+    // A real zero must survive as a zero — only the absent value becomes a gap.
+    expect(series[0]?.data.map((d) => d.value)).toEqual([120, null, 0]);
   });
 
   it("normalizes stacked percent values to 0–100", () => {

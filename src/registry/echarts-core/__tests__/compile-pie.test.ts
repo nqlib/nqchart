@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { applyChartAnimationToOption } from "../apply-chart-animation";
 import { compilePieOption } from "../compile-pie";
 import type { PieSeriesPart } from "../parts/types";
 import { makeCtx } from "./make-ctx";
@@ -16,6 +17,41 @@ describe("compilePieOption", () => {
     expect(option.series).toBeDefined();
     expect(Array.isArray(option.series)).toBe(true);
     expect((option.series as unknown[]).length).toBeGreaterThan(0);
+  });
+
+  it("uses instant hover updates and disabled native emphasis", () => {
+    const option = compilePieOption(
+      makeCtx({
+        parts: [piePart],
+        data: [
+          { name: "alpha", value: 10 },
+          { name: "beta", value: 20 },
+        ],
+      }),
+    );
+    const series = (
+      option.series as Array<{
+        animationDurationUpdate?: number;
+        emphasis?: { focus?: string; disabled?: boolean };
+        stateAnimation?: { duration?: number };
+      }>
+    )[0]!;
+    expect(series.animationDurationUpdate).toBe(0);
+    expect(series.stateAnimation?.duration).toBe(0);
+    expect(series.emphasis?.focus).toBe("self");
+    expect(series.emphasis?.disabled).toBe(true);
+  });
+
+  it("keeps animationDurationUpdate at 0 after applyChartAnimationToOption", () => {
+    const option = compilePieOption(
+      makeCtx({
+        parts: [piePart],
+        data: [{ name: "alpha", value: 10 }],
+      }),
+    );
+    const animated = applyChartAnimationToOption(option);
+    const series = (animated.series as Array<{ animationDurationUpdate?: number }>)[0]!;
+    expect(series.animationDurationUpdate).toBe(0);
   });
 
   it("maps names, values, and colors from a 3-row dataset", () => {

@@ -2,9 +2,15 @@
 
 import { type ChartConfig } from "@/registry/ui/chart";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
-import { createCartesianChart } from "@/registry/echarts-core/create-cartesian-chart";
+import {
+  createCartesianChart,
+  type CartesianChartBaseProps,
+} from "@/registry/echarts-core/create-cartesian-chart";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import { compileComposedOption } from "@/registry/echarts-core/compile-composed";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
+import type { NQScale } from "@/registry/echarts-core/parts/types";
 import { ChartBackground } from "@/registry/ui/background";
 import {
   NQChartLegend,
@@ -12,30 +18,29 @@ import {
   type ChartLegendVariant,
 } from "@/registry/ui/legend";
 import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/registry/ui/tooltip";
-import { useState } from "react";
+import type { EChartsType } from "echarts/core";
+import { useState, type Ref } from "react";
 
 type NQComposedChartProps<
   TData extends Record<string, unknown>,
   TConfig extends Record<string, ChartConfig[string]>,
-> = {
+> = Omit<CartesianChartBaseProps<TData, TConfig>, "config"> & {
   config: TConfig;
-  data: TData[];
-  children: React.ReactNode;
-  className?: string;
-  xDataKey?: keyof TData & string;
-  isLoading?: boolean;
   loadingBars?: number;
-  showBrush?: boolean;
   barRadius?: number;
-  brushFormatLabel?: (value: unknown, index: number) => string;
 };
 
 type ComposedChartCanvasProps<TData extends Record<string, unknown>> = {
   data: TData[];
+  fullData?: TData[];
+  indexOffset?: number;
   xDataKey?: string;
   barRadius?: number;
   externalBrush?: boolean;
   onPlotRect?: (insets: ChartPlotInsets) => void;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 };
 
 const { Chart: ComposedChartInner } = createCartesianChart<
@@ -61,12 +66,17 @@ const { Chart: ComposedChartInner } = createCartesianChart<
     xDataKey,
     cartesian: { barRadius, externalBrush },
   }),
-  mapCanvasProps: ({ barRadius }, { chartData, xKey, externalBrush, onPlotRect }) => ({
-    data: chartData,
-    xDataKey: xKey,
+  mapCanvasProps: ({ barRadius }, shell) => ({
+    data: shell.chartData,
+    fullData: shell.fullData,
+    indexOffset: shell.brushStartIndex,
+    xDataKey: shell.xKey,
     barRadius,
-    externalBrush,
-    onPlotRect,
+    externalBrush: shell.externalBrush,
+    onPlotRect: shell.onPlotRect,
+    onMarkClick: shell.onMarkClick,
+    onChartReady: shell.onChartReady,
+    chartRef: shell.chartRef,
   }),
 });
 
@@ -88,12 +98,29 @@ export function Grid() {
 export function XAxis({
   dataKey,
   tickFormatter,
+  scale,
+  reversed,
+  labelRotate,
+  labelInterval,
 }: {
   dataKey?: string;
-  tickFormatter?: (value: unknown) => string;
+  tickFormatter?: (value: unknown, index?: number) => string;
+  scale?: NQScale;
+  reversed?: boolean;
+  labelRotate?: number;
+  labelInterval?: number | "auto";
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "xAxis", id, dataKey, tickFormatter });
+  useRegisterPart({
+    type: "xAxis",
+    id,
+    dataKey,
+    tickFormatter,
+    scale,
+    reversed,
+    labelRotate,
+    labelInterval,
+  });
   return null;
 }
 
@@ -102,56 +129,94 @@ export function YAxis({
   orientation,
   domain,
   unit,
+  tickFormatter,
+  scale,
+  reversed,
+  labelRotate,
+  labelInterval,
 }: {
   yAxisId?: string;
   orientation?: "left" | "right";
   domain?: [number, number];
   unit?: string;
+  tickFormatter?: (value: unknown, index?: number) => string;
+  scale?: NQScale;
+  reversed?: boolean;
+  labelRotate?: number;
+  labelInterval?: number | "auto";
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "yAxis", id, yAxisId, orientation, domain, unit });
+  useRegisterPart({
+    type: "yAxis",
+    id,
+    yAxisId,
+    orientation,
+    domain,
+    unit,
+    tickFormatter,
+    scale,
+    reversed,
+    labelRotate,
+    labelInterval,
+  });
   return null;
 }
 
 export function Bar({
   dataKey,
+  yAxisId,
   barProps,
   radius,
   stackId,
   showInLegend,
+  showLabels,
+  labelFormatter,
 }: {
   dataKey: string;
+  yAxisId?: string;
+  /** @deprecated use flat `yAxisId` */
   barProps?: { yAxisId?: string };
   radius?: number;
   stackId?: string;
   showInLegend?: boolean;
+  showLabels?: boolean;
+  labelFormatter?: (value: unknown) => string;
 }) {
   const id = usePartId();
   useRegisterPart({
     type: "bar",
     id,
     dataKey,
-    yAxisId: barProps?.yAxisId,
+    yAxisId: yAxisId ?? barProps?.yAxisId,
     radius,
     stackId,
     showInLegend,
+    showLabels,
+    labelFormatter,
   });
   return null;
 }
 
 export function Line({
   dataKey,
+  yAxisId,
   lineProps,
   curveType = "linear",
   variant,
   showInLegend,
+  showLabels,
+  labelFormatter,
 }: {
   dataKey: string;
+  yAxisId?: string;
   curveType?: "linear" | "monotone" | "step";
+  /** @deprecated use flat `yAxisId` */
   lineProps?: { yAxisId?: string };
   /** `points` — markers only (e.g. box-plot median ticks). */
   variant?: "points";
   showInLegend?: boolean;
+  showLabels?: boolean;
+  labelFormatter?: (value: unknown) => string;
 }) {
   const id = usePartId();
   useRegisterPart({
@@ -159,9 +224,46 @@ export function Line({
     id,
     dataKey,
     curveType,
-    yAxisId: lineProps?.yAxisId,
+    yAxisId: yAxisId ?? lineProps?.yAxisId,
     variant,
     showInLegend,
+    showLabels,
+    labelFormatter,
+  });
+  return null;
+}
+
+export function Area({
+  dataKey,
+  curveType = "monotone",
+  variant,
+  yAxisId,
+  stackId,
+  showInLegend,
+  showLabels,
+  labelFormatter,
+}: {
+  dataKey: string;
+  curveType?: "linear" | "monotone" | "step" | "bump";
+  variant?: string;
+  yAxisId?: string;
+  stackId?: string;
+  showInLegend?: boolean;
+  showLabels?: boolean;
+  labelFormatter?: (value: unknown) => string;
+}) {
+  const id = usePartId();
+  useRegisterPart({
+    type: "area",
+    id,
+    dataKey,
+    curveType,
+    variant,
+    yAxisId,
+    stackId,
+    showInLegend,
+    showLabels,
+    labelFormatter,
   });
   return null;
 }
@@ -226,16 +328,22 @@ export function Legend({
   isClickable = false,
   hideIcon,
   className,
+  selected: selectedProp,
+  onSelectChange,
 }: {
   variant?: ChartLegendVariant;
   align?: "left" | "center" | "right";
   isClickable?: boolean;
   hideIcon?: boolean;
   className?: string;
+  selected?: string | null;
+  onSelectChange?: (selected: string | null) => void;
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "legend", id, variant, align, isClickable });
-  const [selected, setSelected] = useState<string | null>(null);
+  const [uncontrolled, setUncontrolled] = useState<string | null>(null);
+  const selected = selectedProp !== undefined ? selectedProp : uncontrolled;
+  useRegisterPart({ type: "legend", id, variant, align, isClickable, selected });
+  const setSelected = onSelectChange ?? setUncontrolled;
 
   return (
     <NQChartLegend
@@ -249,5 +357,7 @@ export function Legend({
     />
   );
 }
+
+export { ReferenceLine, ReferenceBand } from "@/registry/echarts-core/chart-parts";
 
 bindChartLegendLayer(Legend);

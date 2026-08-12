@@ -12,6 +12,7 @@ import type {
   RadialCompileConfig,
 } from "./parts/types";
 import { validateDataKeys } from "./validate-data-keys";
+import { withLegendFocus } from "./legend-focus";
 
 export type CompileRootFields<TData extends Record<string, unknown> = Record<string, unknown>> = {
   data: TData[];
@@ -76,7 +77,11 @@ export function useCompiledOption<TData extends Record<string, unknown>>(
       { data, xDataKey, nameKey, valueKey, valueDataKey, cartesian, radial, funnel, viewport },
       { config, parts, chartId, resolveColor },
     );
-    return compile(ctx);
+    // Applied here rather than in each compiler: every chart root funnels
+    // through this hook, so legend focus lands on all of them at once and
+    // cannot drift between families.
+    const legend = parts.find((p) => p.type === "legend");
+    return withLegendFocus(compile(ctx), legend);
   }, [
     compile,
     config,

@@ -55,9 +55,11 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
         },
         "scale": false,
       },
+      "id": "sales",
       "itemStyle": {
         "color": "color(sales,0)",
       },
+      "label": undefined,
       "lineStyle": {
         "color": "color(sales,0)",
       },
@@ -69,6 +71,7 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
       "symbolSize": 5,
       "triggerLineEvent": true,
       "type": "line",
+      "yAxisIndex": 0,
     },
   ],
   "textStyle": {
@@ -77,13 +80,10 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
     "fontSize": 12,
   },
   "tooltip": {
-    "backgroundColor": "transparent",
+    "backgroundColor": "#ffffff",
     "borderColor": "#e5e5e5",
-    "borderWidth": 0,
     "confine": true,
     "enterable": false,
-    "extraCssText": "box-shadow:none;pointer-events:none!important;",
-    "padding": 0,
     "position": [Function],
     "textStyle": {
       "color": "#171717",
@@ -123,33 +123,35 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
     },
     "type": "category",
   },
-  "yAxis": {
-    "axisLabel": {
-      "color": "#737373",
-    },
-    "axisLine": {
-      "lineStyle": {
-        "color": "#e5e5e5",
+  "yAxis": [
+    {
+      "axisLabel": {
+        "color": "#737373",
       },
-    },
-    "axisTick": {
-      "lineStyle": {
-        "color": "#e5e5e5",
+      "axisLine": {
+        "lineStyle": {
+          "color": "#e5e5e5",
+        },
       },
-    },
-    "nameTextStyle": {
-      "color": "#737373",
-    },
-    "splitArea": {},
-    "splitLine": {
-      "lineStyle": {
-        "color": "#e5e5e5",
-        "opacity": 0.5,
-        "type": "dotted",
+      "axisTick": {
+        "lineStyle": {
+          "color": "#e5e5e5",
+        },
       },
-      "show": false,
+      "nameTextStyle": {
+        "color": "#737373",
+      },
+      "splitArea": {},
+      "splitLine": {
+        "lineStyle": {
+          "color": "#e5e5e5",
+          "opacity": 0.5,
+          "type": "dotted",
+        },
+        "show": false,
+      },
+      "type": "value",
     },
-    "type": "value",
-  },
+  ],
 }
 `;

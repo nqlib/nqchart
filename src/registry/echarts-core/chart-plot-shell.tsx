@@ -14,6 +14,7 @@ import {
 } from "react";
 import { cn } from "@/lib/utils";
 import type { ChartPlotInsets } from "./chart-grid";
+import { ChartEmptyState, ChartErrorState } from "./chart-a11y";
 
 function isBackgroundLayer(child: ReactNode): child is ReactElement {
   return (
@@ -38,6 +39,11 @@ export function ChartPlotShell({
   isLoading,
   loadingVariant = "generic",
   plotRect = null,
+  isEmpty,
+  emptyState,
+  error,
+  a11yTable,
+  canvasWrapperProps,
 }: {
   canvas: ReactNode;
   children: ReactNode;
@@ -45,6 +51,13 @@ export function ChartPlotShell({
   loadingVariant?: ChartLoadingVariant;
   /** Measured axis-bounded plot box; forwarded to `<Background />` so it clips to it. */
   plotRect?: ChartPlotInsets | null;
+  isEmpty?: boolean;
+  emptyState?: ReactNode;
+  error?: ReactNode;
+  /** Visually hidden data table (screen reader / print fallback). */
+  a11yTable?: ReactNode;
+  /** Props for the focusable canvas wrapper (keyboard nav). */
+  canvasWrapperProps?: React.HTMLAttributes<HTMLDivElement>;
 }) {
   const childArray = Children.toArray(children);
   const legends = childArray.filter(isLegendLayer);
@@ -58,6 +71,9 @@ export function ChartPlotShell({
     .filter(isBackgroundLayer)
     .map((bg) => cloneElement(bg as ReactElement<{ plotRect?: ChartPlotInsets | null }>, { plotRect }));
 
+  const showError = error != null && error !== false;
+  const showEmpty = !showError && !isLoading && Boolean(isEmpty);
+
   return (
     <>
       {registerParts}
@@ -65,9 +81,22 @@ export function ChartPlotShell({
         <div className="relative z-[1] flex min-h-0 flex-1 flex-col">
           <div className={cn("relative min-h-0 flex-1", isLoading && "opacity-0")}>
             {backgrounds}
-            <div className="relative z-[1] h-full w-full">{canvas}</div>
+            <div
+              className="relative z-[1] h-full w-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              {...canvasWrapperProps}
+            >
+              <div
+                className="relative z-[1] h-full w-full"
+                aria-hidden={a11yTable || showEmpty || showError ? true : undefined}
+              >
+                {showEmpty || showError ? null : canvas}
+              </div>
+              {showEmpty ? <ChartEmptyState>{emptyState}</ChartEmptyState> : null}
+              {showError ? <ChartErrorState>{error}</ChartErrorState> : null}
+            </div>
           </div>
           {isLoading ? <ChartLoadingSkeleton variant={loadingVariant} /> : null}
+          {a11yTable}
           {legends}
         </div>
       </div>

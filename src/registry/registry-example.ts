@@ -10,6 +10,12 @@ export const examples: Registry["items"] = [
     files: [{ path: "examples/ex-bar-chart.tsx", type: "registry:block" }],
   },
   {
+    name: "ex-mark-click-budget-chart",
+    registryDependencies: ["@nqchart/bar-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-mark-click-budget-chart.tsx", type: "registry:block" }],
+  },
+  {
     name: "ex-loading-state-bar-chart",
     registryDependencies: ["@nqchart/bar-chart"],
     type: "registry:block",

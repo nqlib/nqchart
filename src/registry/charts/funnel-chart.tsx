@@ -1,8 +1,18 @@
 "use client";
 
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
+import {
+  ChartA11yTable,
+  deriveSeriesKeysFromConfig,
+} from "@/registry/echarts-core/chart-a11y";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import {
+  ChartInstanceProvider,
+  useChartInstanceRef,
+} from "@/registry/echarts-core/chart-instance-context";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileFunnelOption } from "@/registry/echarts-core/compile-funnel";
 import type {
@@ -12,9 +22,15 @@ import type {
   FunnelTaper,
 } from "@/registry/echarts-core/parts/types";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
+import { useKeyboardMarkNav } from "@/registry/echarts-core/use-keyboard-mark-nav";
 import { NQChartLegend } from "@/registry/ui/legend";
 import { ChartTooltip } from "@/registry/ui/tooltip";
-import type { ReactNode } from "react";
+import type { EChartsType } from "echarts/core";
+import type { ReactNode, Ref } from "react";
 import { useState } from "react";
 
 export type { FunnelConnection, FunnelOrient, FunnelSort, FunnelTaper };
@@ -50,6 +66,15 @@ type NQFunnelChartProps<
   turnRadius?: number;
   /** Pipe mode: draw stage name + value above the ribbon. */
   showLabels?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
+  isEmpty?: boolean;
+  emptyState?: ReactNode;
+  error?: ReactNode;
+  a11yTable?: boolean;
+  a11yLabel?: string;
+  a11ySummary?: string;
 };
 
 function FunnelChartCanvas<TData extends Record<string, unknown>>({
@@ -63,6 +88,9 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   sort,
   turnRadius,
   showLabels,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: {
   data: TData[];
   stageKey?: string;
@@ -74,6 +102,9 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   sort?: FunnelSort;
   turnRadius?: number;
   showLabels?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 }) {
   const { option, colorEpoch } = useCompiledOption(compileFunnelOption, {
     data,
@@ -89,7 +120,27 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
       showLabels,
     },
   });
-  return <EChartsHost option={option} colorEpoch={colorEpoch} />;
+  const runtimeRef = useChartInstanceRef();
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady: (instance) => {
+      runtimeRef.current = instance;
+      onChartReady?.(instance);
+    },
+    chartRef,
+    data: data as Record<string, unknown>[],
+    nameKey: stageKey,
+    valueKey,
+  });
+
+  return (
+    <EChartsHost
+      option={withMarkPointerCursor(option, pointerEnabled)}
+      colorEpoch={colorEpoch}
+      eventHandlers={eventHandlers}
+      onChartInstance={onChartInstance}
+    />
+  );
 }
 
 export function NQFunnelChart<
@@ -110,34 +161,131 @@ export function NQFunnelChart<
   sort,
   turnRadius,
   showLabels,
+  onMarkClick,
+  onChartReady,
+  chartRef,
+  isEmpty: isEmptyProp,
+  emptyState,
+  error,
+  a11yTable = true,
+  a11yLabel,
+  a11ySummary,
 }: NQFunnelChartProps<TData, TConfig>) {
   const displayData = isLoading ? (getLoadingData(4) as unknown as TData[]) : data;
+  const derivedEmpty =
+    isEmptyProp ?? (!isLoading && !error && Array.isArray(data) && data.length === 0);
+  const seriesKeys = deriveSeriesKeysFromConfig(
+    config,
+    data as Record<string, unknown>[],
+    stageKey,
+  );
+
   return (
     <PartRegistryProvider>
-      <ChartContainer config={config} className={className} isLoading={isLoading}>
-        <ChartPlotShell
-          isLoading={isLoading}
-          loadingVariant="funnel"
-          canvas={
-            <FunnelChartCanvas
-              data={displayData}
-              stageKey={stageKey}
-              valueKey={valueKey}
-              stageGap={stageGap}
-              connection={connection}
-              taper={taper}
-              orient={orient}
-              sort={sort}
-              turnRadius={turnRadius}
-              showLabels={showLabels}
-            />
-          }
-        >
-          <RegisterFunnel stageKey={stageKey} valueKey={valueKey} />
-          {children}
-        </ChartPlotShell>
-      </ChartContainer>
+      <ChartInstanceProvider>
+        <ChartContainer config={config} className={className} isLoading={isLoading}>
+          <FunnelPlotBody
+            isLoading={isLoading}
+            isEmpty={derivedEmpty}
+            emptyState={emptyState}
+            error={error}
+            a11yTable={
+              a11yTable && !isLoading && !error ? (
+                <ChartA11yTable
+                  config={config}
+                  data={data as Record<string, unknown>[]}
+                  seriesKeys={seriesKeys.length ? seriesKeys : [valueKey]}
+                  categoryKey={stageKey}
+                  label={a11yLabel}
+                  summary={a11ySummary}
+                />
+              ) : null
+            }
+            onMarkClick={onMarkClick}
+            data={displayData as Record<string, unknown>[]}
+            seriesKeys={seriesKeys}
+            stageKey={stageKey}
+            valueKey={valueKey}
+            canvas={
+              <FunnelChartCanvas
+                data={displayData}
+                stageKey={stageKey}
+                valueKey={valueKey}
+                stageGap={stageGap}
+                connection={connection}
+                taper={taper}
+                orient={orient}
+                sort={sort}
+                turnRadius={turnRadius}
+                showLabels={showLabels}
+                onMarkClick={onMarkClick}
+                onChartReady={onChartReady}
+                chartRef={chartRef}
+              />
+            }
+          >
+            <RegisterFunnel stageKey={stageKey} valueKey={valueKey} />
+            {children}
+          </FunnelPlotBody>
+        </ChartContainer>
+      </ChartInstanceProvider>
     </PartRegistryProvider>
+  );
+}
+
+function FunnelPlotBody({
+  children,
+  canvas,
+  isLoading,
+  isEmpty,
+  emptyState,
+  error,
+  a11yTable,
+  onMarkClick,
+  data,
+  seriesKeys,
+  stageKey,
+  valueKey,
+}: {
+  children: ReactNode;
+  canvas: ReactNode;
+  isLoading?: boolean;
+  isEmpty?: boolean;
+  emptyState?: ReactNode;
+  error?: ReactNode;
+  a11yTable?: ReactNode;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  data: Record<string, unknown>[];
+  seriesKeys: string[];
+  stageKey: string;
+  valueKey: string;
+}) {
+  const chartInstanceRef = useChartInstanceRef();
+  const keyboardProps = useKeyboardMarkNav({
+    enabled: Boolean(onMarkClick),
+    categoryCount: data.length,
+    seriesKeys: seriesKeys.length ? seriesKeys : ["value"],
+    data,
+    nameKey: stageKey,
+    valueKey,
+    mode: "pie",
+    onMarkClick,
+    chartInstanceRef,
+  });
+
+  return (
+    <ChartPlotShell
+      isLoading={isLoading}
+      loadingVariant="funnel"
+      canvas={canvas}
+      isEmpty={isEmpty}
+      emptyState={emptyState}
+      error={error}
+      a11yTable={a11yTable}
+      canvasWrapperProps={keyboardProps}
+    >
+      {children}
+    </ChartPlotShell>
   );
 }
 
@@ -187,11 +335,21 @@ export function Tooltip() {
   return <ChartTooltip />;
 }
 
-export function Legend(props: { isClickable?: boolean }) {
+export function Legend({
+  isClickable,
+  selected: selectedProp,
+  onSelectChange,
+}: {
+  isClickable?: boolean;
+  selected?: string | null;
+  onSelectChange?: (selected: string | null) => void;
+}) {
   const id = usePartId();
-  useRegisterPart({ type: "legend", id, isClickable: props.isClickable });
-  const [selected, setSelected] = useState<string | null>(null);
+  const [uncontrolled, setUncontrolled] = useState<string | null>(null);
+  const selected = selectedProp !== undefined ? selectedProp : uncontrolled;
+  useRegisterPart({ type: "legend", id, isClickable, selected });
+  const setSelected = onSelectChange ?? setUncontrolled;
   return (
-    <NQChartLegend isClickable={props.isClickable} selected={selected} onSelectChange={setSelected} />
+    <NQChartLegend isClickable={isClickable} selected={selected} onSelectChange={setSelected} />
   );
 }

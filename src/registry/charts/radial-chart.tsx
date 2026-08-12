@@ -17,7 +17,14 @@ import {
   type TooltipRoundness,
   type TooltipVariant,
 } from "@/registry/ui/tooltip";
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useChartInteraction,
+  withMarkPointerCursor,
+} from "@/registry/echarts-core/use-chart-interaction";
+import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
+import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
+import type { EChartsType } from "echarts/core";
+import { type ReactNode, type Ref, useEffect, useMemo, useRef, useState } from "react";
 
 /** Bucket CSS px so ResizeObserver does not recompile on every pixel. */
 const VIEWPORT_BUCKET_PX = 16;
@@ -52,6 +59,9 @@ type NQRadialChartProps<
   min?: number;
   max?: number;
   isLoading?: boolean;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 };
 
 function RadialChartCanvas<TData extends Record<string, unknown>>({
@@ -64,6 +74,9 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
   startAngle,
   min,
   max,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: {
   data: TData[];
   nameKey?: string;
@@ -74,6 +87,9 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
   startAngle?: number;
   min?: number;
   max?: number;
+  onMarkClick?: (event: NQMarkEvent) => void;
+  onChartReady?: (instance: EChartsType) => void;
+  chartRef?: Ref<ChartHandle | null>;
 }) {
   const hostWrapRef = useRef<HTMLDivElement>(null);
   const [viewport, setViewport] = useState<{ width: number; height: number } | undefined>();
@@ -105,9 +121,22 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
       radialStartAngle: startAngle,
     },
   });
+  // A ring is identified by its `nameKey` value, the same way a pie slice is.
+  const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
+    onMarkClick,
+    onChartReady,
+    chartRef,
+    data: data as Record<string, unknown>[],
+    nameKey,
+  });
   return (
     <div ref={hostWrapRef} className="min-h-0 h-full w-full min-w-0 flex-1">
-      <EChartsHost option={option} colorEpoch={colorEpoch} />
+      <EChartsHost
+        option={withMarkPointerCursor(option, pointerEnabled)}
+        colorEpoch={colorEpoch}
+        eventHandlers={eventHandlers}
+        onChartInstance={onChartInstance}
+      />
     </div>
   );
 }
@@ -129,6 +158,9 @@ export function NQRadialChart<
   min,
   max,
   isLoading = false,
+  onMarkClick,
+  onChartReady,
+  chartRef,
 }: NQRadialChartProps<TData, TConfig>) {
   const resolvedNameKey = (nameKey ?? Object.keys(data[0] ?? {})[0] ?? "name") as string;
   const displayData = isLoading ? (getLoadingData(5) as unknown as TData[]) : data;
@@ -154,6 +186,9 @@ export function NQRadialChart<
               startAngle={startAngle}
               min={min}
               max={max}
+              onMarkClick={onMarkClick}
+              onChartReady={onChartReady}
+              chartRef={chartRef}
             />
           }
         >
@@ -232,16 +267,22 @@ export function Legend({
   isClickable = false,
   hideIcon,
   className,
+  selected: selectedProp,
+  onSelectChange,
 }: {
   variant?: ChartLegendVariant;
   align?: "left" | "center" | "right";
   isClickable?: boolean;
   hideIcon?: boolean;
   className?: string;
+  selected?: string | null;
+  onSelectChange?: (selected: string | null) => void;
 } = {}) {
   const id = usePartId();
-  useRegisterPart({ type: "legend", id, variant, align, isClickable });
-  const [selected, setSelected] = useState<string | null>(null);
+  const [uncontrolled, setUncontrolled] = useState<string | null>(null);
+  const selected = selectedProp !== undefined ? selectedProp : uncontrolled;
+  useRegisterPart({ type: "legend", id, variant, align, isClickable, selected });
+  const setSelected = onSelectChange ?? setUncontrolled;
 
   return (
     <NQChartLegend

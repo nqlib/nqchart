@@ -41,6 +41,7 @@ NQChart hover contract: **one mark at full opacity, all others at `0.2`**. Spec:
 5. **Treemap native high-down + repair:** double pipeline causes flicker; use `emphasis.disabled: true` + NQChart repair only.
 6. **Treemap layout tween:** default `animationDurationUpdate` ~900ms → set `0` on series + in `apply-chart-animation.ts`.
 7. **Funnel:** same native+repair race as treemap on adjacent stages — use `funnelFocus()` + `funnel-hover-focus.ts`.
+7b. **Pie:** same adjacent-wedge race — use `pieFocus()` + `pie-hover-focus.ts`.
 8. **Waterfall:** stacked placeholder + values series races native index focus — use `waterfallColumnFocus()` + `waterfall-hover-focus.ts` on `__wf_values__`.
 9. **Radial / rose:** one series per ring/petal with `focus: "series"` — native high-down still races; use `radialBarSeriesFocus()` + `radial-hover-focus.ts`. **Read series options via `.get()`**, not `series.stack` / `series.id` fields.
 10. **Intro × axisPointer:** hovering during area/line enter cancels unfinished tweens (clipped bands) and can leave a **stuck dashed cursor**. `introLock` must set `getZr().silent = true` and clear tip/axisPointer on lock start/end.
@@ -52,6 +53,7 @@ NQChart hover contract: **one mark at full opacity, all others at `0.2`**. Spec:
 | scatter-symbol-blur | Hovered scatter dot dims; stale multi-focus | [../fixes/hover-focus-scatter-symbol-blur.md](../fixes/hover-focus-scatter-symbol-blur.md) |
 | treemap-flicker-vanish | Treemap flicker; hovered tile disappears | [../fixes/hover-focus-treemap-flicker-vanish.md](../fixes/hover-focus-treemap-flicker-vanish.md) |
 | funnel-blur | Funnel hover dim / flicker; stale bright stages | [../fixes/hover-focus-funnel-blur.md](../fixes/hover-focus-funnel-blur.md) |
+| pie-blur | Pie hover dim / flicker; stale bright wedges | [../fixes/hover-focus-pie-blur.md](../fixes/hover-focus-pie-blur.md) |
 | waterfall-blur | Waterfall hover dim / flicker; stale bright columns | [../fixes/hover-focus-waterfall-blur.md](../fixes/hover-focus-waterfall-blur.md) |
 | radial-blur | Radial/rose hover dim / flicker; stale bright rings | [../fixes/hover-focus-radial-blur.md](../fixes/hover-focus-radial-blur.md) |
 | intro-axis-pointer-clip | Hover mid-intro clips series; stuck dashed axisPointer | [../fixes/hover-focus-intro-axis-pointer-clip.md](../fixes/hover-focus-intro-axis-pointer-clip.md) |

@@ -4,6 +4,9 @@
 [`docs/product/agentic-coding-guideline.md`](../docs/product/agentic-coding-guideline.md) —
 **plan before `src/` edits** for features; chores/bugs exempt.
 
+**Product record (EP/ST):** [`docs/product/README.md`](../docs/product/README.md) — epics &
+stories are the *what/why*; this folder is the *how*. Feature work should link both.
+
 | Role | Path |
 |------|------|
 | New plan template | [`_template.md`](./_template.md) |
@@ -31,6 +34,13 @@ self-contained. Related: `../plan/IMPROVEMENT_PLAN.md`.
 | 006 | [Landing/docs a11y quick wins](006-landing-a11y-quick-wins.md) | a11y | S–M | DONE |
 | 007 | [Funnel: horizontal orient + smooth pipe connections](007-funnel-horizontal-pipe.md) | engine / funnel | L | DONE |
 | 008 | [Funnel: `sort` prop + data-order default](008-funnel-sort-prop.md) | engine / funnel | S | DONE |
+| 009 | [BI interaction API: mark click, legend selection, brush range](009-bi-interaction-api.md) | engine / api | M | DONE |
+| 010 | [BI axes: tick formatters, dual axis everywhere, scale types](010-bi-axes-and-formatting.md) | engine / api | M | DONE |
+| 011 | [Reference lines, bands, and `<Area>` in composed charts](011-bi-annotations-and-marks.md) | engine / api | M | DONE |
+| 012 | [Empty/error states, keyboard access, and export](012-bi-states-a11y-export.md) | a11y / dx | M | DONE |
+| 013 | [BI-readiness acceptance test plan (verifying 009–012)](013-bi-readiness-acceptance-test-plan.md) | tests / release | S | DONE |
+| 014 | [Make the interaction API consumable (unblock 0.3.0)](014-make-the-interaction-api-consumable.md) | engine / api | S | DONE |
+| 015 | [BI ship leftovers (waterfall, funnel, harness, series id)](015-bi-ship-leftovers.md) | engine / api | M | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 
@@ -48,6 +58,34 @@ Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) 
 ```
 
 No plan here is risky enough to require 001 first, but **001 must land before any engine refactor** (chart factory, CompileContext narrowing) is attempted.
+
+## BI-readiness program (009–012)
+
+Written 2026-08-11 after a consumer (`secolab`) attempted to migrate its dashboard renderer
+onto NQChart 0.2.2 and stopped. The blocker and the six smaller API findings are recorded in
+plan 009 and 010.
+
+```
+009 (interaction)  ─┬─►  011 (annotations)   needs 010's axis-binding helper
+                    └─►  012 (states/a11y)   needs 009's mark-event helper
+010 (axes)         ─┘
+```
+
+**014 is the release gate.** 009–012 are implemented but 009 is not consumable — three roots
+declare standalone props types that omit `onMarkClick`. 013 is how you verify a release; 014
+is what makes one possible. The manual surface for both is `/charts/lab` in `nqui-showcase`
+(its plan 001), run via `pnpm dev:local:charts`.
+
+009 and 010 are independent of each other and are the two that unblock the consumer
+migration — 009 restores the *features* (cross-filter, drill), 010 restores *parity* (that
+app already ships per-axis tick formatting on recharts, which NQChart cannot yet match).
+Do both before asking anyone to migrate. 011 and 012 are what make the library a BI
+renderer rather than a chart renderer.
+
+**Headline finding:** most of the interaction capability already exists internally —
+`useChartBrush` returns a range with an `onChange`, and `NQChartLegend` accepts `selected` /
+`onSelectChange`. Neither reaches the public API. Only mark click is genuinely new. That is
+why 009 is M and not L.
 
 ## Deferred candidates (vetted, not yet planned)
 

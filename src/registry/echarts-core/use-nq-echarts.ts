@@ -8,6 +8,7 @@ import { maxIntroDurationMs, optionHasAnimatedSeries } from "./apply-chart-anima
 import { applyRolloutIntroReveal } from "./apply-rollout-intro";
 import type { ChartPlotInsets } from "./chart-grid";
 import { resetFunnelHoverFocus, scheduleFunnelHoverFocusRepair } from "./funnel-hover-focus";
+import { resetPieHoverFocus, schedulePieHoverFocusRepair } from "./pie-hover-focus";
 import {
   isRadialRingSeriesEvent,
   resetRadialHoverFocus,
@@ -29,11 +30,16 @@ export type NQChartSeriesEvent = {
   componentType?: string;
   seriesType?: string;
   dataIndex?: number;
+  seriesIndex?: number;
+  seriesName?: string;
+  seriesId?: string;
 };
 
 export type NQChartEventHandlers = {
   onSeriesMouseOver?: (params: NQChartSeriesEvent) => void;
   onGlobalOut?: () => void;
+  /** Raw ECharts series click — map with `mapEChartsClickToMarkEvent`. */
+  onSeriesClick?: (params: NQChartSeriesEvent) => void;
 };
 
 /**
@@ -52,9 +58,15 @@ function readPlotInsets(instance: EChartsType): ChartPlotInsets | null {
     };
   };
   const inst = instance as unknown as {
-    getModel(): { getComponent(name: string, idx: number): GridModel };
+    isDisposed?: () => boolean;
+    getModel(): { getComponent(name: string, idx: number): GridModel } | undefined;
   };
-  const gridModel = inst.getModel().getComponent("grid", 0);
+  // ResizeObserver can fire while empty/error/loading mounts have no model yet,
+  // or after dispose races — never assume getModel() is present.
+  if (inst.isDisposed?.()) return null;
+  const model = inst.getModel();
+  if (!model) return null;
+  const gridModel = model.getComponent("grid", 0);
   const rect = gridModel?.coordinateSystem?.getRect?.();
   if (!rect) return null;
 
@@ -149,6 +161,14 @@ export function useNQEcharts(
   const eventHandlersRef = useRef(eventHandlers);
   useEffect(() => {
     eventHandlersRef.current = eventHandlers;
+  });
+
+  // Never put onChartInstance in the init-effect deps — callers often pass an
+  // inline lambda (createDefaultCanvas), and plotRect → parent re-render would
+  // dispose + re-init the chart (blank canvas / lost model).
+  const onChartInstanceRef = useRef(onChartInstance);
+  useEffect(() => {
+    onChartInstanceRef.current = onChartInstance;
   });
 
   // Plot insets are re-read after every setOption and every ResizeObserver tick,
@@ -272,9 +292,13 @@ export function useNQEcharts(
     const el = containerRef.current;
     if (!el) return;
 
-    const instance = echarts.getInstanceByDom(el) ?? echarts.init(el, undefined, { renderer: "canvas" });
+    const existing = echarts.getInstanceByDom(el);
+    const instance =
+      existing && !existing.isDisposed()
+        ? existing
+        : echarts.init(el, undefined, { renderer: "canvas" });
     chartRef.current = instance;
-    onChartInstance?.(instance);
+    onChartInstanceRef.current?.(instance);
 
     const onMouseOver = (params: unknown) => {
       const p = params as NQChartSeriesEvent & {
@@ -294,6 +318,8 @@ export function useNQEcharts(
           scheduleTreemapHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
         } else if (p.seriesType === "funnel") {
           scheduleFunnelHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+        } else if (p.seriesType === "pie") {
+          schedulePieHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
         } else if (isWaterfallValuesSeriesEvent(p)) {
           scheduleWaterfallHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
         }
@@ -307,16 +333,36 @@ export function useNQEcharts(
       resetScatterHoverFocus(instance);
       resetTreemapHoverFocus(instance);
       resetFunnelHoverFocus(instance);
+      resetPieHoverFocus(instance);
       resetWaterfallHoverFocus(instance);
       resetRadialHoverFocus(instance);
       eventHandlersRef.current?.onGlobalOut?.();
     };
+    const onClick = (params: unknown) => {
+      eventHandlersRef.current?.onSeriesClick?.(params as NQChartSeriesEvent);
+    };
     instance.on("mouseover", onMouseOver);
     instance.on("globalout", onGlobalOut);
+    instance.on("click", onClick);
 
     const ro = new ResizeObserver(() => {
       // ECharts `resize()` runs an update with animation duration 0, which overrides
       // enter tweens if it fires while intro is playing. Canvas-only resize is enough.
+      if (instance.isDisposed()) return;
+      const rect = el.getBoundingClientRect();
+      const hasModel = (() => {
+        try {
+          return Boolean(
+            (instance as unknown as { getModel?: () => unknown }).getModel?.(),
+          );
+        } catch {
+          return false;
+        }
+      })();
+      const canvas = el.querySelector("canvas");
+      // Empty/error plates unmount the canvas; RO can still fire on the parent
+      // before dispose settles. Resizing a model-less instance blanks the plot.
+      if (!hasModel || !canvas || rect.width === 0 || rect.height === 0) return;
       if (introLockRef.current) {
         instance.getZr().resize();
         return;
@@ -329,6 +375,7 @@ export function useNQEcharts(
     return () => {
       instance.off("mouseover", onMouseOver);
       instance.off("globalout", onGlobalOut);
+      instance.off("click", onClick);
       ro.disconnect();
       clearIntroTimer();
       instance.dispose();
@@ -339,9 +386,9 @@ export function useNQEcharts(
       pendingOptionRef.current = null;
       structureKeyRef.current = "";
       stableKeyRef.current = "";
-      onChartInstance?.(null);
+      onChartInstanceRef.current?.(null);
     };
-  }, [containerRef, reportPlotRect, onChartInstance]);
+  }, [containerRef, reportPlotRect]);
 
   useEffect(() => {
     const el = containerRef.current;

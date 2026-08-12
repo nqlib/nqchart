@@ -45,6 +45,11 @@ export function compileSparklineOption(ctx: CompileContext): EChartsOption {
         data: values,
         smooth: true,
         showSymbol: false,
+        // With no symbols drawn, the only hit target is a 2px stroke — which
+        // makes `onMarkClick` technically present and practically unusable.
+        // `triggerLineEvent` makes the whole line hit-testable, as it already
+        // does on line and area.
+        triggerLineEvent: true,
         // Sparklines are decorative: no hover highlight. Deriving an emphasis state
         // makes ECharts animate the gradient areaStyle, which crashes zrender's
         // interpolate1DArray (gradient color object has no interpolable array). The

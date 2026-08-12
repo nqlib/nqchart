@@ -12,11 +12,13 @@ export function useChartBrush<TData extends Record<string, unknown>>({
   defaultStartIndex = 0,
   defaultEndIndex,
   minSpan = 2,
+  onChange,
 }: {
   data: TData[];
   defaultStartIndex?: number;
   defaultEndIndex?: number;
   minSpan?: number;
+  onChange?: (range: ChartBrushRange) => void;
 }) {
   const [range, setRange] = useState<ChartBrushRange>(() => ({
     startIndex: defaultStartIndex,
@@ -51,13 +53,19 @@ export function useChartBrush<TData extends Record<string, unknown>>({
     return { startIndex, endIndex };
   };
 
+  const commit = (next: ChartBrushRange) => {
+    const clamped = clampRange(next);
+    setRange(clamped);
+    onChange?.(clamped);
+  };
+
   return {
     range,
     visibleData,
     brushProps: {
       startIndex: range.startIndex,
       endIndex: range.endIndex,
-      onChange: (next: ChartBrushRange) => setRange(clampRange(next)),
+      onChange: commit,
       minSpan,
     },
   };
