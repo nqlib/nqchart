@@ -56,12 +56,13 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
     grid.right = 56;
   }
 
+  const dataZoom = buildCategoryDataZoom(hasBrush, { chartVariant: "line" });
   const base: EChartsOption = {
     grid,
     tooltip: { trigger: "axis" },
     xAxis: xAxis as EChartsOption["xAxis"],
     yAxis: yAxisList,
-    dataZoom: buildCategoryDataZoom(hasBrush, { chartVariant: "line" }),
+    ...(dataZoom ? { dataZoom } : {}),
     series,
   };
 

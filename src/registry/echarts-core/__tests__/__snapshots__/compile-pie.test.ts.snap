@@ -2,7 +2,6 @@
 
 exports[`compilePieOption > matches snapshot for a representative context 1`] = `
 {
-  "angleAxis": undefined,
   "animation": true,
   "animationDuration": 700,
   "animationDurationUpdate": 350,
@@ -10,11 +9,7 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
   "animationEasingUpdate": "cubic-bezier(0.16,1,0.3,1)",
   "animationThreshold": 4000,
   "backgroundColor": "transparent",
-  "calendar": undefined,
-  "dataZoom": undefined,
   "legend": undefined,
-  "radar": undefined,
-  "radiusAxis": undefined,
   "series": [
     {
       "animation": true,
@@ -108,7 +103,6 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
     "transitionDuration": 0,
     "trigger": "item",
   },
-  "visualMap": undefined,
   "xAxis": undefined,
   "yAxis": undefined,
 }

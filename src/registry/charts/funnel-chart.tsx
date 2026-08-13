@@ -12,6 +12,8 @@ import {
 } from "@/registry/echarts-core/chart-instance-context";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { CustomChart, FunnelChart } from "echarts/charts";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileFunnelOption } from "@/registry/echarts-core/compile-funnel";
@@ -32,6 +34,9 @@ import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { EChartsType } from "echarts/core";
 import type { ReactNode, Ref } from "react";
 import { useState } from "react";
+
+const FUNNEL_ECHARTS_MODULES = [FunnelChart, CustomChart];
+getEcharts(FUNNEL_ECHARTS_MODULES);
 
 export type { FunnelConnection, FunnelOrient, FunnelSort, FunnelTaper };
 
@@ -139,6 +144,7 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
       colorEpoch={colorEpoch}
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
+      echartsModules={FUNNEL_ECHARTS_MODULES}
     />
   );
 }

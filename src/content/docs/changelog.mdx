@@ -3,6 +3,22 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.3.1 — 2026-08-12
+
+### Payload
+
+- **Per-family ECharts registration** — a bar-chart entry no longer pulls Gauge / Treemap / Radar and the rest. Each family registers only the modules it draws. `getEcharts(extra)` stays a called function (`sideEffects: false` would drop a top-level `echarts.use`). `pnpm run check:size` gzips every family entry and fails on >5% growth. Unused `dataZoom` / `calendar` / `visualMap` keys are omitted so ECharts does not demand unregistered components.
+
+### Export
+
+- **`toDataURL` is PNG-only.** Charts initialise with `CanvasRenderer`. `ChartExportOpts.type: "svg"` could not emit SVG; ECharts called `canvas.toDataURL("image/svg")`, which browsers silently return as PNG.
+
+### Internals
+
+- **`pnpm run check:internals`** resolves the private `echarts/lib/...` paths hover-focus depends on, so a moved file fails the build instead of a consumer runtime.
+
+---
+
 ## 0.3.0 — 2026-08-11
 
 ### BI readiness (SecoLab ST-289 unblock)

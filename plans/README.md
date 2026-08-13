@@ -41,6 +41,7 @@ self-contained. Related: `../plan/IMPROVEMENT_PLAN.md`.
 | 013 | [BI-readiness acceptance test plan (verifying 009–012)](013-bi-readiness-acceptance-test-plan.md) | tests / release | S | DONE |
 | 014 | [Make the interaction API consumable (unblock 0.3.0)](014-make-the-interaction-api-consumable.md) | engine / api | S | DONE |
 | 015 | [BI ship leftovers (waterfall, funnel, harness, series id)](015-bi-ship-leftovers.md) | engine / api | M | DONE |
+| 016 | [Per-family ECharts registration, honest export, internals check](016-echarts-payload.md) | performance / dist | M | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 
@@ -104,7 +105,7 @@ Remaining optional follow-ups:
 - **"eslint missing react-hooks rules"** — `eslint-config-next/core-web-vitals` already includes them.
 - **ReDoS in `src/lib/llm.ts`** — patterns are non-greedy with literal terminators and run over repo-controlled MDX only; not exploitable.
 - **`--path` token unused** — false; used via `text-path` in `toc-indicator.tsx:144` and `nav-main.tsx:42,50`.
-- **Per-chart ECharts module registration** (instead of the global `echarts-init.ts` list) — modest bundle win, breaks the registry's standalone-file story. Known limitation.
+- ~~**Per-chart ECharts module registration**~~ — reversed in [016](016-echarts-payload.md). The old objection was extras living in a shared init file. Declaring extras in the family file keeps a shadcn copy self-contained and is what the npm per-entry build needs.
 - **Removing `@carbon/icons-react` / `@mantine/hooks` / `@base-ui/react` / `embla-carousel-react`** — all verified in use (2, 2, 3, 1 files respectively). Consolidation is a product decision, not hygiene.
 - **Auth/rate-limiting on `/mcp`** — serves public docs; complexity not justified until abuse is observed.
 - **An agent-reported claim that echarts "5.10+" exists** — unverified version number; treat any echarts upgrade as an investigate item (deferred #8), not a fact.

@@ -3,6 +3,9 @@
 import { type ChartConfig, ChartContainer } from "@/registry/ui/chart";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { HeatmapChart } from "echarts/charts";
+import { CalendarComponent, VisualMapComponent } from "echarts/components";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileCalendarOption } from "@/registry/echarts-core/compile-calendar";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
@@ -17,6 +20,9 @@ import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import type { CalendarPart } from "@/registry/echarts-core/parts/types";
 import type { EChartsType } from "echarts/core";
 import type { ReactNode, Ref } from "react";
+
+const CALENDAR_ECHARTS_MODULES = [HeatmapChart, CalendarComponent, VisualMapComponent];
+getEcharts(CALENDAR_ECHARTS_MODULES);
 
 type NQCalendarChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
@@ -58,6 +64,7 @@ function CalendarChartCanvas({
       colorEpoch={colorEpoch}
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
+      echartsModules={CALENDAR_ECHARTS_MODULES}
     />
   );
 }

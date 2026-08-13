@@ -107,7 +107,7 @@ export function resolveAreaFillColor(
 
   const entry = config[key];
   const bright = entry?.colors?.dark?.[index] ?? entry?.colors?.dark?.[0];
-  if (!bright) return resolveColor(key, index);
+  if (!bright || typeof document === "undefined") return resolveColor(key, index);
 
   const resolved = resolveCssColorValue(bright, document.documentElement);
   return resolved.startsWith("var(") ? resolveColor(key, index) : resolved;

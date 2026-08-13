@@ -120,12 +120,13 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
     grid.right = 56;
   }
 
+  const dataZoom = buildCategoryDataZoom(hasBrush, { chartVariant: "area" });
   const base: EChartsOption = {
     grid,
     tooltip: { trigger: "axis" },
     xAxis: xAxis as EChartsOption["xAxis"],
     yAxis: yAxisList,
-    dataZoom: buildCategoryDataZoom(hasBrush, { chartVariant: "area" }),
+    ...(dataZoom ? { dataZoom } : {}),
     series,
   };
 

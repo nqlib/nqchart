@@ -67,7 +67,22 @@ single-select isolate today (`string | null`).
 | `isEmpty` / `emptyState` | Empty plate; default empty when `data.length === 0` |
 | `error` | Error plate, distinct from empty |
 | `a11yTable` | Visually hidden table (default on; row-capped) |
-| `chartRef.toDataURL` | PNG/SVG with themed background |
+| `chartRef.toDataURL` | PNG with themed background (`CanvasRenderer` only) |
+
+## ECharts private internals
+
+Hover-focus and rollout-intro import three **non-public** echarts paths. There is no
+public equivalent. They stay; CI resolves them so a moved file fails our build
+instead of a consumer's runtime:
+
+| Path | Used by |
+|------|---------|
+| `echarts/lib/util/states.js` | pie / funnel / radial / scatter / treemap / waterfall hover-focus |
+| `echarts/lib/animation/basicTransition.js` | `apply-rollout-intro.ts` |
+| `echarts/lib/util/graphic.js` | `apply-rollout-intro.ts` |
+
+Verified against **echarts 5.6.0** (installed peer; range `^5.6.0`). Gate:
+`pnpm run check:internals` inside `build:npm`.
 
 ## Stability rules
 

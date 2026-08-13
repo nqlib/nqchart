@@ -20,10 +20,10 @@ plans/NNN-*.md    technical blueprints (how) — linked from stories
 | [EP-002](epics/EP-002-docs-and-agents/epic.md) | Docs site, skills, agent HTTP | done |
 | [EP-003](epics/EP-003-chart-craft/epic.md) | Chart craft — hover, motion, brush | done |
 | [EP-004](epics/EP-004-bi-readiness/epic.md) | BI readiness — interaction, axes, annotations, a11y | **done** (009–015; 0.3.0; SecoLab Phase 4 manual) |
-| [EP-005](epics/EP-005-distribution/epic.md) | Distribution & docs-truth | planned |
+| [EP-005](epics/EP-005-distribution/epic.md) | Distribution & docs-truth | **in-progress** (ST-022 / plan 016) |
 | [EP-006](epics/EP-006-engine-hardening/epic.md) | Engine hardening (typed contexts, ECharts 6) | planned |
 
-**Next IDs: `EP-007` / `ST-022`.**
+**Next IDs: `EP-007` / `ST-023`.**
 
 IDs are global and never reused. Mint against this table **and** open branches before
 creating files.

@@ -8,6 +8,8 @@ import {
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { ScatterChart } from "echarts/charts";
 import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import {
   ChartInstanceProvider,
@@ -37,6 +39,9 @@ import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { EChartsType } from "echarts/core";
 import type { ReactNode, Ref } from "react";
 import { useMemo, useState } from "react";
+
+const SCATTER_ECHARTS_MODULES = [ScatterChart];
+getEcharts(SCATTER_ECHARTS_MODULES);
 
 const SCATTER_SERIES_META = "__seriesKey";
 const SCATTER_Y_META = "__y";
@@ -142,6 +147,7 @@ function ScatterPlotBody({
           onPlotRect={onPlotRect}
           eventHandlers={eventHandlers}
           onChartInstance={onChartInstance}
+          echartsModules={SCATTER_ECHARTS_MODULES}
         />
       }
     >

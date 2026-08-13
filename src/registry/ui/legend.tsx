@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/registry/lib/cn";
 import { getColorsCount, useChart } from "@/registry/ui/chart";
 import { usePartsSnapshot } from "@/registry/echarts-core/part-registry";
 import type { ChartPart } from "@/registry/echarts-core/parts/types";

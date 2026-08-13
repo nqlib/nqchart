@@ -209,6 +209,10 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
     grid.right = 56;
   }
 
+  const dataZoom = buildCategoryDataZoom(hasBrush, {
+    axisDim: horizontal ? "y" : "x",
+    chartVariant: "bar",
+  });
   const base: EChartsOption = {
     grid,
     tooltip: { trigger: hasMonospace || hasHoverTrace ? "item" : "axis" },
@@ -218,10 +222,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
       : yAxes.length > 1
         ? valueAxes
         : valueAxis) as EChartsOption["yAxis"],
-    dataZoom: buildCategoryDataZoom(hasBrush, {
-      axisDim: horizontal ? "y" : "x",
-      chartVariant: "bar",
-    }),
+    ...(dataZoom ? { dataZoom } : {}),
     series,
   };
 

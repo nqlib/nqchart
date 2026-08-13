@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/registry/lib/cn";
 import { LoadingShimmerPattern, useLoadingMaskId } from "@/registry/ui/loading-shimmer";
 
 export type ChartLoadingVariant =

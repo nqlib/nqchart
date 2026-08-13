@@ -4,6 +4,9 @@ import {
   type ChartConfig,
 } from "@/registry/ui/chart";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { BarChart, CustomChart } from "echarts/charts";
+import { GraphicComponent } from "echarts/components";
 import { usePartId, usePartsSnapshot, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { useHoverTraceMarkLine } from "@/registry/echarts-core/use-hover-trace-mark-line";
 import { useMonospaceCollapse } from "@/registry/echarts-core/use-monospace-collapse";
@@ -37,6 +40,9 @@ import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/regi
 import { useChart } from "@/registry/ui/chart";
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState, type Ref } from "react";
 import type { EChartsType } from "echarts/core";
+
+const BAR_ECHARTS_MODULES = [BarChart, CustomChart, GraphicComponent];
+getEcharts(BAR_ECHARTS_MODULES);
 
 type ValidateConfigKeys<TData, TConfig> = {
   [K in keyof TConfig]: K extends keyof TData ? ChartConfig[string] : never;
@@ -234,6 +240,7 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
       onPlotRect={onPlotRect}
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
+      echartsModules={BAR_ECHARTS_MODULES}
     />
   );
 }
@@ -282,6 +289,7 @@ const { Chart: BarChartInner } = createCartesianChart<
   }),
   Canvas: BarChartCanvas,
   usePlotRectState: useBarPlotRectState,
+  echartsModules: BAR_ECHARTS_MODULES,
   mapCanvasProps: (
     { layout, stackType, barRadius, variant, onHoverTraceChange },
     {

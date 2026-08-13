@@ -14,6 +14,8 @@ import { NQChartBrush } from "@/registry/echarts-core/nq-chart-brush";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { BarChart } from "echarts/charts";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileWaterfallOption } from "@/registry/echarts-core/compile-waterfall";
@@ -29,6 +31,9 @@ import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { EChartsType } from "echarts/core";
 import type { ReactNode, Ref } from "react";
 import { useState } from "react";
+
+const WATERFALL_ECHARTS_MODULES = [BarChart];
+getEcharts(WATERFALL_ECHARTS_MODULES);
 
 type NQWaterfallChartProps<
   TData extends Record<string, unknown>,
@@ -105,6 +110,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
       onPlotRect={onPlotRect}
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
+      echartsModules={WATERFALL_ECHARTS_MODULES}
     />
   );
 }

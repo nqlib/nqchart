@@ -3,6 +3,8 @@
 import { type ChartConfig, ChartContainer } from "@/registry/ui/chart";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { LineChart } from "echarts/charts";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileSparklineOption } from "@/registry/echarts-core/compile-sparkline";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
@@ -16,6 +18,9 @@ import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import type { EChartsType } from "echarts/core";
 import type { ReactNode, Ref } from "react";
+
+const SPARKLINE_ECHARTS_MODULES = [LineChart];
+getEcharts(SPARKLINE_ECHARTS_MODULES);
 
 type NQSparklineChartProps<
   TData extends Record<string, unknown>,
@@ -68,6 +73,7 @@ function SparklineChartCanvas<TData extends Record<string, unknown>>({
       colorEpoch={colorEpoch}
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
+      echartsModules={SPARKLINE_ECHARTS_MODULES}
     />
   );
 }

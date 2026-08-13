@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/registry/lib/cn";
 import type { ChartConfig } from "@/registry/ui/chart";
 import type { ReactNode } from "react";
 

@@ -3,6 +3,9 @@
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { BarChart, GaugeChart, PieChart } from "echarts/charts";
+import { PolarComponent } from "echarts/components";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileRadialOption } from "@/registry/echarts-core/compile-radial";
 import { segmentKeysFromData } from "@/registry/echarts-core/segment-keys";
@@ -25,6 +28,9 @@ import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import type { EChartsType } from "echarts/core";
 import { type ReactNode, type Ref, useEffect, useMemo, useRef, useState } from "react";
+
+const RADIAL_ECHARTS_MODULES = [GaugeChart, BarChart, PieChart, PolarComponent];
+getEcharts(RADIAL_ECHARTS_MODULES);
 
 /** Bucket CSS px so ResizeObserver does not recompile on every pixel. */
 const VIEWPORT_BUCKET_PX = 16;
@@ -136,6 +142,7 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
         colorEpoch={colorEpoch}
         eventHandlers={eventHandlers}
         onChartInstance={onChartInstance}
+        echartsModules={RADIAL_ECHARTS_MODULES}
       />
     </div>
   );

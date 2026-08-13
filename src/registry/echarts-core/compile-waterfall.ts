@@ -46,13 +46,14 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
     colors.push(ctx.resolveColor(name, 0));
   }
 
+  const dataZoom = buildCategoryDataZoom(hasBrush, { chartVariant: "waterfall" });
   const base: EChartsOption = {
     grid: resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
     tooltip: { trigger: "axis" },
     legend: { show: false },
     xAxis: { type: "category", data: categories },
     yAxis: { type: "value", splitLine: { show: hasGrid } },
-    dataZoom: buildCategoryDataZoom(hasBrush, { chartVariant: "waterfall" }),
+    ...(dataZoom ? { dataZoom } : {}),
     series: [
       {
         type: "bar",

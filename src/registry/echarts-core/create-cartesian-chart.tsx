@@ -5,6 +5,7 @@ import { NQChartBrush } from "@/registry/echarts-core/nq-chart-brush";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import type { EChartsExtraModules } from "@/registry/echarts-core/echarts-init";
 import { PartRegistryProvider } from "@/registry/echarts-core/part-registry";
 import { useChartBrush, type ChartBrushRange } from "@/registry/echarts-core/use-chart-brush";
 import { useCompiledOption, type CompileRootFields } from "@/registry/echarts-core/use-compiled-option";
@@ -100,6 +101,7 @@ type CreateCartesianChartConfig<
   Canvas?: React.ComponentType<TCanvasProps>;
   usePlotRectState?: () => CartesianPlotRectState;
   getLoadingPoints?: (props: TChartProps) => number;
+  echartsModules?: EChartsExtraModules;
 };
 
 function useDefaultPlotRectState(): CartesianPlotRectState {
@@ -110,6 +112,7 @@ function useDefaultPlotRectState(): CartesianPlotRectState {
 function createDefaultCanvas<TData extends Record<string, unknown>, TCanvasProps extends Record<string, unknown>>(
   compile: (ctx: CompileContext<TData>) => EChartsOption,
   getCompileRoot: (canvasProps: TCanvasProps) => CompileRootFields<TData>,
+  echartsModules?: EChartsExtraModules,
 ) {
   return function DefaultCartesianCanvas(canvasProps: TCanvasProps) {
     const compileRoot = getCompileRoot(canvasProps);
@@ -155,6 +158,7 @@ function createDefaultCanvas<TData extends Record<string, unknown>, TCanvasProps
         onPlotRect={onPlotRect}
         eventHandlers={eventHandlers}
         onChartInstance={handleChartInstance}
+        echartsModules={echartsModules}
       />
     );
   };
@@ -183,12 +187,13 @@ export function createCartesianChart<
     Canvas: CustomCanvas,
     usePlotRectState = useDefaultPlotRectState,
     getLoadingPoints,
+    echartsModules,
   } = config;
 
   const Canvas =
     CustomCanvas ??
     (getCompileRoot
-      ? createDefaultCanvas<TData, TCanvasProps>(compile, getCompileRoot)
+      ? createDefaultCanvas<TData, TCanvasProps>(compile, getCompileRoot, echartsModules)
       : (() => {
           throw new Error(`${displayName}: getCompileRoot is required when Canvas is omitted`);
         }) as React.ComponentType<TCanvasProps>);

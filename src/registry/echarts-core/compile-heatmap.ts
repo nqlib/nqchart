@@ -46,7 +46,7 @@ export function compileHeatmapOption(ctx: CompileContext): EChartsOption {
     },
     xAxis: { type: "category", data: xLabels, splitArea: { show: true } },
     yAxis: { type: "category", data: yLabels, splitArea: { show: true } },
-    dataZoom: buildHeatmapDataZoom(enableZoom),
+    ...(enableZoom ? { dataZoom: buildHeatmapDataZoom(true) } : {}),
     visualMap: {
       min,
       max,

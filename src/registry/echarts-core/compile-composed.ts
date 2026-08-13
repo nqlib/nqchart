@@ -159,6 +159,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     "category",
   );
 
+  const dataZoom = buildCategoryDataZoom(hasBrush, { chartVariant: "composed" });
   const base: EChartsOption = {
     grid,
     tooltip: {
@@ -167,7 +168,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     },
     xAxis: xAxis as EChartsOption["xAxis"],
     yAxis: yAxisList,
-    dataZoom: buildCategoryDataZoom(hasBrush, { chartVariant: "composed" }),
+    ...(dataZoom ? { dataZoom } : {}),
     series: [...barSeries, ...lineSeries, ...areaSeries, ...whiskerSeries] as EChartsOption["series"],
   };
 

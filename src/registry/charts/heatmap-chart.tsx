@@ -4,6 +4,9 @@ import { type ChartConfig, ChartContainer } from "@/registry/ui/chart";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { HeatmapChart } from "echarts/charts";
+import { DataZoomComponent, VisualMapComponent } from "echarts/components";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileHeatmapOption } from "@/registry/echarts-core/compile-heatmap";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
@@ -17,8 +20,10 @@ import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import type { HeatmapPart } from "@/registry/echarts-core/parts/types";
 import type { EChartsType } from "echarts/core";
-import type { ReactNode, Ref } from "react";
-import { useState } from "react";
+import { type ReactNode, type Ref, useState } from "react";
+
+const HEATMAP_ECHARTS_MODULES = [HeatmapChart, VisualMapComponent, DataZoomComponent];
+getEcharts(HEATMAP_ECHARTS_MODULES);
 
 type NQHeatmapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
@@ -65,6 +70,7 @@ function HeatmapChartCanvas({
       onPlotRect={onPlotRect}
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
+      echartsModules={HEATMAP_ECHARTS_MODULES}
     />
   );
 }

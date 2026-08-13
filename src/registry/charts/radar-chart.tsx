@@ -3,6 +3,9 @@
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { RadarChart } from "echarts/charts";
+import { PolarComponent, RadarComponent } from "echarts/components";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileRadarOption } from "@/registry/echarts-core/compile-radar";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
@@ -23,6 +26,9 @@ import type { PolarAngleAxisPart } from "@/registry/echarts-core/parts/types";
 import type { EChartsType } from "echarts/core";
 import type { ReactNode, Ref } from "react";
 import { useState } from "react";
+
+const RADAR_ECHARTS_MODULES = [RadarChart, RadarComponent, PolarComponent];
+getEcharts(RADAR_ECHARTS_MODULES);
 
 type NQRadarChartProps<
   TData extends Record<string, unknown>,
@@ -73,6 +79,7 @@ function RadarChartCanvas<TData extends Record<string, unknown>>({
       colorEpoch={colorEpoch}
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
+      echartsModules={RADAR_ECHARTS_MODULES}
     />
   );
 }

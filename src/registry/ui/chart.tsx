@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/registry/lib/cn";
 import * as React from "react";
 
 const THEMES = { light: "", dark: ".dark" } as const;

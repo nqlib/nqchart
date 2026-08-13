@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, type RefObject } from "react";
 import type { EChartsOption } from "echarts";
 import type { EChartsType } from "echarts/core";
-import { getEcharts } from "./echarts-init";
+import { getEcharts, type EChartsExtraModules } from "./echarts-init";
 import { maxIntroDurationMs, optionHasAnimatedSeries } from "./apply-chart-animation";
 import { applyRolloutIntroReveal } from "./apply-rollout-intro";
 import type { ChartPlotInsets } from "./chart-grid";
@@ -22,9 +22,7 @@ import {
   scheduleWaterfallHoverFocusRepair,
 } from "./waterfall-hover-focus";
 
-// Call (don't just import) so the module registry — including the canvas renderer —
-// is guaranteed in the bundle despite `sideEffects: false`. See echarts-init.ts.
-const echarts = getEcharts();
+const NO_EXTRA: EChartsExtraModules = [];
 
 export type NQChartSeriesEvent = {
   componentType?: string;
@@ -149,6 +147,7 @@ export function useNQEcharts(
   onPlotRect?: (insets: ChartPlotInsets) => void,
   eventHandlers?: NQChartEventHandlers,
   onChartInstance?: (instance: EChartsType | null) => void,
+  extraModules: EChartsExtraModules = NO_EXTRA,
 ) {
   const chartRef = useRef<EChartsType | null>(null);
   const introStartedRef = useRef(false);
@@ -292,6 +291,10 @@ export function useNQEcharts(
     const el = containerRef.current;
     if (!el) return;
 
+    // Called function — not a top-level `echarts.use` — so `sideEffects: false`
+    // cannot drop the canvas renderer. See echarts-init.ts.
+    const echarts = getEcharts(extraModules);
+
     const existing = echarts.getInstanceByDom(el);
     const instance =
       existing && !existing.isDisposed()
@@ -388,7 +391,7 @@ export function useNQEcharts(
       stableKeyRef.current = "";
       onChartInstanceRef.current?.(null);
     };
-  }, [containerRef, reportPlotRect]);
+  }, [containerRef, extraModules, reportPlotRect]);
 
   useEffect(() => {
     const el = containerRef.current;

@@ -39,7 +39,7 @@ Wallpaper vs guides: **[background-and-grid.md](./background-and-grid.md)** (req
 | `onMarkClick` | Mark click / keyboard Enter → `{ category, seriesKey, datum, value, index, modifiers }` |
 | `onBrushChange` | Brush range `{ startIndex, endIndex }` |
 | `onChartReady` | Escape hatch — ECharts instance (**unsupported** surface) |
-| `chartRef` | `{ getInstance(), toDataURL() }` for PNG/SVG export |
+| `chartRef` | `{ getInstance(), toDataURL() }` for PNG export |
 | `backgroundVariant` | Legacy root prop — prefer `<ChartBackground variant="…" />` (see below) |
 | `showBrush` | Zoom range footer (bar, line, area, composed). Set `false` on KPI blocks. |
 | `brushFormatLabel` | Shorten category labels in brush footer |

@@ -8,6 +8,8 @@ import {
 } from "@/registry/echarts-core/create-cartesian-chart";
 import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import { compileLineOption } from "@/registry/echarts-core/compile-line";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { LineChart } from "echarts/charts";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import type { NQScale } from "@/registry/echarts-core/parts/types";
@@ -20,6 +22,9 @@ import {
 import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/registry/ui/tooltip";
 import type { EChartsType } from "echarts/core";
 import { useState, type Ref } from "react";
+
+const LINE_ECHARTS_MODULES = [LineChart];
+getEcharts(LINE_ECHARTS_MODULES);
 
 type NQLineChartProps<
   TData extends Record<string, unknown>,
@@ -50,6 +55,7 @@ const { Chart: LineChartInner } = createCartesianChart<
   compile: compileLineOption,
   loadingVariant: "line",
   defaultLoadingPoints: 12,
+  echartsModules: LINE_ECHARTS_MODULES,
   getRootFields: (_props, xKey) => ({
     xDataKey: xKey,
     cartesian: { externalBrush: true },

@@ -3,6 +3,8 @@
 import { type ChartConfig, ChartContainer } from "@/registry/ui/chart";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { TreemapChart } from "echarts/charts";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileTreemapOption } from "@/registry/echarts-core/compile-treemap";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
@@ -16,6 +18,9 @@ import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { EChartsType } from "echarts/core";
 import type { ReactNode, Ref } from "react";
+
+const TREEMAP_ECHARTS_MODULES = [TreemapChart];
+getEcharts(TREEMAP_ECHARTS_MODULES);
 
 type NQTreemapChartProps<TConfig extends Record<string, ChartConfig[string]>> = {
   config: TConfig;
@@ -55,6 +60,7 @@ function TreemapChartCanvas({
       colorEpoch={colorEpoch}
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
+      echartsModules={TREEMAP_ECHARTS_MODULES}
     />
   );
 }

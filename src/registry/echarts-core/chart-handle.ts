@@ -2,7 +2,12 @@ import type { EChartsType } from "echarts/core";
 import { resolveChartChrome } from "./resolve-chart-chrome";
 
 export type ChartExportOpts = {
-  type?: "png" | "svg";
+  /**
+   * Raster format. Charts initialise with `CanvasRenderer` only, so SVG is not
+   * produced — ECharts would call `canvas.toDataURL("image/svg")`, which
+   * browsers treat as an unknown type and silently return PNG.
+   */
+  type?: "png";
   pixelRatio?: number;
   backgroundColor?: string;
 };
@@ -22,12 +27,11 @@ export function createChartHandle(
     toDataURL(opts) {
       const instance = getInstance();
       if (!instance) return "";
-      const type = opts?.type === "svg" ? "svg" : "png";
       const backgroundColor =
         opts?.backgroundColor ??
         (chartId ? resolveChartChrome(chartId).background : "#ffffff");
       return instance.getDataURL({
-        type,
+        type: "png",
         pixelRatio: opts?.pixelRatio ?? 2,
         backgroundColor,
       });

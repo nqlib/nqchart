@@ -1,6 +1,6 @@
 {
   "name": "@nqlib/nqchart",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "packageManager": "pnpm@10.12.1",
   "scripts": {
     "postinstall": "fumadocs-mdx",
@@ -23,7 +23,9 @@
     "build:types": "node scripts/build-types.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "check:api": "node scripts/check-api.mjs",
-    "build:npm": "rm -rf dist && pnpm run build:lib && pnpm run build:types && pnpm run check:dist && pnpm run check:api",
+    "check:internals": "node scripts/check-internals.mjs",
+    "check:size": "node scripts/check-size.mjs",
+    "build:npm": "rm -rf dist && pnpm run build:lib && pnpm run build:types && pnpm run check:dist && pnpm run check:api && pnpm run check:internals && pnpm run check:size",
     "verify:publish": "node scripts/verify-publish.mjs",
     "publish:npm": "node scripts/publish-npm.mjs",
     "prepack": "node scripts/strip-deps-for-publish.mjs prepack",

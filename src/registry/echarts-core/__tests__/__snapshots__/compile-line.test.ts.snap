@@ -2,7 +2,6 @@
 
 exports[`compileLineOption > matches snapshot for a representative context 1`] = `
 {
-  "angleAxis": undefined,
   "animation": true,
   "animationDuration": 700,
   "animationDurationUpdate": 350,
@@ -10,8 +9,6 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
   "animationEasingUpdate": "cubic-bezier(0.16,1,0.3,1)",
   "animationThreshold": 4000,
   "backgroundColor": "transparent",
-  "calendar": undefined,
-  "dataZoom": undefined,
   "grid": {
     "bottom": 4,
     "containLabel": true,
@@ -20,8 +17,6 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
     "top": 14,
   },
   "legend": undefined,
-  "radar": undefined,
-  "radiusAxis": undefined,
   "series": [
     {
       "animation": true,
@@ -91,7 +86,6 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
     "transitionDuration": 0,
     "trigger": "axis",
   },
-  "visualMap": undefined,
   "xAxis": {
     "axisLabel": {
       "color": "#737373",

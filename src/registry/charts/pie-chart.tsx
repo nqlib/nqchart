@@ -12,6 +12,8 @@ import {
 } from "@/registry/echarts-core/chart-instance-context";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { PieChart } from "echarts/charts";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compilePieOption } from "@/registry/echarts-core/compile-pie";
@@ -34,6 +36,9 @@ import {
 } from "@/registry/ui/tooltip";
 import { type ReactNode, type Ref, useMemo, useState } from "react";
 import type { EChartsType } from "echarts/core";
+
+const PIE_ECHARTS_MODULES = [PieChart];
+getEcharts(PIE_ECHARTS_MODULES);
 
 type NQPieChartProps<
   TData extends Record<string, unknown>,
@@ -88,6 +93,7 @@ function PieChartCanvas<TData extends Record<string, unknown>>({
         runtimeRef.current = instance;
         onChartInstance(instance);
       }}
+      echartsModules={PIE_ECHARTS_MODULES}
     />
   );
 }

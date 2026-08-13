@@ -7,12 +7,23 @@ describe("createChartHandle", () => {
     expect(handle.toDataURL()).toBe("");
   });
 
-  it("forwards getDataURL with themed background and opts", () => {
+  it("always requests png from the canvas renderer", () => {
     const getDataURL = vi.fn(() => "data:image/png;base64,abc");
     const handle = createChartHandle(() => ({ getDataURL }) as never, undefined);
-    expect(handle.toDataURL({ type: "svg", pixelRatio: 3 })).toBe("data:image/png;base64,abc");
+    expect(handle.toDataURL()).toBe("data:image/png;base64,abc");
     expect(getDataURL).toHaveBeenCalledWith({
-      type: "svg",
+      type: "png",
+      pixelRatio: 2,
+      backgroundColor: "#ffffff",
+    });
+  });
+
+  it("forwards pixelRatio and themed background", () => {
+    const getDataURL = vi.fn(() => "data:image/png;base64,abc");
+    const handle = createChartHandle(() => ({ getDataURL }) as never, undefined);
+    expect(handle.toDataURL({ type: "png", pixelRatio: 3 })).toBe("data:image/png;base64,abc");
+    expect(getDataURL).toHaveBeenCalledWith({
+      type: "png",
       pixelRatio: 3,
       backgroundColor: "#ffffff",
     });

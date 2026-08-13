@@ -16,12 +16,13 @@ Git tags (`v0.3.0`, …) mark the tree. **`pnpm publish:npm` is a separate human
 ## npm package
 
 ```bash
-pnpm run build:npm        # dist/ + types + check:dist + check:api
+pnpm run build:npm        # dist/ + types + check:dist + check:api + check:internals + check:size
 pnpm run verify:publish   # prepublishOnly gate
 pnpm publish:npm          # optional OTP: -- --otp=123456
 ```
 
 `check:api` type-probes `dist/types/` so inherited props (`onMarkClick` on line/area/composed) cannot silently drop.
+`check:internals` resolves private `echarts/lib/...` imports. `check:size` gzips each family entry (echarts included) and fails on >5% growth.
 
 ## Git tag (release)
 

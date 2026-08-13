@@ -1,7 +1,7 @@
 "use client";
 
 import { SPRING } from "@/globals/constants/motion";
-import { cn } from "@/lib/utils";
+import { cn } from "@/registry/lib/cn";
 import type { EChartsOption } from "echarts";
 import {
   motion,
@@ -156,7 +156,7 @@ function BrushHandle({
       {label ? (
         <div
           className={cn(
-            "brush-label bg-foreground text-background pointer-events-none absolute top-0 z-30 -translate-y-[calc(100%+6px)] rounded px-1.5 py-0.5 text-[10px] leading-tight font-medium whitespace-nowrap shadow-sm transition-opacity",
+            "brush-label bg-foreground text-background pointer-events-none absolute top-0 z-30 -translate-y-[calc(100%+6px)] rounded px-1.5 py-0.5 text-xs leading-tight font-medium whitespace-nowrap shadow-sm transition-opacity",
             isLeft ? "left-0" : "right-0 -translate-x-full",
             showLabel ? "opacity-100" : "opacity-0 group-hover/handle:opacity-100",
           )}

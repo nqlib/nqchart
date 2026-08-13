@@ -73,12 +73,11 @@ export function toMiniPreviewOption(
       emphasis: entry.type === "bar" ? { disabled: true } : { scale: false },
     }));
 
-  return {
+  const next: EChartsOption = {
     ...option,
     backgroundColor: "transparent",
     animation: false,
     animationDuration: 0,
-    dataZoom: undefined,
     tooltip: { show: false },
     legend: { show: false },
     grid: edgeToEdge
@@ -94,4 +93,6 @@ export function toMiniPreviewOption(
     yAxis: hideAxisPair(option.yAxis, !edgeToEdge) as EChartsOption["yAxis"],
     series: series as EChartsOption["series"],
   };
+  delete next.dataZoom;
+  return next;
 }

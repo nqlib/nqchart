@@ -8,6 +8,8 @@ import {
 } from "@/registry/echarts-core/create-cartesian-chart";
 import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import { compileComposedOption } from "@/registry/echarts-core/compile-composed";
+import { getEcharts } from "@/registry/echarts-core/echarts-init";
+import { BarChart, CustomChart, LineChart } from "echarts/charts";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import type { NQScale } from "@/registry/echarts-core/parts/types";
@@ -20,6 +22,9 @@ import {
 import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/registry/ui/tooltip";
 import type { EChartsType } from "echarts/core";
 import { useState, type Ref } from "react";
+
+const COMPOSED_ECHARTS_MODULES = [BarChart, LineChart, CustomChart];
+getEcharts(COMPOSED_ECHARTS_MODULES);
 
 type NQComposedChartProps<
   TData extends Record<string, unknown>,
@@ -53,6 +58,7 @@ const { Chart: ComposedChartInner } = createCartesianChart<
   compile: compileComposedOption,
   loadingVariant: "composed",
   defaultLoadingPoints: 8,
+  echartsModules: COMPOSED_ECHARTS_MODULES,
   // `barRadius` intentionally unset — see NQBarChart: a default here would
   // short-circuit the compile-time `--radius-sm` lookup.
   defaults: { isLoading: false, showBrush: true },

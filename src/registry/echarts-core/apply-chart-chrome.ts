@@ -335,7 +335,7 @@ export function applyChartChromeToOption(
   const hasHtmlTooltip = options?.hasHtmlTooltip ?? false;
   const fontFamily = resolveChartFontFamily(chartId);
 
-  return {
+  const next: EChartsOption = {
     ...option,
     backgroundColor: "transparent",
     // Root textStyle is the cascade point: ECharts inherits fontFamily/fontSize
@@ -349,14 +349,37 @@ export function applyChartChromeToOption(
     },
     xAxis: themeAxes(option.xAxis, chrome) as EChartsOption["xAxis"],
     yAxis: themeAxes(option.yAxis, chrome) as EChartsOption["yAxis"],
-    angleAxis: themeAxes(option.angleAxis, chrome) as EChartsOption["angleAxis"],
-    radiusAxis: themeAxes(option.radiusAxis, chrome) as EChartsOption["radiusAxis"],
-    radar: themeRadar(option.radar, chrome),
-    calendar: themeCalendar(option.calendar, chrome) as EChartsOption["calendar"],
     legend: themeLegend(option.legend, chrome),
     tooltip: themeNativeTooltip(option.tooltip, chrome, hasHtmlTooltip),
-    dataZoom: themeDataZoom(option.dataZoom, chrome) as EChartsOption["dataZoom"],
-    visualMap: themeVisualMap(option.visualMap, chrome) as EChartsOption["visualMap"],
     series: themeSpecialSeries(option.series, chrome) as EChartsOption["series"],
   };
+
+  const angleAxis = themeAxes(option.angleAxis, chrome);
+  if (angleAxis) next.angleAxis = angleAxis as EChartsOption["angleAxis"];
+  const radiusAxis = themeAxes(option.radiusAxis, chrome);
+  if (radiusAxis) next.radiusAxis = radiusAxis as EChartsOption["radiusAxis"];
+  const radar = themeRadar(option.radar, chrome);
+  if (radar) next.radar = radar;
+  const calendar = themeCalendar(option.calendar, chrome);
+  if (calendar) next.calendar = calendar as EChartsOption["calendar"];
+  const dataZoom = themeDataZoom(option.dataZoom, chrome);
+  if (dataZoom) next.dataZoom = dataZoom as EChartsOption["dataZoom"];
+  const visualMap = themeVisualMap(option.visualMap, chrome);
+  if (visualMap) next.visualMap = visualMap as EChartsOption["visualMap"];
+
+  // Compilers often set `dataZoom: undefined` when zoom is off. A present-but-empty
+  // key makes ECharts demand that component even when this family never registered it.
+  for (const key of [
+    "angleAxis",
+    "radiusAxis",
+    "radar",
+    "calendar",
+    "dataZoom",
+    "visualMap",
+    "polar",
+  ] as const) {
+    if (next[key] == null) delete next[key];
+  }
+
+  return next;
 }

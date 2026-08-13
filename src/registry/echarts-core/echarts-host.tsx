@@ -5,6 +5,7 @@ import type { EChartsOption } from "echarts";
 import { useNQEcharts, type NQChartEventHandlers } from "./use-nq-echarts";
 import type { ChartPlotInsets } from "./chart-grid";
 import { subscribeThemeChange } from "./resolve-chart-colors";
+import type { EChartsExtraModules } from "./echarts-init";
 
 type EChartsHostProps = {
   option: EChartsOption;
@@ -14,6 +15,8 @@ type EChartsHostProps = {
   onPlotRect?: (insets: ChartPlotInsets) => void;
   eventHandlers?: NQChartEventHandlers;
   onChartInstance?: (instance: import("echarts/core").EChartsType | null) => void;
+  /** Per-family ECharts chart/component modules. See echarts-init.ts. */
+  echartsModules?: EChartsExtraModules;
 };
 
 export function EChartsHost({
@@ -23,6 +26,7 @@ export function EChartsHost({
   onPlotRect,
   eventHandlers,
   onChartInstance,
+  echartsModules,
 }: EChartsHostProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [themeTick, setThemeTick] = useState(0);
@@ -31,7 +35,7 @@ export function EChartsHost({
 
   const mergedOption = useMemo(() => option, [option, colorEpoch, themeTick]);
 
-  useNQEcharts(containerRef, mergedOption, [mergedOption], onPlotRect, eventHandlers, onChartInstance);
+  useNQEcharts(containerRef, mergedOption, [mergedOption], onPlotRect, eventHandlers, onChartInstance, echartsModules);
 
   return <div ref={containerRef} className={className ?? "min-h-0 h-full w-full min-w-0 flex-1"} />;
 }

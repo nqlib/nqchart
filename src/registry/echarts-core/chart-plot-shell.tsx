@@ -12,7 +12,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/registry/lib/cn";
 import type { ChartPlotInsets } from "./chart-grid";
 import { ChartEmptyState, ChartErrorState } from "./chart-a11y";
 
