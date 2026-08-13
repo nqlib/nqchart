@@ -40,9 +40,11 @@ chartRef?: Ref<ChartHandle | null>;             // getInstance + toDataURL
 ```
 
 `seriesKey` is the config **dataKey**, not the display label. Compilers set ECharts
-series `id` to `dataKey`; the click mapper prefers `seriesId`, then an embedded
-`__nq_seriesKey`, then a label→key reverse map. Pie / funnel use the raw `nameKey` /
-`stageKey` value as `seriesKey`.
+series `id` to `dataKey`. When two marks share a dataKey (composed Area + Line),
+the second series uses `${dataKey}__nq_<kind>`; the click mapper strips that
+suffix so `seriesKey` stays the dataKey. The mapper prefers `seriesId`, then an
+embedded `__nq_seriesKey`, then a label→key reverse map. Pie / funnel use the
+raw `nameKey` / `stageKey` value as `seriesKey`.
 
 Selection **state** is owned by the consumer. Legend `selected` / `onSelectChange` is
 single-select isolate today (`string | null`).

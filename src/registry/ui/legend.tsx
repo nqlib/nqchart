@@ -110,8 +110,9 @@ export function ChartLegendContent({
   seriesKeys,
 }: ChartLegendContentProps) {
   const { config } = useChart();
+  const keys = uniqueLegendSeriesKeys(seriesKeys);
 
-  if (!seriesKeys.length) return null;
+  if (!keys.length) return null;
 
   return (
     <div
@@ -123,7 +124,7 @@ export function ChartLegendContent({
         className,
       )}
     >
-      {seriesKeys.map((key) => {
+      {keys.map((key) => {
         const itemConfig = config[key];
         if (!itemConfig) return null;
         const colorsCount = getColorsCount(itemConfig);
@@ -172,14 +173,27 @@ const LEGEND_SERIES_TYPES = new Set([
 type SeriesPart = Extract<ChartPart, { dataKey: string }>;
 
 function seriesKeysFromParts(parts: ChartPart[]) {
-  return parts
-    .filter(
-      (p): p is SeriesPart =>
-        LEGEND_SERIES_TYPES.has(p.type) &&
-        // `showInLegend` only exists on bar/line; other series default to shown.
-        (p as { showInLegend?: boolean }).showInLegend !== false,
-    )
-    .map((p) => p.dataKey);
+  return uniqueLegendSeriesKeys(
+    parts
+      .filter(
+        (p): p is SeriesPart =>
+          LEGEND_SERIES_TYPES.has(p.type) &&
+          // `showInLegend` only exists on bar/line; other series default to shown.
+          (p as { showInLegend?: boolean }).showInLegend !== false,
+      )
+      .map((p) => p.dataKey),
+  );
+}
+
+/** One legend row per config `dataKey`. Composed `<Area />` + `<Line />` on the
+ *  same key (fill under the line) must not emit two React keys. */
+export function uniqueLegendSeriesKeys(keys: string[]): string[] {
+  const seen = new Set<string>();
+  return keys.filter((key) => {
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 /** HTML legend rendered below the chart; hides built-in ECharts legend. */
@@ -203,7 +217,9 @@ export function NQChartLegend({
   const parts = usePartsSnapshot();
   const { segmentKeys } = useChart();
   const fromParts = seriesKeysFromParts(parts);
-  const seriesKeys = fromParts.length > 0 ? fromParts : (segmentKeys ?? []);
+  const seriesKeys = uniqueLegendSeriesKeys(
+    fromParts.length > 0 ? fromParts : (segmentKeys ?? []),
+  );
 
   return (
     <ChartLegendContent

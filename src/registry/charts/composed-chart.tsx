@@ -218,8 +218,8 @@ export function Line({
   curveType?: "linear" | "monotone" | "step";
   /** @deprecated use flat `yAxisId` */
   lineProps?: { yAxisId?: string };
-  /** `points` — markers only (e.g. box-plot median ticks). */
-  variant?: "points";
+  /** `points` — markers only (e.g. box-plot median ticks). `dashed` / `dotted` set stroke dash. */
+  variant?: "points" | "solid" | "dashed" | "dotted";
   showInLegend?: boolean;
   showLabels?: boolean;
   labelFormatter?: (value: unknown) => string;

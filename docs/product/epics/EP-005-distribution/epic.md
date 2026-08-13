@@ -36,7 +36,7 @@ a CI docs-truth lint. Without it, SecoLab-class migrations will rediscover drift
 |----|-------|--------|------|
 | ST-014 | Docs-truth lint against `dist/types` | planned | (mint plan when starting) |
 | ST-015 | Consumer install smoke (`shadcn add` or npm) | planned | — |
-| [ST-022](stories/ST-022-echarts-payload.md) | Per-family ECharts payload + export/internals guards | **done** | [016](../../../../plans/016-echarts-payload.md) |
+| [ST-022](stories/ST-022-echarts-payload.md) | Per-family ECharts payload + export/internals guards | **review** | [016](../../../../plans/016-echarts-payload.md) |
 
 ## Dependencies
 

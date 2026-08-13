@@ -17,6 +17,18 @@ description: Release notes and notable changes to NQChart
 
 - **`pnpm run check:internals`** resolves the private `echarts/lib/...` paths hover-focus depends on, so a moved file fails the build instead of a consumer runtime.
 
+### Line stroke
+
+- **`<Line variant="dashed" | "dotted">`** — standalone and composed Line compile `lineStyle.type`. Area already dashed on `dashed-stroke`; `variant="dashed"` now dashes the unstacked area stroke too. Composed Line still accepts `"points"` for markers-only (box-plot medians).
+
+### Composed
+
+- **Area + Line on the same `dataKey`** (fill under the line) no longer throws `id duplicates` at `setOption`. The second series uses `${dataKey}__nq_<kind>`; `onMarkClick.seriesKey` stays the dataKey. The HTML legend shows **one** row.
+
+### Accessibility
+
+- **Pie data table** keys off the value column (`{ name, value }`), not slice names in `config`. The previous lookup left every cell blank while `a11yTable` defaulted on.
+
 ---
 
 ## 0.3.0 — 2026-08-11

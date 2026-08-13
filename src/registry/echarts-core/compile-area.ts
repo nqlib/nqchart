@@ -10,7 +10,7 @@ import { resolveCanvasGapColor } from "./resolve-chart-chrome";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { areaVerticalFill, withAlpha } from "./color-alpha";
-import { categoryValues, getXKey, seriesValue, LINE_MARKER } from "./cartesian-series";
+import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import { normalizeStackPercent } from "./stack-percent";
 import type { AreaSeriesPart, CompileContext, XAxisPart, YAxisPart } from "./parts/types";
@@ -86,7 +86,7 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
       areaStyle,
       lineStyle: {
         color,
-        type: area.variant?.includes("dashed") ? ("dashed" as const) : ("solid" as const),
+        type: lineStyleType(area.variant),
         width: lineWidth,
       },
       triggerLineEvent: true,
@@ -153,7 +153,7 @@ export function buildAreaSeries(ctx: CompileContext) {
       step: area.curveType === "step" ? ("end" as const) : undefined,
       data: ctx.data.map((row) => seriesValue(row[area.dataKey])),
       areaStyle,
-      lineStyle: { color, width: lineWidth },
+      lineStyle: { color, width: lineWidth, type: lineStyleType(area.variant) },
       triggerLineEvent: true,
       label: seriesLabelOption(area.showLabels, area.labelFormatter),
       ...LINE_MARKER,

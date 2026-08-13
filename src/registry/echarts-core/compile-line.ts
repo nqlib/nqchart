@@ -10,7 +10,7 @@ import {
   buildValueYAxes,
   resolveYAxisIndex,
 } from "./cartesian-axes";
-import { categoryValues, getXKey, seriesValue, LINE_MARKER } from "./cartesian-series";
+import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import type { CompileContext, LineSeriesPart, XAxisPart, YAxisPart } from "./parts/types";
@@ -36,7 +36,7 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
       smooth: line.curveType === "monotone",
       step: line.curveType === "step" ? ("end" as const) : undefined,
       itemStyle: { color },
-      lineStyle: { color },
+      lineStyle: { color, type: lineStyleType(line.variant) },
       triggerLineEvent: true,
       label: seriesLabelOption(line.showLabels, line.labelFormatter),
       ...LINE_MARKER,

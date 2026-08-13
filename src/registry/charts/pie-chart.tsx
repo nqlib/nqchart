@@ -3,7 +3,7 @@
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
 import {
   ChartA11yTable,
-  deriveSeriesKeysFromConfig,
+  derivePieSeriesKeys,
 } from "@/registry/echarts-core/chart-a11y";
 import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import {
@@ -126,8 +126,7 @@ export function NQPieChart<
   );
   const derivedEmpty =
     isEmptyProp ?? (!isLoading && !error && Array.isArray(data) && data.length === 0);
-  const seriesKeys = deriveSeriesKeysFromConfig(
-    config,
+  const seriesKeys = derivePieSeriesKeys(
     data as Record<string, unknown>[],
     resolvedNameKey,
   );

@@ -102,7 +102,7 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 
 **Children:** `Line`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`
 
-**Line child:** `dataKey`, `curveType`, stroke variants, `dot`, `lineProps`
+**Line child:** `dataKey`, `curveType`, `variant` (`solid` \| `dashed` \| `dotted`; composed also `points` for markers-only), `dot`, `lineProps`
 
 ### Area-only
 
@@ -113,6 +113,8 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 ### Composed
 
 **Children:** `Bar`, `Line`, `Area`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`, `ReferenceLine`, `ReferenceBand`
+
+`<Area dataKey="otd" />` + `<Line dataKey="otd" />` is a fill-under-line: one legend row, `onMarkClick.seriesKey` is still `"otd"`.
 
 Bind series to a second axis with flat `yAxisId` (preferred). `barProps` / `lineProps` `{ yAxisId }` still work but are deprecated.
 

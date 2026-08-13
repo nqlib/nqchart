@@ -165,6 +165,7 @@ export function Line({
   curveType = "linear",
   yAxisId,
   lineProps,
+  variant,
   showLabels,
   labelFormatter,
 }: {
@@ -173,6 +174,8 @@ export function Line({
   yAxisId?: string;
   /** @deprecated use flat `yAxisId` */
   lineProps?: { yAxisId?: string };
+  /** Stroke dash. `"dashed"` tells a rolling mean apart from a parent series in the same colour. */
+  variant?: "solid" | "dashed" | "dotted";
   showLabels?: boolean;
   labelFormatter?: (value: unknown) => string;
 }) {
@@ -183,6 +186,7 @@ export function Line({
     dataKey,
     curveType,
     yAxisId: yAxisId ?? lineProps?.yAxisId,
+    variant,
     showLabels,
     labelFormatter,
   });

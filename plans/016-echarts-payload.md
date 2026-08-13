@@ -1,8 +1,9 @@
 # Plan 016 — Per-family ECharts registration, honest export, internals check
 
-- **Status:** DONE
+- **Status:** VERIFY — ready to tag v0.3.1; owner publishes npm
 - **Written:** 2026-08-12
 - **Closed:** 2026-08-12
+- **Reopened:** 2026-08-12 (consumer driving 0.3.0 against `/charts/lab`)
 - **Effort:** M · **Risk:** med
 - **Skills:** `nqchart-dev` / `nqchart-docs`
 - **Story:** [ST-022](../docs/product/epics/EP-005-distribution/stories/ST-022-echarts-payload.md)
@@ -49,8 +50,7 @@ paths under a `^5.6.0` peer range with no CI check.
 - Do not move `echarts.use([...])` to module top level (tree-shaken away;
   `Renderer 'undefined' is not imported`).
 - Do not bundle echarts (peer, stay external in `vite.lib.config.ts`).
-- Do not change any public **prop**. `ChartExportOpts.type` narrowing is the
-  only public-type change.
+- Do not change any public **prop** except the 0.3.1 follow-up: `<Line variant="dashed" | "dotted">` (composed also `"points"`). `ChartExportOpts.type` narrowing is the other public-type change.
 - Do not remove the private echarts imports (hover-focus / rollout intro).
 - Do not register `SVGRenderer` or add a `renderer` prop.
 - Do not touch plans 009–015.
@@ -177,9 +177,100 @@ toward the full-library set trips the check.
 - [x] `/bi-check`: click, legend, brush, empty, error, export still work
 - [x] Changelog 0.3.1; `package.json` 0.3.1; **not published**
 - [x] Consumer skill + `pnpm sync:skills` if export copy changed
+- [x] **`variant="dashed"` on Line (and Area).** `lineStyleType()` maps `dashed` / `dotted` (and Area `dashed-stroke`). Standalone `<Line variant>` is `"solid" | "dashed" | "dotted"`; composed also keeps `"points"`. Compilers set `lineStyle.type`.
+- [x] **Pie a11y table is empty.** `derivePieSeriesKeys` keys the table off the value column (explicit key, else `"value"`, else first non-name column). Do not use `Object.keys(config)` for pie.
 
 ## Out of scope / follow-ups
 
 - SVG renderer / `renderer` prop — own plan if a consumer needs vector export.
 - Splitting hover-focus imports out of `use-nq-echarts` (small vs the echarts tax).
 - ECharts 6.x (EP-006).
+
+## Session log — 2026-08-12
+
+Shipped on `feat/016-echarts-payload` (`eccb03d`). Package **0.3.1**, not published.
+Push to `nqlib/beecharts` was blocked (GitHub token for `bnguyenSVG` 403).
+
+**Finding 1.** `echarts-init.ts` registers BASE only. Each family file imports its
+chart/component modules, calls `getEcharts(MODULES)` at module scope, and passes
+`echartsModules` into `EChartsHost` / `createCartesianChart`. `use-nq-echarts`
+calls `getEcharts(extra)` inside the init effect (never top-level `echarts.use`).
+Registry `cn` is clsx-only (`src/registry/lib/cn.ts`) so a family entry does not
+pay `tailwind-merge`. Bar-chart: **273.5 → 198 KB gzip** (same `check:size`
+method as the gate; the work-order 333 KB figure was the published tarball).
+
+**Finding 2.** `ChartExportOpts.type` is `"png"` only. Chromium:
+`canvas.toDataURL("image/svg")` → `data:image/png;base64,…`. ECharts canvas
+`getDataURL` does `toDataURL('image/' + type)`.
+
+**Finding 3.** `scripts/check-internals.mjs` + `check:size` run inside
+`build:npm`. Duplicate `declare module` blocks removed from `globals.d.ts`.
+
+**Gotchas found while verifying `/` and `/bi-check`:**
+
+1. Guard extras by **module identity**, not a string key. Pie `[PieChart]` and
+   line `[LineChart]` both stringified to `"mod"`, so the later family never
+   registered (`Series pie is used but not imported`).
+2. Do not put `dataZoom: undefined` (or calendar/visualMap) on the option.
+   ECharts treats a present key as “this component is used”. Compilers omit the
+   key when zoom is off; `apply-chart-chrome` deletes nullish keys;
+   `to-mini-preview-option` `delete`s `dataZoom` instead of setting `undefined`
+   (the brush mini-preview is a second `EChartsHost` without DataZoom).
+3. `resolveAreaFillColor` must not touch `document` during SSR (`/bi-check` 500).
+
+**Consumer findings — 2026-08-12** (driving 0.3.0 via nqui-showcase `/charts/lab`; both must land before 0.3.1 publishes):
+
+4. **Harness, not library.** A synthetic `click` from an automation tool does not reach ECharts. Events must be a `mousedown` / `mouseup` / `click` sequence on the canvas. First two automated clicks appeared to do nothing; the handler was fine. Recorded so the next run does not file a false bug.
+5. **Null stays a gap — confirmed.** Hidden cartesian a11y table: `2026-05` actual is an empty cell, neighbouring series untouched, nothing drawn as zero. Dual axis (`$` left, `%` right), mixed bar+line, and legend all survive (ST-284 output intact).
+6. **Pie a11y table is a grid of blanks** (see acceptance above). Consumer turned `a11yTable` off for the donut only, with a comment naming the bug. Cartesian tables stay on.
+7. **No dashed line style** (see acceptance above). **Landed:** `lineStyleType()` in `cartesian-series.ts`; Line `variant` on standalone + composed; `check:api` probes `variant="dashed"`.
+
+**Implementation — 2026-08-12 (this follow-up):** dashed Line + pie a11y table; Area+Line same dataKey (`uniquifySeriesIds` + one legend row). Lab pins `composition.dashed-line`, `a11y.pie-table`, `composition.shared-datakey`. Tag `v0.3.1`; do not `pnpm publish:npm` from the agent.
+
+## How to test
+
+### Automated (must stay green)
+
+```bash
+pnpm test
+pnpm run lint          # 0 errors; existing warnings OK
+pnpm exec tsc --noEmit
+pnpm run check:size    # bar-chart ≤ 200 KB gzip; no family >5% over baseline
+pnpm run check:internals
+pnpm run check:api
+pnpm run build:npm     # lib → types → dist → api → internals → size
+```
+
+`check:size` prints every family. Confirm **bar-chart ~198 KB gzip**. To refresh
+the committed baseline after a deliberate payload change:
+`node scripts/check-size.mjs --write`.
+
+Type-level export check: `toDataURL({ type: "svg" })` must be a TS error;
+`toDataURL()` / `toDataURL({ type: "png" })` must typecheck.
+
+### Manual — `/bi-check` (`pnpm exec next dev --port 3001`)
+
+Open `http://localhost:3001/bi-check`. DevTools console must **not** show
+`Component X is used but not imported` / `Series X is used but not imported`.
+
+| Check | What to do | Pass |
+|-------|------------|------|
+| Export | Click **Export PNG via chartRef.toDataURL()** | Panel: `PNG ok (… chars)` |
+| Click | Click a **bar** in section 1 (not the a11y table). Real pointer or a `mousedown`/`mouseup`/`click` sequence on the **canvas** — a synthetic `click` alone does not reach ECharts. | `last mark click` shows series key + raw category; count increments |
+| Empty plot | Click the plot background | Count does **not** move |
+| Legend | Click a legend swatch/label (HTML legend, not `<th>`) | `legend selection` updates |
+| Brush | Drag the footer brush on section 1 | `brush range` shows `start…end` |
+| Empty plate | Section 5 left | “no data” plate, no canvas crash |
+| Error plate | Section 5 right | “Failed to load series”, distinct from empty |
+| Pie click | Section 6 pie slice | Panel updates `seriesKey` |
+
+Also load `/` (demo dashboard: area, bar, pie, radial). Same: no “not imported”
+warnings; charts draw; area/bar footer brush mini-preview draws.
+
+Spot-check docs pages that use modules other families omit: `/docs/heatmap-chart/static`,
+`/docs/calendar-chart/static`, `/docs/radar-chart/static`, `/docs/funnel-chart/static`.
+
+Showcase lab (`nqui-showcase`, `pnpm dev:local:charts`): `/charts/lab` cases
+`composition.dashed-line` and `a11y.pie-table` must pass.
+
+Do **not** `pnpm publish:npm`.

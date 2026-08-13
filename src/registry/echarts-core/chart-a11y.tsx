@@ -99,4 +99,24 @@ export function deriveSeriesKeysFromConfig(
   return Object.keys(data[0]).filter((k) => k !== categoryKey);
 }
 
+/**
+ * Pie (and other name/value) rows are `{ name, value }` while `config` is keyed
+ * by slice name for colour. `deriveSeriesKeysFromConfig` would look up
+ * `row["Alpha"]` and hand a screen reader a grid of blanks.
+ *
+ * Prefer an explicit value column, else `value`, else the first non-name key.
+ */
+export function derivePieSeriesKeys(
+  data: Record<string, unknown>[],
+  nameKey: string,
+  valueKey?: string,
+): string[] {
+  if (valueKey) return [valueKey];
+  const row = data[0];
+  if (!row) return ["value"];
+  const keys = Object.keys(row).filter((k) => k !== nameKey);
+  if (keys.includes("value")) return ["value"];
+  return keys.length ? [keys[0]!] : ["value"];
+}
+
 export { A11Y_TABLE_ROW_CAP };

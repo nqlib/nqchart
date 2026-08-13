@@ -60,4 +60,21 @@ describe("compileAreaOption", () => {
     expect(series[0]?.data[0]).toBe(186);
     expect(series[1]?.data[0]).toBe(80);
   });
+
+  it("sets lineStyle.type dashed for variant=dashed and dashed-stroke", () => {
+    const option = compileAreaOption(
+      makeCtx({
+        parts: [
+          { ...desktop, variant: "dashed" },
+          { ...mobile, variant: "dashed-stroke" },
+        ],
+        xDataKey: "month",
+        data: [{ month: "Jan", desktop: 186, mobile: 80 }],
+      }),
+    );
+
+    const series = option.series as Array<{ lineStyle?: { type?: string } }>;
+    expect(series[0]?.lineStyle?.type).toBe("dashed");
+    expect(series[1]?.lineStyle?.type).toBe("dashed");
+  });
 });

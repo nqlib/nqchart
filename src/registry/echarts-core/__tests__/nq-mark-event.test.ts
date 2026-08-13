@@ -66,6 +66,21 @@ describe("mapEChartsClickToMarkEvent", () => {
     expect(event?.seriesKey).toBe("planned");
   });
 
+  it("strips a collision suffix so seriesKey stays the dataKey", () => {
+    const event = mapEChartsClickToMarkEvent(
+      {
+        componentType: "series",
+        seriesId: "otd__nq_area",
+        seriesName: "On-time delivery",
+        dataIndex: 0,
+        value: 0.9,
+        name: "Jan",
+      },
+      { data: [{ month: "Jan", otd: 0.9 }], xDataKey: "month" },
+    );
+    expect(event?.seriesKey).toBe("otd");
+  });
+
   it("adds indexOffset for brush-window clicks", () => {
     const full = [
       { month: "Jan", sales: 10 },

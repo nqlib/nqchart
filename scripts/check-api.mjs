@@ -50,7 +50,7 @@ if (missing.length) {
 const probeTsx = `import { NQBarChart, Bar } from "../dist/types/registry/charts/bar-chart";
 import { NQLineChart, Line } from "../dist/types/registry/charts/line-chart";
 import { NQAreaChart, Area } from "../dist/types/registry/charts/area-chart";
-import { NQComposedChart, Bar as CBar } from "../dist/types/registry/charts/composed-chart";
+import { NQComposedChart, Bar as CBar, Line as CLine } from "../dist/types/registry/charts/composed-chart";
 import { NQPieChart, Pie } from "../dist/types/registry/charts/pie-chart";
 import { NQScatterChart, Scatter } from "../dist/types/registry/charts/scatter-chart";
 import { NQWaterfallChart } from "../dist/types/registry/charts/waterfall-chart";
@@ -100,7 +100,7 @@ export const line = (
     onChartReady={onChartReady}
     chartRef={chartRef}
   >
-    <Line dataKey="v" />
+    <Line dataKey="v" variant="dashed" />
   </NQLineChart>
 );
 
@@ -114,7 +114,7 @@ export const area = (
     onChartReady={onChartReady}
     chartRef={chartRef}
   >
-    <Area dataKey="v" />
+    <Area dataKey="v" variant="dashed" />
   </NQAreaChart>
 );
 
@@ -129,6 +129,7 @@ export const composed = (
     chartRef={chartRef}
   >
     <CBar dataKey="v" />
+    <CLine dataKey="y" variant="dashed" />
   </NQComposedChart>
 );
 

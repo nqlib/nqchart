@@ -42,6 +42,19 @@ describe("compileLineOption", () => {
     expect(series[0]?.name).toBe("Revenue");
   });
 
+  it("sets lineStyle.type dashed when variant is dashed", () => {
+    const option = compileLineOption(
+      makeCtx({
+        parts: [{ ...salesLine, variant: "dashed" }],
+        xDataKey: "month",
+        data: [{ month: "Jan", sales: 5 }],
+      }),
+    );
+
+    const series = option.series as Array<{ lineStyle?: { type?: string } }>;
+    expect(series[0]?.lineStyle?.type).toBe("dashed");
+  });
+
   it("matches snapshot for a representative context", () => {
     const option = compileLineOption(
       makeCtx({

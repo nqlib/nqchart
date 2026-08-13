@@ -18,6 +18,7 @@ Public props types and `dist/types/` must admit what the factory already wires.
 ## Fixes
 
 - [standalone props drop inherited](../fixes/api-surface-standalone-props-drop-inherited.md)
+- [Line variant dashed](../fixes/api-surface-line-variant-dashed.md)
 
 ## When investigating
 

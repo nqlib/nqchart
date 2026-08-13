@@ -8,7 +8,7 @@ import {
   buildValueYAxes,
   resolveYAxisIndex,
 } from "./cartesian-axes";
-import { categoryValues, getXKey, seriesValue, LINE_MARKER } from "./cartesian-series";
+import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { buildAreaSeries } from "./compile-area";
@@ -20,6 +20,7 @@ import type {
   XAxisPart,
   YAxisPart,
 } from "./parts/types";
+import { uniquifySeriesIds } from "./series-identity";
 import { seriesLabelOption } from "./series-labels";
 
 export function compileComposedOption(ctx: CompileContext): EChartsOption {
@@ -68,7 +69,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       showLine: !markersOnly,
       triggerLineEvent: true,
       itemStyle: { color },
-      lineStyle: { color, width: markersOnly ? 0 : 2 },
+      lineStyle: { color, width: markersOnly ? 0 : 2, type: lineStyleType(line.variant) },
       showSymbol: true,
       symbol: markersOnly ? "rect" : LINE_MARKER.symbol,
       symbolSize: markersOnly ? [16, 3] : LINE_MARKER.symbolSize,
@@ -169,7 +170,12 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     xAxis: xAxis as EChartsOption["xAxis"],
     yAxis: yAxisList,
     ...(dataZoom ? { dataZoom } : {}),
-    series: [...barSeries, ...lineSeries, ...areaSeries, ...whiskerSeries] as EChartsOption["series"],
+    series: uniquifySeriesIds([
+      ...barSeries,
+      ...lineSeries,
+      ...areaSeries,
+      ...whiskerSeries,
+    ]) as EChartsOption["series"],
   };
 
   return applyChartUiToOption(ctx, base);

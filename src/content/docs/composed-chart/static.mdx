@@ -271,10 +271,10 @@ A single line series. Each `<Line />` is self-contained and generates its own co
 
 <ApiTable>
   <ApiRow name="dataKey" type="string" required>
-    The series key. Must exist on both the data rows and the chart `config`.
+    The series key. Must exist on both the data rows and the chart `config`. May be shared with `<Area />` for a fill-under-line: the legend shows one row and `onMarkClick.seriesKey` stays this key.
   </ApiRow>
-  <ApiRow name="strokeVariant" type='"solid" | "dashed" | "animated-dashed"' default='"solid"'>
-    The stroke style for this line.
+  <ApiRow name="variant" type='"solid" | "dashed" | "dotted" | "points"' default='"solid"'>
+    `"dashed"` / `"dotted"` set the stroke dash. `"points"` draws markers only (box-plot median ticks).
   </ApiRow>
   <ApiRow name="curveType" type='"basis" | "bump" | "linear" | "natural" | "monotoneX" | "monotoneY" | "monotone" | "step" | "stepBefore" | "stepAfter" | …'>
     The curve interpolation for this line. Falls back to the chart's `curveType` when omitted.

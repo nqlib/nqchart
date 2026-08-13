@@ -14,7 +14,7 @@ metadata:
 
 **Agents:** When the user asks to fix a bug, **search this file first** (domain table, then semantic table). Open the fix note before changing code.
 
-Last updated: 2026-08-11
+Last updated: 2026-08-12
 
 ---
 
@@ -29,7 +29,10 @@ Problem areas → domain overview → individual fix notes.
 | **cartesian-stack** | Percent stack empty plot; series off-scale above yAxis.max 100; chrome paints, bands missing | [domains/cartesian-stack.md](./domains/cartesian-stack.md) | [area percent empty](./fixes/cartesian-stack-area-percent-empty.md) |
 | **brush** | Footer slider splits bar groups; handle mid-cluster; range framing | [domains/brush.md](./domains/brush.md) | [band-edge handles](./fixes/brush-band-edge-handles.md) |
 | **funnel-order** | Pipeline stages jump when values cross; hardcoded descending sort | [domains/funnel-order.md](./domains/funnel-order.md) | [sort none / sort prop](./fixes/funnel-order-sort-none.md) |
-| **api-surface** | TS rejects a prop the runtime already wires; standalone props omit factory fields | [domains/api-surface.md](./domains/api-surface.md) | [standalone props drop inherited](./fixes/api-surface-standalone-props-drop-inherited.md) |
+| **legend** | Duplicate React keys; two legend rows for one dataKey; Area+Line fill-under-line | [domains/legend.md](./domains/legend.md) | [duplicate dataKey](./fixes/legend-duplicate-datakey.md) |
+| **series-id** | `id duplicates: otd` at setOption; Area+Line same dataKey | [domains/series-id.md](./domains/series-id.md) | [duplicate series ids](./fixes/series-id-duplicates.md) |
+| **api-surface** | TS rejects a prop the runtime already wires; standalone props omit factory fields; **Line cannot dash** | [domains/api-surface.md](./domains/api-surface.md) | [standalone props drop inherited](./fixes/api-surface-standalone-props-drop-inherited.md), [Line variant dashed](./fixes/api-surface-line-variant-dashed.md) |
+| **a11y** | Hidden data table blank; pie cells empty; series keys from config vs row shape | [domains/a11y.md](./domains/a11y.md) | [pie table blank](./fixes/a11y-pie-table-blank.md) |
 
 <!-- Add rows when new domains appear: animation, tooltip, compile-bar, registry-boundary, … -->
 
@@ -70,8 +73,15 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | indexToPlotPercent center; boundaryGap brush left right edges | brush | [brush-band-edge-handles](./fixes/brush-band-edge-handles.md) |
 | funnel stages reorder; On Deck jumps above Opportunities; sort descending hardcoded | funnel | [funnel-order-sort-none](./fixes/funnel-order-sort-none.md) |
 | FunnelSort; sort none; pipeline stage order follows data | funnel | [funnel-order-sort-none](./fixes/funnel-order-sort-none.md) |
+| two children same key otd; legend duplicate key; Area Line same dataKey; fill under line two legend rows | composed / legend | [legend-duplicate-datakey](./fixes/legend-duplicate-datakey.md) |
+| id duplicates: otd; setOption id duplicates; Area Line same series id | composed / echarts | [series-id-duplicates](./fixes/series-id-duplicates.md) |
+| otd__nq_area; uniquifySeriesIds; seriesMatchesLegendKey | composed / series-id | [series-id-duplicates](./fixes/series-id-duplicates.md) |
 | onMarkClick excess property; composed props omit click; standalone props drop inherited | line / area / composed | [api-surface-standalone-props-drop-inherited](./fixes/api-surface-standalone-props-drop-inherited.md) |
 | check:api; CartesianChartBaseProps; dist/types probe fails onMarkClick | api / types | [api-surface-standalone-props-drop-inherited](./fixes/api-surface-standalone-props-drop-inherited.md) |
+| Line variant dashed does nothing; rolling mean same colour as parent; no dashed lineStyle; strokeVariant missing | line / composed | [api-surface-line-variant-dashed](./fixes/api-surface-line-variant-dashed.md) |
+| lineStyle.type unset; compile-line lineStyle color only; composed Line variant points only | line / compile-line | [api-surface-line-variant-dashed](./fixes/api-surface-line-variant-dashed.md) |
+| pie a11y table blank; donut sr-only grid of empty cells; a11yTable pie empty | pie / a11y | [a11y-pie-table-blank](./fixes/a11y-pie-table-blank.md) |
+| deriveSeriesKeysFromConfig Object.keys config slice names; row Alpha empty | pie / chart-a11y | [a11y-pie-table-blank](./fixes/a11y-pie-table-blank.md) |
 | item focus opacity 0.2 on focused mark; emphasis state wrong | item-focus charts | Start [hover-focus domain](./domains/hover-focus.md), then chart-specific fix |
 | `repairScatterHoverFocus` / `repairTreemapHoverFocus` / `repairFunnelHoverFocus` / `repairWaterfallHoverFocus` / `repairRadialHoverFocus` | echarts-core runtime | See scatter, treemap, funnel, waterfall, or radial fix note above |
 
@@ -106,7 +116,15 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/stack-percent.ts` | cartesian-stack |
 | `src/registry/echarts-core/chart-grid.ts` | brush |
 | `src/registry/echarts-core/nq-chart-brush.tsx` | brush |
+| `src/registry/ui/legend.tsx` | legend |
+| `src/registry/echarts-core/series-identity.ts` | series-id |
+| `src/registry/echarts-core/compile-composed.ts` | series-id |
+| `src/registry/echarts-core/nq-mark-event.ts` | series-id |
+| `src/registry/echarts-core/legend-focus.ts` | series-id, legend |
 | `src/registry/charts/{line,area,composed}-chart.tsx` (props types) | api-surface |
+| `src/registry/echarts-core/compile-line.ts` | api-surface |
+| `src/registry/echarts-core/chart-a11y.tsx` | a11y |
+| `src/registry/charts/pie-chart.tsx` | a11y |
 | `scripts/check-api.mjs` | api-surface |
 | `src/registry/echarts-core/create-cartesian-chart.tsx` (`CartesianChartBaseProps`) | api-surface |
 

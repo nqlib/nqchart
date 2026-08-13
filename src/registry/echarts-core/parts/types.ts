@@ -55,8 +55,8 @@ export type LineSeriesPart = {
   curveType?: "linear" | "monotone" | "step" | "bump";
   yAxisId?: string;
   smooth?: boolean;
-  /** `points` — markers only (box-plot median ticks). */
-  variant?: string;
+  /** `points` — markers only (box-plot median ticks). `dashed` / `dotted` set stroke dash. */
+  variant?: "solid" | "dashed" | "dotted" | "points" | string;
   showInLegend?: boolean;
   showLabels?: boolean;
   labelFormatter?: (value: unknown) => string;

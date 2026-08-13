@@ -122,4 +122,26 @@ describe("withLegendFocus", () => {
     // Better to change nothing than to fade a whole chart over a stale key.
     expect(s.every((x) => x.itemStyle?.opacity === undefined)).toBe(true);
   });
+
+  it("keeps a collision-suffixed area bright when the legend key is the dataKey", () => {
+    const fillUnder: EChartsOption = {
+      series: [
+        { type: "bar", id: "planned", data: [1] },
+        { type: "line", id: "otd", data: [5], lineStyle: { width: 2 } },
+        {
+          type: "line",
+          id: "otd__nq_area",
+          name: "On-time delivery",
+          data: [5],
+          areaStyle: { opacity: 0.2 },
+        },
+      ],
+    };
+    const o = withLegendFocus(fillUnder, { ...on, selected: "otd" });
+    const [planned, line, area] = seriesOf(o);
+    expect(planned?.itemStyle?.opacity).toBeLessThan(1);
+    expect(line?.itemStyle?.opacity).toBe(1);
+    expect(area?.itemStyle?.opacity).toBe(1);
+    expect(area?.areaStyle?.opacity).toBe(0.2);
+  });
 });

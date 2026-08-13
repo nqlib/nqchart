@@ -20,6 +20,7 @@
 
 import type { EChartsOption } from "echarts";
 import { isReferenceSeriesId } from "./nq-mark-event";
+import { seriesMatchesLegendKey } from "./series-identity";
 
 /** Low enough to recede, high enough to still read as context. */
 const DIMMED = 0.16;
@@ -108,7 +109,8 @@ export function withLegendFocus(
   // Does any series *own* this key? If so the selection is series-level;
   // otherwise it names a slice inside a single series.
   const seriesLevel =
-    selected != null && series.some((s) => s.id === selected || s.name === selected);
+    selected != null &&
+    series.some((s) => seriesMatchesLegendKey(s.id, s.name, selected));
   const itemLevel = selected != null && !seriesLevel;
 
   return {
@@ -120,7 +122,10 @@ export function withLegendFocus(
       if (itemLevel || (selected == null && Array.isArray(s.data) && s.data.some(isNamedItem))) {
         return focusItems(s, selected);
       }
-      return withOpacity(s, selected != null && s.id !== selected && s.name !== selected);
+      return withOpacity(
+        s,
+        selected != null && !seriesMatchesLegendKey(s.id, s.name, selected),
+      );
     }) as EChartsOption["series"],
   };
 }

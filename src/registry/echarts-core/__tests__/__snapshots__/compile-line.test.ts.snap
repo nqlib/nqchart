@@ -57,6 +57,7 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
       "label": undefined,
       "lineStyle": {
         "color": "color(sales,0)",
+        "type": "solid",
       },
       "name": "sales",
       "showSymbol": true,

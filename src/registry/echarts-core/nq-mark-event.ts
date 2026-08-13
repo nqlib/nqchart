@@ -3,6 +3,8 @@
  * `category` is the raw axis / row value (not the tick label) so boards can filter.
  */
 
+import { dataKeyFromSeriesId } from "./series-identity";
+
 export type NQMarkEventModifiers = {
   shift: boolean;
   meta: boolean;
@@ -170,7 +172,7 @@ export function mapEChartsClickToMarkEvent(
   if (embeddedKey) {
     seriesKey = embeddedKey;
   } else if (seriesId) {
-    seriesKey = seriesId;
+    seriesKey = dataKeyFromSeriesId(seriesId);
   } else if (opts.nameKey) {
     // Pie / funnel: slice identity is the raw nameKey value, not the series name.
     const sliceId = datum[opts.nameKey];

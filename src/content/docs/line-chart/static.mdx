@@ -91,7 +91,7 @@ links:
 
 ## Usage
 
-The line chart is composible. `<NQLineChart>` is the container, and you compose only the parts you need — `<Grid>`, `<XAxis>`, `<YAxis>`, `<Legend>`, `<Tooltip>`, and one or more `<Line>` — as its children. Each `<Line>` carries its own `strokeVariant`, `curveType`, `glowing`, `enableBufferLine`, and `isClickable`, so a single chart can mix stroke styles and make only some series interactive.
+The line chart is composible. `<NQLineChart>` is the container, and you compose only the parts you need — `<Grid>`, `<XAxis>`, `<YAxis>`, `<Legend>`, `<Tooltip>`, and one or more `<Line>` — as its children. Each `<Line>` carries its own `variant` (`solid` / `dashed` / `dotted`), `curveType`, and `isClickable`, so a single chart can mix stroke styles and make only some series interactive.
 
 ```tsx
 import {
@@ -229,8 +229,8 @@ A single line series. Each `<Line />` is self-contained and generates its own gr
   <ApiRow name="dataKey" type="string" required>
     The series key. Must exist on both the data rows and the chart `config`.
   </ApiRow>
-  <ApiRow name="strokeVariant" type='"solid" | "dashed" | "animated-dashed"' default='"solid"'>
-    The visual style for this line's stroke. Applies to this line only.
+  <ApiRow name="variant" type='"solid" | "dashed" | "dotted"' default='"solid"'>
+    Stroke dash. Use `"dashed"` to tell a rolling mean apart from a parent series in the same colour.
   </ApiRow>
   <ApiRow name="curveType" type='"basis" | "bump" | "linear" | "natural" | "monotoneX" | "monotoneY" | "monotone" | "step" | "stepBefore" | "stepAfter" | …'>
     The curve interpolation for this line. Falls back to the chart's `curveType` when omitted.
