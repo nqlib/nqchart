@@ -101,9 +101,9 @@ its design tokens at runtime from the chart container's computed style:
 | `--font-sans` | all canvas text (ECharts can't inherit CSS fonts) |
 | `--radius` | bar / treemap / radial corner radii |
 
-nqui is an **optional** peer: without it, charts fall back to a shadcn-compatible neutral palette,
-an Inter-first font stack, and `--radius: 0.45rem`. Define those variables yourself and NQChart
-matches whatever design system you're using.
+nqui is **not a dependency**. Without those tokens, charts fall back to a shadcn-compatible
+neutral palette, an Inter-first font stack, and `--radius: 0.45rem`. Install any
+`@nqlib/nqui` version (or none) — NQChart matches whatever defines the variables.
 
 Motion is aligned to nqui's `motion.css` vocabulary — entrances use its `--ease-out`
 curve, morphs use `--ease-in-out`, and `prefers-reduced-motion` disables animation

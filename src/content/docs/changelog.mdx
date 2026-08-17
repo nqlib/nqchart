@@ -9,6 +9,10 @@ description: Release notes and notable changes to NQChart
 
 - **`hoverFocus?: boolean`** (default on) on every `NQ*Chart` root. `false` keeps the tooltip and disables sibling dim. Sparkline and single-arc gauge stay tooltip-only either way. See [Hover Focus](/docs/hover-focus). Toggling Off then On overwrites ECharts `emphasis.disabled` (no remount required).
 
+### Packaging
+
+- **No `@nqlib/nqui` peer.** Charts read CSS tokens (`--foreground`, `--radius`, …) when present. Install any nqui version — or none.
+
 ## 0.3.1 — 2026-08-12
 
 ### Payload

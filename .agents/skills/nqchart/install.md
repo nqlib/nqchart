@@ -25,6 +25,8 @@ npm i react react-dom echarts motion
 
 Most React/Next.js apps already have `react`/`react-dom`; you typically only add `echarts` and `motion`.
 
+`@nqlib/nqui` is **not** a peer. Install any nqui version (or none). Charts read CSS tokens (`--foreground`, `--radius`, …) when they exist and otherwise fall back to a shadcn-compatible palette.
+
 ## 3. Import per chart family
 
 Each chart family is its own subpath. A family exports its root (`NQ*Chart`) **plus** the scoped children you compose inside it (`Bar`, `XAxis`, `Tooltip`, …):
