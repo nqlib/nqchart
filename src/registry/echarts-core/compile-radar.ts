@@ -1,7 +1,7 @@
 import type { EChartsOption } from "echarts";
 import { getColorsCount } from "@/registry/ui/chart";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { itemFocus } from "./emphasis-presets";
+import { itemFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { radarAreaFill } from "./color-alpha";
 import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
@@ -46,7 +46,10 @@ export function compileRadarOption(ctx: CompileContext): EChartsOption {
       itemStyle: { color },
       symbol: "circle",
       symbolSize: 4,
-      ...itemFocus({ blurLine: true, ...(glowing ? { shadowBlur: 14 } : {}) }),
+      ...hoverFocusOrOff(
+        isHoverFocusOn(ctx),
+        itemFocus({ blurLine: true, ...(glowing ? { shadowBlur: 14 } : {}) }),
+      ),
     };
   });
 

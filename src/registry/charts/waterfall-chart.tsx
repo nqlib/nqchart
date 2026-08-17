@@ -52,6 +52,7 @@ type NQWaterfallChartProps<
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
   isEmpty?: boolean;
   emptyState?: ReactNode;
   error?: ReactNode;
@@ -71,6 +72,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   data: TData[];
   fullData?: TData[];
@@ -82,12 +84,14 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
   const { option, colorEpoch } = useCompiledOption(compileWaterfallOption, {
     data,
     nameKey,
     valueKey,
     cartesian: { externalBrush },
+    hoverFocus,
   });
   const runtimeRef = useChartInstanceRef();
   const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
@@ -111,6 +115,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
       echartsModules={WATERFALL_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }
@@ -127,6 +132,7 @@ export function NQWaterfallChart<
   valueKey = "value",
   isLoading,
   showBrush = true,
+  hoverFocus = true,
   brushFormatLabel,
   onBrushChange,
   onMarkClick,
@@ -215,6 +221,7 @@ export function NQWaterfallChart<
                 onMarkClick={onMarkClick}
                 onChartReady={onChartReady}
                 chartRef={chartRef}
+                hoverFocus={hoverFocus}
               />
             }
           >

@@ -68,6 +68,7 @@ type NQRadialChartProps<
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 };
 
 function RadialChartCanvas<TData extends Record<string, unknown>>({
@@ -83,6 +84,7 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   data: TData[];
   nameKey?: string;
@@ -96,6 +98,7 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
   const hostWrapRef = useRef<HTMLDivElement>(null);
   const [viewport, setViewport] = useState<{ width: number; height: number } | undefined>();
@@ -119,6 +122,7 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
     data,
     nameKey,
     viewport,
+    hoverFocus,
     radial: {
       radialVariant: variant === "semi" ? "semi" : "full",
       radialLayout: layout ?? "concentric",
@@ -143,6 +147,7 @@ function RadialChartCanvas<TData extends Record<string, unknown>>({
         eventHandlers={eventHandlers}
         onChartInstance={onChartInstance}
         echartsModules={RADIAL_ECHARTS_MODULES}
+        hoverFocus={hoverFocus}
       />
     </div>
   );
@@ -168,6 +173,7 @@ export function NQRadialChart<
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: NQRadialChartProps<TData, TConfig>) {
   const resolvedNameKey = (nameKey ?? Object.keys(data[0] ?? {})[0] ?? "name") as string;
   const displayData = isLoading ? (getLoadingData(5) as unknown as TData[]) : data;
@@ -196,6 +202,7 @@ export function NQRadialChart<
               onMarkClick={onMarkClick}
               onChartReady={onChartReady}
               chartRef={chartRef}
+              hoverFocus={hoverFocus}
             />
           }
         >

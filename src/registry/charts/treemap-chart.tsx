@@ -31,6 +31,7 @@ type NQTreemapChartProps<TConfig extends Record<string, ChartConfig[string]>> = 
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 };
 
 function TreemapChartCanvas({
@@ -38,13 +39,15 @@ function TreemapChartCanvas({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   tree: TreemapNode[];
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
-  const { option, colorEpoch } = useCompiledOption(compileTreemapOption, { data: [] });
+  const { option, colorEpoch } = useCompiledOption(compileTreemapOption, { data: [], hoverFocus });
   // A tile's identity is its node name, exactly as a pie slice's is.
   const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
     onMarkClick,
@@ -61,6 +64,7 @@ function TreemapChartCanvas({
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
       echartsModules={TREEMAP_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }
@@ -74,6 +78,7 @@ export function NQTreemapChart<TConfig extends Record<string, ChartConfig[string
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: NQTreemapChartProps<TConfig>) {
   const tree = data as TreemapNode[];
   return (
@@ -88,6 +93,7 @@ export function NQTreemapChart<TConfig extends Record<string, ChartConfig[string
               onMarkClick={onMarkClick}
               onChartReady={onChartReady}
               chartRef={chartRef}
+              hoverFocus={hoverFocus}
             />
           }
         >

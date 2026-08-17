@@ -177,6 +177,9 @@ The root container. It owns hierarchical data (`TreemapNode[]`), shared tile sel
   <ApiRow name="isLoading" type="boolean" default="false">
     Displays the animated mosaic skeleton generated inside the SVG while data resolves.
   </ApiRow>
+  <ApiRow name="hoverFocus" type="boolean" default="true">
+    Hover dim: focused tile full opacity, siblings at `0.2`. `false` keeps the tooltip and disables sibling fade. See [Hover Focus](/docs/hover-focus).
+  </ApiRow>
   <ApiRow name="treemapProps" type='Omit<TreemapProps, "data" | "dataKey">'>
     Additional ECharts treemap options (`data`, `dataKey`, labels, gradients, strokes, naming keys, and sizing already owned by NQTreemap internals). Read the <Link href="https://echarts.apache.org/en/option.html#series-treemap" _blank>ECharts treemap documentation</Link> for available escape hatches.
   </ApiRow>

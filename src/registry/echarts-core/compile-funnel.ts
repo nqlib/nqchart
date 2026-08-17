@@ -1,6 +1,6 @@
 import type { CustomSeriesOption, EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { funnelFocus, itemFocus, HOVER_DIM_OPACITY } from "./emphasis-presets";
+import { funnelFocus, itemFocus, HOVER_DIM_OPACITY, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { resolveFunnelLayout } from "./funnel-layout";
 import { buildPipeLayout } from "./funnel-pipe-geometry";
 import {
@@ -80,7 +80,7 @@ function compilePipeSeries(
     id: "nq-funnel-pipe",
     coordinateSystem: "cartesian2d",
     clip: false,
-    ...itemFocus({ dimLabel: true }),
+    ...hoverFocusOrOff(isHoverFocusOn(ctx), itemFocus({ dimLabel: true })),
     blur: {
       itemStyle: { opacity: HOVER_DIM_OPACITY },
     },
@@ -215,7 +215,7 @@ export function compileFunnelOption(ctx: CompileContext): EChartsOption {
           formatter: "{b}\n{c}",
         },
         labelLine: { show: false },
-        ...funnelFocus(),
+        ...hoverFocusOrOff(isHoverFocusOn(ctx), funnelFocus()),
         data: funnelData,
       },
     ],

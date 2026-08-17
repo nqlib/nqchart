@@ -226,6 +226,9 @@ The root container. It owns the data, the shared selection state, the loading sk
   <ApiRow name="showBrush" type="boolean" default="false">
     When enabled, displays a brush control below the chart for selecting a category range. Handle labels stay visible at rest. Horizontal layouts use a vertical category mini-preview so the window matches category bands.
   </ApiRow>
+  <ApiRow name="hoverFocus" type="boolean" default="true">
+    Hover dim: focused mark full opacity, siblings at `0.2`. `false` keeps the tooltip and disables sibling fade. See [Hover Focus](/docs/hover-focus).
+  </ApiRow>
   <ApiRow name="xDataKey" type="keyof TData & string">
     The data key used for the x-axis. Only needed by the brush footer — the axis itself reads its key from `<XAxis dataKey="…" />`.
   </ApiRow>

@@ -4,7 +4,7 @@
  */
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { pieFocus } from "./emphasis-presets";
+import { pieFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 import type { CompileContext, PieSeriesPart } from "./parts/types";
@@ -49,7 +49,7 @@ export function compilePieOption(ctx: CompileContext): EChartsOption {
           formatter: "{b}",
         },
         labelLine: { show: pie?.showLabels ?? true, length: 10, length2: 8 },
-        ...pieFocus(),
+        ...hoverFocusOrOff(isHoverFocusOn(ctx), pieFocus()),
       },
     ],
   };

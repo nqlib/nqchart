@@ -42,6 +42,7 @@ type NQRadarChartProps<
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 };
 
 function RadarChartCanvas<TData extends Record<string, unknown>>({
@@ -49,13 +50,15 @@ function RadarChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   data: TData[];
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
-  const { option, colorEpoch } = useCompiledOption(compileRadarOption, { data });
+  const { option, colorEpoch } = useCompiledOption(compileRadarOption, { data, hoverFocus });
   const parts = usePartsSnapshot();
   const angleKey = parts.find(
     (p): p is PolarAngleAxisPart => p.type === "polarAngleAxis",
@@ -80,6 +83,7 @@ function RadarChartCanvas<TData extends Record<string, unknown>>({
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
       echartsModules={RADAR_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }
@@ -96,6 +100,7 @@ export function NQRadarChart<
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: NQRadarChartProps<TData, TConfig>) {
   const displayData = isLoading ? (getLoadingData(6) as unknown as TData[]) : data;
   return (
@@ -110,6 +115,7 @@ export function NQRadarChart<
               onMarkClick={onMarkClick}
               onChartReady={onChartReady}
               chartRef={chartRef}
+              hoverFocus={hoverFocus}
             />
           }
         >

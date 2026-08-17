@@ -32,18 +32,21 @@ type NQCalendarChartProps<TConfig extends Record<string, ChartConfig[string]>> =
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 };
 
 function CalendarChartCanvas({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
-  const { option, colorEpoch } = useCompiledOption(compileCalendarOption, { data: [] });
+  const { option, colorEpoch } = useCompiledOption(compileCalendarOption, { data: [], hoverFocus });
   // Cells live on the `<Calendar>` part rather than the root, so the rows a
   // click resolves against have to be read back out of the registry.
   const parts = usePartsSnapshot();
@@ -65,6 +68,7 @@ function CalendarChartCanvas({
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
       echartsModules={CALENDAR_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }
@@ -77,6 +81,7 @@ export function NQCalendarChart<TConfig extends Record<string, ChartConfig[strin
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: NQCalendarChartProps<TConfig>) {
   return (
     <PartRegistryProvider>
@@ -89,6 +94,7 @@ export function NQCalendarChart<TConfig extends Record<string, ChartConfig[strin
               onMarkClick={onMarkClick}
               onChartReady={onChartReady}
               chartRef={chartRef}
+              hoverFocus={hoverFocus}
             />
           }
         >

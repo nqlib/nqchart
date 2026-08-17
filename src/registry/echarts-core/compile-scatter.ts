@@ -2,7 +2,7 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { gridBottomWithZoom } from "./category-data-zoom";
 import { resolveCartesianGrid } from "./chart-grid";
-import { itemFocus } from "./emphasis-presets";
+import { itemFocus, isHoverFocusOn } from "./emphasis-presets";
 import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
 import type { ChartPart, CompileContext, ScatterSeriesPart } from "./parts/types";
 
@@ -21,15 +21,22 @@ function scatterDataPoint(opts: {
   color: string;
   symbolSize: number;
   glowing: boolean;
+  hoverFocus: boolean;
 }) {
-  const focus = itemFocus();
-  return {
+  const base = {
     name: opts.label,
     value: [opts.x, opts.y] as [number, number],
     symbolSize: opts.symbolSize,
     itemStyle: { color: opts.color },
     [NQ_SERIES_KEY]: opts.seriesKey,
     [NQ_DATUM]: opts.datum,
+  };
+  if (!opts.hoverFocus) {
+    return { ...base, emphasis: { disabled: true as const } };
+  }
+  const focus = itemFocus();
+  return {
+    ...base,
     blur: focus.blur,
     emphasis: {
       ...focus.emphasis,
@@ -67,6 +74,7 @@ export function compileScatterOption(ctx: CompileContext): EChartsOption {
         color,
         symbolSize,
         glowing,
+        hoverFocus: isHoverFocusOn(ctx),
       }),
     );
   });

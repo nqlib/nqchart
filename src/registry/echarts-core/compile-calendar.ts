@@ -1,6 +1,6 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { itemFocus } from "./emphasis-presets";
+import { itemFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import type { CompileContext, CalendarPart } from "./parts/types";
 import type { CalendarCell } from "@/registry/lib/chart-recipes";
 
@@ -131,7 +131,7 @@ export function compileCalendarOption(ctx: CompileContext): EChartsOption {
         calendarIndex: 0,
         data,
         label: { show: false },
-        ...itemFocus(),
+        ...hoverFocusOrOff(isHoverFocusOn(ctx), itemFocus()),
       },
     ],
   };

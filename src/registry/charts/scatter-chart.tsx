@@ -55,6 +55,7 @@ type NQScatterChartProps<TConfig extends Record<string, ChartConfig[string]>> = 
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
   isEmpty?: boolean;
   emptyState?: ReactNode;
   error?: ReactNode;
@@ -69,6 +70,7 @@ function ScatterPlotBody({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
   children,
   isLoading,
   isEmpty,
@@ -81,6 +83,7 @@ function ScatterPlotBody({
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
   children: ReactNode;
   isLoading?: boolean;
   isEmpty?: boolean;
@@ -104,7 +107,7 @@ function ScatterPlotBody({
     );
   }, [parts, xKey, yKey]);
 
-  const { option, colorEpoch } = useCompiledOption(compileScatterOption, { data: [] });
+  const { option, colorEpoch } = useCompiledOption(compileScatterOption, { data: [], hoverFocus });
   const runtimeRef = useChartInstanceRef();
 
   const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
@@ -148,6 +151,7 @@ function ScatterPlotBody({
           eventHandlers={eventHandlers}
           onChartInstance={onChartInstance}
           echartsModules={SCATTER_ECHARTS_MODULES}
+          hoverFocus={hoverFocus}
         />
       }
     >
@@ -209,6 +213,7 @@ export function NQScatterChart<TConfig extends Record<string, ChartConfig[string
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
   isEmpty,
   emptyState,
   error,
@@ -230,6 +235,7 @@ export function NQScatterChart<TConfig extends Record<string, ChartConfig[string
             onMarkClick={onMarkClick}
             onChartReady={onChartReady}
             chartRef={chartRef}
+            hoverFocus={hoverFocus}
             isLoading={isLoading}
             isEmpty={isEmpty}
             emptyState={emptyState}

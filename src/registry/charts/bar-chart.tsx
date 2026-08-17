@@ -80,6 +80,7 @@ type BarChartCanvasProps<TData extends Record<string, unknown>> = {
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 };
 
 function BarChartCanvas<TData extends Record<string, unknown>>({
@@ -98,6 +99,7 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: BarChartCanvasProps<TData>) {
   const { chartId } = useChart();
   const parts = usePartsSnapshot();
@@ -165,8 +167,9 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
       data,
       xDataKey,
       cartesian: { layout, stackType, barRadius, variant, externalBrush },
+      hoverFocus,
     }),
-    [data, xDataKey, layout, stackType, barRadius, variant, externalBrush],
+    [data, xDataKey, layout, stackType, barRadius, variant, externalBrush, hoverFocus],
   );
 
   const { option, colorEpoch } = useCompiledOption(compileBarOption, compileRoot);
@@ -241,6 +244,7 @@ function BarChartCanvas<TData extends Record<string, unknown>>({
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
       echartsModules={BAR_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }

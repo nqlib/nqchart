@@ -1,6 +1,6 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { cartesianColumnFocus, cartesianLineFocus } from "./emphasis-presets";
+import { cartesianColumnFocus, cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
 import { barBorderRadius, resolveBarRadius } from "./bar-radius";
 import {
@@ -52,7 +52,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
         borderRadius: barBorderRadius(r, false),
       },
       label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
-      ...cartesianColumnFocus(color),
+      ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianColumnFocus(color)),
     };
   });
 
@@ -74,12 +74,15 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       symbol: markersOnly ? "rect" : LINE_MARKER.symbol,
       symbolSize: markersOnly ? [16, 3] : LINE_MARKER.symbolSize,
       label: seriesLabelOption(line.showLabels, line.labelFormatter),
-      ...cartesianLineFocus({
-        color,
-        lineWidth: markersOnly ? 0 : 3,
-        borderColor: gapColor,
-        borderWidth: markersOnly ? 0 : 2,
-      }),
+      ...hoverFocusOrOff(
+        isHoverFocusOn(ctx),
+        cartesianLineFocus({
+          color,
+          lineWidth: markersOnly ? 0 : 3,
+          borderColor: gapColor,
+          borderWidth: markersOnly ? 0 : 2,
+        }),
+      ),
     };
   });
 

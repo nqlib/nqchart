@@ -42,6 +42,7 @@ self-contained. Related: `../plan/IMPROVEMENT_PLAN.md`.
 | 014 | [Make the interaction API consumable (unblock 0.3.0)](014-make-the-interaction-api-consumable.md) | engine / api | S | DONE |
 | 015 | [BI ship leftovers (waterfall, funnel, harness, series id)](015-bi-ship-leftovers.md) | engine / api | M | DONE |
 | 016 | [Per-family ECharts registration, honest export, internals check](016-echarts-payload.md) | performance / dist | M | VERIFY — ready to tag v0.3.1; owner publishes |
+| 017 | [hoverFocus opt-out on every chart root](017-hover-focus-opt-out.md) | engine / api | M | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 

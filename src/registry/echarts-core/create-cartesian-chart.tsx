@@ -41,6 +41,11 @@ export type CartesianChartBaseProps<
   xDataKey?: keyof TData & string;
   isLoading?: boolean;
   showBrush?: boolean;
+  /**
+   * Hover-focus contract (default on). `false` keeps the tooltip and disables
+   * sibling dim. Sparkline / single-arc gauge stay tooltip-only either way.
+   */
+  hoverFocus?: boolean;
   brushFormatLabel?: (value: unknown, index: number) => string;
   onMarkClick?: (event: NQMarkEvent) => void;
   onBrushChange?: (range: ChartBrushRange) => void;
@@ -115,7 +120,10 @@ function createDefaultCanvas<TData extends Record<string, unknown>, TCanvasProps
   echartsModules?: EChartsExtraModules,
 ) {
   return function DefaultCartesianCanvas(canvasProps: TCanvasProps) {
-    const compileRoot = getCompileRoot(canvasProps);
+    const compileRoot = {
+      ...getCompileRoot(canvasProps),
+      hoverFocus: (canvasProps as { hoverFocus?: boolean }).hoverFocus !== false,
+    };
     const { option, colorEpoch } = useCompiledOption(compile, compileRoot);
     const onPlotRect = (canvasProps as { onPlotRect?: (insets: ChartPlotInsets) => void }).onPlotRect;
     const onMarkClick = (canvasProps as { onMarkClick?: (e: NQMarkEvent) => void }).onMarkClick;
@@ -150,6 +158,7 @@ function createDefaultCanvas<TData extends Record<string, unknown>, TCanvasProps
     );
 
     const painted = withMarkPointerCursor(option, pointerEnabled);
+    const hoverFocus = (canvasProps as { hoverFocus?: boolean }).hoverFocus !== false;
 
     return (
       <EChartsHost
@@ -159,6 +168,7 @@ function createDefaultCanvas<TData extends Record<string, unknown>, TCanvasProps
         eventHandlers={eventHandlers}
         onChartInstance={handleChartInstance}
         echartsModules={echartsModules}
+        hoverFocus={hoverFocus}
       />
     );
   };
@@ -208,6 +218,7 @@ export function createCartesianChart<
       xDataKey,
       isLoading = false,
       showBrush = true,
+      hoverFocus = true,
       brushFormatLabel,
       onMarkClick,
       onBrushChange,
@@ -234,7 +245,7 @@ export function createCartesianChart<
     const brushStartIndex = showBrush && !isLoading ? range.startIndex : 0;
     const externalBrush = showBrush && !isLoading;
     const { plotAlign, onPlotRect, canvasProps } = usePlotRectState();
-    const rootFields = getRootFields(merged, xKey);
+    const rootFields = { ...getRootFields(merged, xKey), hoverFocus };
     const brushRootFields =
       rootFields.cartesian?.layout === "horizontal"
         ? {
@@ -246,18 +257,21 @@ export function createCartesianChart<
           }
         : rootFields;
 
-    const canvasElementProps = mapCanvasProps(merged, {
-      chartData,
-      fullData: displayData,
-      brushStartIndex,
-      xKey,
-      externalBrush,
-      onPlotRect,
-      canvasProps,
-      onMarkClick,
-      onChartReady,
-      chartRef,
-    });
+    const canvasElementProps = {
+      ...mapCanvasProps(merged, {
+        chartData,
+        fullData: displayData,
+        brushStartIndex,
+        xKey,
+        externalBrush,
+        onPlotRect,
+        canvasProps,
+        onMarkClick,
+        onChartReady,
+        chartRef,
+      }),
+      hoverFocus,
+    };
 
     const derivedEmpty =
       isEmptyProp ?? (!isLoading && !error && Array.isArray(data) && data.length === 0);

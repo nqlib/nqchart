@@ -39,6 +39,7 @@ exports[`compileLineOption > matches snapshot for a representative context 1`] =
       ],
       "emphasis": {
         "blurScope": "coordinateSystem",
+        "disabled": false,
         "focus": "self",
         "itemStyle": {
           "color": "color(sales,0)",

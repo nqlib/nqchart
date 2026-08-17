@@ -53,6 +53,7 @@ type NQPieChartProps<
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
   isEmpty?: boolean;
   emptyState?: ReactNode;
   error?: ReactNode;
@@ -67,14 +68,16 @@ function PieChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   data: TData[];
   nameKey?: string;
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
-  const { option, colorEpoch } = useCompiledOption(compilePieOption, { data, nameKey });
+  const { option, colorEpoch } = useCompiledOption(compilePieOption, { data, nameKey, hoverFocus });
   const runtimeRef = useChartInstanceRef();
   const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
     onMarkClick,
@@ -94,6 +97,7 @@ function PieChartCanvas<TData extends Record<string, unknown>>({
         onChartInstance(instance);
       }}
       echartsModules={PIE_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }
@@ -111,6 +115,7 @@ export function NQPieChart<
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
   isEmpty: isEmptyProp,
   emptyState,
   error,
@@ -144,6 +149,7 @@ export function NQPieChart<
                 onMarkClick={onMarkClick}
                 onChartReady={onChartReady}
                 chartRef={chartRef}
+                hoverFocus={hoverFocus}
               />
             }
             isEmpty={derivedEmpty}

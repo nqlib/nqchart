@@ -148,6 +148,7 @@ export function useNQEcharts(
   eventHandlers?: NQChartEventHandlers,
   onChartInstance?: (instance: EChartsType | null) => void,
   extraModules: EChartsExtraModules = NO_EXTRA,
+  hoverFocus = true,
 ) {
   const chartRef = useRef<EChartsType | null>(null);
   const introStartedRef = useRef(false);
@@ -160,6 +161,10 @@ export function useNQEcharts(
   const eventHandlersRef = useRef(eventHandlers);
   useEffect(() => {
     eventHandlersRef.current = eventHandlers;
+  });
+  const hoverFocusRef = useRef(hoverFocus);
+  useEffect(() => {
+    hoverFocusRef.current = hoverFocus;
   });
 
   // Never put onChartInstance in the init-effect deps — callers often pass an
@@ -308,23 +313,25 @@ export function useNQEcharts(
         seriesIndex?: number;
         seriesName?: string;
       };
-      if (p.seriesIndex != null && isRadialRingSeriesEvent(instance, p)) {
-        scheduleRadialHoverFocusRepair(instance, p.seriesIndex);
-      } else if (p.dataIndex != null && p.seriesIndex != null) {
-        if (p.seriesType === "scatter") {
-          requestAnimationFrame(() => {
+      if (hoverFocusRef.current !== false) {
+        if (p.seriesIndex != null && isRadialRingSeriesEvent(instance, p)) {
+          scheduleRadialHoverFocusRepair(instance, p.seriesIndex);
+        } else if (p.dataIndex != null && p.seriesIndex != null) {
+          if (p.seriesType === "scatter") {
             requestAnimationFrame(() => {
-              repairScatterHoverFocus(instance, p.seriesIndex!, p.dataIndex!);
+              requestAnimationFrame(() => {
+                repairScatterHoverFocus(instance, p.seriesIndex!, p.dataIndex!);
+              });
             });
-          });
-        } else if (p.seriesType === "treemap") {
-          scheduleTreemapHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
-        } else if (p.seriesType === "funnel") {
-          scheduleFunnelHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
-        } else if (p.seriesType === "pie") {
-          schedulePieHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
-        } else if (isWaterfallValuesSeriesEvent(p)) {
-          scheduleWaterfallHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+          } else if (p.seriesType === "treemap") {
+            scheduleTreemapHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+          } else if (p.seriesType === "funnel") {
+            scheduleFunnelHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+          } else if (p.seriesType === "pie") {
+            schedulePieHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+          } else if (isWaterfallValuesSeriesEvent(p)) {
+            scheduleWaterfallHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
+          }
         }
       }
       eventHandlersRef.current?.onSeriesMouseOver?.(params as NQChartSeriesEvent);

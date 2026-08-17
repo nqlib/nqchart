@@ -2,7 +2,7 @@ import type { EChartsOption } from "echarts";
 import { getColorsCount } from "@/registry/ui/chart";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { resolveChartCornerRadius } from "./chart-corner-radius";
-import { HOVER_DIM_OPACITY, RADIAL_BAR_MIN_ANGLE, radialBarSeriesFocus } from "./emphasis-presets";
+import { HOVER_DIM_OPACITY, RADIAL_BAR_MIN_ANGLE, hoverFocusOrOff, isHoverFocusOn, radialBarSeriesFocus } from "./emphasis-presets";
 import type { CompileContext, RadialBarPart } from "./parts/types";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
@@ -280,7 +280,7 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
   // rather than by per-item geometry hit-testing (which thrashes across the gaps
   // between concentric rings). Each series carries a value only at its own ring
   // index; a shared stack lets that single bar fill the category band.
-  const ringFocus = radialBarSeriesFocus();
+  const ringFocus = hoverFocusOrOff(isHoverFocusOn(ctx), radialBarSeriesFocus());
   const ringSeries = ctx.data.map((row, i) => {
     const configKey = configKeyFromRow(row, nameKey);
     const color = itemColor(configKey, ctx);
@@ -401,7 +401,7 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
   // One bar series per petal + `focus: "series"` — same flicker-free pattern as the
   // concentric variant (see compileRadialBarOption). A shared stack lets each
   // single-value series fill its own angular band without grouping.
-  const petalFocus = radialBarSeriesFocus();
+  const petalFocus = hoverFocusOrOff(isHoverFocusOn(ctx), radialBarSeriesFocus());
   const petalSeries = ctx.data.map((row, i) => {
     const configKey = configKeyFromRow(row, nameKey);
     const color = itemColor(configKey, ctx);

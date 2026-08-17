@@ -1,7 +1,7 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { resolveChartCornerRadius } from "./chart-corner-radius";
-import { treemapFocus } from "./emphasis-presets";
+import { treemapFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import {
   resolveCanvasGapColor,
   resolveCanvasGroupLabelColor,
@@ -107,7 +107,7 @@ export function compileTreemapOption(ctx: CompileContext): EChartsOption {
             upperLabel: { color: groupLabelColor },
           },
         ],
-        ...treemapFocus(),
+        ...hoverFocusOrOff(isHoverFocusOn(ctx), treemapFocus()),
         data: colored,
       },
     ],

@@ -17,6 +17,8 @@ type EChartsHostProps = {
   onChartInstance?: (instance: import("echarts/core").EChartsType | null) => void;
   /** Per-family ECharts chart/component modules. See echarts-init.ts. */
   echartsModules?: EChartsExtraModules;
+  /** Hover-focus contract. Default on. False skips runtime dim repair. */
+  hoverFocus?: boolean;
 };
 
 export function EChartsHost({
@@ -27,6 +29,7 @@ export function EChartsHost({
   eventHandlers,
   onChartInstance,
   echartsModules,
+  hoverFocus = true,
 }: EChartsHostProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [themeTick, setThemeTick] = useState(0);
@@ -35,7 +38,7 @@ export function EChartsHost({
 
   const mergedOption = useMemo(() => option, [option, colorEpoch, themeTick]);
 
-  useNQEcharts(containerRef, mergedOption, [mergedOption], onPlotRect, eventHandlers, onChartInstance, echartsModules);
+  useNQEcharts(containerRef, mergedOption, [mergedOption], onPlotRect, eventHandlers, onChartInstance, echartsModules, hoverFocus);
 
   return <div ref={containerRef} className={className ?? "min-h-0 h-full w-full min-w-0 flex-1"} />;
 }

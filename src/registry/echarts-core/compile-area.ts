@@ -1,6 +1,6 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { cartesianLineFocus } from "./emphasis-presets";
+import { cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import {
   applyAxisPartToOption,
   buildValueYAxes,
@@ -93,14 +93,17 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
       label: seriesLabelOption(area.showLabels, area.labelFormatter),
       ...LINE_MARKER,
       itemStyle: { color, borderColor: gapColor, borderWidth: 1.5 },
-      ...cartesianLineFocus({
-        color,
-        lineWidth: glowing ? lineWidth + 0.5 : lineWidth,
-        borderColor: gapColor,
-        borderWidth: 1.5,
-        areaStyle,
-        shadowBlur: glowing ? 16 : undefined,
-      }),
+      ...hoverFocusOrOff(
+        isHoverFocusOn(ctx),
+        cartesianLineFocus({
+          color,
+          lineWidth: glowing ? lineWidth + 0.5 : lineWidth,
+          borderColor: gapColor,
+          borderWidth: 1.5,
+          areaStyle,
+          shadowBlur: glowing ? 16 : undefined,
+        }),
+      ),
     };
   });
 
@@ -158,13 +161,16 @@ export function buildAreaSeries(ctx: CompileContext) {
       label: seriesLabelOption(area.showLabels, area.labelFormatter),
       ...LINE_MARKER,
       itemStyle: { color, borderColor: gapColor, borderWidth: 1.5 },
-      ...cartesianLineFocus({
-        color,
-        lineWidth,
-        borderColor: gapColor,
-        borderWidth: 1.5,
-        areaStyle,
-      }),
+      ...hoverFocusOrOff(
+        isHoverFocusOn(ctx),
+        cartesianLineFocus({
+          color,
+          lineWidth,
+          borderColor: gapColor,
+          borderWidth: 1.5,
+          areaStyle,
+        }),
+      ),
     };
   });
 }

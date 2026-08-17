@@ -34,16 +34,44 @@
 /** The one dim level. Everything not focused fades to this on hover. */
 export const HOVER_DIM_OPACITY = 0.2;
 
+/** Compiled when `hoverFocus={false}` — tooltip stays, sibling dim does not. */
+export const HOVER_FOCUS_OFF = {
+  emphasis: { disabled: true as const },
+};
+
+export function isHoverFocusOn(ctx: { hoverFocus?: boolean }): boolean {
+  return ctx.hoverFocus !== false;
+}
+
+/**
+ * Apply a focus preset, or disable native emphasis when the host opted out.
+ * Default (omit / true) keeps today’s dim-on-hover.
+ *
+ * Native-emphasis presets (area/line/bar/…) set `emphasis.disabled: false`
+ * so a later `hoverFocus={true}` overwrites Off via ECharts setOption merge.
+ * Pie/funnel/treemap/waterfall/radial keep `disabled: true` and dim via repair.
+ */
+export function hoverFocusOrOff<T extends Record<string, unknown>>(
+  enabled: boolean,
+  focus: T,
+): T | typeof HOVER_FOCUS_OFF {
+  return enabled ? focus : HOVER_FOCUS_OFF;
+}
+
 const INDEX_FOCUS = {
   focus: "self" as const,
   blurScope: "coordinateSystem" as const,
   scale: false as const,
+  // Explicit false so setOption merge can undo `hoverFocus={false}` (`disabled: true`).
+  // Omitting the key leaves the previous disabled flag in place until remount.
+  disabled: false as const,
 };
 
 const ITEM_FOCUS = {
   focus: "self" as const,
   blurScope: "series" as const,
   scale: false as const,
+  disabled: false as const,
 };
 
 /* ─────────────────────────── Shared-axis cartesian ─────────────────────────── */

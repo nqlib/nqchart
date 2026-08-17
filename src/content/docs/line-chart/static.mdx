@@ -183,6 +183,9 @@ The root container. It owns the data, the shared selection state, the loading sk
   <ApiRow name="showBrush" type="boolean" default="false">
     When enabled, displays a brush control below the chart for selecting and zooming into a range of data.
   </ApiRow>
+  <ApiRow name="hoverFocus" type="boolean" default="true">
+    Hover dim: focused mark full opacity, siblings at `0.2`. `false` keeps the tooltip and disables sibling fade. See [Hover Focus](/docs/hover-focus).
+  </ApiRow>
   <ApiRow name="onMarkClick" type="(event: NQMarkEvent) => void">
     Fires when a mark is clicked or activated with keyboard Enter. Payload includes raw `category`, `seriesKey` (config dataKey), `datum`, `index`, and modifiers.
   </ApiRow>

@@ -11,7 +11,7 @@ NQChart is a composable chart library for BI dashboards and analytics products. 
 1. [Install](/docs/nqchart/installation) `@nqlib/nqchart` (or add charts from the registry).
 2. Browse [Components](/docs/nqchart/components) or jump to a primitive ([Bar](/docs/nqchart/bar-chart/static), [Funnel](/docs/nqchart/funnel-chart/static), [Radial](/docs/nqchart/radial-chart/static)).
 3. Use [Chart recipes](/docs/nqchart/chart-recipes) for histogram, Pareto, bullet, and gauge helpers.
-4. See the [Changelog](/docs/nqchart/changelog) for what shipped in **0.3.0** (mark-click, dual-axis, a11y).
+4. See the [Changelog](/docs/nqchart/changelog) for **0.3.2** (`hoverFocus` opt-out), **0.3.1** (per-family payload, dashed Line, pie a11y), and **0.3.0** (mark-click, dual-axis, a11y).
 
 Live gallery: open **Charts** in this showcase (`/charts`).
 
@@ -20,7 +20,7 @@ Live gallery: open **Charts** in this showcase (`/charts`).
 Most chart libraries are flexible but visually generic — teams copy default styles and dashboards end up looking the same. NQChart pairs a design-first compound API with ECharts under the hood: opinionated defaults, handcrafted motion, and BI recipes for the chart types product teams actually need.
 
 - **Composable primitives** — `NQBarChart`, `NQLineChart`, and siblings with child parts, not boolean props on one mega chart
-- **BI interaction** — `onMarkClick`, dual Y + tick formatters, brush, keyboard, a11y table (0.3.0)
+- **BI interaction** — `onMarkClick`, dual Y + tick formatters, brush, keyboard, a11y table (0.3.0); per-family ECharts payload (0.3.1); `hoverFocus` opt-out (0.3.2)
 - **BI-ready recipes** — histogram, Pareto, waterfall, funnel, gauge helpers in `chart-recipes`
 - **ECharts engine** — canvas performance and rich chart types, with token-aligned tooltips and chrome
 - **Responsive labels** — category ticks use collision hiding (`hideOverlap`) so dense cards stay readable; radial/gauge use the same idea on dials

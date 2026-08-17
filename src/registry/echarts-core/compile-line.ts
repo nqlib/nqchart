@@ -4,7 +4,7 @@
  */
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { cartesianLineFocus } from "./emphasis-presets";
+import { cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import {
   applyAxisPartToOption,
   buildValueYAxes,
@@ -40,7 +40,7 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
       triggerLineEvent: true,
       label: seriesLabelOption(line.showLabels, line.labelFormatter),
       ...LINE_MARKER,
-      ...cartesianLineFocus({ color }),
+      ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianLineFocus({ color })),
     };
   });
 

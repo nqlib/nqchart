@@ -5,7 +5,7 @@ Human-readable contract for what NQChart **guarantees**. Machine-oriented detail
 
 Version baseline for this document: **`@nqlib/nqchart@0.3.0`** (BI readiness consumable).
 
-**Spec revision:** 2026-08-11 (0.3.0)
+**Spec revision:** 2026-08-16 (ST-023 `hoverFocus`)
 
 ---
 
@@ -31,6 +31,7 @@ Version baseline for this document: **`@nqlib/nqchart@0.3.0`** (BI readiness con
 | S2.7 | Legend selection is **single-select** (`string \| null`) in this revision. |
 | S2.8 | `onBrushChange` + exported `useChartBrush` / `ChartBrushRange` on brush-capable roots. |
 | S2.9 | `onChartReady` / `chartRef` exist as unsupported escape hatches. |
+| S2.10 | Every `NQ*Chart` root accepts `hoverFocus?: boolean` (default on). `false` keeps tooltip, disables sibling dim. Sparkline / single-arc gauge stay tooltip-only either way. |
 
 ## S3 — Axes & marks
 

@@ -2,7 +2,7 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { barBorderRadius } from "./bar-radius";
 import { resolveChartBarCornerRadius } from "./chart-corner-radius";
-import { waterfallColumnFocus } from "./emphasis-presets";
+import { waterfallColumnFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
@@ -72,7 +72,7 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
         id: "__wf_values__",
         name: "__wf_values__",
         stack: "wf",
-        ...waterfallColumnFocus(),
+        ...hoverFocusOrOff(isHoverFocusOn(ctx), waterfallColumnFocus()),
         data: values.map((v, i) => ({
           value: v,
           itemStyle: {

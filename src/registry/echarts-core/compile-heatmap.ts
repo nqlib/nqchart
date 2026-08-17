@@ -1,6 +1,6 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { itemFocus } from "./emphasis-presets";
+import { itemFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { buildHeatmapDataZoom } from "./category-data-zoom";
 import type { CompileContext, HeatmapPart } from "./parts/types";
 import type { HeatmapCell } from "@/registry/lib/chart-recipes";
@@ -68,7 +68,7 @@ export function compileHeatmapOption(ctx: CompileContext): EChartsOption {
         id: colorKey,
         data,
         label: { show: false },
-        ...itemFocus(),
+        ...hoverFocusOrOff(isHoverFocusOn(ctx), itemFocus()),
       },
     ],
   };

@@ -393,4 +393,9 @@ export type CompileContext<TData extends Record<string, unknown> = Record<string
    * view is too small (gauge axis ticks). Omitted → card-sized default.
    */
   viewport?: { width: number; height: number };
+  /**
+   * Hover-focus contract (default on). `false` keeps tooltip, disables sibling dim.
+   * Sparkline / single-arc gauge stay tooltip-only either way.
+   */
+  hoverFocus?: boolean;
 };

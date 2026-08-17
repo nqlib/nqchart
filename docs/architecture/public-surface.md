@@ -35,6 +35,7 @@ type NQMarkEvent = {
 // bar, line, area, composed, scatter, pie, waterfall, funnel
 onMarkClick?: (event: NQMarkEvent) => void;
 onBrushChange?: (range: ChartBrushRange) => void; // brush-capable roots
+hoverFocus?: boolean; // default on; false keeps tooltip, skips sibling dim
 onChartReady?: (instance: EChartsType) => void; // unsupported escape hatch
 chartRef?: Ref<ChartHandle | null>;             // getInstance + toDataURL
 ```

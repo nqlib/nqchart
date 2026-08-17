@@ -33,6 +33,7 @@ type NQHeatmapChartProps<TConfig extends Record<string, ChartConfig[string]>> = 
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 };
 
 function HeatmapChartCanvas({
@@ -40,13 +41,15 @@ function HeatmapChartCanvas({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   onPlotRect?: (insets: ChartPlotInsets) => void;
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
-  const { option, colorEpoch } = useCompiledOption(compileHeatmapOption, { data: [] });
+  const { option, colorEpoch } = useCompiledOption(compileHeatmapOption, { data: [], hoverFocus });
   // Cells live on the `<Heatmap>` part rather than the root.
   const parts = usePartsSnapshot();
   const cells = (parts.find((p): p is HeatmapPart => p.type === "heatmap")?.cells ??
@@ -71,6 +74,7 @@ function HeatmapChartCanvas({
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
       echartsModules={HEATMAP_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }
@@ -83,6 +87,7 @@ export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: NQHeatmapChartProps<TConfig>) {
   // Heatmap is cartesian (x/y category axes) — clip a composed <Background /> to the
   // measured grid rect so it stays inside the axes.
@@ -101,6 +106,7 @@ export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string
               onMarkClick={onMarkClick}
               onChartReady={onChartReady}
               chartRef={chartRef}
+              hoverFocus={hoverFocus}
             />
           }
         >

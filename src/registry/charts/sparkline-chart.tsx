@@ -38,6 +38,8 @@ type NQSparklineChartProps<
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  /** Accepted as a no-op — sparkline is always tooltip-only. */
+  hoverFocus?: boolean;
 };
 
 function SparklineChartCanvas<TData extends Record<string, unknown>>({
@@ -47,6 +49,7 @@ function SparklineChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   data: TData[];
   xDataKey?: string;
@@ -54,10 +57,12 @@ function SparklineChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
   const { option, colorEpoch } = useCompiledOption(compileSparklineOption, {
     data,
     valueDataKey,
+    hoverFocus,
   });
   const { eventHandlers, onChartInstance, pointerEnabled } = useChartInteraction({
     onMarkClick,
@@ -74,6 +79,7 @@ function SparklineChartCanvas<TData extends Record<string, unknown>>({
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
       echartsModules={SPARKLINE_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }
@@ -93,6 +99,7 @@ export function NQSparklineChart<
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: NQSparklineChartProps<TData, TConfig>) {
   return (
     <PartRegistryProvider>
@@ -108,6 +115,7 @@ export function NQSparklineChart<
               onMarkClick={onMarkClick}
               onChartReady={onChartReady}
               chartRef={chartRef}
+              hoverFocus={hoverFocus}
             />
           }
         >

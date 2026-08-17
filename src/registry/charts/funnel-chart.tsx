@@ -74,6 +74,7 @@ type NQFunnelChartProps<
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
   isEmpty?: boolean;
   emptyState?: ReactNode;
   error?: ReactNode;
@@ -96,6 +97,7 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
 }: {
   data: TData[];
   stageKey?: string;
@@ -110,9 +112,11 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
+  hoverFocus?: boolean;
 }) {
   const { option, colorEpoch } = useCompiledOption(compileFunnelOption, {
     data,
+    hoverFocus,
     funnel: {
       stageKey,
       valueKey,
@@ -145,6 +149,7 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
       eventHandlers={eventHandlers}
       onChartInstance={onChartInstance}
       echartsModules={FUNNEL_ECHARTS_MODULES}
+      hoverFocus={hoverFocus}
     />
   );
 }
@@ -170,6 +175,7 @@ export function NQFunnelChart<
   onMarkClick,
   onChartReady,
   chartRef,
+  hoverFocus = true,
   isEmpty: isEmptyProp,
   emptyState,
   error,
@@ -227,6 +233,7 @@ export function NQFunnelChart<
                 onMarkClick={onMarkClick}
                 onChartReady={onChartReady}
                 chartRef={chartRef}
+                hoverFocus={hoverFocus}
               />
             }
           >

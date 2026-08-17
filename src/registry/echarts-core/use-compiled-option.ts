@@ -24,6 +24,7 @@ export type CompileRootFields<TData extends Record<string, unknown> = Record<str
   radial?: RadialCompileConfig;
   funnel?: FunnelCompileConfig;
   viewport?: { width: number; height: number };
+  hoverFocus?: boolean;
 };
 
 function buildCompileContext<TData extends Record<string, unknown>>(
@@ -41,6 +42,7 @@ function buildCompileContext<TData extends Record<string, unknown>>(
     radial: root.radial,
     funnel: root.funnel,
     viewport: root.viewport,
+    hoverFocus: root.hoverFocus,
   };
 }
 
@@ -69,12 +71,13 @@ export function useCompiledOption<TData extends Record<string, unknown>>(
     radial,
     funnel,
     viewport,
+    hoverFocus,
   } = root;
 
   const option = useMemo(() => {
     validateDataKeys(data, parts, xDataKey ? [xDataKey] : []);
     const ctx = buildCompileContext(
-      { data, xDataKey, nameKey, valueKey, valueDataKey, cartesian, radial, funnel, viewport },
+      { data, xDataKey, nameKey, valueKey, valueDataKey, cartesian, radial, funnel, viewport, hoverFocus },
       { config, parts, chartId, resolveColor },
     );
     // Applied here rather than in each compiler: every chart root funnels
@@ -107,6 +110,7 @@ export function useCompiledOption<TData extends Record<string, unknown>>(
     funnel?.funnelTaper,
     viewport?.width,
     viewport?.height,
+    hoverFocus,
     parts,
     chartId,
     resolveColor,

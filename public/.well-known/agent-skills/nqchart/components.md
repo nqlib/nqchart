@@ -42,6 +42,7 @@ Wallpaper vs guides: **[background-and-grid.md](./background-and-grid.md)** (req
 | `chartRef` | `{ getInstance(), toDataURL() }` for PNG export |
 | `backgroundVariant` | Legacy root prop — prefer `<ChartBackground variant="…" />` (see below) |
 | `showBrush` | Zoom range footer (bar, line, area, composed). Set `false` on KPI blocks. |
+| `hoverFocus` | Hover dim (default on). `false` keeps tooltip, skips sibling fade. Sparkline/gauge stay tooltip-only. |
 | `brushFormatLabel` | Shorten category labels in brush footer |
 
 **Cross-filter example:**

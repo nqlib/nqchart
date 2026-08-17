@@ -4,7 +4,7 @@
  */
 import type { BarSeriesOption, EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { cartesianColumnFocus } from "./emphasis-presets";
+import { cartesianColumnFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { barVariantFill } from "./bar-pattern";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import {
@@ -164,7 +164,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
     }
 
     const color = ctx.resolveColor(bar.dataKey, 0);
-    const columnFocus = cartesianColumnFocus(color);
+    const columnFocus = hoverFocusOrOff(isHoverFocusOn(ctx), cartesianColumnFocus(color));
 
     if (bar.variant === "hover-trace") {
       return {

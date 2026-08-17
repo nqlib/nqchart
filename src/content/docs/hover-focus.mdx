@@ -84,6 +84,21 @@ tooltip DOM (which would bounce hover on/off), the tooltip is `pointer-events: n
 offset from the cursor, and uses `transitionDuration: 0`. See
 [`echarts-tooltip.ts`](https://github.com/nqlib/nqchart/blob/main/src/registry/echarts-core/echarts-tooltip.ts).
 
+## Opt out
+
+The contract is **on by default**. Existing apps that omit the prop keep today’s dim.
+
+Pass `hoverFocus={false}` on any `NQ*Chart` root to keep the tooltip and skip sibling fade. Legend isolate (`<Legend isClickable />`) and the brush are separate switches.
+
+```tsx
+<NQAreaChart hoverFocus={false} data={data} config={config} xDataKey="period">
+  <Grid /><XAxis dataKey="period" /><Legend /><Tooltip />
+  <Area dataKey="home" />
+</NQAreaChart>
+```
+
+Sparkline and single-arc gauge stay tooltip-only either way — they have no siblings to dim.
+
 ## Adding or changing a chart
 
 1. Pick the mapping by geometry: shared category axis → `cartesianColumnFocus` /

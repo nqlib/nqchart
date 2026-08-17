@@ -1,7 +1,7 @@
 ---
 id: EP-003
 title: Chart craft — hover, motion, brush
-status: done
+status: in-progress
 target: 2026-Q3
 owner: nqchart
 ---
@@ -31,9 +31,10 @@ aligned with nqui, and a brush footer that does not fight intro animations.
 | ID | Title | Status | Plan |
 |----|-------|--------|------|
 | ST-009 | Funnel horizontal + pipe + sort | done | 007, 008 |
+| ST-023 | hoverFocus opt-out on every chart root | review | 017 |
 
 Hover/motion work landed as continuous craft + `fixed/` notes rather than numbered plans;
-treat those fix notes as the story archive for regressions.
+treat those fix notes as the story archive for regressions. ST-023 is the public opt-out.
 
 ## Dependencies
 
