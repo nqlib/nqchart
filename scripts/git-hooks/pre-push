@@ -5,4 +5,8 @@
 # Skips at once when `pnpm preflight` already passed on the pushed commit.
 # Do not bypass with --no-verify (CLAUDE.md § Shared rules).
 root=$(git rev-parse --show-toplevel) || exit 1
+if [ ! -f "$root/scripts/preflight.mjs" ]; then
+  echo "pre-push — this branch predates scripts/preflight.mjs. Run the ci.yml steps by hand before the push." >&2
+  exit 0
+fi
 exec node "$root/scripts/preflight.mjs" --hook
