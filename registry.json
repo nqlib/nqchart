@@ -395,6 +395,19 @@
       ]
     },
     {
+      "name": "ex-mark-click-budget-chart",
+      "registryDependencies": [
+        "@nqchart/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-mark-click-budget-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
       "name": "ex-loading-state-bar-chart",
       "registryDependencies": [
         "@nqchart/bar-chart"

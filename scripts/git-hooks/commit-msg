@@ -1,0 +1,6 @@
+#!/bin/sh
+# strip-ai-attribution
+# Remove a Claude or Cursor attribution line before git stores the commit.
+# A human Co-authored-by line stays. Install: pnpm hooks:install
+root=$(git rev-parse --show-toplevel) || exit 0
+exec node "$root/scripts/lint-commit-attribution.mjs" --commit-msg "$1"

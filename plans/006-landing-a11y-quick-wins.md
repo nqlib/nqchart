@@ -1,6 +1,6 @@
 # Plan 006 — Landing/docs accessibility quick wins (h1, reduced motion, SVG labels, button contrast)
 
-- **Status:** TODO
+- **Status:** DONE
 - **Written against commit:** `f43ccf9` (branch `landing-redesign-and-theme`)
 - **Effort:** S–M · **Risk of change:** low · **Priority:** 6
 

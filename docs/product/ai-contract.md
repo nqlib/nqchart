@@ -14,22 +14,22 @@ Do **not** use this contract for external app integration — use the consumer s
 
 ## Definition of done (every PR)
 
-- [ ] `pnpm lint` passes
-- [ ] `pnpm exec tsc --noEmit` passes
-- [ ] `pnpm test` passes (if touching engine or llm)
-- [ ] `pnpm run audit:previews` passes (if touching registry or MDX previews)
-- [ ] `pnpm run audit:registry-boundary` passes (if touching registry)
-- [ ] `pnpm skill:validate` passes (if touching `skills/` or `.agents/skills/nqchart-*`)
+- [ ] `pnpm preflight` exits 0 on the committed branch. It selects the CI checks from the
+      changed paths: lint, typecheck, test, preview and boundary audits, skill validation and
+      sync, `build:npm` (dist, `check:api`, `check:internals`, `check:size`), and the site build.
+      It always runs `lint:status`, `sync:agents --check`, and `lint:attribution`.
 - [ ] `pnpm run registry:fresh` run and outputs committed (if registry manifests changed)
+- [ ] Plan, story, and epic status updated in the same PR
+- [ ] Public API change: specs / public-surface, MDX, consumer skill, and changelog updated
 - [ ] Light/dark spot-check on affected chart docs pages
-- [ ] Skills updated if public API or install flow changed (see `skills/README.md`)
+- [ ] No AI attribution in the commits or the PR body
 
 ## Workflow (registry changes)
 
 1. Edit `src/registry/` + register in `registry-*.ts`.
 2. Add/update `src/registry/examples/ex-*.tsx`.
 3. Wire `<ComponentPreview />` in matching `src/content/docs/<chart>/static.mdx`.
-4. Run verification gates above.
+4. Run `pnpm preflight`.
 5. Update consumer skill if user-facing API changed (`skills/consumer/nqchart/`).
 6. Run `pnpm sync:skills` before commit if consumer skill changed.
 
@@ -39,7 +39,7 @@ Do **not** use this contract for external app integration — use the consumer s
 2. Registry must not import `src/components/**`.
 3. Compilers stay pure — no hooks in `compile-*.ts`.
 4. Examples on primitive doc pages only — no duplicate doc nav slugs.
-5. Do not edit synced copies under `.agents/skills/nqchart/` — edit `skills/consumer/nqchart/` and sync.
+5. Do not edit synced copies under `.agents/skills/nqchart/` or `.claude/skills/` — edit the source and run `pnpm sync:skills`.
 6. No feature-sized change without a `plans/` row (see agentic guideline). Prefer an EP/ST
    record for anything a consumer repo might cite.
 7. Bug lessons → `fixed` skill; non-derivable decisions → `memory/` (write rarely).

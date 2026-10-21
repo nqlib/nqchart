@@ -6,7 +6,7 @@ Companion docs:
 
 | Doc | Role |
 |-----|------|
-| Root [`AGENTS.md`](../../AGENTS.md) | Orientation + skill routing |
+| Root [`CLAUDE.md`](../../CLAUDE.md) | Agent rules, task routing, git rules (`AGENTS.md` is a generated copy) |
 | [`docs/README.md`](../README.md) | Vault index |
 | [[product/philosophy]] · [[product/specs]] | Beliefs + API promise |
 | [[product/README]] | Epic / story index (EP/ST) |
@@ -28,7 +28,7 @@ Chat-only plans are not enough. Epics without a linked plan are not enough to st
 ## 1. Sequence of execution (do not skip)
 
 ```
-1. Orient     → AGENTS.md → docs/README.md → load 1–3 skill/docs files
+1. Orient     → CLAUDE.md → docs/README.md → load 1–3 skill/docs files
 2. Recall     → memory/INDEX.md if prior decisions might apply
 3. Intake     → classify size; find epic/story and/or plan home
 4. Product    → for programs: EP + ST (create if missing); link consumer stories if any

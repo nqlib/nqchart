@@ -1,6 +1,6 @@
 # Plan 002 — Make the /mcp JSON-RPC endpoint return protocol errors instead of crashing
 
-- **Status:** TODO
+- **Status:** DONE
 - **Written against commit:** `f43ccf9` (branch `landing-redesign-and-theme`)
 - **Effort:** S · **Risk of change:** low · **Priority:** 2
 

@@ -49,8 +49,11 @@ next-env.d.ts
  
 #public
 /public/r
-# local agent config
-.claude/
+# local agent config (.claude/skills and .claude/settings.json are committed)
+.claude/settings.local.json
+.claude/worktrees/
+.cursor/debug-*.log
+.api-probe/
 
 # npm library build output
 /dist

@@ -1,6 +1,6 @@
 # Plan 001 — Establish a test baseline (Vitest) for the chart engine and LLM pipeline
 
-- **Status:** TODO
+- **Status:** DONE
 - **Written against commit:** `f43ccf9` (branch `landing-redesign-and-theme`)
 - **Effort:** M · **Risk of change:** low · **Priority:** 1 (other plans' refactors depend on this safety net)
 

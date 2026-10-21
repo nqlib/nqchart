@@ -2,7 +2,7 @@
 id: ST-022
 epic: EP-005
 title: "Per-family ECharts payload + export/internals guards"
-status: review
+status: done
 priority: must
 estimate: 5
 owner: nqchart

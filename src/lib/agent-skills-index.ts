@@ -19,17 +19,16 @@ export type AgentSkillsIndex = {
 };
 
 const CONSUMER_FALLBACK =
-  "Build dashboards with composable NQChart — install @nqchart/* via shadcn, compose NQ*Chart children, theme colors, BI recipes.";
+  "Build dashboards with composable NQChart — install the @nqlib/nqchart npm package, compose NQ*Chart children, theme colors, BI recipes.";
 const DEV_FALLBACK =
   "Contribute to NQChart — engine, registry, examples, chart-recipes.";
 const DOCS_FALLBACK =
   "NQChart docs site — Fumadocs MDX, ComponentPreview, landing, agent HTTP routes.";
 
 function readSkillDescription(skillDir: string, fallback: string): string {
-  return parseSkillDescription(
-    readFileSync(join(skillDir, "SKILL.md"), "utf8"),
-    fallback,
-  );
+  // Normalize CRLF: a Windows checkout (core.autocrlf) breaks the frontmatter parse.
+  const text = readFileSync(join(skillDir, "SKILL.md"), "utf8").replace(/\r\n/g, "\n");
+  return parseSkillDescription(text, fallback);
 }
 
 /** Build agentskills.io index from skill source directories (same shape as sync script). */

@@ -1,6 +1,6 @@
 # Plan 004 — Rewrite CONTRIBUTING.md to match the actual project (pnpm + ECharts + registry scripts)
 
-- **Status:** TODO
+- **Status:** DONE
 - **Written against commit:** `f43ccf9` (branch `landing-redesign-and-theme`)
 - **Effort:** M · **Risk of change:** low (docs only) · **Priority:** 4
 

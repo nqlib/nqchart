@@ -11,20 +11,20 @@
 
 <p align="center">
   <a href="https://github.com/nqlib/nqchart"><strong>Repository</strong></a> ·
-  <a href="https://github.com/nqlib/nqchart/tree/Released/docs">Docs (in repo)</a> ·
-  <a href="https://github.com/nqlib/nqchart/blob/Released/src/content/docs/installation.mdx">Installation</a>
+  <a href="https://github.com/nqlib/nqchart/tree/main/docs">Docs (in repo)</a> ·
+  <a href="https://github.com/nqlib/nqchart/blob/main/src/content/docs/installation.mdx">Installation</a>
 </p>
 
 <p align="center">
   <a href="https://github.com/nqlib/nqchart/stargazers"><img src="https://img.shields.io/github/stars/nqlib/nqchart?style=flat&logo=github" alt="GitHub stars"></a>
-  <a href="https://github.com/nqlib/nqchart/blob/Released/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://github.com/nqlib/nqchart/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
 </p>
 
 ---
 
-## Latest (0.1.8)
+## Latest (0.3.2)
 
-Hover during a multi-series area/line intro no longer clips bands or sticks the dashed axis cursor — `introLock` silences zrender hit-testing and clears tip / axisPointer / emphasis on leave. Full notes: [Changelog](src/content/docs/changelog.mdx) · [Hover focus](src/content/docs/hover-focus.mdx).
+Every `NQ*Chart` root accepts `hoverFocus={false}`. The tooltip stays and sibling marks do not dim. The package no longer has an `@nqlib/nqui` peer, so any nqui version (or none) works. Full notes: [Changelog](src/content/docs/changelog.mdx) · [Hover focus](src/content/docs/hover-focus.mdx).
 
 ## Why NQChart
 
@@ -156,4 +156,4 @@ Upload `docs/assets/readme/social-preview.png` to **GitHub → Settings → Gene
 
 ---
 
-Contributors: [AGENTS.md](./AGENTS.md) · [docs/index.md](./docs/index.md) · [skills/README.md](./skills/README.md)
+Contributors: [CONTRIBUTING.md](./CONTRIBUTING.md) · [CLAUDE.md](./CLAUDE.md) · [docs/index.md](./docs/index.md) · [skills/README.md](./skills/README.md)

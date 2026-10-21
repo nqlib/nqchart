@@ -1,6 +1,6 @@
 # Plan 005 — Defer the landing page's 4-chart demo dashboard out of first-load JS
 
-- **Status:** TODO
+- **Status:** DONE
 - **Written against commit:** `f43ccf9` (branch `landing-redesign-and-theme`)
 - **Effort:** S–M · **Risk of change:** medium (layout shift / hydration) · **Priority:** 5
 

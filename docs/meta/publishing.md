@@ -26,10 +26,12 @@ pnpm publish:npm          # optional OTP: -- --otp=123456
 
 ## Git tag (release)
 
+Tag the merge commit of the `dev` → `main` release PR. Do not push a commit to `main`.
+Full steps: [`../conventions.md`](../conventions.md) § Release.
+
 ```bash
-pnpm exec tsc --noEmit && pnpm test && pnpm run build:npm
+git switch main && git pull --ff-only
 git tag -a vX.Y.Z -m "nqchart X.Y.Z — …"
-git push origin HEAD
 git push origin vX.Y.Z
 ```
 
@@ -58,14 +60,7 @@ Users configure:
 ## Verification before deploy / tag
 
 ```bash
-pnpm lint
-pnpm exec tsc --noEmit
-pnpm test
-pnpm run audit:previews
-pnpm run audit:registry-boundary
-pnpm skill:validate
-pnpm run build:npm
-pnpm build
+pnpm preflight --full   # every CI check, including build:npm and next build
 ```
 
 See [[registry/build-pipeline]] for local registry regeneration.

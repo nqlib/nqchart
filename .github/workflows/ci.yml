@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, master, Released]
+    branches: [main, dev]
   pull_request:
 
 concurrency:
@@ -10,6 +10,74 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  branch-flow:
+    # docs/conventions.md § Git: only dev and hotfix/* open a PR into main, and every commit
+    # on main is a merge commit (a squash into main makes main and dev drift apart).
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR into main comes from dev or hotfix/*
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          case "$HEAD_REF" in
+            dev|hotfix/*) echo "branch-flow — $HEAD_REF → main is allowed." ;;
+            *) echo "::error::branch-flow — a PR into main must come from dev or hotfix/*, not $HEAD_REF. Retarget the PR to dev."; exit 1 ;;
+          esac
+
+      - name: PR into dev does not come from main (except the hotfix back-merge)
+        if: github.event_name == 'pull_request' && github.base_ref == 'dev'
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          case "$HEAD_REF" in
+            hotfix/*) echo "::error::branch-flow — a hotfix goes into main first. Back-merge main into dev after the release."; exit 1 ;;
+            *) echo "branch-flow — $HEAD_REF → dev is allowed." ;;
+          esac
+
+      - uses: actions/checkout@v4
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          fetch-depth: 2
+
+      - name: Push to main is a merge commit
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          parents=$(git rev-list --parents -n 1 HEAD | wc -w)
+          if [ "$parents" -lt 3 ]; then
+            echo "::error::branch-flow — main HEAD $(git rev-parse --short HEAD) is not a merge commit. A squash or a direct push reached main. Merge main back into dev and fix the GitHub ruleset (main: merge commits only)."
+            exit 1
+          fi
+          echo "branch-flow — main HEAD is a merge commit."
+
+  rules:
+    # Repo rules from CLAUDE.md: agent-rule mirror, status agreement, no AI attribution.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Agent rules in sync (AGENTS.md = CLAUDE.md)
+        run: node scripts/sync-agents-md.mjs --check
+
+      - name: Plan / story / epic status agree
+        run: node scripts/lint-status.mjs
+
+      - name: No AI attribution in commits
+        if: github.event_name == 'pull_request'
+        run: node scripts/lint-commit-attribution.mjs --base origin/${{ github.base_ref }}
+
+      - name: No AI attribution in PR body
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: node scripts/lint-commit-attribution.mjs --pr-body
+
   quality:
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +118,12 @@ jobs:
       - name: Sync skills (no drift)
         run: |
           pnpm sync:skills
-          git diff --exit-code -- public/.well-known/agent-skills .agents/skills/nqchart
+          git diff --exit-code -- public/.well-known/agent-skills .agents/skills/nqchart .claude/skills
+          test -z "$(git status --porcelain -- public/.well-known/agent-skills .agents/skills/nqchart .claude/skills)"
+
+      # The npm package is the contract: dist, api type-probe, echarts internals, size budget.
+      - name: npm package checks
+        run: pnpm run build:npm
 
       - name: Cache Next.js build
         uses: actions/cache@v4
@@ -62,3 +135,7 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      # `pnpm build` runs registry:fresh. A diff means the committed generated files are stale.
+      - name: Generated registry files committed (no drift)
+        run: git diff --exit-code -- registry.json src/registry/__index__.tsx
