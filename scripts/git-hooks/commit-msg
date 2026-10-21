@@ -1,5 +1,5 @@
 #!/bin/sh
-# strip-ai-attribution
+# nqchart-hook (strip-ai-attribution)
 # Remove a Claude or Cursor attribution line before git stores the commit.
 # A human Co-authored-by line stays. Install: pnpm hooks:install
 root=$(git rev-parse --show-toplevel) || exit 0

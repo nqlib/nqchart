@@ -12,15 +12,13 @@
  *   node scripts/lint-commit-attribution.mjs --commit-msg <file>   strip lines (commit-msg hook)
  *   node scripts/lint-commit-attribution.mjs --base origin/dev     fail on commits in base..HEAD
  *   PR_BODY="…" node scripts/lint-commit-attribution.mjs --pr-body fail on the PR body (CI)
- *   node scripts/lint-commit-attribution.mjs --install-hook        install the commit-msg hook
+ *   node scripts/lint-commit-attribution.mjs --install-hook        alias of scripts/install-git-hooks.mjs
  */
 import { execFileSync } from "node:child_process";
-import { chmodSync, copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
 const root = join(import.meta.dirname, "..");
-const HOOK_SRC = join(root, "scripts/git-hooks/commit-msg");
-const HOOK_MARKER = "strip-ai-attribution";
 
 export function isBannedLine(line) {
   const text = line.trim().toLowerCase();
@@ -85,20 +83,8 @@ function checkPrBody() {
   console.log("lint:attribution — PR body is clean.");
 }
 
-function installHook() {
-  const hooksDir = git("rev-parse", "--git-path", "hooks").trim();
-  const dest = resolve(root, hooksDir, "commit-msg");
-  if (existsSync(dest) && !readFileSync(dest, "utf8").includes(HOOK_MARKER)) {
-    console.error(`hooks:install — ${dest} exists and is not ours. Merge it by hand.`);
-    process.exit(1);
-  }
-  copyFileSync(HOOK_SRC, dest);
-  chmodSync(dest, 0o755);
-  console.log(`hooks:install — installed ${dest}`);
-}
-
 const msgFile = argValue("--commit-msg");
 if (msgFile) commitMsg(msgFile);
 else if (process.argv.includes("--pr-body")) checkPrBody();
-else if (process.argv.includes("--install-hook")) installHook();
+else if (process.argv.includes("--install-hook")) await import("./install-git-hooks.mjs");
 else checkRange(argValue("--base") ?? "origin/dev");

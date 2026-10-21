@@ -107,10 +107,31 @@ A squash-merge into `dev` joins the commit messages of the branch. Always pass a
 
 Enforcement:
 
-- `scripts/git-hooks/commit-msg` removes these lines before git stores the commit. Install it
-  once per clone with `pnpm hooks:install`.
+- `scripts/git-hooks/commit-msg` removes these lines before git stores the commit. Install the
+  hooks once per clone with `pnpm hooks:install`.
 - `pnpm lint:attribution` fails when a commit on the branch, or the PR body, contains one. CI
   runs it on each PR.
+
+## Local CI first
+
+GitHub Actions minutes cost money. CI is the last gate. Run every check here before a push.
+
+| Where | What runs |
+|-------|-----------|
+| `pnpm preflight` | The `ci.yml` steps for the areas that the branch changes (lint, typecheck, test, audits, skills, `build:npm`, site build, drift). It records the commit that passed |
+| `pre-push` hook | Nothing when the pushed commit has a recorded pass. Otherwise preflight, and a failure blocks the push |
+| CI on a draft PR | `branch-flow` only (no paid build) |
+| CI on a ready PR | `branch-flow` and `rules` (seconds). Then `quality` (minutes) when `rules` passes and the PR changes more than `docs/`, `plans/`, `memory/`, or root `*.md` |
+| CI on a push to `main` | The merge-commit guard only. The release PR already ran the full suite |
+
+Rules:
+
+- Commit, run `pnpm preflight`, then push. Read the exit code.
+- Do not use `git push --no-verify`.
+- Push in batches. Each push to a ready PR starts a CI run.
+- Keep the PR a draft until preflight passes. Then mark it ready.
+- If CI fails on a check that passed here, find why the two differ. Fix the local check so the
+  next failure shows here first.
 
 ## Release
 

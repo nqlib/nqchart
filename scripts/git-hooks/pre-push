@@ -1,0 +1,8 @@
+#!/bin/sh
+# nqchart-hook
+# Run the CI checks locally before a push. GitHub Actions minutes cost money; a CI failure
+# on a check that runs here is a failure of the push. Install: pnpm hooks:install
+# Skips at once when `pnpm preflight` already passed on the pushed commit.
+# Do not bypass with --no-verify (CLAUDE.md § Shared rules).
+root=$(git rev-parse --show-toplevel) || exit 1
+exec node "$root/scripts/preflight.mjs" --hook

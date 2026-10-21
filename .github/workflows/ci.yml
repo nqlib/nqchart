@@ -1,9 +1,17 @@
 name: CI
 
+# Actions minutes cost money. Run every check locally first (`pnpm preflight`; the pre-push
+# hook enforces it). CI is the final gate, not the place to find a failure:
+# - A push runs only the main merge-commit guard. The PR already ran the full suite.
+# - A draft PR runs nothing but branch-flow. Mark the PR ready when preflight passes.
+# - `rules` (seconds) runs first. `quality` (minutes) runs only when `rules` passes and the PR
+#   changes more than the maintainer vault (docs/, plans/, memory/, root *.md).
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -52,7 +60,10 @@ jobs:
 
   rules:
     # Repo rules from CLAUDE.md: agent-rule mirror, status agreement, no AI attribution.
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && !github.event.pull_request.draft)
     runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.changes.outputs.code }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -61,6 +72,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Detect changes outside the maintainer vault
+        id: changes
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          other=$(git diff --name-only "origin/$BASE_REF...HEAD"             | grep -Ev '^(docs/|plans/|memory/|\.cursor/|\.github/ISSUE_TEMPLATE/|\.github/PULL_REQUEST_TEMPLATE\.md$|[^/]+\.md$)' || true)
+          if [ -n "$other" ]; then echo "code=true" >> "$GITHUB_OUTPUT"; else echo "code=false" >> "$GITHUB_OUTPUT"; fi
+          echo "Files outside the vault:"; echo "${other:-(none — quality is skipped)}"
 
       - name: Agent rules in sync (AGENTS.md = CLAUDE.md)
         run: node scripts/sync-agents-md.mjs --check
@@ -79,6 +102,8 @@ jobs:
         run: node scripts/lint-commit-attribution.mjs --pr-body
 
   quality:
+    needs: rules
+    if: needs.rules.outputs.code == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -164,19 +164,29 @@ echarts/core                → the only ECharts import path
   overrides the agent harness default, which adds both. A squash-merge joins the commit
   messages of the branch, so one trailer on one commit reaches `dev`. Always write the
   squash-merge subject and body by hand (`gh pr merge --squash --subject … --body-file …`).
-  `scripts/git-hooks/commit-msg` removes a trailer before git stores the commit. Install it
-  once per clone with `pnpm hooks:install`. `pnpm lint:attribution` fails a PR that still has
+  `scripts/git-hooks/commit-msg` removes a trailer before git stores the commit. Install the
+  hooks once per clone with `pnpm hooks:install`. `pnpm lint:attribution` fails a PR that still has
   one.
-- **Run every CI check locally before you push.**
+- **Build and run CI locally first. GitHub CI is the last gate, not the test bench.** Each
+  Actions run costs money. A CI failure on a check that can run here is a failure of the
+  push, not of CI.
   1. Commit first. `scripts/preflight.mjs` reads the committed diff against `origin/dev`
      (`origin/main` for a `hotfix/*` branch).
-  2. Run `pnpm preflight`. It runs the CI checks for the areas that the branch changes. Run
-     `pnpm preflight --full` before a release.
+  2. Run `pnpm preflight`. It runs the same steps as `ci.yml` for the areas that the branch
+     changes, including `build:npm` and the site build. Run `pnpm preflight --full` before a
+     release.
   3. Push only when the command exits 0. Read the exit code, not the printed lines. A pipe
      such as `cmd | tail` returns the exit code of its last command.
-  4. If a check cannot run here, name it in the PR body. Tell the developer before the push.
+  4. The `pre-push` hook (`pnpm hooks:install`) runs preflight again if the pushed commit has
+     no recorded pass, and blocks the push on a failure. **Never use `git push --no-verify`.**
+  5. Batch the commits. Push when the change is ready to check, not after each commit. Each
+     push to an open PR starts a CI run.
+  6. Open a PR as a **draft** while the work is in progress. A draft PR runs no paid CI job.
+     Mark it ready when preflight passes.
+  7. If a check cannot run here, name it in the PR body. Tell the developer before the push.
 
-  Do not push to see what CI says. Do not push a fix that you did not run here.
+  Do not push to see what CI says. Do not push a fix that you did not run here. If CI fails on
+  a check that passed here, find why the two differ and fix the local check.
 - **CI waits:** do not poll CI in the foreground. Wait with one
   `gh pr checks <n> --watch --fail-fast` call in a background job. Report the result when it
   exits.

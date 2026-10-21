@@ -71,11 +71,17 @@ pnpm run audit:previews
 
 Commit first, then run:
 
+GitHub Actions minutes cost money, so CI is the last gate. Build and check locally first:
+
 ```bash
-pnpm hooks:install   # once per clone: strips AI attribution from commit messages
-pnpm preflight       # the CI checks for the areas your branch changes
+pnpm hooks:install      # once per clone: commit-msg (strips AI attribution) + pre-push (preflight)
+pnpm preflight          # the CI checks for the areas your branch changes
 pnpm preflight --full   # every check, including build:npm and next build (releases)
 ```
+
+The `pre-push` hook blocks a push when preflight has not passed on the pushed commit. Do not
+bypass it with `--no-verify`. Open a PR as a draft while you work: a draft PR runs no paid CI
+job. Push in batches, not after each commit.
 
 `pnpm preflight` reads the committed diff against `origin/dev` (`origin/main` on a `hotfix/*`
 branch). Push only when it exits 0.
