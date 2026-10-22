@@ -512,6 +512,71 @@
       ]
     },
     {
+      "name": "ex-reference-domain-pinned-line-chart",
+      "registryDependencies": [
+        "@nqchart/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-reference-domain-pinned-line-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-reference-domain-auto-line-chart",
+      "registryDependencies": [
+        "@nqchart/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-reference-domain-auto-line-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-signed-bar-chart",
+      "registryDependencies": [
+        "@nqchart/composed-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-signed-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-signed-stack-bar-chart",
+      "registryDependencies": [
+        "@nqchart/composed-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-signed-stack-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-signed-horizontal-bar-chart",
+      "registryDependencies": [
+        "@nqchart/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-signed-horizontal-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
       "name": "ex-loading-state-line-chart",
       "registryDependencies": [
         "@nqchart/line-chart"

@@ -565,6 +565,96 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "ex-reference-domain-pinned-line-chart": {
+    name: "ex-reference-domain-pinned-line-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/line-chart"],
+    files: [{
+      path: "@/registry/examples/ex-reference-domain-pinned-line-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-reference-domain-pinned-line-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-reference-domain-pinned-line-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-reference-domain-auto-line-chart": {
+    name: "ex-reference-domain-auto-line-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/line-chart"],
+    files: [{
+      path: "@/registry/examples/ex-reference-domain-auto-line-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-reference-domain-auto-line-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-reference-domain-auto-line-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-signed-bar-chart": {
+    name: "ex-signed-bar-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/composed-chart"],
+    files: [{
+      path: "@/registry/examples/ex-signed-bar-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-signed-bar-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-signed-bar-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-signed-stack-bar-chart": {
+    name: "ex-signed-stack-bar-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/composed-chart"],
+    files: [{
+      path: "@/registry/examples/ex-signed-stack-bar-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-signed-stack-bar-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-signed-stack-bar-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-signed-horizontal-bar-chart": {
+    name: "ex-signed-horizontal-bar-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/bar-chart"],
+    files: [{
+      path: "@/registry/examples/ex-signed-horizontal-bar-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-signed-horizontal-bar-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-signed-horizontal-bar-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "ex-loading-state-line-chart": {
     name: "ex-loading-state-line-chart",
     description: "",
