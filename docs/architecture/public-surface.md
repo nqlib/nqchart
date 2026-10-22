@@ -16,8 +16,27 @@ migration once (SecoLab ST-289).
 | `@nqlib/nqchart/bar-chart` | `NQBarChart`, `Bar`, axes, legend, tooltip, … |
 | `@nqlib/nqchart/<family>-chart` | Same pattern per primitive |
 | `@nqlib/nqchart/recipes` | `binForHistogram`, `prepareParetoData`, … |
+| `@nqlib/nqchart/headless` | Every `compile*Option`, `buildAreaSeries`, `withLegendFocus`, `createColorResolver`, `withHeadlessTheme` / `headlessThemeOf` / `HeadlessTheme`, `printLegend`, `renderToSvg`, `CompileContext` / `ChartPart` / every part type, `ChartConfig`, `CHART_TYPOGRAPHY`, `CHART_FONT_FAMILY_FALLBACK` (0.4.0) |
 
 Root barrel: `src/lib/public.ts`. Family barrels: each `charts/<family>-chart.tsx`.
+Headless barrel: `src/registry/headless/index.ts`.
+
+## Headless contract (0.4.0, spec S6)
+
+- The entry imports no React module and reads no DOM. `check:internals` fails the build
+  when a compile-path file, the headless sources or the built `dist/headless.*` chunks
+  import React.
+- **The chart id is the key to the theme.** `withHeadlessTheme(chartId, theme, fn)`
+  registers a `HeadlessTheme` while `fn` runs. Every helper that reads
+  `[data-chart="<id>"]` in the browser reads the registered theme first. With no theme,
+  the option is the 0.3.x option.
+- `printLegend(ctx, legendPart, option)` puts an ECharts legend under the plot: a block for
+  a bar or an area series, the line in its own style for a line series.
+- `renderToSvg(option, { width, height, modules? })` draws with echarts SSR
+  (`renderer: "svg"`, `ssr: true`) and returns `renderToSVGString()`. Animation and the
+  tooltip are off. The browser entries keep `CanvasRenderer` only.
+- `echarts` stays a peer and an external; the entry has its own `check:size` baseline
+  (`platform: "node"`) and a real render in `smoke-dist.mjs`.
 
 ## Interaction contract (BI boards)
 
@@ -70,7 +89,7 @@ single-select isolate today (`string | null`).
 | `isEmpty` / `emptyState` | Empty plate; default empty when `data.length === 0` |
 | `error` | Error plate, distinct from empty |
 | `a11yTable` | Visually hidden table (default on; row-capped) |
-| `chartRef.toDataURL` | PNG with themed background (`CanvasRenderer` only) |
+| `chartRef.toDataURL` | PNG with themed background (`CanvasRenderer` only); for SVG in Node use `@nqlib/nqchart/headless` |
 
 ## ECharts private internals
 

@@ -22,7 +22,7 @@ pnpm publish:npm          # optional OTP: -- --otp=123456
 ```
 
 `check:api` type-probes `dist/types/` so inherited props (`onMarkClick` on line/area/composed) cannot silently drop.
-`check:internals` resolves private `echarts/lib/...` imports. `check:size` gzips each family entry (echarts included) and fails on >5% growth.
+`check:internals` resolves private `echarts/lib/...` imports and fails when React reaches the compile path or `dist/headless.*`. `check:size` gzips each family entry and the headless entry (echarts included) and fails on >5% growth. `smoke-dist.mjs` renders one composed chart to SVG from `dist/headless.mjs` and `dist/headless.cjs`.
 
 ## Git tag (release)
 

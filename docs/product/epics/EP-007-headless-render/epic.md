@@ -40,9 +40,9 @@ as the browser. The consumer injects the theme. No browser and no DOM are necess
 
 | ID | Title | Status | Plan |
 |----|-------|--------|------|
-| [ST-024](stories/ST-024-pure-compile-path-and-theme.md) | Pure compile path and the headless theme registry | ready | [018](../../../../plans/018-headless-render.md) |
-| [ST-025](stories/ST-025-headless-entry-and-svg-render.md) | Headless entry and the SVG render | ready | [018](../../../../plans/018-headless-render.md) |
-| [ST-026](stories/ST-026-release-0-4-0.md) | Release 0.4.0 | ready | [018](../../../../plans/018-headless-render.md) |
+| [ST-024](stories/ST-024-pure-compile-path-and-theme.md) | Pure compile path and the headless theme registry | done | [018](../../../../plans/018-headless-render.md) |
+| [ST-025](stories/ST-025-headless-entry-and-svg-render.md) | Headless entry and the SVG render | done | [018](../../../../plans/018-headless-render.md) |
+| [ST-026](stories/ST-026-release-0-4-0.md) | Release 0.4.0 | done | [018](../../../../plans/018-headless-render.md) |
 
 ## Success metrics
 

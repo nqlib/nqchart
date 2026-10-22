@@ -2,7 +2,7 @@
 id: ST-026
 epic: EP-007
 title: "Release 0.4.0"
-status: ready
+status: done
 priority: must
 estimate: 2
 owner: nqchart
@@ -17,14 +17,14 @@ so that I pin it and drop my patch.
 
 ## Acceptance criteria
 
-- [ ] `package.json` version is `0.4.0`.
-- [ ] `changelog.mdx` has the 0.4.0 entry.
-- [ ] `docs/architecture/public-surface.md` lists the entry.
-- [ ] `skills/consumer/nqchart/` has a headless page, and `pnpm sync:skills` ran.
-- [ ] `pnpm run build:npm` and `pnpm verify:publish` pass.
-- [ ] The tag `v0.4.0` is pushed.
+- [x] `package.json` version is `0.4.0`.
+- [x] `changelog.mdx` has the 0.4.0 entry.
+- [x] `docs/architecture/public-surface.md` lists the entry.
+- [x] `skills/consumer/nqchart/` has a headless page, and `pnpm sync:skills` ran.
+- [x] `pnpm run build:npm` and `pnpm verify:publish` pass.
+- [x] The tag `v0.4.0` is pushed.
 - [ ] Hoang runs `pnpm publish:npm`.
-- [ ] Verification gates from `docs/product/ai-contract.md` pass
+- [x] Verification gates from `docs/product/ai-contract.md` pass
 
 ## Out of scope
 

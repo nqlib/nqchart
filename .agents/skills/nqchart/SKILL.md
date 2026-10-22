@@ -10,7 +10,7 @@ license: MIT
 compatibility: Requires React, echarts, and motion (peer deps).
 metadata:
   author: ctesibius/nqchart
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # NQChart (agent guide)
@@ -29,6 +29,7 @@ Read in order:
 | [components.md](./components.md) | Roots, parts, and props per chart |
 | [recipes.md](./recipes.md) | `@nqlib/nqchart/recipes` — histogram, bullet, Pareto, heatmap, box plot, gauge |
 | [examples.md](./examples.md) | Copy-ready chart patterns |
+| [headless.md](./headless.md) | `@nqlib/nqchart/headless` — compile and render a chart to SVG in Node (PDF / e-mail export) |
 
 Repo docs: `https://nqchart.vercel.app/docs` (or local `/docs/<chart>`).
 

@@ -56,6 +56,7 @@ Import children from the **same family** as the root — each family defines its
 | `@nqlib/nqchart/funnel-chart` | `NQFunnelChart`, `Stages`, axes, `Tooltip`, `Legend` |
 | `@nqlib/nqchart/waterfall-chart` | `NQWaterfallChart`, `Bars`, `Grid`, axes, `Tooltip`, `Legend` |
 | `@nqlib/nqchart/sparkline-chart` | `NQSparklineChart`, `Sparkline`, `Fill`, `EndDot`, `ReferenceBand` |
+| `@nqlib/nqchart/headless` | No root: `compile*Option`, `withHeadlessTheme`, `printLegend`, `renderToSvg` — SVG in Node, see [headless.md](./headless.md) |
 
 There is **no** separate `gauge-chart` / `histogram-chart` subpath — those are patterns on the primitives above (see [recipes.md](./recipes.md)).
 

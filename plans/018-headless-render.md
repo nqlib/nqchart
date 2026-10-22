@@ -1,6 +1,6 @@
 # Plan 018 — Headless render: pure compile path, theme registry, SVG in Node
 
-- **Status:** APPROVED
+- **Status:** DONE
 - **Written:** 2026-10-21
 - **Effort:** L · **Risk:** med
 - **Skills:** `nqchart-dev`
@@ -106,45 +106,74 @@ Notes. The size check runs esbuild with `platform: "browser"` for families; the 
 
 ST-024 — pure compile path and the headless theme registry:
 
-- [ ] `echarts-tooltip.ts` imports no React module.
-- [ ] A theme registered with `withHeadlessTheme(chartId, theme, fn)` is read by every helper that reads `[data-chart]` today (the list is in Approach part 2).
-- [ ] A composed stacked bar rounds only its outer corners (the port of secolab PR #1387).
-- [ ] The bar, line, area and composed families register `MarkLineComponent` and `MarkAreaComponent`.
-- [ ] The vitest suite passes in the `node` environment.
+- [x] `echarts-tooltip.ts` imports no React module.
+- [x] A theme registered with `withHeadlessTheme(chartId, theme, fn)` is read by every helper that reads `[data-chart]` today (the list is in Approach part 2).
+- [x] A composed stacked bar rounds only its outer corners (the port of secolab PR #1387).
+- [x] The bar, line, area and composed families register `MarkLineComponent` and `MarkAreaComponent`.
+- [x] The vitest suite passes in the `node` environment.
 
 ST-025 — headless entry and the SVG render:
 
-- [ ] The entry exists in `package.json` `exports`, `vite.lib.config.ts` and `tsconfig.lib.json`.
-- [ ] `renderToSvg(option, {width, height, modules})` returns a string that starts with `<svg`.
-- [ ] `printLegend(ctx, legendPart)` puts an ECharts legend in the option with a block icon for a bar or an area series and the line's own style for a line series.
-- [ ] `smoke-dist.mjs` renders one composed chart to SVG from the built `dist/headless.mjs` and from `dist/headless.cjs`.
-- [ ] `check-size` has a baseline for the entry.
-- [ ] `check-api` type-checks a headless call.
+- [x] The entry exists in `package.json` `exports`, `vite.lib.config.ts` and `tsconfig.lib.json`.
+- [x] `renderToSvg(option, {width, height, modules})` returns a string that starts with `<svg`.
+- [x] `printLegend(ctx, legendPart)` puts an ECharts legend in the option with a block icon for a bar or an area series and the line's own style for a line series.
+- [x] `smoke-dist.mjs` renders one composed chart to SVG from the built `dist/headless.mjs` and from `dist/headless.cjs`.
+- [x] `check-size` has a baseline for the entry.
+- [x] `check-api` type-checks a headless call.
 
 ST-026 — release 0.4.0:
 
-- [ ] `package.json` version `0.4.0`.
-- [ ] `changelog.mdx` entry.
-- [ ] `docs/architecture/public-surface.md` lists the entry.
-- [ ] `skills/consumer/nqchart/` has a headless page and `pnpm sync:skills` ran.
-- [ ] `pnpm run build:npm` and `pnpm verify:publish` pass.
-- [ ] Tag `v0.4.0` pushed.
+- [x] `package.json` version `0.4.0`.
+- [x] `changelog.mdx` entry.
+- [x] `docs/architecture/public-surface.md` lists the entry.
+- [x] `skills/consumer/nqchart/` has a headless page and `pnpm sync:skills` ran.
+- [x] `pnpm run build:npm` and `pnpm verify:publish` pass.
+- [x] Tag `v0.4.0` pushed.
 - [ ] Hoang runs `pnpm publish:npm`.
 
 Checks that prove the criteria:
 
-- [ ] `pnpm run audit:previews` and `pnpm run audit:registry-boundary` exit 0.
-- [ ] `pnpm skill:validate` exits 0 and `git diff --exit-code .agents/skills/nqchart` is empty after `pnpm sync:skills`.
-- [ ] `node scripts/smoke-dist.mjs` prints the headless render check as passed.
-- [ ] From a scratch package that installs the packed tarball, `node -e "import('@nqlib/nqchart/headless')"` prints no error, and a script in it renders a composed chart to `out.svg` with two series, a dashed line and a legend.
-- [ ] `git grep -n "from \"react\"" src/registry/headless src/registry/echarts-core/*.ts` prints nothing.
+- [x] `pnpm run audit:previews` and `pnpm run audit:registry-boundary` exit 0.
+- [x] `pnpm skill:validate` exits 0 and `git diff --exit-code .agents/skills/nqchart` is empty after `pnpm sync:skills`.
+- [x] `node scripts/smoke-dist.mjs` prints the headless render check as passed.
+- [x] From a scratch package that installs the packed tarball, `node -e "import('@nqlib/nqchart/headless')"` prints no error, and a script in it renders a composed chart to `out.svg` with two series, a dashed line and a legend.
+- [x] `git grep -n "from \"react\"" src/registry/headless src/registry/echarts-core/*.ts` prints nothing.
 - [ ] `npm view @nqlib/nqchart version` prints `0.4.0` after Hoang publishes.
 
 Gates:
 
-- [ ] Verification gates from `docs/product/ai-contract.md` pass for touched surfaces
-- [ ] Consumer skill updated if public API changed (`pnpm sync:skills`)
-- [ ] Bug? → `.agents/skills/fixed/` note if non-trivial regression risk (the MarkLine registration, Approach part 4)
+- [x] Verification gates from `docs/product/ai-contract.md` pass for touched surfaces
+- [x] Consumer skill updated if public API changed (`pnpm sync:skills`)
+- [x] Bug? → `.agents/skills/fixed/` note if non-trivial regression risk (the MarkLine registration, Approach part 4)
+
+## Outcome (2026-10-21)
+
+Shipped on branch `feat/018-headless-render-code` as 0.4.0. Deviations from the Approach,
+each with its reason:
+
+- `getColorsCount` also left `compile-radar.ts` and `compile-radial-bar.ts`, which imported
+  it from `ui/chart.tsx` too. The headless entry exports those compilers.
+- The literal grep `git grep 'from "react"' src/registry/echarts-core/*.ts` prints the eight
+  React hooks (`use-*.ts`). They are not on the compile path. `check:internals` greps the
+  non-hook files and the headless sources, walks the import graph from
+  `headless/index.ts`, and walks the chunks of `dist/headless.mjs` and `dist/headless.cjs`.
+- `resolveAreaFillColor` and `radarAreaFill` take an optional trailing `chartId`. No chart
+  id reached them before; the compilers pass `ctx.chartId`.
+- The print legend text uses `chrome.foreground`, as the HTML legend (`text-foreground`).
+- The print legend sets no root `icon`: a root icon overrides the line entries. A line
+  entry sets `itemStyle.opacity: 0` so the glyph is a short line with no point symbol.
+- `renderToSvg` drops the `tooltip` key instead of `tooltip: { show: false }`: the tooltip
+  component is not registered in the headless render.
+- The scatter family also registers `MarkLineComponent` and `MarkAreaComponent`; it exports
+  `ReferenceLine` and `ReferenceBand` and had the same gap.
+- The bar and scatter families also register `LineChart`. The reference marks ride on a
+  synthetic `type: "line"` series, and ECharts drops that series when `LineChart` is not
+  registered (seen on the docs page, proven with an SSR render). Bar grew from 202,732 to
+  220,315 bytes gzip (+8.7 %) and scatter from 180,847 to 197,307 bytes (+9.1 %), so
+  `node scripts/check-size.mjs --write` rewrote the baseline.
+- `scripts/check-size.mjs` resolves esbuild through tsx. esbuild is not a direct dependency,
+  and the script failed on `main` with `ERR_MODULE_NOT_FOUND`.
+- No pie or line snapshot changed.
 
 ## Out of scope / follow-ups
 
