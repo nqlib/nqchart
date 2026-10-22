@@ -28,7 +28,9 @@ type Series = {
   connectNulls?: boolean;
   tooltip?: { show?: boolean };
   areaStyle?: { opacity?: number };
-  markLine?: { data?: Array<{ yAxis?: number }> };
+  markLine?: {
+    data?: Array<{ yAxis?: number; label?: { position?: string; distance?: [number, number] } }>;
+  };
   markArea?: { data?: Array<[{ yAxis?: number | string }, { yAxis?: number | string }]> };
 };
 
@@ -247,7 +249,42 @@ describe("reference marks", () => {
       }),
     );
 
-    expect(refSeries(option, 0)?.markLine?.data?.map((d) => d.yAxis)).toEqual([10, 10]);
+    const marks = refSeries(option, 0)?.markLine?.data;
+    expect(marks?.map((d) => d.yAxis)).toEqual([10, 10]);
+    expect(marks?.[0]?.label?.position).toBe("insideEndTop");
+    expect(marks?.[0]?.label?.distance).toEqual([64, 6]);
+  });
+
+  it("reserves room above a labeled line that is the axis max", () => {
+    const option = compileLineOption(
+      makeCtx({
+        parts: [
+          salesLine,
+          { type: "referenceLine", id: "stretch", y: 40, label: "Stretch" } satisfies ReferenceLinePart,
+        ],
+        xDataKey: "month",
+        data: rows,
+      }),
+    );
+
+    const grid = option.grid as { top?: number };
+    expect(grid.top).toBeGreaterThanOrEqual(28);
+  });
+
+  it("leaves the top padding alone when the labeled line is inside the data", () => {
+    const option = compileLineOption(
+      makeCtx({
+        parts: [
+          salesLine,
+          { type: "referenceLine", id: "mid", y: 15, label: "Mid" } satisfies ReferenceLinePart,
+        ],
+        xDataKey: "month",
+        data: rows,
+      }),
+    );
+
+    const grid = option.grid as { top?: number };
+    expect(grid.top).toBe(14);
   });
 
   it("warns for an unknown yAxisId and uses axis 0", () => {

@@ -54,8 +54,8 @@ export function NQExampleReferenceRangeChart() {
       <Tooltip />
       <RangeArea lowKey="low" highKey="high" yAxisId="left" tone="accent" label="Interval" />
       <ReferenceBand y={[190, null]} yAxisId="left" tone="warning" label="Above plan" />
-      <ReferenceLine y={220} yAxisId="left" label="Stretch" tone="critical" />
-      <ReferenceLine y={60} yAxisId="right" label="Index cap" tone="accent" />
+      <ReferenceLine y={220} yAxisId="left" label="Stretch" labelPosition="middle" tone="critical" />
+      <ReferenceLine y={60} yAxisId="right" label="Index cap" labelPosition="middle" tone="accent" />
       <Line dataKey="revenue" yAxisId="left" />
       <Line dataKey="forecast" yAxisId="left" variant="dashed" />
       <Line dataKey="index" yAxisId="right" />

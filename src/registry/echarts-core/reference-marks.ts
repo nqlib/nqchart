@@ -51,12 +51,26 @@ function lineType(variant?: ReferenceLinePart["variant"]): "solid" | "dashed" | 
   return "dashed";
 }
 
+/**
+ * `end` anchors the text on the axis and draws it outward, onto the ticks.
+ * The inside* positions inset along the line and lift the text off the stroke.
+ */
 function labelPosition(
   pos?: ReferenceLinePart["labelPosition"],
-): "start" | "middle" | "end" {
-  if (pos === "start" || pos === "middle") return pos;
-  return "end";
+): "insideStartTop" | "insideMiddleTop" | "insideEndTop" {
+  if (pos === "start") return "insideStartTop";
+  if (pos === "middle") return "insideMiddleTop";
+  return "insideEndTop";
 }
+
+/** [inset from the line end, gap above the stroke]. */
+const MARK_LINE_LABEL_DISTANCE: [number, number] = [64, 6];
+
+/**
+ * Room above the plot when a labeled line is the axis max.
+ * `inside*Top` draws the glyphs above the stroke; 14px of grid padding clips them.
+ */
+const TOP_EDGE_LABEL_PAD = 28;
 
 function warnUnknownAxis(chartId: string, yAxisId: string) {
   if (process.env.NODE_ENV === "production") return;
@@ -135,6 +149,7 @@ function buildMarkLineData(lines: ReferenceLinePart[], chartId: string) {
           show: Boolean(line.label),
           formatter: line.label ?? "",
           position: labelPosition(line.labelPosition),
+          distance: MARK_LINE_LABEL_DISTANCE,
           color,
         },
         lineStyle: {
@@ -153,7 +168,7 @@ function buildMarkAreaData(bands: ReferenceBandPart[], chartId: string) {
       const color = resolveToneColor(band.tone, chartId);
       const opacity = band.opacity ?? 0.12;
       const label = band.label
-        ? { show: true, position: "inside" as const, color }
+        ? { show: true, position: "insideTop" as const, color, distance: 6 }
         : { show: false };
       if (band.y) {
         return [
@@ -365,6 +380,56 @@ function extendYAxes(
   return apply(yAxis, 0);
 }
 
+/** Largest plotted value on one y-axis. Range highs count; they can sit above the lines. */
+function axisDataMax(ctx: CompileContext, axisIndex: number, yAxes: YAxisPart[]): number {
+  let max = Number.NEGATIVE_INFINITY;
+  const consider = (yAxisId: string | undefined, raw: unknown) => {
+    if (resolveMarkAxis(yAxisId, yAxes, ctx.chartId) !== axisIndex) return;
+    const value = seriesValue(raw);
+    if (value != null) max = Math.max(max, value);
+  };
+
+  for (const part of ctx.parts) {
+    if (part.type === "line" || part.type === "bar" || part.type === "area") {
+      for (const row of ctx.data) consider(part.yAxisId, row[part.dataKey]);
+    } else if (part.type === "rangeArea") {
+      for (const row of ctx.data) {
+        consider(part.yAxisId, row[part.lowKey]);
+        consider(part.yAxisId, row[part.highKey]);
+      }
+    }
+  }
+  return max;
+}
+
+/**
+ * A label drawn above a line that is the top of the scale leaves the canvas.
+ * True when that line is on screen at the axis max (auto domain grew to it,
+ * or an explicit domain ends on it).
+ */
+function labelSitsOnAxisTop(
+  line: ReferenceLinePart,
+  axis: YAxisPart | undefined,
+  dataMax: number,
+): boolean {
+  if (!line.label || line.y == null || !Number.isFinite(line.y)) return false;
+  const explicitMax = axis?.domain?.[1];
+  if (explicitMax != null) return line.y >= explicitMax;
+  if (line.includeInDomain === false) return false;
+  return line.y >= dataMax;
+}
+
+function withTopLabelRoom(grid: EChartsOption["grid"]): EChartsOption["grid"] {
+  const lift = (item: object) => {
+    const top = (item as { top?: number | string }).top;
+    const current = typeof top === "number" ? top : 14;
+    return { ...item, top: Math.max(current, TOP_EDGE_LABEL_PAD) };
+  };
+  if (Array.isArray(grid)) return grid.map((item) => (item && typeof item === "object" ? lift(item) : item));
+  if (grid && typeof grid === "object") return lift(grid);
+  return { top: TOP_EDGE_LABEL_PAD };
+}
+
 function appendSeries(
   option: EChartsOption,
   extra: EChartsOption["series"],
@@ -392,10 +457,17 @@ export function withReferenceMarks(
     next = { ...next, series: appendSeries(next, range) };
   }
   if (ref) {
+    const yAxes = ctx.parts.filter((p): p is YAxisPart => p.type === "yAxis");
+    const lines = ctx.parts.filter((p): p is ReferenceLinePart => p.type === "referenceLine");
+    const needsTopRoom = lines.some((line) => {
+      const axisIndex = resolveMarkAxis(line.yAxisId, yAxes, ctx.chartId);
+      return labelSitsOnAxisTop(line, yAxes[axisIndex], axisDataMax(ctx, axisIndex, yAxes));
+    });
     next = {
       ...next,
       yAxis: extendYAxes(next.yAxis, ref.extents),
       series: appendSeries(next, ref.series),
+      ...(needsTopRoom ? { grid: withTopLabelRoom(next.grid) } : {}),
     };
   }
   return next;

@@ -52,9 +52,6 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
   );
 
   const grid = resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush));
-  if (yAxes.some((y) => y.orientation === "right") && !ctx.cartesian?.externalBrush) {
-    grid.right = 56;
-  }
 
   const dataZoom = buildCategoryDataZoom(hasBrush, { chartVariant: "line" });
   const base: EChartsOption = {

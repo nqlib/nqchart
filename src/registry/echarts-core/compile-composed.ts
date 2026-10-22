@@ -162,9 +162,6 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   });
 
   const grid = resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush));
-  if (yAxes.some((y) => y.orientation === "right") && !ctx.cartesian?.externalBrush) {
-    grid.right = 56;
-  }
 
   const xAxis = applyAxisPartToOption(
     { type: "category", data: categories },

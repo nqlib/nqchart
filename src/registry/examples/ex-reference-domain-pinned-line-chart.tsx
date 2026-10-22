@@ -18,7 +18,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-/** Caller-set max stays. The line at 80 is off the plot. */
+/** Revenue stays inside 0–40. The line at 80 does not widen the axis. */
 export function NQExampleReferenceDomainPinnedLineChart() {
   return (
     <NQLineChart

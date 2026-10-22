@@ -179,10 +179,6 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
     ),
     ...(hasHoverTrace && !horizontal ? { left: 56 } : {}),
   };
-  if (yAxes.some((y) => y.orientation === "right") && !ctx.cartesian?.externalBrush && !horizontal) {
-    grid.right = 56;
-  }
-
   const dataZoom = buildCategoryDataZoom(hasBrush, {
     axisDim: horizontal ? "y" : "x",
     chartVariant: "bar",
