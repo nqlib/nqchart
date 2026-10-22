@@ -57,6 +57,10 @@
     "waterfall-chart": {
       "minified": 560427,
       "gzip": 187374
+    },
+    "headless": {
+      "minified": 652141,
+      "gzip": 217829
     }
   }
 }

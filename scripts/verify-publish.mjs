@@ -47,6 +47,9 @@ function verifyTarball() {
     "dist/bar-chart.mjs",
     "dist/bar-chart.cjs",
     "dist/types/registry/charts/bar-chart.d.ts",
+    "dist/headless.mjs",
+    "dist/headless.cjs",
+    "dist/types/registry/headless/index.d.ts",
   ];
   const missing = required.filter((r) => !files.includes(r));
   const leaked = files.filter(

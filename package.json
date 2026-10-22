@@ -142,6 +142,11 @@
       "import": "./dist/recipes.mjs",
       "require": "./dist/recipes.cjs"
     },
+    "./headless": {
+      "types": "./dist/types/registry/headless/index.d.ts",
+      "import": "./dist/headless.mjs",
+      "require": "./dist/headless.cjs"
+    },
     "./area-chart": {
       "types": "./dist/types/registry/charts/area-chart.d.ts",
       "import": "./dist/area-chart.mjs",
