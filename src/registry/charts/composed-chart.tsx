@@ -10,6 +10,7 @@ import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import { compileComposedOption } from "@/registry/echarts-core/compile-composed";
 import { getEcharts } from "@/registry/echarts-core/echarts-init";
 import { BarChart, CustomChart, LineChart } from "echarts/charts";
+import { MarkAreaComponent, MarkLineComponent } from "echarts/components";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import type { NQScale } from "@/registry/echarts-core/parts/types";
@@ -23,7 +24,14 @@ import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/regi
 import type { EChartsType } from "echarts/core";
 import { useState, type Ref } from "react";
 
-const COMPOSED_ECHARTS_MODULES = [BarChart, LineChart, CustomChart];
+const COMPOSED_ECHARTS_MODULES = [
+  BarChart,
+  LineChart,
+  CustomChart,
+  // ReferenceLine / ReferenceBand compile to markLine / markArea.
+  MarkLineComponent,
+  MarkAreaComponent,
+];
 getEcharts(COMPOSED_ECHARTS_MODULES);
 
 type NQComposedChartProps<

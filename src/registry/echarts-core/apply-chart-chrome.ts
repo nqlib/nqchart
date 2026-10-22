@@ -2,6 +2,7 @@ import type { EChartsOption } from "echarts";
 import type { ChartChromeColors } from "./resolve-chart-chrome";
 import { resolveCanvasChartChrome, resolveChartFontFamily } from "./resolve-chart-chrome";
 import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
+import { headlessThemeOf } from "./headless-theme";
 
 type AxisLike = Record<string, unknown>;
 
@@ -118,10 +119,11 @@ function themeLegend(legend: EChartsOption["legend"], chrome: ChartChromeColors)
 }
 
 /** Canvas-safe slider tints — ECharts cannot parse oklch() filler colors. */
-function sliderTrackColors() {
-  const isDark =
-    typeof document !== "undefined" &&
-    document.documentElement.classList.contains("dark");
+function sliderTrackColors(chartId: string) {
+  const theme = headlessThemeOf(chartId);
+  const isDark = theme
+    ? theme.isDark
+    : typeof document !== "undefined" && document.documentElement.classList.contains("dark");
 
   return isDark
     ? {
@@ -140,10 +142,14 @@ function sliderTrackColors() {
       };
 }
 
-function themeDataZoom(dataZoom: EChartsOption["dataZoom"], chrome: ChartChromeColors) {
+function themeDataZoom(
+  dataZoom: EChartsOption["dataZoom"],
+  chrome: ChartChromeColors,
+  chartId: string,
+) {
   if (!dataZoom) return dataZoom;
   const items = Array.isArray(dataZoom) ? dataZoom : [dataZoom];
-  const sliderColors = sliderTrackColors();
+  const sliderColors = sliderTrackColors(chartId);
 
   return items.map((entry) => {
     const e = entry as AxisLike;
@@ -362,7 +368,7 @@ export function applyChartChromeToOption(
   if (radar) next.radar = radar;
   const calendar = themeCalendar(option.calendar, chrome);
   if (calendar) next.calendar = calendar as EChartsOption["calendar"];
-  const dataZoom = themeDataZoom(option.dataZoom, chrome);
+  const dataZoom = themeDataZoom(option.dataZoom, chrome, chartId);
   if (dataZoom) next.dataZoom = dataZoom as EChartsOption["dataZoom"];
   const visualMap = themeVisualMap(option.visualMap, chrome);
   if (visualMap) next.visualMap = visualMap as EChartsOption["visualMap"];

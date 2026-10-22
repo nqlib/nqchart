@@ -1,5 +1,5 @@
 import type { ChartConfig } from "@/registry/ui/chart";
-import { getColorsCount } from "@/registry/ui/chart";
+import { getColorsCount } from "./config-colors";
 import { configKeyFromDisplayName } from "./config-key-from-display-name";
 import type { TooltipPart } from "./parts/types";
 import type { EChartsOption } from "echarts";

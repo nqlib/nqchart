@@ -39,6 +39,9 @@ const entry: Record<string, string> = {
   // heatmap/calendar prep). Pure functions, no React — shipped as its own
   // subpath so dashboards can transform data without pulling a chart bundle.
   recipes: path.resolve(__dirname, "src/registry/lib/chart-recipes.ts"),
+  // Compile and render with no DOM and no React (plan 018): the pure compilers, the
+  // headless theme registry, the print legend and renderToSvg (echarts SSR).
+  headless: path.resolve(__dirname, "src/registry/headless/index.ts"),
 };
 for (const family of CHART_FAMILIES) {
   entry[family] = path.resolve(__dirname, `src/registry/charts/${family}.tsx`);

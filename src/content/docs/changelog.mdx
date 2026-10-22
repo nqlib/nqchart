@@ -3,6 +3,28 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.4.0 — 2026-10-21
+
+### Headless render
+
+- **`@nqlib/nqchart/headless`** — a new entry that compiles a chart and draws it to an SVG string in Node, with no DOM and no React. It exports every `compile*Option`, `createColorResolver`, the theme registry, `printLegend` and `renderToSvg`, plus `CompileContext`, `ChartPart` and every part type. See the consumer skill page `headless.md`.
+- **Theme registry keyed by chart id** — `withHeadlessTheme(chartId, theme, fn)` registers a `HeadlessTheme` (chrome, tones, tokens, radius, font, animation) while `fn` runs. Every helper that reads `[data-chart]` in the browser reads it first. A browser consumer with no registered theme gets the same option as in 0.3.2.
+- **`printLegend`** — an ECharts legend under the plot for an SVG: a block for a bar or an area, the line in its own style (dashed, dotted) for a line.
+- **`renderToSvg(option, { width, height, modules? })`** — echarts SSR with the SVG renderer, animation and tooltip off. The browser entries keep `CanvasRenderer`.
+- The compile path no longer imports React: `getColorsCount` lives in `echarts-core/config-colors.ts` (still exported from the root).
+
+### Composed
+
+- **A stacked bar rounds only the outer corners of its stack**, as in the bar family. An unstacked bar is unchanged.
+
+### Reference marks
+
+- **`ReferenceLine` and `ReferenceBand` draw in bar, line, area, composed and scatter.** They compiled to `markLine` / `markArea` on a synthetic line series, but no family registered `MarkLineComponent` or `MarkAreaComponent`, and bar and scatter did not register `LineChart`, so ECharts dropped them. Bar and scatter grow about 9 % gzip for `LineChart`.
+
+### Build
+
+- `check:size` resolves esbuild through tsx and measures the headless entry against its own baseline. `check:internals` fails when React reaches the compile path.
+
 ## 0.3.2 — 2026-08-16
 
 ### Interaction

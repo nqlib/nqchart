@@ -2,7 +2,7 @@
 id: ST-024
 epic: EP-007
 title: "Pure compile path and the headless theme registry"
-status: ready
+status: done
 priority: must
 estimate: 5
 owner: nqchart
@@ -17,14 +17,14 @@ so that the option it builds equals the browser's for the same theme.
 
 ## Acceptance criteria
 
-- [ ] `echarts-tooltip.ts` imports no React module.
-- [ ] A theme registered with `withHeadlessTheme(chartId, theme, fn)` is read by every helper
+- [x] `echarts-tooltip.ts` imports no React module.
+- [x] A theme registered with `withHeadlessTheme(chartId, theme, fn)` is read by every helper
   that reads `[data-chart]` today. Plan 018 lists the helpers.
-- [ ] A composed stacked bar rounds only its outer corners (the port of secolab PR #1387).
-- [ ] The bar, line, area and composed families register `MarkLineComponent` and
+- [x] A composed stacked bar rounds only its outer corners (the port of secolab PR #1387).
+- [x] The bar, line, area and composed families register `MarkLineComponent` and
   `MarkAreaComponent`.
-- [ ] The vitest suite passes in the `node` environment.
-- [ ] Verification gates from `docs/product/ai-contract.md` pass
+- [x] The vitest suite passes in the `node` environment.
+- [x] Verification gates from `docs/product/ai-contract.md` pass
 
 ## Out of scope
 

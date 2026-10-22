@@ -2,6 +2,8 @@
 /**
  * Consumer-payload gate: bundle each family entry with esbuild (echarts
  * included, react/motion external), gzip, compare to scripts/size-baseline.json.
+ * The headless entry (plan 018) is built for `platform: "node"` and compared only
+ * with its own baseline, never with a family.
  *
  * Fails when any entry grows more than THRESHOLD over its committed baseline.
  * Write a new baseline with: node scripts/check-size.mjs --write
@@ -16,11 +18,17 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
+import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import * as esbuild from "esbuild";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+// esbuild is not a direct dependency; pnpm does not hoist it to the root. It comes
+// with tsx (a dependency), so resolve it from there rather than add a package.
+const requireFromRoot = createRequire(join(root, "package.json"));
+const esbuildPath = createRequire(requireFromRoot.resolve("tsx/package.json")).resolve("esbuild");
+const esbuild = await import(pathToFileURL(esbuildPath).href);
 const baselinePath = join(root, "scripts", "size-baseline.json");
 const outDir = join(root, ".size-probe");
 const THRESHOLD = 0.05;
@@ -43,12 +51,23 @@ const FAMILIES = [
   "waterfall-chart",
 ];
 
+/** Every measured entry: the families, then the headless entry. */
+const ENTRIES = [...FAMILIES, "headless"];
+
+/** Source path and esbuild platform of each entry. */
+function entrySource(name) {
+  if (name === "headless") {
+    return { file: join(root, "src", "registry", "headless", "index.ts"), platform: "node" };
+  }
+  return { file: join(root, "src", "registry", "charts", `${name}.tsx`), platform: "browser" };
+}
+
 function kb(bytes) {
   return Math.round((bytes / 1024) * 10) / 10;
 }
 
-async function measureFamily(family) {
-  const entry = join(root, "src", "registry", "charts", `${family}.tsx`);
+async function measureEntry(family) {
+  const { file: entry, platform } = entrySource(family);
   const outfile = join(outDir, `${family}.mjs`);
   const result = await esbuild.build({
     absWorkingDir: root,
@@ -56,7 +75,7 @@ async function measureFamily(family) {
     bundle: true,
     minify: true,
     format: "esm",
-    platform: "browser",
+    platform,
     target: "es2020",
     outfile,
     write: true,
@@ -87,13 +106,13 @@ async function measureFamily(family) {
 mkdirSync(outDir, { recursive: true });
 
 const sizes = {};
-for (const family of FAMILIES) {
-  sizes[family] = await measureFamily(family);
+for (const family of ENTRIES) {
+  sizes[family] = await measureEntry(family);
 }
 
 rmSync(outDir, { recursive: true, force: true });
 
-const rows = FAMILIES.map((family) => {
+const rows = ENTRIES.map((family) => {
   const s = sizes[family];
   return `  ${family.padEnd(18)} ${String(kb(s.minified)).padStart(7)} KB min   ${String(kb(s.gzip)).padStart(6)} KB gzip`;
 });
@@ -119,7 +138,7 @@ if (!existsSync(baselinePath)) {
 
 const baseline = JSON.parse(readFileSync(baselinePath, "utf8"));
 const failures = [];
-for (const family of FAMILIES) {
+for (const family of ENTRIES) {
   const current = sizes[family]?.gzip;
   const prev = baseline.sizes?.[family]?.gzip;
   if (typeof prev !== "number") {
@@ -139,4 +158,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.info("check:size — ok (no family grew more than 5% over baseline)");
+console.info("check:size — ok (no entry grew more than 5% over baseline)");

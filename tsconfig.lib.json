@@ -15,6 +15,7 @@
     "src/registry/charts",
     "src/registry/ui",
     "src/registry/echarts-core",
+    "src/registry/headless",
     "src/registry/lib/chart-recipes.ts"
   ],
   "exclude": [

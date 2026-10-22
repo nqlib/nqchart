@@ -1,6 +1,6 @@
 {
   "name": "@nqlib/nqchart",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "packageManager": "pnpm@10.12.1",
   "scripts": {
     "postinstall": "fumadocs-mdx",
@@ -141,6 +141,11 @@
       "types": "./dist/types/registry/lib/chart-recipes.d.ts",
       "import": "./dist/recipes.mjs",
       "require": "./dist/recipes.cjs"
+    },
+    "./headless": {
+      "types": "./dist/types/registry/headless/index.d.ts",
+      "import": "./dist/headless.mjs",
+      "require": "./dist/headless.cjs"
     },
     "./area-chart": {
       "types": "./dist/types/registry/charts/area-chart.d.ts",

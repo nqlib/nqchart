@@ -34,6 +34,7 @@ const required = [
   "registry/echarts-core/nq-mark-event.d.ts",
   "registry/echarts-core/chart-handle.d.ts",
   "registry/echarts-core/use-chart-brush.d.ts",
+  "registry/headless/index.d.ts",
 ];
 
 if (!existsSync(typesRoot)) {
@@ -60,6 +61,17 @@ import type { ChartHandle } from "../dist/types/registry/echarts-core/chart-hand
 import type { ChartBrushRange } from "../dist/types/registry/echarts-core/use-chart-brush";
 import type { EChartsType } from "echarts/core";
 import type { Ref } from "react";
+// The headless entry through the package's own "exports" map (plan 018).
+import {
+  compileComposedOption,
+  createColorResolver,
+  printLegend,
+  renderToSvg,
+  withHeadlessTheme,
+  type CompileContext,
+  type HeadlessTheme,
+  type LegendPart,
+} from "@nqlib/nqchart/headless";
 
 const data = [{ x: "Jan", v: 1, y: 2 }];
 const config = { v: { label: "V" } };
@@ -169,6 +181,38 @@ export const waterfall = (
   </NQWaterfallChart>
 );
 
+const headlessTheme: HeadlessTheme = {
+  isDark: false,
+  chrome: {
+    foreground: "#111111",
+    background: "#ffffff",
+    muted: "#555555",
+    border: "#eeeeee",
+    splitLine: "#eeeeee",
+    popover: "#ffffff",
+    popoverForeground: "#111111",
+  },
+  tones: { neutral: "#666", accent: "#00f", positive: "#0a0", warning: "#fa0", critical: "#f00" },
+  radiusPx: null,
+  fontFamily: "Inter, sans-serif",
+  animation: false,
+};
+const headlessLegend: LegendPart = { type: "legend", id: "legend" };
+const headlessCtx: CompileContext = {
+  chartId: "probe",
+  config,
+  data,
+  xDataKey: "x",
+  parts: [{ type: "bar", id: "b", dataKey: "v" }, { type: "line", id: "l", dataKey: "y", variant: "dashed" }, headlessLegend],
+  resolveColor: createColorResolver("probe", config),
+};
+export const headlessSvg: string = renderToSvg(
+  withHeadlessTheme("probe", headlessTheme, () =>
+    printLegend(headlessCtx, headlessLegend, compileComposedOption(headlessCtx)),
+  ),
+  { width: 640, height: 300 },
+);
+
 export const funnel = (
   <NQFunnelChart
     config={funnelConfig}
@@ -221,4 +265,4 @@ if (result.status !== 0) {
   process.exit(result.status ?? 1);
 }
 
-console.info("check:api — ok (interaction props accepted on bar/line/area/composed/pie/scatter/waterfall/funnel)");
+console.info("check:api — ok (interaction props accepted on bar/line/area/composed/pie/scatter/waterfall/funnel; headless renderToSvg + compileComposedOption type-check)");

@@ -32,6 +32,7 @@ run("npx", ["tsc", "-p", "tsconfig.lib.json"]);
 const required = [
   "dist/types/lib/public.d.ts",
   "dist/types/registry/charts/bar-chart.d.ts",
+  "dist/types/registry/headless/index.d.ts",
 ];
 const missing = required.filter((f) => !existsSync(join(root, f)));
 if (missing.length) {

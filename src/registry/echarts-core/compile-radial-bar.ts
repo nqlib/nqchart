@@ -1,5 +1,5 @@
 import type { EChartsOption } from "echarts";
-import { getColorsCount } from "@/registry/ui/chart";
+import { getColorsCount } from "./config-colors";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { resolveChartCornerRadius } from "./chart-corner-radius";
 import { HOVER_DIM_OPACITY, RADIAL_BAR_MIN_ANGLE, hoverFocusOrOff, isHoverFocusOn, radialBarSeriesFocus } from "./emphasis-presets";
