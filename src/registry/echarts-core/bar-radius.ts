@@ -2,6 +2,7 @@ import {
   CHART_BAR_CORNER_RADIUS_PX,
   resolveChartBarCornerRadius,
 } from "./chart-corner-radius";
+import type { BarSeriesPart } from "./parts/types";
 
 /** Default top-rounded bar corners — nqui `--radius-sm` at 16px root. */
 export const DEFAULT_BAR_RADIUS = CHART_BAR_CORNER_RADIUS_PX;
@@ -123,4 +124,35 @@ export function buildStackCornerRoles(
   }
 
   return roles;
+}
+
+/**
+ * Corner roles for every stacked bar, grouped by stack id. A bar with no `stackId`
+ * joins `defaultStack` when one is given (the bar family's chart-level stack);
+ * otherwise it is unstacked and gets no role.
+ */
+export function groupStackRoles(
+  bars: Pick<BarSeriesPart, "dataKey" | "stackId">[],
+  rows: Record<string, unknown>[],
+  defaultStack?: string,
+): Map<string, StackCornerRole[]> {
+  const rolesByKey = new Map<string, StackCornerRole[]>();
+  const groups = new Map<string, Pick<BarSeriesPart, "dataKey" | "stackId">[]>();
+
+  for (const bar of bars) {
+    const stackId = bar.stackId ?? defaultStack;
+    if (!stackId) continue;
+    const group = groups.get(stackId) ?? [];
+    group.push(bar);
+    groups.set(stackId, group);
+  }
+
+  for (const groupBars of groups.values()) {
+    const groupRoles = buildStackCornerRoles(groupBars, rows);
+    for (const [dataKey, roles] of groupRoles) {
+      rolesByKey.set(dataKey, roles);
+    }
+  }
+
+  return rolesByKey;
 }

@@ -2,7 +2,7 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { cartesianColumnFocus, cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
-import { barBorderRadius, resolveBarRadius } from "./bar-radius";
+import { barBorderRadius, barItemBorderRadius, groupStackRoles, resolveBarRadius } from "./bar-radius";
 import {
   applyAxisPartToOption,
   buildValueYAxes,
@@ -37,19 +37,32 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
 
   const yAxisList = buildValueYAxes({ yAxes, hasGrid });
 
+  // A stacked bar rounds only the outer corners of its stack: each data point gets
+  // its own corner role (bottom, middle, top, only), the same rule as the bar family.
+  // An unstacked bar keeps one borderRadius on the series. (Port of secolab PR #1387.)
+  const stackRoles = groupStackRoles(bars, ctx.data);
+
   const barSeries = bars.map((bar) => {
     const r = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
     const color = ctx.resolveColor(bar.dataKey, 0);
+    const roles = bar.stackId ? stackRoles.get(bar.dataKey) : undefined;
     return {
       type: "bar" as const,
       id: bar.dataKey,
       name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
       yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
       stack: bar.stackId,
-      data: ctx.data.map((row) => seriesValue(row[bar.dataKey])),
+      data: ctx.data.map((row, dataIndex) => {
+        const value = seriesValue(row[bar.dataKey]);
+        if (!bar.stackId) return value;
+        return {
+          value,
+          itemStyle: { borderRadius: barItemBorderRadius(undefined, roles?.[dataIndex], r, false) },
+        };
+      }),
       itemStyle: {
         color,
-        borderRadius: barBorderRadius(r, false),
+        ...(bar.stackId ? {} : { borderRadius: barBorderRadius(r, false) }),
       },
       label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
       ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianColumnFocus(color)),
