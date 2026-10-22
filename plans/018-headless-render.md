@@ -1,6 +1,6 @@
 # Plan 018 — Headless render: pure compile path, theme registry, SVG in Node
 
-- **Status:** TODO
+- **Status:** APPROVED
 - **Written:** 2026-10-21
 - **Effort:** L · **Risk:** med
 - **Skills:** `nqchart-dev`

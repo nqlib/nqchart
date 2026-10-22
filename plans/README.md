@@ -43,7 +43,7 @@ self-contained. Related: `../plan/IMPROVEMENT_PLAN.md`.
 | 015 | [BI ship leftovers (waterfall, funnel, harness, series id)](015-bi-ship-leftovers.md) | engine / api | M | DONE |
 | 016 | [Per-family ECharts registration, honest export, internals check](016-echarts-payload.md) | performance / dist | M | VERIFY — ready to tag v0.3.1; owner publishes |
 | 017 | [hoverFocus opt-out on every chart root](017-hover-focus-opt-out.md) | engine / api | M | DONE |
-| 018 | [Headless render: pure compile path, theme registry, SVG in Node](018-headless-render.md) | engine / dist | L | TODO |
+| 018 | [Headless render: pure compile path, theme registry, SVG in Node](018-headless-render.md) | engine / dist | L | APPROVED |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 
