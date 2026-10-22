@@ -154,6 +154,17 @@ for the owner.
    `git tag -a vX.Y.Z -m "nqchart X.Y.Z — <summary>"` and `git push origin vX.Y.Z`.
 9. The owner runs `pnpm publish:npm`. A tag does not publish.
 
+### Release with no package change
+
+A `dev` → `main` PR can carry only docs-site, tooling, or dependency changes. Examples: a
+security update of `next`, a CI change. The npm package does not change, because the publish
+step removes `dependencies` from the published manifest.
+
+1. Do not bump `version`. Do not tag. Do not publish.
+2. Title the PR `release: <summary> (no package change)`. Merge it with a merge commit.
+3. Confirm the claim: `pnpm run build:npm` on `dev` produces the same `dist/` as the last tag.
+   If `dist/` differs, use the normal release steps.
+
 ### Hotfix
 
 Use a hotfix only for a bug in the published version that cannot wait for the next release.
