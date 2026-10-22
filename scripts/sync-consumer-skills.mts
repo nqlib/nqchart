@@ -3,6 +3,10 @@
  * Sync consumer Agent Skill from skills/consumer/nqchart to:
  *   - .agents/skills/nqchart          (skills CLI / repo-local agents)
  *   - public/.well-known/agent-skills/nqchart  (HTTP static bundle)
+ *
+ * Also copies the maintainer skills (source: .agents/skills/<name>) to:
+ *   - .claude/skills/<name>           (Claude Code loads project skills only from here)
+ *   - public/.well-known/agent-skills/<name>  (nqchart-dev, nqchart-docs only)
  */
 import { cpSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -37,8 +41,18 @@ for (const name of ["nqchart-dev", "nqchart-docs"]) {
   cpSync(maintainerSource, maintainerDest, { recursive: true });
 }
 
+// Claude Code reads project skills from .claude/skills/. Copies only; edit .agents/skills/.
+const claudeSkills = ["nqchart-dev", "nqchart-docs", "fixed", "memory", "no-box-glow"];
+for (const name of claudeSkills) {
+  const dest = join(root, ".claude/skills", name);
+  rmSync(dest, { recursive: true, force: true });
+  mkdirSync(dirname(dest), { recursive: true });
+  cpSync(join(root, ".agents/skills", name), dest, { recursive: true });
+}
+
 console.log("sync-consumer-skills:");
 console.log("  →", agentsDest);
 console.log("  →", publicDest);
 console.log("  →", indexPath);
 console.log("  → maintainer skills in public/.well-known/agent-skills/");
+console.log("  → .claude/skills/", claudeSkills.join(", "));

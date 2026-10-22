@@ -1,6 +1,6 @@
 # Plan 003 — Lockfile hygiene + remove confirmed-unused dependencies
 
-- **Status:** TODO
+- **Status:** DONE
 - **Written against commit:** `f43ccf9` (branch `landing-redesign-and-theme`)
 - **Effort:** S · **Risk of change:** low · **Priority:** 3
 

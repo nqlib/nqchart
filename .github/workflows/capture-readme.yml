@@ -2,13 +2,9 @@ name: Capture README screenshots
 
 on:
   workflow_dispatch:
+  # Recapture on each release tag. GitHub does not evaluate path filters for tag pushes.
   push:
-    branches: [Released]
-    paths:
-      - "src/components/landing/**"
-      - "src/registry/**"
-      - "src/content/docs/**"
-      - "scripts/capture-readme-screenshots.mts"
+    tags: ["v*"]
 
 jobs:
   capture:

@@ -20,7 +20,7 @@ Next id = highest `NNN` below + 1. Add a row when you create a plan; keep **Stat
 ## Historical program (001–006)
 
 Written by an advisor session on **2026-06-10** against commit **`f43ccf9`**. Each plan is
-self-contained. Related: `../plan/IMPROVEMENT_PLAN.md`.
+self-contained. Related: [`_archive/2026-06-10-improvement-plan.md`](_archive/2026-06-10-improvement-plan.md).
 
 ## Status
 
@@ -41,12 +41,24 @@ self-contained. Related: `../plan/IMPROVEMENT_PLAN.md`.
 | 013 | [BI-readiness acceptance test plan (verifying 009–012)](013-bi-readiness-acceptance-test-plan.md) | tests / release | S | DONE |
 | 014 | [Make the interaction API consumable (unblock 0.3.0)](014-make-the-interaction-api-consumable.md) | engine / api | S | DONE |
 | 015 | [BI ship leftovers (waterfall, funnel, harness, series id)](015-bi-ship-leftovers.md) | engine / api | M | DONE |
-| 016 | [Per-family ECharts registration, honest export, internals check](016-echarts-payload.md) | performance / dist | M | VERIFY — ready to tag v0.3.1; owner publishes |
+| 016 | [Per-family ECharts registration, honest export, internals check](016-echarts-payload.md) | performance / dist | M | DONE — shipped in v0.3.1 |
 | 017 | [hoverFocus opt-out on every chart root](017-hover-focus-opt-out.md) | engine / api | M | DONE |
 | 018 | [Headless render: pure compile path, theme registry, SVG in Node](018-headless-render.md) | engine / dist | L | DONE |
 | 019 | [Reference marks per axis, open bands, RangeArea](019-reference-marks-and-range-area.md) | engine / api | M | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
+
+Keep the **Status** column and the `- **Status:**` line of the plan file the same. The first
+word must match. `pnpm lint:status` fails the PR when they differ.
+
+## Archive
+
+Plans written before this index, kept as history. Do not edit them.
+
+| File | Note |
+|------|------|
+| [`_archive/2026-06-echarts-migration.md`](_archive/2026-06-echarts-migration.md) | The Recharts → ECharts migration plan (was `PLAN.md` at the repo root) |
+| [`_archive/2026-06-10-improvement-plan.md`](_archive/2026-06-10-improvement-plan.md) | The engine + docs-app review that produced plans 001–006 (was `plan/IMPROVEMENT_PLAN.md`) |
 
 ## Recommended execution order & dependencies
 
@@ -116,13 +128,8 @@ Remaining optional follow-ups:
 ## Verification gates (used by all plans)
 
 ```bash
-pnpm lint
-pnpm exec tsc --noEmit
-pnpm test
-pnpm skill:validate
-pnpm run audit:previews
-pnpm run audit:registry-boundary
-pnpm build            # runs sync:skills + registry:fresh + next build
+pnpm preflight          # the CI checks for the areas the branch changes
+pnpm preflight --full   # every check (release)
 ```
 
 Package manager is **pnpm 10.12.1** (enforced via the `packageManager` field) — never npm/yarn/bun.

@@ -104,7 +104,7 @@ export default function Home() {
             </EnhancedButton>
             <EnhancedButton asChild variant="outline" size="lg">
               <Link
-                href="https://github.com/ctesibius/nqchart"
+                href="https://github.com/nqlib/nqchart"
                 target="_blank"
                 rel="noreferrer"
               >

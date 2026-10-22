@@ -1,6 +1,6 @@
 # Plan NNN — short title
 
-- **Status:** TODO
+- **Status:** TODO   # TODO | IN-PROGRESS | VERIFY | DONE | BLOCKED | CANCELLED
 - **Written:** YYYY-MM-DD
 - **Effort:** S | M | L · **Risk:** low | med | high
 - **Skills:** e.g. `nqchart-dev` / `nqchart-docs` / `fixed`

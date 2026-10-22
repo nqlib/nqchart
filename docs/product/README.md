@@ -18,9 +18,9 @@ plans/NNN-*.md    technical blueprints (how) — linked from stories
 |----|------|--------|
 | [EP-001](epics/EP-001-registry-foundation/epic.md) | Registry foundation & compound API | done |
 | [EP-002](epics/EP-002-docs-and-agents/epic.md) | Docs site, skills, agent HTTP | done |
-| [EP-003](epics/EP-003-chart-craft/epic.md) | Chart craft — hover, motion, brush | **in-progress** (ST-023 / plan 017) |
+| [EP-003](epics/EP-003-chart-craft/epic.md) | Chart craft — hover, motion, brush | done (ST-023 shipped in v0.3.2) |
 | [EP-004](epics/EP-004-bi-readiness/epic.md) | BI readiness — interaction, axes, annotations, a11y | **done** (009–015; 0.3.0; SecoLab Phase 4 manual) |
-| [EP-005](epics/EP-005-distribution/epic.md) | Distribution & docs-truth | **in-progress** (ST-022 / plan 016) |
+| [EP-005](epics/EP-005-distribution/epic.md) | Distribution & docs-truth | **in-progress** (ST-022 done in v0.3.1; ST-014, ST-015 open) |
 | [EP-006](epics/EP-006-engine-hardening/epic.md) | Engine hardening (typed contexts, ECharts 6) | planned |
 | [EP-007](epics/EP-007-headless-render/epic.md) | Headless render — compile and render a chart to SVG in Node | **in-progress** (ST-024..026 / plan 018) |
 

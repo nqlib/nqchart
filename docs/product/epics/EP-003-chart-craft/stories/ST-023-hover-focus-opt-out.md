@@ -2,7 +2,7 @@
 id: ST-023
 epic: EP-003
 title: "hoverFocus opt-out on every chart root"
-status: review
+status: done
 priority: should
 estimate: 3
 owner: nqchart

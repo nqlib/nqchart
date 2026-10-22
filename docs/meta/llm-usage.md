@@ -33,14 +33,22 @@ The old skills index used a custom schema with `install` / `docs` fields; use th
 ## Install consumer skill (recommended)
 
 ```bash
-npx skills add ctesibius/nqchart --skill nqchart -y
+npx skills add nqlib/nqchart --skill nqchart -y
 ```
 
 Source of truth: `skills/consumer/nqchart/` (synced to `.agents/skills/nqchart/` and `public/.well-known/agent-skills/nqchart/`).
 
 For contributing to this repo, use `nqchart-dev` / `nqchart-docs` — not the consumer skill.
 
-## shadcn registry install
+## npm install (primary)
+
+```bash
+pnpm add @nqlib/nqchart echarts motion
+```
+
+Import each chart family from its subpath (`@nqlib/nqchart/bar-chart`). See `/docs/installation`.
+
+## shadcn registry install (secondary)
 
 ```bash
 pnpm dlx shadcn@latest add @nqchart/bar-chart

@@ -1,6 +1,6 @@
 # Plan 016 — Per-family ECharts registration, honest export, internals check
 
-- **Status:** VERIFY — ready to tag v0.3.1; owner publishes npm
+- **Status:** DONE — shipped in v0.3.1 (2026-08-12)
 - **Written:** 2026-08-12
 - **Closed:** 2026-08-12
 - **Reopened:** 2026-08-12 (consumer driving 0.3.0 against `/charts/lab`)
