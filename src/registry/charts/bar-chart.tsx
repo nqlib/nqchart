@@ -510,6 +510,6 @@ export function Legend({
   );
 }
 
-export { ReferenceLine, ReferenceBand } from "@/registry/echarts-core/chart-parts";
+export { ReferenceLine, ReferenceBand, RangeArea } from "@/registry/echarts-core/chart-parts";
 
 bindChartLegendLayer(Legend);

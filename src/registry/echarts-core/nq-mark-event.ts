@@ -54,7 +54,20 @@ const NQ_SERIES_KEY = "__nq_seriesKey";
 const NQ_DATUM = "__nq_datum";
 
 export function isReferenceSeriesId(id: unknown): boolean {
-  return id === REFERENCE_SERIES_ID || (typeof id === "string" && id.startsWith("__nq_reference"));
+  if (typeof id !== "string") return false;
+  return (
+    id === REFERENCE_SERIES_ID ||
+    id.startsWith("__nq_reference") ||
+    /-ref-\d+$/.test(id)
+  );
+}
+
+export function isRangeAreaSeriesId(id: unknown): boolean {
+  return typeof id === "string" && /-range-\d+-(?:low|span)$/.test(id);
+}
+
+export function isAnnotationSeriesId(id: unknown): boolean {
+  return isReferenceSeriesId(id) || isRangeAreaSeriesId(id);
 }
 
 export { REFERENCE_SERIES_ID, NQ_SERIES_KEY, NQ_DATUM };
@@ -135,7 +148,7 @@ export function mapEChartsClickToMarkEvent(
   opts: MapMarkClickOptions,
 ): NQMarkEvent | null {
   if (params.componentType !== "series") return null;
-  if (isReferenceSeriesId(params.seriesId)) return null;
+  if (isAnnotationSeriesId(params.seriesId)) return null;
   // Waterfall transparent stack must never fire.
   if (params.seriesName === "__wf_placeholder__" || params.seriesId === "__wf_placeholder__") {
     return null;
@@ -163,7 +176,7 @@ export function mapEChartsClickToMarkEvent(
   const seriesId =
     typeof params.seriesId === "string" &&
     params.seriesId &&
-    !isReferenceSeriesId(params.seriesId) &&
+    !isAnnotationSeriesId(params.seriesId) &&
     !params.seriesId.startsWith("__wf_")
       ? params.seriesId
       : undefined;

@@ -13,13 +13,19 @@ description: Release notes and notable changes to NQChart
 - **`renderToSvg(option, { width, height, modules? })`** — echarts SSR with the SVG renderer, animation and tooltip off. The browser entries keep `CanvasRenderer`.
 - The compile path no longer imports React: `getColorsCount` lives in `echarts-core/config-colors.ts` (still exported from the root).
 
-### Composed
-
-- **A stacked bar rounds only the outer corners of its stack**, as in the bar family. An unstacked bar is unchanged.
-
 ### Reference marks
 
-- **`ReferenceLine` and `ReferenceBand` draw in bar, line, area, composed and scatter.** They compiled to `markLine` / `markArea` on a synthetic line series, but no family registered `MarkLineComponent` or `MarkAreaComponent`, and bar and scatter did not register `LineChart`, so ECharts dropped them. Bar and scatter grow about 9 % gzip for `LineChart`.
+- **`ReferenceLine` and `ReferenceBand` draw without a host registration.** They compile to `markLine` / `markArea`. NQChart registers `MarkLineComponent` and `MarkAreaComponent`, and bar and scatter also register `LineChart`, so a fresh chart draws both. Hosts can remove their own `MarkLineComponent` registration.
+- **Each mark uses its own axis.** Lines and bands group by resolved `yAxisId`. Each axis gets a silent series (`<chartId>-ref-<axisIndex>`). A mark with no `yAxisId` uses axis 0. An unknown id uses axis 0 and warns in development.
+- **Marks outside the data stay on the plot.** `includeInDomain` (default `true`) on `ReferenceLine` and `ReferenceBand` extends an automatic axis with `min` / `max` functions so the mark is included. An axis whose `min` or `max` you set is left alone.
+- **Open bands.** `ReferenceBand` `y` accepts `[number | null, number | null]`. `null` is the axis edge (`"min"` or `"max"`), so `[100, null]` shades everything above 100.
+- **`RangeArea`.** A filled band between `lowKey` and `highKey` (`yAxisId`, `tone`, `opacity` default `0.15`, `label`). A row is skipped when either value is null, which leaves a gap. The band is not in the legend or the tooltip and does not take a palette slot.
+
+`variant`, `tone`, `label`, and `labelPosition` are unchanged. Two marks at the same value both draw.
+
+### Bars
+
+- **Corners follow the sign.** A positive bar rounds the end away from zero, a negative bar rounds the opposite end, and zero stays square. In a stack, only the outermost segment of each sign is rounded, so the zero line is never rounded. A horizontal bar rounds the right end when positive and the left end when negative. Hosts can remove a sign-aware radius patch.
 
 ### Build
 

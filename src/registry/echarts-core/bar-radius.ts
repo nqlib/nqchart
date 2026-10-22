@@ -17,6 +17,30 @@ export function barBorderRadius(
   return horizontal ? [0, radius, radius, 0] : [radius, radius, 0, 0];
 }
 
+/** Outer end of a negative bar: bottom when vertical, left when horizontal. */
+export function negativeBarBorderRadius(
+  radius: number,
+  horizontal: boolean,
+): [number, number, number, number] {
+  if (radius <= 0) return [0, 0, 0, 0];
+  return horizontal ? [radius, 0, 0, radius] : [0, 0, radius, radius];
+}
+
+/**
+ * Round the end away from zero. A positive bar rounds its far end, a negative
+ * bar rounds the opposite end, and zero has no radius. The zero line stays square.
+ */
+export function signedBarBorderRadius(
+  value: number | null | undefined,
+  radius: number,
+  horizontal: boolean,
+): [number, number, number, number] {
+  if (value == null || value === 0) return [0, 0, 0, 0];
+  return value > 0
+    ? barBorderRadius(radius, horizontal)
+    : negativeBarBorderRadius(radius, horizontal);
+}
+
 export function stackedBarBorderRadius(
   role: StackCornerRole,
   radius: number,
@@ -26,24 +50,22 @@ export function stackedBarBorderRadius(
 
   if (horizontal) {
     switch (role) {
-      case "only":
-        return [radius, radius, radius, radius];
       case "bottom":
         return [radius, 0, 0, radius];
       case "middle":
         return [0, 0, 0, 0];
+      case "only":
       case "top":
         return [0, radius, radius, 0];
     }
   }
 
   switch (role) {
-    case "only":
-      return [radius, radius, radius, radius];
     case "bottom":
       return [0, 0, radius, radius];
     case "middle":
       return [0, 0, 0, 0];
+    case "only":
     case "top":
       return [radius, radius, 0, 0];
   }
@@ -64,16 +86,26 @@ export function stackSegmentGapStyle(
   return {};
 }
 
-/** Stripped caps need a square top edge; rounded tops clip the gradient cap. */
+/**
+ * Per-datum radius.
+ *
+ * `"top"` is the outer end of the positive stack (top, or the right end when
+ * horizontal). `"bottom"` is the outer end of the negative stack. `"middle"`
+ * is square. With no role, the sign of `value` picks the outer end, and zero
+ * stays square. The end on the zero line is never rounded.
+ */
 export function barItemBorderRadius(
   variant: string | undefined,
   role: StackCornerRole | undefined,
   radius: number,
   horizontal: boolean,
+  value?: number | null,
 ): [number, number, number, number] {
   if (variant === "stripped") return [0, 0, 0, 0];
-  if (role != null) return stackedBarBorderRadius(role, radius, horizontal);
-  return barBorderRadius(radius, horizontal);
+  if (value == null || value === 0 || role === "middle") return [0, 0, 0, 0];
+  if (role === "top") return barBorderRadius(radius, horizontal);
+  if (role === "bottom") return negativeBarBorderRadius(radius, horizontal);
+  return signedBarBorderRadius(value, radius, horizontal);
 }
 
 /**
@@ -93,34 +125,35 @@ export function resolveBarRadius(
   return DEFAULT_BAR_RADIUS;
 }
 
-/** Per-series corner roles for each category column in a stack group. */
+/**
+ * Per-series corner roles for each category.
+ *
+ * ECharts `stackStrategy: "samesign"` draws the positive stack and the negative
+ * stack apart, both starting at zero. Within one sign, series order runs from
+ * the zero line outward, so only the last non-zero segment of that sign is
+ * `"top"` (positive) or `"bottom"` (negative). Every other segment is `"middle"`.
+ */
 export function buildStackCornerRoles(
   stackBars: Array<{ dataKey: string }>,
   rows: Record<string, unknown>[],
 ): Map<string, StackCornerRole[]> {
   const roles = new Map<string, StackCornerRole[]>();
+  for (const bar of stackBars) roles.set(bar.dataKey, []);
 
   for (let dataIndex = 0; dataIndex < rows.length; dataIndex++) {
     const row = rows[dataIndex] ?? {};
-    const active = stackBars.filter((bar) => Number(row[bar.dataKey] ?? 0) > 0);
+    const positive: Array<{ dataKey: string }> = [];
+    const negative: Array<{ dataKey: string }> = [];
 
     for (const bar of stackBars) {
-      if (!roles.has(bar.dataKey)) roles.set(bar.dataKey, []);
+      const n = Number(row[bar.dataKey]);
+      if (!Number.isFinite(n) || n === 0) continue;
+      if (n > 0) positive.push(bar);
+      else negative.push(bar);
     }
 
-    if (active.length === 0) continue;
-
-    if (active.length === 1) {
-      roles.get(active[0]!.dataKey)![dataIndex] = "only";
-      continue;
-    }
-
-    for (let i = 0; i < active.length; i++) {
-      const bar = active[i]!;
-      const role: StackCornerRole =
-        i === 0 ? "bottom" : i === active.length - 1 ? "top" : "middle";
-      roles.get(bar.dataKey)![dataIndex] = role;
-    }
+    assignOuterRole(positive, "top", dataIndex, roles);
+    assignOuterRole(negative, "bottom", dataIndex, roles);
   }
 
   return roles;
@@ -155,4 +188,16 @@ export function groupStackRoles(
   }
 
   return rolesByKey;
+}
+
+function assignOuterRole(
+  active: Array<{ dataKey: string }>,
+  outer: StackCornerRole,
+  dataIndex: number,
+  roles: Map<string, StackCornerRole[]>,
+) {
+  for (let i = 0; i < active.length; i++) {
+    const bar = active[i]!;
+    roles.get(bar.dataKey)![dataIndex] = i === active.length - 1 ? outer : "middle";
+  }
 }

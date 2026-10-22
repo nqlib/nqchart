@@ -12,7 +12,7 @@ migration once (SecoLab ST-289).
 
 | Import | Contents |
 |--------|----------|
-| `@nqlib/nqchart` | `ChartConfig`, shell UI, `useChartBrush`, `NQMarkEvent`, `ChartHandle`, `ReferenceLine` / `ReferenceBand` |
+| `@nqlib/nqchart` | `ChartConfig`, shell UI, `useChartBrush`, `NQMarkEvent`, `ChartHandle`, `ReferenceLine` / `ReferenceBand` / `RangeArea` |
 | `@nqlib/nqchart/bar-chart` | `NQBarChart`, `Bar`, axes, legend, tooltip, … |
 | `@nqlib/nqchart/<family>-chart` | Same pattern per primitive |
 | `@nqlib/nqchart/recipes` | `binForHistogram`, `prepareParetoData`, … |
@@ -77,9 +77,12 @@ single-select isolate today (`string | null`).
 
 ## Annotation contract
 
-- `<ReferenceLine y|x />`, `<ReferenceBand y|x={[lo,hi]} />`
+- `<ReferenceLine y|x />`, `<ReferenceBand y|x={[lo,hi]} />`, `<RangeArea lowKey highKey />`
 - `tone`: `neutral` | `accent` | `positive` | `warning` | `critical`
-- Not in legend; not reported by `onMarkClick`
+- `ReferenceBand` `y` accepts `null` for an axis edge (`"min"` / `"max"`)
+- `includeInDomain` (default `true`) extends an automatic axis; a caller-set `min` or `max` stays
+- Marks group by `yAxisId` (series id `<chartId>-ref-<axisIndex>`). Unknown ids use axis 0 and warn in development
+- Not in legend or tooltip; not reported by `onMarkClick`. `RangeArea` draws only where both keys are present
 
 ## States / a11y / export
 

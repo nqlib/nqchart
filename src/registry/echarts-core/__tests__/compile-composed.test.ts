@@ -49,6 +49,54 @@ describe("compileComposedOption", () => {
     const line = series.find((s) => s.type === "line");
     expect(line?.lineStyle?.type).toBe("dashed");
   });
+
+  it("rounds a plain negative bar at the bottom", () => {
+    const option = compileComposedOption(
+      makeCtx({
+        parts: [{ type: "bar", id: "a", dataKey: "a" }],
+        cartesian: { barRadius: 4 },
+        xDataKey: "x",
+        config: { a: { label: "Net" } },
+        data: [
+          { x: "Jan", a: 12000 },
+          { x: "Feb", a: -8000 },
+        ],
+      }),
+    );
+
+    const series = option.series as Array<{
+      itemStyle?: { borderRadius?: number[] };
+      data: Array<{ itemStyle: { borderRadius: number[] } }>;
+    }>;
+    expect(series[0]?.itemStyle?.borderRadius).toBeUndefined();
+    expect(series[0]?.data.map((d) => d.itemStyle.borderRadius)).toEqual([
+      [4, 4, 0, 0],
+      [0, 0, 4, 4],
+    ]);
+  });
+
+  it("rounds stacked gain and loss on their outer ends", () => {
+    const option = compileComposedOption(
+      makeCtx({
+        parts: [
+          { type: "bar", id: "gain", dataKey: "gain", stackId: "s" },
+          { type: "bar", id: "loss", dataKey: "loss", stackId: "s" },
+        ],
+        cartesian: { barRadius: 4 },
+        xDataKey: "x",
+        config: { gain: { label: "Gain" }, loss: { label: "Loss" } },
+        data: [{ x: "Jan", gain: 20000, loss: -7000 }],
+      }),
+    );
+
+    const series = option.series as Array<{
+      data: Array<{ itemStyle: { borderRadius: number[] } }>;
+    }>;
+    expect(series.map((s) => s.data[0]?.itemStyle.borderRadius)).toEqual([
+      [4, 4, 0, 0],
+      [0, 0, 4, 4],
+    ]);
+  });
 });
 
 describe("compileComposedOption — stacked bar corners", () => {
@@ -86,10 +134,10 @@ describe("compileComposedOption — stacked bar corners", () => {
     return (bar(id).data as BarPoint[]).map((p) => p.itemStyle?.borderRadius);
   }
 
-  it("rounds the bottom segment at the bottom and the top segment at the top", () => {
+  it("rounds only the outer end of a positive stack", () => {
     expect(radii("a").slice(0, 2)).toEqual([
-      [0, 0, 4, 4],
-      [0, 0, 4, 4],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
     expect(radii("b").slice(0, 2)).toEqual([
       [4, 4, 0, 0],
@@ -97,9 +145,8 @@ describe("compileComposedOption — stacked bar corners", () => {
     ]);
   });
 
-  it("hands the top role to the other series when the top series is null", () => {
-    // The only segment in its column rounds all four corners, the top included.
-    expect(radii("a")[2]).toEqual([4, 4, 4, 4]);
+  it("hands the outer role to the other series when the top series is null", () => {
+    expect(radii("a")[2]).toEqual([4, 4, 0, 0]);
     expect((bar("b").data as BarPoint[])[2]?.value).toBeNull();
   });
 
@@ -108,9 +155,14 @@ describe("compileComposedOption — stacked bar corners", () => {
     expect(bar("a").itemStyle?.borderRadius).toBeUndefined();
   });
 
-  it("keeps one series radius and plain values on an unstacked bar", () => {
+  it("gives an unstacked bar a per-point radius and keeps the value", () => {
     const c = bar("c");
-    expect(c.itemStyle?.borderRadius).toEqual([4, 4, 0, 0]);
-    expect(c.data).toEqual([1, 2, 3]);
+    expect(c.itemStyle?.borderRadius).toBeUndefined();
+    expect((c.data as BarPoint[]).map((p) => p.value)).toEqual([1, 2, 3]);
+    expect((c.data as BarPoint[]).map((p) => p.itemStyle?.borderRadius)).toEqual([
+      [4, 4, 0, 0],
+      [4, 4, 0, 0],
+      [4, 4, 0, 0],
+    ]);
   });
 });

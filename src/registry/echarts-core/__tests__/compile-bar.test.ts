@@ -128,5 +128,77 @@ describe("compileBarOption", () => {
       5,
     );
   });
+
+  it("rounds a negative bar at the outer end", () => {
+    const option = compileBarOption(
+      makeCtx({
+        parts: [revenueBar],
+        cartesian: { barRadius: 4 },
+        xDataKey: "x",
+        data: [
+          { x: "Jan", revenue: 12000 },
+          { x: "Feb", revenue: -8000 },
+          { x: "Mar", revenue: 0 },
+        ],
+      }),
+    );
+
+    const series = option.series as Array<{
+      data: Array<{ itemStyle: { borderRadius: number[] } }>;
+    }>;
+    expect(series[0]?.data.map((d) => d.itemStyle.borderRadius)).toEqual([
+      [4, 4, 0, 0],
+      [0, 0, 4, 4],
+      [0, 0, 0, 0],
+    ]);
+  });
+
+  it("rounds a horizontal negative bar on the left", () => {
+    const option = compileBarOption(
+      makeCtx({
+        parts: [revenueBar],
+        cartesian: { layout: "horizontal", barRadius: 4 },
+        xDataKey: "x",
+        data: [
+          { x: "Jan", revenue: 5 },
+          { x: "Feb", revenue: -5 },
+        ],
+      }),
+    );
+
+    const series = option.series as Array<{
+      data: Array<{ itemStyle: { borderRadius: number[] } }>;
+    }>;
+    expect(series[0]?.data.map((d) => d.itemStyle.borderRadius)).toEqual([
+      [0, 4, 4, 0],
+      [4, 0, 0, 4],
+    ]);
+  });
+
+  it("rounds only the outer end of each same-sign stack", () => {
+    const option = compileBarOption(
+      makeCtx({
+        parts: [
+          { type: "bar", id: "gain", dataKey: "gain", stackId: "s" },
+          { type: "bar", id: "more", dataKey: "more", stackId: "s" },
+          { type: "bar", id: "loss", dataKey: "loss", stackId: "s" },
+          { type: "bar", id: "deeper", dataKey: "deeper", stackId: "s" },
+        ],
+        cartesian: { barRadius: 4 },
+        xDataKey: "x",
+        data: [{ x: "Jan", gain: 20000, more: 1000, loss: -7000, deeper: -500 }],
+      }),
+    );
+
+    const series = option.series as Array<{
+      data: Array<{ itemStyle: { borderRadius: number[] } }>;
+    }>;
+    expect(series.map((s) => s.data[0]?.itemStyle.borderRadius)).toEqual([
+      [0, 0, 0, 0],
+      [4, 4, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 4, 4],
+    ]);
+  });
 });
 
