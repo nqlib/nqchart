@@ -1,0 +1,8 @@
+#!/bin/sh
+# nqchart-hook (strip-ai-attribution)
+# Remove a Claude or Cursor attribution line before git stores the commit.
+# A human Co-authored-by line stays. Install: pnpm hooks:install
+root=$(git rev-parse --show-toplevel) || exit 0
+# A branch that predates the script keeps the message as written; CI lint:attribution still checks it.
+[ -f "$root/scripts/lint-commit-attribution.mjs" ] || exit 0
+exec node "$root/scripts/lint-commit-attribution.mjs" --commit-msg "$1"

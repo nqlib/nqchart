@@ -10,6 +10,7 @@
  *   pnpm publish:npm
  *   pnpm publish:npm -- --otp=123456   # 2FA code from authenticator
  *   NPM_OTP=123456 pnpm publish:npm
+ *   pnpm publish:npm -- --tag next      # pre-release; default for an X.Y.Z-beta.N version
  */
 import { readFileSync } from "node:fs";
 import { spawnSync, execSync } from "node:child_process";
@@ -22,6 +23,15 @@ const registry = "https://registry.npmjs.org";
 const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
 const otpArg = process.argv.find((a) => a.startsWith("--otp="));
 const otp = process.env.NPM_OTP ?? otpArg?.slice("--otp=".length);
+// npm dist-tag. A pre-release version (X.Y.Z-beta.N) defaults to `next` so `latest` stays on
+// the release (docs/conventions.md § Pre-release).
+const tagIdx = process.argv.findIndex((a) => a === "--tag" || a.startsWith("--tag="));
+const tagArg =
+  tagIdx === -1
+    ? undefined
+    : process.argv[tagIdx].startsWith("--tag=")
+      ? process.argv[tagIdx].slice("--tag=".length)
+      : process.argv[tagIdx + 1];
 
 function whoami() {
   try {
@@ -73,6 +83,8 @@ if (isPublished(pkg.name, pkg.version)) {
 // because the gate is the real safety net, not a clean tree.
 const args = ["publish", "--access", "public", "--no-git-checks", `--registry=${registry}`];
 if (otp) args.push(`--otp=${otp}`);
+const distTag = tagArg ?? (pkg.version.includes("-") ? "next" : undefined);
+if (distTag) args.push("--tag", distTag);
 
 console.log("publish:npm — running pnpm publish (prepublishOnly runs verify:publish)…\n");
 const result = spawnSync("pnpm", args, {

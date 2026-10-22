@@ -1,0 +1,11 @@
+# Check out every text file with LF, on every OS. The repo stores LF; a CRLF checkout on
+# Windows (core.autocrlf=true) made local checks differ from Linux CI: frontmatter parsers,
+# snapshot files, and the generated skills index. Local CI must match GitHub CI.
+* text=auto eol=lf
+
+# Binary assets: never convert.
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary

@@ -37,4 +37,4 @@ Public API reference lives in **`src/content/docs/`** (Fumadocs at `/docs`).
 
 - **Public docs site** — `src/content/docs/`
 - **Executor plans** — `plans/README.md` (the *how*; epics/stories are the *what/why*)
-- **Repo agent router** — root `AGENTS.md` · `CLAUDE.md`
+- **Repo agent rules** — root `CLAUDE.md` (`AGENTS.md` is a generated copy)

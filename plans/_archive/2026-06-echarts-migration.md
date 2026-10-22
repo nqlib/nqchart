@@ -1,6 +1,6 @@
 # NQChart — NQChart → ECharts migration plan
 
-> **Superseded for day-to-day work.** Use [docs/index.md](./docs/index.md), [plans/README.md](./plans/README.md), and root [AGENTS.md](./AGENTS.md) instead. This file is kept as historical migration context.
+> **Superseded for day-to-day work.** Use [docs/index.md](../../docs/index.md), [plans/README.md](../README.md), and root [CLAUDE.md](../../CLAUDE.md) instead. This file is kept as historical migration context.
 
 ## Goal
 

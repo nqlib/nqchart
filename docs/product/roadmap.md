@@ -6,7 +6,7 @@ Steering backlog for maintainers and AI agents.
 - **Change design:** `plans/README.md`
 - **Intake:** [[product/agentic-coding-guideline]]
 - **API promise:** [[product/specs]]
-- **Deep review scrap:** `plan/IMPROVEMENT_PLAN.md`
+- **Deep review scrap:** `plans/_archive/2026-06-10-improvement-plan.md`
 
 ## Active / recent
 

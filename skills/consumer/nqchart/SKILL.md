@@ -9,7 +9,7 @@ description: >-
 license: MIT
 compatibility: Requires React, echarts, and motion (peer deps).
 metadata:
-  author: ctesibius/nqchart
+  author: nqlib/nqchart
   version: "1.4.0"
 ---
 

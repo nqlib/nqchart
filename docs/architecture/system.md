@@ -1,12 +1,13 @@
 # System architecture
 
-NQChart is a **composable chart library** for React. The product ships two surfaces that
-share one source tree:
+NQChart is a **composable chart library** for React. The product ships from one source tree
+(`src/registry/`):
 
-1. **Installable registry** — `src/registry/` copied into consumer apps via
-   `shadcn add @nqchart/<primitive>-chart` (and published as `@nqlib/nqchart` npm packages
-   for the same modules).
-2. **Docs site** — Next.js + Fumadocs at `/docs`, plus agent HTTP (`/llms.txt`, `/mcp`,
+1. **npm package (primary)** — `@nqlib/nqchart`, one package with a subpath entry per chart
+   family. This is how users install the library.
+2. **shadcn registry (secondary)** — the same source copied into a consumer app via
+   `shadcn add @nqchart/<primitive>-chart`.
+3. **Docs site** — Next.js + Fumadocs at `/docs`, plus agent HTTP (`/llms.txt`, `/mcp`,
    `/.well-known/agent-skills/`).
 
 Company / consumer context: charts for BI boards (SecoLab Dashboards v2 and similar), not

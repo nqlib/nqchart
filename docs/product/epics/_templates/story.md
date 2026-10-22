@@ -2,7 +2,7 @@
 id: ST-NNN
 epic: EP-NNN
 title: "Short title"
-status: backlog | ready | in-progress | done | blocked | cancelled
+status: backlog | ready | in-progress | review | done | blocked | cancelled
 priority: must | should | could
 estimate: 1-8
 owner: handle

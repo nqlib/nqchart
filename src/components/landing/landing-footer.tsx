@@ -32,7 +32,7 @@ export function LandingFooter() {
             </Link>
           ))}
           <Link
-            href="https://github.com/ctesibius/nqchart"
+            href="https://github.com/nqlib/nqchart"
             target="_blank"
             rel="noreferrer"
             className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors"

@@ -9,6 +9,7 @@ behavior updates its docs in the same PR (see [`conventions.md`](conventions.md)
 | [`architecture/`](architecture/) | System design, layer model (compound · compile · host), dependency rules, public surface | [`architecture/system.md`](architecture/system.md) · [`architecture/layers.md`](architecture/layers.md) |
 | [`engine/`](engine/) | Compile pipeline, chart-recipes | [`engine/compile-context.md`](engine/compile-context.md) |
 | [`registry/`](registry/) | Chart catalog, registry build | [`registry/chart-catalog.md`](registry/chart-catalog.md) |
+| [`conventions.md`](conventions.md) | Git (`dev` → `main`), commits, release, hotfix, docs-as-code, status values | — |
 | [`meta/`](meta/) | Publishing, agent HTTP / MCP | [`meta/publishing.md`](meta/publishing.md) |
 | [`../plans/`](../plans/) | Technical implementation blueprints (the *how*); numbered `NNN-*.md` | [`../plans/README.md`](../plans/README.md) |
 
@@ -35,7 +36,7 @@ product/           why & what: philosophy → specs → epics → stories
 
 | Path | Role |
 |------|------|
-| `AGENTS.md` / `CLAUDE.md` | Agent router |
+| `CLAUDE.md` | Agent rules and task routing (source). `AGENTS.md` is a generated copy |
 | `memory/` | Durable non-code decisions (write rarely) |
 | `.agents/skills/fixed/` | Bug / regression search index |
 | `skills/consumer/nqchart/` | Consumer agent skill (SOT → `pnpm sync:skills`) |
