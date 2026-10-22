@@ -1,5 +1,6 @@
 "use client";
 
+import { getColorsCount } from "@/registry/echarts-core/config-colors";
 import { cn } from "@/registry/lib/cn";
 import * as React from "react";
 
@@ -202,12 +203,6 @@ export function getPayloadConfigFromPayload(config: ChartConfig, payload: unknow
 
 function axisValueToPercentFormatter(value: number) {
   return `${Math.round(value * 100).toFixed(0)}%`;
-}
-
-function getColorsCount(config: ChartConfig[string]): number {
-  if (!config.colors) return 1;
-  const counts = VALID_THEME_KEYS.map((theme) => config.colors?.[theme]?.length ?? 0);
-  return Math.max(...counts, 1);
 }
 
 export const getLoadingData = (points: number = 10, min: number = 0, max: number = 70) => {

@@ -56,6 +56,7 @@ compound face. States/a11y landed on the shared plot shell so every root inherit
 | [ST-013](stories/ST-013-states-a11y-export.md) | Empty/error, a11y table, keyboard, export | done | [012](../../../../plans/012-bi-states-a11y-export.md) |
 | [ST-020](stories/ST-020-consumable-interaction-api.md) | Consumable typed props + `check:api` | done | [014](../../../../plans/014-make-the-interaction-api-consumable.md) |
 | [ST-021](stories/ST-021-bi-acceptance.md) | Acceptance vs dist + `/bi-check` + 0.3.0 prep | done | [013](../../../../plans/013-bi-readiness-acceptance-test-plan.md) |
+| [ST-022](stories/ST-022-reference-axis-and-range-area.md) | Reference marks per axis, open bands, RangeArea | done | [019](../../../../plans/019-reference-marks-and-range-area.md) |
 
 Leftovers (waterfall/funnel/scatter keyboard/series id): [015](../../../../plans/015-bi-ship-leftovers.md) (DONE). Phase 4 SecoLab smoke remains a consumer follow-up.
 

@@ -2,16 +2,24 @@ import * as echarts from "echarts/core";
 import {
   GridComponent,
   LegendComponent,
+  MarkAreaComponent,
+  MarkLineComponent,
   TooltipComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
 
-/** Modules every family needs. Chart types and specialty components are extras. */
+/**
+ * Modules every family needs. Chart types and specialty components are extras.
+ * MarkLine / MarkArea stay here: reference marks compile to those components,
+ * and ECharts draws nothing when they are not registered.
+ */
 const BASE = [
   CanvasRenderer,
   GridComponent,
   TooltipComponent,
   LegendComponent,
+  MarkLineComponent,
+  MarkAreaComponent,
 ] as const;
 
 const registered = new Set<unknown>();

@@ -10,6 +10,7 @@ import type { ChartHandle } from "@/registry/echarts-core/chart-handle";
 import { compileAreaOption } from "@/registry/echarts-core/compile-area";
 import { getEcharts } from "@/registry/echarts-core/echarts-init";
 import { LineChart } from "echarts/charts";
+import { MarkAreaComponent, MarkLineComponent } from "echarts/components";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import type { StackType, NQScale } from "@/registry/echarts-core/parts/types";
@@ -23,7 +24,8 @@ import { ChartTooltip, type TooltipRoundness, type TooltipVariant } from "@/regi
 import type { EChartsType } from "echarts/core";
 import { useState, type Ref } from "react";
 
-const AREA_ECHARTS_MODULES = [LineChart];
+// ReferenceLine / ReferenceBand compile to markLine / markArea.
+const AREA_ECHARTS_MODULES = [LineChart, MarkLineComponent, MarkAreaComponent];
 getEcharts(AREA_ECHARTS_MODULES);
 
 type NQAreaChartProps<
@@ -240,7 +242,7 @@ export function Legend({
   );
 }
 
-export { ReferenceLine, ReferenceBand } from "@/registry/echarts-core/chart-parts";
+export { ReferenceLine, ReferenceBand, RangeArea } from "@/registry/echarts-core/chart-parts";
 
 bindChartLegendLayer(Legend);
 

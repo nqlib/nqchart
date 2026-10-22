@@ -10,6 +10,10 @@ links:
 
 <ComponentPreview title="Basic Chart" name="ex-line-chart"  />
 
+<ComponentPreview title="Reference marks and range" name="ex-reference-range-chart" />
+
+Revenue and the dashed forecast share the left axis. The index line and its cap sit on the right axis. The open band shades everything above the plan, and the range fills the forecast interval — with a gap in March, where the low value is missing. The stretch line sits above the data, so the left axis grows to include it. Switch the docs theme to check light and dark.
+
 ## Installation
 
 <CodeTabs>
@@ -326,5 +330,89 @@ The series legend. When the chart is clickable, each entry toggles selection of 
   </ApiRow>
   <ApiRow name="isClickable" type="boolean" default="false">
     Lets each legend entry toggle selection of its series.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>ReferenceLine</ApiHeading>
+
+A horizontal or vertical rule in data space. It stays out of the legend and the tooltip, and it does not take a palette color.
+
+<ApiTable>
+  <ApiRow name="y" type="number">
+    Horizontal rule, in the units of the y-axis named by `yAxisId`.
+  </ApiRow>
+  <ApiRow name="x" type="string | number">
+    Vertical rule, in x-axis units.
+  </ApiRow>
+  <ApiRow name="yAxisId" type="string">
+    Which y-axis the rule uses. Omit it for the first axis. An unknown id falls back to axis 0 and warns in development.
+  </ApiRow>
+  <ApiRow name="variant" type='"solid" | "dashed" | "dotted"' default='"dashed"'>
+    Stroke style.
+  </ApiRow>
+  <ApiRow name="tone" type='"neutral" | "accent" | "positive" | "warning" | "critical"' default='"neutral"'>
+    Semantic color. Not a series palette slot.
+  </ApiRow>
+  <ApiRow name="label" type="string">
+    Text drawn on the rule.
+  </ApiRow>
+  <ApiRow name="labelPosition" type='"start" | "middle" | "end"' default='"end"'>
+    Where the label sits on the rule.
+  </ApiRow>
+  <ApiRow name="includeInDomain" type="boolean" default="true">
+    Widen an automatic axis so the rule stays on the plot. An axis whose `min` or `max` you set is left alone.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>ReferenceBand</ApiHeading>
+
+A shaded range. `null` on `y` means that edge of the axis, so `[100, null]` shades everything above 100.
+
+<ApiTable>
+  <ApiRow name="y" type="[number | null, number | null]">
+    Horizontal band. `null` is `"min"` or `"max"` on the axis.
+  </ApiRow>
+  <ApiRow name="x" type="[string | number, string | number]">
+    Vertical band between two x values.
+  </ApiRow>
+  <ApiRow name="yAxisId" type="string">
+    Which y-axis the band uses. Same fallback as `ReferenceLine`.
+  </ApiRow>
+  <ApiRow name="tone" type='"neutral" | "accent" | "positive" | "warning" | "critical"' default='"neutral"'>
+    Semantic fill color.
+  </ApiRow>
+  <ApiRow name="opacity" type="number" default="0.12">
+    Fill strength.
+  </ApiRow>
+  <ApiRow name="label" type="string">
+    Text drawn inside the band.
+  </ApiRow>
+  <ApiRow name="includeInDomain" type="boolean" default="true">
+    Widen an automatic axis so a finite edge stays on the plot. An axis whose `min` or `max` you set is left alone.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>RangeArea</ApiHeading>
+
+A filled band between two data keys — a projection interval or a tolerance that moves with each period. A row is skipped when either value is null, which leaves a gap. The band is not in the legend or the tooltip.
+
+<ApiTable>
+  <ApiRow name="lowKey" type="string" required>
+    Data key for the lower edge.
+  </ApiRow>
+  <ApiRow name="highKey" type="string" required>
+    Data key for the upper edge.
+  </ApiRow>
+  <ApiRow name="yAxisId" type="string">
+    Which y-axis the band uses.
+  </ApiRow>
+  <ApiRow name="tone" type='"neutral" | "accent" | "positive" | "warning" | "critical"' default='"neutral"'>
+    Semantic fill color.
+  </ApiRow>
+  <ApiRow name="opacity" type="number" default="0.15">
+    Fill strength.
+  </ApiRow>
+  <ApiRow name="label" type="string">
+    Text drawn at the last point where both edges exist.
   </ApiRow>
 </ApiTable>

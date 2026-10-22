@@ -5,7 +5,7 @@ The product backlog and feature record, following
 
 ```
 philosophy.md     beliefs that decide API shape
-specs.md          numbered public API promise (S1…S5)
+specs.md          numbered public API promise (S1…S6)
 epics/EP-NNN-*/   capability programs (what/why)
   epic.md
   stories/ST-NNN-*.md
@@ -22,8 +22,9 @@ plans/NNN-*.md    technical blueprints (how) — linked from stories
 | [EP-004](epics/EP-004-bi-readiness/epic.md) | BI readiness — interaction, axes, annotations, a11y | **done** (009–015; 0.3.0; SecoLab Phase 4 manual) |
 | [EP-005](epics/EP-005-distribution/epic.md) | Distribution & docs-truth | **in-progress** (ST-022 / plan 016) |
 | [EP-006](epics/EP-006-engine-hardening/epic.md) | Engine hardening (typed contexts, ECharts 6) | planned |
+| [EP-007](epics/EP-007-headless-render/epic.md) | Headless render — compile and render a chart to SVG in Node | **in-progress** (ST-024..026 / plan 018) |
 
-**Next IDs: `EP-007` / `ST-024`.**
+**Next IDs: `EP-008` / `ST-027`.**
 
 IDs are global and never reused. Mint against this table **and** open branches before
 creating files.

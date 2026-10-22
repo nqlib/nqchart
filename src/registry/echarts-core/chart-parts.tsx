@@ -19,6 +19,7 @@ export function ReferenceLine({
   labelPosition = "end",
   variant = "dashed",
   tone = "neutral",
+  includeInDomain = true,
 }: {
   y?: number;
   x?: string | number;
@@ -27,6 +28,8 @@ export function ReferenceLine({
   labelPosition?: "start" | "middle" | "end";
   variant?: "solid" | "dashed" | "dotted";
   tone?: ReferenceTone;
+  /** Widen an auto y-axis so this mark stays on the plot. Default true. */
+  includeInDomain?: boolean;
 }) {
   const id = usePartId();
   useRegisterPart({
@@ -39,6 +42,7 @@ export function ReferenceLine({
     labelPosition,
     variant,
     tone,
+    includeInDomain,
   });
   return null;
 }
@@ -50,13 +54,17 @@ export function ReferenceBand({
   label,
   tone = "neutral",
   opacity,
+  includeInDomain = true,
 }: {
-  y?: [number, number];
+  /** `null` reaches the axis edge. Example: `[100, null]` shades everything above 100. */
+  y?: [number | null, number | null];
   x?: [string | number, string | number];
   yAxisId?: string;
   label?: string;
   tone?: ReferenceTone;
   opacity?: number;
+  /** Widen an auto y-axis so this band stays on the plot. Default true. */
+  includeInDomain?: boolean;
 }) {
   const id = usePartId();
   useRegisterPart({
@@ -68,6 +76,37 @@ export function ReferenceBand({
     label,
     tone,
     opacity,
+    includeInDomain,
+  });
+  return null;
+}
+
+export function RangeArea({
+  lowKey,
+  highKey,
+  yAxisId,
+  tone = "neutral",
+  opacity = 0.15,
+  label,
+}: {
+  lowKey: string;
+  highKey: string;
+  yAxisId?: string;
+  tone?: ReferenceTone;
+  /** Fill strength. Default 0.15. */
+  opacity?: number;
+  label?: string;
+}) {
+  const id = usePartId();
+  useRegisterPart({
+    type: "rangeArea",
+    id,
+    lowKey,
+    highKey,
+    yAxisId,
+    tone,
+    opacity,
+    label,
   });
   return null;
 }

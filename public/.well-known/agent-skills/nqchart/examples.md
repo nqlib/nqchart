@@ -60,6 +60,7 @@ Dedicated `.tsx` files — best starting points for primitives.
 | Block | Notes |
 |-------|-------|
 | `ex-line-chart` | Default |
+| `ex-reference-range-chart` | Dual axis, open band, `RangeArea` around a dashed forecast |
 | `ex-loading-state-line-chart` | Skeleton |
 
 *(Area variants live in doc examples below.)*

@@ -395,6 +395,19 @@
       ]
     },
     {
+      "name": "ex-mark-click-budget-chart",
+      "registryDependencies": [
+        "@nqchart/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-mark-click-budget-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
       "name": "ex-loading-state-bar-chart",
       "registryDependencies": [
         "@nqchart/bar-chart"
@@ -481,6 +494,19 @@
       "files": [
         {
           "path": "src/registry/examples/ex-line-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-reference-range-chart",
+      "registryDependencies": [
+        "@nqchart/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-reference-range-chart.tsx",
           "type": "registry:block"
         }
       ]

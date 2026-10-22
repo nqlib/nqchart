@@ -68,7 +68,7 @@ Wallpaper vs guides: **[background-and-grid.md](./background-and-grid.md)** (req
 ```
 
 Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from `@nqlib/nqchart`.
-`ReferenceLine` / `ReferenceBand` from the same chart subpath as the root.
+`ReferenceLine` / `ReferenceBand` / `RangeArea` from the same chart subpath as the root.
 
 ### Bar-only
 
@@ -97,11 +97,11 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 
 **Legend:** `<Legend isClickable selected onSelectChange />` — uncontrolled by default; pass both for controlled (single-select).
 
-**Annotations:** `<ReferenceLine y={n} />` / `<ReferenceBand y={[lo, hi]} />` (tones: `neutral` \| `accent` \| `positive` \| `warning` \| `critical`).
+**Annotations:** `<ReferenceLine y={n} />` / `<ReferenceBand y={[lo, hi]} />` / `<RangeArea lowKey highKey />` (tones: `neutral` \| `accent` \| `positive` \| `warning` \| `critical`). `ReferenceBand` `y` may be `[number | null, number | null]` — `null` is the axis edge. `includeInDomain` (default `true`) extends an automatic axis; a caller-set `min` or `max` is left alone. Each `yAxisId` gets its own silent series. `RangeArea` fills `highKey - lowKey`, skips a row when either value is null, and stays out of the legend and tooltip.
 
 ### Line-only
 
-**Children:** `Line`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`
+**Children:** `Line`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`, `ReferenceLine`, `ReferenceBand`, `RangeArea`
 
 **Line child:** `dataKey`, `curveType`, `variant` (`solid` \| `dashed` \| `dotted`; composed also `points` for markers-only), `dot`, `lineProps`
 
@@ -113,7 +113,7 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 
 ### Composed
 
-**Children:** `Bar`, `Line`, `Area`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`, `ReferenceLine`, `ReferenceBand`
+**Children:** `Bar`, `Line`, `Area`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`, `ReferenceLine`, `ReferenceBand`, `RangeArea`
 
 `<Area dataKey="otd" />` + `<Line dataKey="otd" />` is a fill-under-line: one legend row, `onMarkClick.seriesKey` is still `"otd"`.
 

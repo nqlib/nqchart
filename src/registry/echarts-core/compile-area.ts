@@ -70,7 +70,7 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
 
   const series = areas.map((area) => {
     const color = ctx.resolveColor(area.dataKey, 0);
-    const fillColor = resolveAreaFillColor(ctx.config, area.dataKey, ctx.resolveColor, 0);
+    const fillColor = resolveAreaFillColor(ctx.config, area.dataKey, ctx.resolveColor, 0, ctx.chartId);
     const glowing = isGlowing(area.variant);
     const areaStyle = areaStyleFor(area.variant, fillColor);
     const lineWidth = area.variant === "solid-stroke" ? 2 : 1.5;
@@ -119,9 +119,6 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
   );
 
   const grid = resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush));
-  if (yAxes.some((y) => y.orientation === "right") && !ctx.cartesian?.externalBrush) {
-    grid.right = 56;
-  }
 
   const dataZoom = buildCategoryDataZoom(hasBrush, { chartVariant: "area" });
   const base: EChartsOption = {
@@ -143,7 +140,7 @@ export function buildAreaSeries(ctx: CompileContext) {
   const yAxes = ctx.parts.filter((p): p is YAxisPart => p.type === "yAxis");
   return areas.map((area) => {
     const color = ctx.resolveColor(area.dataKey, 0);
-    const fillColor = resolveAreaFillColor(ctx.config, area.dataKey, ctx.resolveColor, 0);
+    const fillColor = resolveAreaFillColor(ctx.config, area.dataKey, ctx.resolveColor, 0, ctx.chartId);
     const areaStyle = areaStyleFor(area.variant, fillColor);
     const lineWidth = area.variant === "solid-stroke" ? 2 : 1.5;
     return {
