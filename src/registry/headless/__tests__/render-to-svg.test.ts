@@ -43,3 +43,39 @@ describe("renderToSvg", () => {
     expect(svg).toContain("Closed");
   });
 });
+
+describe("renderToSvg — reference marks", () => {
+  it("draws a bar chart's ReferenceLine (a markLine on a synthetic line series)", async () => {
+    const { compileBarOption } = await import("@/registry/echarts-core/compile-bar");
+    const { createColorResolver } = await import("@/registry/echarts-core/resolve-chart-colors");
+    const chartId = "print-bar-reference";
+    const config = { desktop: { label: "Desktop", colors: { light: ["#0f766e"] } } };
+    const ctx = {
+      chartId,
+      config,
+      xDataKey: "month",
+      data: [
+        { month: "Jan", desktop: 200 },
+        { month: "Feb", desktop: 340 },
+      ],
+      parts: [
+        { type: "xAxis" as const, id: "x", dataKey: "month" },
+        { type: "yAxis" as const, id: "y" },
+        { type: "bar" as const, id: "bar", dataKey: "desktop" },
+        {
+          type: "referenceLine" as const,
+          id: "cap",
+          y: 280,
+          label: "Budget",
+          tone: "warning" as const,
+          variant: "dashed" as const,
+        },
+      ],
+      resolveColor: createColorResolver(chartId, config),
+    };
+    const option = withHeadlessTheme(chartId, PRINT_THEME, () => compileBarOption(ctx));
+    const svg = renderToSvg(option, { width: 400, height: 240 });
+    expect(svg).toMatch(new RegExp(`stroke="${PRINT_THEME.tones.warning}"[^>]*stroke-dasharray`));
+    expect(svg).toContain("Budget");
+  });
+});

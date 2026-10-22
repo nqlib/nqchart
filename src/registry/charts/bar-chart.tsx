@@ -5,8 +5,8 @@ import {
 } from "@/registry/ui/chart";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { getEcharts } from "@/registry/echarts-core/echarts-init";
-import { BarChart, CustomChart } from "echarts/charts";
-import { GraphicComponent } from "echarts/components";
+import { BarChart, CustomChart, LineChart } from "echarts/charts";
+import { GraphicComponent, MarkAreaComponent, MarkLineComponent } from "echarts/components";
 import { usePartId, usePartsSnapshot, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { useHoverTraceMarkLine } from "@/registry/echarts-core/use-hover-trace-mark-line";
 import { useMonospaceCollapse } from "@/registry/echarts-core/use-monospace-collapse";
@@ -41,7 +41,16 @@ import { useChart } from "@/registry/ui/chart";
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState, type Ref } from "react";
 import type { EChartsType } from "echarts/core";
 
-const BAR_ECHARTS_MODULES = [BarChart, CustomChart, GraphicComponent];
+const BAR_ECHARTS_MODULES = [
+  BarChart,
+  CustomChart,
+  GraphicComponent,
+  // ReferenceLine / ReferenceBand compile to markLine / markArea on a synthetic
+  // `type: "line"` series; ECharts drops that series without LineChart.
+  LineChart,
+  MarkLineComponent,
+  MarkAreaComponent,
+];
 getEcharts(BAR_ECHARTS_MODULES);
 
 type ValidateConfigKeys<TData, TConfig> = {
