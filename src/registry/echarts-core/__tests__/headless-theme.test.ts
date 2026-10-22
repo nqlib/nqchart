@@ -109,8 +109,9 @@ describe("headless theme registry", () => {
 
     const bar = series.find((s) => s.type === "bar");
     expect(bar?.itemStyle?.color).toBe("#ff8800");
-    // --radius 10px → --radius-sm = 10 - 4 = 6px on the top corners.
-    expect(bar?.itemStyle?.borderRadius).toEqual([6, 6, 0, 0]);
+    // --radius 10px → --radius-sm = 10 - 4 = 6px on the top corners of a positive bar.
+    const points = bar?.data as Array<{ itemStyle?: { borderRadius?: number[] } }> | undefined;
+    expect(points?.[0]?.itemStyle?.borderRadius).toEqual([6, 6, 0, 0]);
 
     const reference = series.find((s) => Array.isArray(s.markLine?.data));
     expect(reference?.markLine?.data?.[0]?.lineStyle?.color).toBe("#0055aa");

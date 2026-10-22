@@ -547,6 +547,24 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "ex-reference-range-chart": {
+    name: "ex-reference-range-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/line-chart"],
+    files: [{
+      path: "@/registry/examples/ex-reference-range-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-reference-range-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-reference-range-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "ex-loading-state-line-chart": {
     name: "ex-loading-state-line-chart",
     description: "",

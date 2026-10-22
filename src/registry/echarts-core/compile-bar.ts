@@ -58,7 +58,7 @@ function buildBarDataPoints(
   return rows.map((row, dataIndex) => {
     const value = seriesValue(row[bar.dataKey]);
     const role = roles?.[dataIndex];
-    const borderRadius = barItemBorderRadius(bar.variant, role, r, horizontal);
+    const borderRadius = barItemBorderRadius(bar.variant, role, r, horizontal, value);
     const gapStyle = role != null ? stackSegmentGapStyle(role, horizontal) : {};
 
     return {

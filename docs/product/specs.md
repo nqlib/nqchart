@@ -40,8 +40,8 @@ Version baseline for this document: **`@nqlib/nqchart@0.3.0`** (BI readiness con
 | S3.1 | `XAxis` and `YAxis` accept `tickFormatter`, `scale`, `reversed`, dense-label props. |
 | S3.2 | Dual Y works on bar, line, area, composed, scatter. |
 | S3.3 | Series bind with flat `yAxisId`; nested `*Props.yAxisId` deprecated but accepted. |
-| S3.4 | `<ReferenceLine>` / `<ReferenceBand>` draw in data space with semantic `tone`. |
-| S3.5 | Reference marks are excluded from legend and `onMarkClick`. |
+| S3.4 | `<ReferenceLine>` / `<ReferenceBand>` draw in data space with semantic `tone`, one silent series per y-axis, and `includeInDomain` (default on) so an automatic axis includes the mark. |
+| S3.5 | Reference marks and `<RangeArea>` are excluded from legend, tooltip, and `onMarkClick`. `RangeArea` leaves a gap where `lowKey` or `highKey` is null. |
 | S3.6 | `NQComposedChart` accepts `<Bar>`, `<Line>`, and `<Area>`. |
 | S3.7 | `showLabels` / `labelFormatter` on bar, line, area series. |
 

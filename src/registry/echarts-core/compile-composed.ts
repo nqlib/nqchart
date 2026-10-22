@@ -2,7 +2,7 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { cartesianColumnFocus, cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
-import { barBorderRadius, barItemBorderRadius, groupStackRoles, resolveBarRadius } from "./bar-radius";
+import { barItemBorderRadius, groupStackRoles, resolveBarRadius } from "./bar-radius";
 import {
   applyAxisPartToOption,
   buildValueYAxes,
@@ -36,10 +36,6 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const hasBrush = ctx.parts.some((p) => p.type === "brush");
 
   const yAxisList = buildValueYAxes({ yAxes, hasGrid });
-
-  // A stacked bar rounds only the outer corners of its stack: each data point gets
-  // its own corner role (bottom, middle, top, only), the same rule as the bar family.
-  // An unstacked bar keeps one borderRadius on the series. (Port of secolab PR #1387.)
   const stackRoles = groupStackRoles(bars, ctx.data);
 
   const barSeries = bars.map((bar) => {
@@ -54,15 +50,15 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       stack: bar.stackId,
       data: ctx.data.map((row, dataIndex) => {
         const value = seriesValue(row[bar.dataKey]);
-        if (!bar.stackId) return value;
         return {
           value,
-          itemStyle: { borderRadius: barItemBorderRadius(undefined, roles?.[dataIndex], r, false) },
+          itemStyle: {
+            borderRadius: barItemBorderRadius(bar.variant, roles?.[dataIndex], r, false, value),
+          },
         };
       }),
       itemStyle: {
         color,
-        ...(bar.stackId ? {} : { borderRadius: barBorderRadius(r, false) }),
       },
       label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
       ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianColumnFocus(color)),

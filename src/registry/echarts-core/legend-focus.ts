@@ -19,7 +19,7 @@
  */
 
 import type { EChartsOption } from "echarts";
-import { isReferenceSeriesId } from "./nq-mark-event";
+import { isAnnotationSeriesId } from "./nq-mark-event";
 import { seriesMatchesLegendKey } from "./series-identity";
 
 /** Low enough to recede, high enough to still read as context. */
@@ -118,7 +118,7 @@ export function withLegendFocus(
     series: series.map((s) => {
       if (!s || typeof s !== "object") return s;
       // Reference lines and bands are annotation, not data — never dimmed.
-      if (isReferenceSeriesId(s.id)) return s;
+      if (isAnnotationSeriesId(s.id)) return s;
       if (itemLevel || (selected == null && Array.isArray(s.data) && s.data.some(isNamedItem))) {
         return focusItems(s, selected);
       }
