@@ -1,4 +1,5 @@
 import type { ChartConfig } from "@/registry/ui/chart";
+import { headlessThemeOf, resolveTokenColor } from "./headless-theme";
 
 const THEMES = { light: "", dark: ".dark" } as const;
 const CSS_VAR_REF = /^var\(\s*--([a-zA-Z0-9_-]+)\s*\)$/;
@@ -15,9 +16,16 @@ function readCustomProperty(el: Element, name: string): string {
 /**
  * Resolve `var(--token)` chains to concrete colors. ECharts and canvas cannot
  * interpret CSS variables — only resolved oklch/hex/rgb strings work.
+ *
+ * `tokens` (a headless theme's custom properties) resolve the chain first; with no
+ * `document` they are the only source. Without `tokens` the behaviour is unchanged.
  */
-export function resolveCssColorValue(value: string, contextEl?: Element | null): string {
-  const trimmed = value.trim();
+export function resolveCssColorValue(
+  value: string,
+  contextEl?: Element | null,
+  tokens?: Record<string, string>,
+): string {
+  const trimmed = tokens ? resolveTokenColor(value, tokens) : value.trim();
   if (!trimmed || typeof document === "undefined") return trimmed;
 
   const varMatch = CSS_VAR_REF.exec(trimmed);
@@ -42,11 +50,35 @@ function finalizeColor(color: string, contextEl?: Element | null): string {
   return resolved.startsWith("var(") ? color : resolved;
 }
 
-/** Read resolved hex/rgb from CSS variables on the chart container. */
+/** A config colour from the theme's slot, resolved through the theme's tokens. */
+function headlessConfigColor(
+  config: ChartConfig,
+  key: string,
+  index: number,
+  isDark: boolean,
+  tokens: Record<string, string> | undefined,
+): string {
+  const entry = config[key];
+  const colors = isDark
+    ? (entry?.colors?.dark ?? entry?.colors?.light)
+    : (entry?.colors?.light ?? entry?.colors?.dark);
+  const color = colors?.[index] ?? colors?.[0] ?? "#8884d8";
+  return resolveCssColorValue(color, null, tokens);
+}
+
+/**
+ * Read resolved hex/rgb from CSS variables on the chart container, or from the
+ * headless theme registered for `chartId` (see `headless-theme.ts`).
+ */
 export function createColorResolver(chartId: string, config: ChartConfig) {
   const cache = new Map<string, string>();
 
   return function resolveColor(key: string, index = 0): string {
+    // Read at call time, not at creation: the caller may build the resolver
+    // before it registers the theme. Not cached: a theme is per call.
+    const theme = headlessThemeOf(chartId);
+    if (theme) return headlessConfigColor(config, key, index, theme.isDark, theme.tokens);
+
     const cacheKey = `${key}:${index}`;
     const cached = cache.get(cacheKey);
     if (cached !== undefined) return cached;
@@ -100,7 +132,18 @@ export function resolveAreaFillColor(
   key: string,
   resolveColor: (key: string, index: number) => string,
   index = 0,
+  chartId?: string,
 ): string {
+  const theme = headlessThemeOf(chartId);
+  if (theme) {
+    if (theme.isDark) return resolveColor(key, index);
+    const entry = config[key];
+    const bright = entry?.colors?.dark?.[index] ?? entry?.colors?.dark?.[0];
+    if (!bright) return resolveColor(key, index);
+    const resolved = resolveTokenColor(bright, theme.tokens);
+    return resolved.startsWith("var(") ? resolveColor(key, index) : resolved;
+  }
+
   const isDark =
     typeof document !== "undefined" && document.documentElement.classList.contains("dark");
   if (isDark) return resolveColor(key, index);

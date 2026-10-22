@@ -16,6 +16,8 @@
  * @see nqui/src/index.css
  */
 
+import { headlessThemeOf } from "./headless-theme";
+
 /** nqui's shipped `--radius`, in rem. Fallback only — see `readBaseRadiusPx`. */
 const NQUI_RADIUS_REM = 0.45;
 const FALLBACK_ROOT_FONT_SIZE_PX = 16;
@@ -52,6 +54,8 @@ function lengthToPx(value: string, rootFontSizePx: number): number | null {
 
 /** Live `--radius` in px for this chart's subtree, or null outside the browser. */
 function readBaseRadiusPx(chartId: string): number | null {
+  const theme = headlessThemeOf(chartId);
+  if (theme) return theme.radiusPx;
   if (typeof document === "undefined") return null;
 
   const el =

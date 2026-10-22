@@ -76,7 +76,7 @@ function buildBarDataPoints(
     ? (bar.radius != null ? bar.radius : 0)
     : resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
   const strokeColor = ctx.resolveColor(bar.dataKey, 0);
-  const fillColor = resolveAreaFillColor(ctx.config, bar.dataKey, ctx.resolveColor, 0);
+  const fillColor = resolveAreaFillColor(ctx.config, bar.dataKey, ctx.resolveColor, 0, ctx.chartId);
   const color = barVariantFill(bar.variant, strokeColor, horizontal, fillColor);
   const effectiveStack = bar.stackId ?? stack;
   const roles = effectiveStack ? stackRoles.get(bar.dataKey) : undefined;

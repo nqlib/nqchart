@@ -21,6 +21,6 @@ export function applyChartUiToOption(
   if (legendPart) {
     next = hideBuiltInLegend(next);
   }
-  next = applyChartAnimationToOption(next);
+  next = applyChartAnimationToOption(next, ctx.chartId);
   return next;
 }

@@ -6,6 +6,7 @@ import type { EChartsOption } from "echarts";
 import { REFERENCE_SERIES_ID } from "./nq-mark-event";
 import type { CompileContext, ReferenceBandPart, ReferenceLinePart, YAxisPart } from "./parts/types";
 import { resolveYAxisIndex } from "./cartesian-axes";
+import { headlessThemeOf } from "./headless-theme";
 
 export type ReferenceTone = "neutral" | "accent" | "positive" | "warning" | "critical";
 
@@ -19,6 +20,8 @@ const TONE_FALLBACK: Record<ReferenceTone, string> = {
 
 function resolveToneColor(tone: ReferenceTone | undefined, chartId: string): string {
   const t = tone ?? "neutral";
+  const theme = headlessThemeOf(chartId);
+  if (theme) return theme.tones[t];
   if (typeof document === "undefined") return TONE_FALLBACK[t];
 
   const el =

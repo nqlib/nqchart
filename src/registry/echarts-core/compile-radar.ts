@@ -1,5 +1,5 @@
 import type { EChartsOption } from "echarts";
-import { getColorsCount } from "@/registry/ui/chart";
+import { getColorsCount } from "./config-colors";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { itemFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { radarAreaFill } from "./color-alpha";
@@ -32,10 +32,10 @@ export function compileRadarOption(ctx: CompileContext): EChartsOption {
     const filled = radar.variant === "filled" || radar.variant?.includes("filled");
     const linesOnly = radar.variant === "lines";
     const resolveFillColor = (key: string, index: number) =>
-      resolveAreaFillColor(ctx.config, key, ctx.resolveColor, index);
+      resolveAreaFillColor(ctx.config, key, ctx.resolveColor, index, ctx.chartId);
     const areaStyle =
       filled && !linesOnly
-        ? radarAreaFill(resolveFillColor, radar.dataKey, colorsCount)
+        ? radarAreaFill(resolveFillColor, radar.dataKey, colorsCount, ctx.chartId)
         : undefined;
 
     return {

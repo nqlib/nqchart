@@ -15,7 +15,7 @@ export function compileSparklineOption(ctx: CompileContext): EChartsOption {
   // ECharts default series name ("series0").
   const seriesLabel = ctx.config?.[colorKey]?.label?.toString();
   const color = ctx.resolveColor(colorKey, 0);
-  const fillColor = resolveAreaFillColor(ctx.config, colorKey, ctx.resolveColor, 0);
+  const fillColor = resolveAreaFillColor(ctx.config, colorKey, ctx.resolveColor, 0, ctx.chartId);
   const values = ctx.data.map((row) => Number(row[valueKey] ?? 0));
   const [yMin, yMax] = computeSparklineDomain(values);
   const categories = values.map((_, i) => String(i));
