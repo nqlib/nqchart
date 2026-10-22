@@ -162,8 +162,13 @@ step removes `dependencies` from the published manifest.
 
 1. Do not bump `version`. Do not tag. Do not publish.
 2. Title the PR `release: <summary> (no package change)`. Merge it with a merge commit.
-3. Confirm the claim: `pnpm run build:npm` on `dev` produces the same `dist/` as the last tag.
-   If `dist/` differs, use the normal release steps.
+3. Confirm the claim against the last tag:
+   - `git diff --stat vX.Y.Z origin/dev -- src/registry src/lib/public.ts vite.lib.config.ts tsconfig.lib.json`
+     shows no change to the library source or its build config.
+   - `dist/types/` built from `dev` matches `dist/types/` built from the tag.
+
+   Do not compare the JS bytes in `dist/`. A bundler upgrade alone renames chunks and moves
+   code between them. If the source or the types differ, use the normal release steps.
 
 ### Hotfix
 
