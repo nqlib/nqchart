@@ -1,3 +1,5 @@
+import { headlessThemeOf } from "./headless-theme";
+
 /** Append alpha to hex, rgb, hsl, oklch, and other CSS color strings. */
 export function withAlpha(color: string, alpha: number): string {
   const value = color.trim();
@@ -60,13 +62,15 @@ type RadarGradientColor = {
   colorStops: { offset: number; color: string }[];
 };
 
-function isDarkTheme(): boolean {
+function isDarkTheme(chartId?: string): boolean {
+  const theme = headlessThemeOf(chartId);
+  if (theme) return theme.isDark;
   if (typeof document === "undefined") return false;
   return document.documentElement.classList.contains("dark");
 }
 
-function radarFillAlphas(): { center: number; edge: number; opacity: number } {
-  if (isDarkTheme()) {
+function radarFillAlphas(chartId?: string): { center: number; edge: number; opacity: number } {
+  if (isDarkTheme(chartId)) {
     return { center: 0.8, edge: 0.3, opacity: RADAR_FILL_OPACITY };
   }
   // Light mode chart tokens use darker hex — soften center so overlap does not muddy the plot.
@@ -76,8 +80,9 @@ function radarFillAlphas(): { center: number; edge: number; opacity: number } {
 function radarGradientColorStops(
   resolveColor: (index: number) => string,
   colorsCount: number,
+  chartId?: string,
 ): RadarGradientColor {
-  const { center: centerAlpha, edge: edgeAlpha } = radarFillAlphas();
+  const { center: centerAlpha, edge: edgeAlpha } = radarFillAlphas(chartId);
 
   if (colorsCount <= 1) {
     const color = resolveColor(0);
@@ -116,10 +121,15 @@ export function radarAreaFill(
   resolveFillColor: (key: string, index: number) => string,
   dataKey: string,
   colorsCount: number,
+  chartId?: string,
 ): { color: RadarGradientColor; opacity: number } {
-  const { opacity } = radarFillAlphas();
+  const { opacity } = radarFillAlphas(chartId);
   return {
-    color: radarGradientColorStops((index) => resolveFillColor(dataKey, index), colorsCount),
+    color: radarGradientColorStops(
+      (index) => resolveFillColor(dataKey, index),
+      colorsCount,
+      chartId,
+    ),
     opacity,
   };
 }

@@ -375,3 +375,25 @@ The series legend. When `isClickable` is set, each entry toggles selection of it
     Controlled legend selection callback.
   </ApiRow>
 </ApiTable>
+
+<ApiHeading>ReferenceLine, ReferenceBand, and RangeArea</ApiHeading>
+
+Same annotation parts as the line chart. A mark's `yAxisId` binds it to that axis. `ReferenceBand` `y={[100, null]}` shades from 100 to the top of the axis. `RangeArea` fills between `lowKey` and `highKey` and leaves a gap where either value is null. See the [line chart demo](/docs/line-chart) for a dual-axis chart with a line on each axis, an open band, and a range around a dashed forecast.
+
+<ApiTable>
+  <ApiRow name="yAxisId" type="string">
+    Axis for the mark or range. Unknown ids use axis 0 and warn in development.
+  </ApiRow>
+  <ApiRow name="includeInDomain" type="boolean" default="true">
+    On `ReferenceLine` and `ReferenceBand`. Widen an automatic axis so the mark stays visible. A caller-set `min` or `max` is not changed.
+  </ApiRow>
+  <ApiRow name="lowKey" type="string">
+    `RangeArea` lower data key.
+  </ApiRow>
+  <ApiRow name="highKey" type="string">
+    `RangeArea` upper data key.
+  </ApiRow>
+  <ApiRow name="opacity" type="number">
+    Band fill. Reference bands default to `0.12`. `RangeArea` defaults to `0.15`.
+  </ApiRow>
+</ApiTable>

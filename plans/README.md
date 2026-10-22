@@ -43,6 +43,8 @@ self-contained. Related: [`_archive/2026-06-10-improvement-plan.md`](_archive/20
 | 015 | [BI ship leftovers (waterfall, funnel, harness, series id)](015-bi-ship-leftovers.md) | engine / api | M | DONE |
 | 016 | [Per-family ECharts registration, honest export, internals check](016-echarts-payload.md) | performance / dist | M | DONE — shipped in v0.3.1 |
 | 017 | [hoverFocus opt-out on every chart root](017-hover-focus-opt-out.md) | engine / api | M | DONE |
+| 018 | [Headless render: pure compile path, theme registry, SVG in Node](018-headless-render.md) | engine / dist | L | DONE |
+| 019 | [Reference marks per axis, open bands, RangeArea](019-reference-marks-and-range-area.md) | engine / api | M | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 

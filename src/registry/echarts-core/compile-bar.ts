@@ -9,7 +9,7 @@ import { barVariantFill } from "./bar-pattern";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import {
   barItemBorderRadius,
-  buildStackCornerRoles,
+  groupStackRoles,
   resolveBarRadius,
   stackSegmentGapStyle,
   type StackCornerRole,
@@ -37,32 +37,6 @@ type BarPointItemStyle = {
   borderColor?: string;
 };
 
-function groupStackRoles(
-  bars: BarSeriesPart[],
-  rows: Record<string, unknown>[],
-  defaultStack: string | undefined,
-): Map<string, StackCornerRole[]> {
-  const rolesByKey = new Map<string, StackCornerRole[]>();
-  const groups = new Map<string, BarSeriesPart[]>();
-
-  for (const bar of bars) {
-    const stackId = bar.stackId ?? defaultStack;
-    if (!stackId) continue;
-    const group = groups.get(stackId) ?? [];
-    group.push(bar);
-    groups.set(stackId, group);
-  }
-
-  for (const groupBars of groups.values()) {
-    const groupRoles = buildStackCornerRoles(groupBars, rows);
-    for (const [dataKey, roles] of groupRoles) {
-      rolesByKey.set(dataKey, roles);
-    }
-  }
-
-  return rolesByKey;
-}
-
 function buildBarDataPoints(
   bar: BarSeriesPart,
   ctx: CompileContext,
@@ -76,7 +50,7 @@ function buildBarDataPoints(
     ? (bar.radius != null ? bar.radius : 0)
     : resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
   const strokeColor = ctx.resolveColor(bar.dataKey, 0);
-  const fillColor = resolveAreaFillColor(ctx.config, bar.dataKey, ctx.resolveColor, 0);
+  const fillColor = resolveAreaFillColor(ctx.config, bar.dataKey, ctx.resolveColor, 0, ctx.chartId);
   const color = barVariantFill(bar.variant, strokeColor, horizontal, fillColor);
   const effectiveStack = bar.stackId ?? stack;
   const roles = effectiveStack ? stackRoles.get(bar.dataKey) : undefined;
@@ -84,7 +58,7 @@ function buildBarDataPoints(
   return rows.map((row, dataIndex) => {
     const value = seriesValue(row[bar.dataKey]);
     const role = roles?.[dataIndex];
-    const borderRadius = barItemBorderRadius(bar.variant, role, r, horizontal);
+    const borderRadius = barItemBorderRadius(bar.variant, role, r, horizontal, value);
     const gapStyle = role != null ? stackSegmentGapStyle(role, horizontal) : {};
 
     return {
@@ -205,10 +179,6 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
     ),
     ...(hasHoverTrace && !horizontal ? { left: 56 } : {}),
   };
-  if (yAxes.some((y) => y.orientation === "right") && !ctx.cartesian?.externalBrush && !horizontal) {
-    grid.right = 56;
-  }
-
   const dataZoom = buildCategoryDataZoom(hasBrush, {
     axisDim: horizontal ? "y" : "x",
     chartVariant: "bar",

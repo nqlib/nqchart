@@ -1,6 +1,7 @@
 import type { ChartConfig } from "@/registry/ui/chart";
-import { getColorsCount } from "@/registry/ui/chart";
+import { getColorsCount } from "./config-colors";
 import { configKeyFromDisplayName } from "./config-key-from-display-name";
+import { isAnnotationSeriesId } from "./nq-mark-event";
 import type { TooltipPart } from "./parts/types";
 import type { EChartsOption } from "echarts";
 
@@ -73,7 +74,7 @@ function formatItemTooltipHtml(
   chartId: string,
 ) {
   const item = (Array.isArray(params) ? params[0] : params) as TooltipAxisParams | undefined;
-  if (!item) return "";
+  if (!item || isAnnotationSeriesId(item.seriesId)) return "";
 
   const displayName = String(item.name ?? item.seriesName ?? "");
   const key = configKeyFromDisplayName(displayName, config);
@@ -215,7 +216,7 @@ function formatAxisTooltipHtml(
   chartId: string,
 ) {
   const items = (Array.isArray(params) ? params : [params]).filter(
-    (p) => p.seriesName != null,
+    (p) => p.seriesName != null && p.seriesName !== "" && !isAnnotationSeriesId(p.seriesId),
   );
   if (!items.length) return "";
 

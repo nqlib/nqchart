@@ -74,4 +74,4 @@ export type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 
 export type { ChartHandle, ChartExportOpts } from "@/registry/echarts-core/chart-handle";
 
-export { ReferenceLine, ReferenceBand } from "@/registry/echarts-core/chart-parts";
+export { ReferenceLine, ReferenceBand, RangeArea } from "@/registry/echarts-core/chart-parts";

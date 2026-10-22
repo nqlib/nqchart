@@ -58,6 +58,42 @@ export const examples: Registry["items"] = [
     files: [{ path: "examples/ex-line-chart.tsx", type: "registry:block" }],
   },
   {
+    name: "ex-reference-range-chart",
+    registryDependencies: ["@nqchart/line-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-reference-range-chart.tsx", type: "registry:block" }],
+  },
+  {
+    name: "ex-reference-domain-pinned-line-chart",
+    registryDependencies: ["@nqchart/line-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-reference-domain-pinned-line-chart.tsx", type: "registry:block" }],
+  },
+  {
+    name: "ex-reference-domain-auto-line-chart",
+    registryDependencies: ["@nqchart/line-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-reference-domain-auto-line-chart.tsx", type: "registry:block" }],
+  },
+  {
+    name: "ex-signed-bar-chart",
+    registryDependencies: ["@nqchart/composed-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-signed-bar-chart.tsx", type: "registry:block" }],
+  },
+  {
+    name: "ex-signed-stack-bar-chart",
+    registryDependencies: ["@nqchart/composed-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-signed-stack-bar-chart.tsx", type: "registry:block" }],
+  },
+  {
+    name: "ex-signed-horizontal-bar-chart",
+    registryDependencies: ["@nqchart/bar-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-signed-horizontal-bar-chart.tsx", type: "registry:block" }],
+  },
+  {
     name: "ex-loading-state-line-chart",
     registryDependencies: ["@nqchart/line-chart"],
     type: "registry:block",

@@ -252,17 +252,20 @@ Configuration slot — renders a `<ChartDot />` on the **last** point only when 
 
 <ApiHeading>ReferenceBand</ApiHeading>
 
-Muted horizontal band for targets, SLA ranges, or baselines.
+Muted horizontal band for targets, SLA ranges, or baselines. `null` on `y` is the axis edge.
 
 <ApiTable>
-  <ApiRow name="y1" type="number" required>
-    Lower bound in data units.
+  <ApiRow name="y" type="[number | null, number | null]">
+    Lower and upper bounds. `[100, null]` shades everything above 100.
   </ApiRow>
-  <ApiRow name="y2" type="number" required>
-    Upper bound in data units.
+  <ApiRow name="tone" type='"neutral" | "accent" | "positive" | "warning" | "critical"' default='"neutral"'>
+    Semantic fill color.
   </ApiRow>
-  <ApiRow name="fillOpacity" type="number" default="0.12">
+  <ApiRow name="opacity" type="number" default="0.12">
     Band fill strength.
+  </ApiRow>
+  <ApiRow name="includeInDomain" type="boolean" default="true">
+    Widen an automatic axis so a finite edge stays on the plot. A sparkline pins its own min and max, so this does not move that domain.
   </ApiRow>
 </ApiTable>
 

@@ -1,6 +1,7 @@
 /** Design-token colors for axes, grids, and ECharts chrome — resolved from the chart container. */
 
 import { CHART_FONT_FAMILY_FALLBACK } from "./chart-typography-tokens";
+import { headlessThemeOf } from "./headless-theme";
 
 export type ChartChromeColors = {
   foreground: string;
@@ -38,6 +39,9 @@ function readCssVar(el: Element, name: string, fallback: string): string {
 }
 
 export function resolveChartChrome(chartId: string): ChartChromeColors {
+  const theme = headlessThemeOf(chartId);
+  if (theme) return { ...theme.chrome };
+
   if (typeof document === "undefined") {
     return LIGHT_FALLBACK;
   }
@@ -71,6 +75,9 @@ export function resolveChartChrome(chartId: string): ChartChromeColors {
  * tokens above, so a themed subtree wins over `:root`.
  */
 export function resolveChartFontFamily(chartId: string): string {
+  const theme = headlessThemeOf(chartId);
+  if (theme) return theme.fontFamily || CHART_FONT_FAMILY_FALLBACK;
+
   if (typeof document === "undefined") {
     return CHART_FONT_FAMILY_FALLBACK;
   }
@@ -133,8 +140,10 @@ export function resolveCanvasGapColor(chartId: string): string {
 /** Label on saturated series fills (funnel segments, treemap leaves). */
 export function resolveCanvasTileLabelColor(chartId: string): string {
   const chrome = resolveCanvasChartChrome(chartId);
-  const isDark =
-    typeof document !== "undefined" && document.documentElement.classList.contains("dark");
+  const theme = headlessThemeOf(chartId);
+  const isDark = theme
+    ? theme.isDark
+    : typeof document !== "undefined" && document.documentElement.classList.contains("dark");
   return isDark ? chrome.popoverForeground : "#ffffff";
 }
 
@@ -144,6 +153,11 @@ export function resolveCanvasGroupLabelColor(chartId: string): string {
 }
 
 export function resolveCanvasChartChrome(chartId: string): ChartChromeColors {
+  // A headless theme holds canvas-safe colours already; `cssColorToCanvasRgb`
+  // needs a DOM, so the theme's chrome is returned as given.
+  const theme = headlessThemeOf(chartId);
+  if (theme) return { ...theme.chrome };
+
   if (typeof document === "undefined") {
     return CANVAS_LIGHT;
   }

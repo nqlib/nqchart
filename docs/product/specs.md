@@ -5,7 +5,7 @@ Human-readable contract for what NQChart **guarantees**. Machine-oriented detail
 
 Version baseline for this document: **`@nqlib/nqchart@0.3.0`** (BI readiness consumable).
 
-**Spec revision:** 2026-08-16 (ST-023 `hoverFocus`)
+**Spec revision:** 2026-10-21 (EP-007 headless render, S6; ships in 0.4.0)
 
 ---
 
@@ -40,8 +40,8 @@ Version baseline for this document: **`@nqlib/nqchart@0.3.0`** (BI readiness con
 | S3.1 | `XAxis` and `YAxis` accept `tickFormatter`, `scale`, `reversed`, dense-label props. |
 | S3.2 | Dual Y works on bar, line, area, composed, scatter. |
 | S3.3 | Series bind with flat `yAxisId`; nested `*Props.yAxisId` deprecated but accepted. |
-| S3.4 | `<ReferenceLine>` / `<ReferenceBand>` draw in data space with semantic `tone`. |
-| S3.5 | Reference marks are excluded from legend and `onMarkClick`. |
+| S3.4 | `<ReferenceLine>` / `<ReferenceBand>` draw in data space with semantic `tone`, one silent series per y-axis, and `includeInDomain` (default on) so an automatic axis includes the mark. |
+| S3.5 | Reference marks and `<RangeArea>` are excluded from legend, tooltip, and `onMarkClick`. `RangeArea` leaves a gap where `lowKey` or `highKey` is null. |
 | S3.6 | `NQComposedChart` accepts `<Bar>`, `<Line>`, and `<Area>`. |
 | S3.7 | `showLabels` / `labelFormatter` on bar, line, area series. |
 
@@ -65,11 +65,18 @@ Version baseline for this document: **`@nqlib/nqchart@0.3.0`** (BI readiness con
 | S5.3 | Public docs live in `src/content/docs/`; maintainer vault in `docs/`. |
 | S5.4 | Consumer skill SOT is `skills/consumer/nqchart/` → `pnpm sync:skills`. |
 
+## S6 — Headless render
+
+| ID | Spec |
+|----|------|
+| S6.1 | The compile path (`compile-*.ts` and the helpers they call) runs in Node with no DOM, no React and no `window`; a DOM read falls to the headless theme registered for the chart id, then to the documented fallback. |
+| S6.2 | `@nqlib/nqchart/headless` exports the compilers, the theme registry, `printLegend` and `renderToSvg`; the option it builds for a context equals the browser's for the same theme, except the tooltip, the animation and the HTML legend. |
+| S6.3 | The entry has its own size baseline and smoke check. |
+
 ## Out of contract (explicit)
 
 - Cross-chart brushing / linking (consumer concern).
 - Multi-select legend isolate.
-- Server-side chart image rendering.
 - CSV/XLSX export of underlying data.
 - Automatic unit conversion.
 - More than two Y axes.

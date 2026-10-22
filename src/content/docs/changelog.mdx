@@ -3,6 +3,34 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.4.0 — 2026-10-21
+
+### Headless render
+
+- **`@nqlib/nqchart/headless`** — a new entry that compiles a chart and draws it to an SVG string in Node, with no DOM and no React. It exports every `compile*Option`, `createColorResolver`, the theme registry, `printLegend` and `renderToSvg`, plus `CompileContext`, `ChartPart` and every part type. See the consumer skill page `headless.md`.
+- **Theme registry keyed by chart id** — `withHeadlessTheme(chartId, theme, fn)` registers a `HeadlessTheme` (chrome, tones, tokens, radius, font, animation) while `fn` runs. Every helper that reads `[data-chart]` in the browser reads it first. A browser consumer with no registered theme gets the same option as in 0.3.2.
+- **`printLegend`** — an ECharts legend under the plot for an SVG: a block for a bar or an area, the line in its own style (dashed, dotted) for a line.
+- **`renderToSvg(option, { width, height, modules? })`** — echarts SSR with the SVG renderer, animation and tooltip off. The browser entries keep `CanvasRenderer`.
+- The compile path no longer imports React: `getColorsCount` lives in `echarts-core/config-colors.ts` (still exported from the root).
+
+### Reference marks
+
+- **`ReferenceLine` and `ReferenceBand` draw without a host registration.** They compile to `markLine` / `markArea`. NQChart registers `MarkLineComponent` and `MarkAreaComponent`, and bar and scatter also register `LineChart`, so a fresh chart draws both. Hosts can remove their own `MarkLineComponent` registration.
+- **Each mark uses its own axis.** Lines and bands group by resolved `yAxisId`. Each axis gets a silent series (`<chartId>-ref-<axisIndex>`). A mark with no `yAxisId` uses axis 0. An unknown id uses axis 0 and warns in development.
+- **Marks outside the data stay on the plot.** `includeInDomain` (default `true`) on `ReferenceLine` and `ReferenceBand` extends an automatic axis with `min` / `max` functions so the mark is included. An axis whose `min` or `max` you set is left alone.
+- **Open bands.** `ReferenceBand` `y` accepts `[number | null, number | null]`. `null` is the axis edge (`"min"` or `"max"`), so `[100, null]` shades everything above 100.
+- **`RangeArea`.** A filled band between `lowKey` and `highKey` (`yAxisId`, `tone`, `opacity` default `0.15`, `label`). A row is skipped when either value is null, which leaves a gap. The band is not in the legend or the tooltip and does not take a palette slot.
+
+`variant`, `tone`, `label`, and `labelPosition` are unchanged. Two marks at the same value both draw.
+
+### Bars
+
+- **Corners follow the sign.** A positive bar rounds the end away from zero, a negative bar rounds the opposite end, and zero stays square. In a stack, only the outermost segment of each sign is rounded, so the zero line is never rounded. A horizontal bar rounds the right end when positive and the left end when negative. Hosts can remove a sign-aware radius patch.
+
+### Build
+
+- `check:size` resolves esbuild through tsx and measures the headless entry against its own baseline. `check:internals` fails when React reaches the compile path.
+
 ## 0.3.2 — 2026-08-16
 
 ### Interaction

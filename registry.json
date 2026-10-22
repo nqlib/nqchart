@@ -499,6 +499,19 @@
       ]
     },
     {
+      "name": "ex-reference-range-chart",
+      "registryDependencies": [
+        "@nqchart/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-reference-range-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
       "name": "ex-loading-state-line-chart",
       "registryDependencies": [
         "@nqchart/line-chart"

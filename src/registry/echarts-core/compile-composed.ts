@@ -2,7 +2,7 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { cartesianColumnFocus, cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
-import { barBorderRadius, resolveBarRadius } from "./bar-radius";
+import { barItemBorderRadius, groupStackRoles, resolveBarRadius } from "./bar-radius";
 import {
   applyAxisPartToOption,
   buildValueYAxes,
@@ -36,20 +36,29 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const hasBrush = ctx.parts.some((p) => p.type === "brush");
 
   const yAxisList = buildValueYAxes({ yAxes, hasGrid });
+  const stackRoles = groupStackRoles(bars, ctx.data);
 
   const barSeries = bars.map((bar) => {
     const r = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
     const color = ctx.resolveColor(bar.dataKey, 0);
+    const roles = bar.stackId ? stackRoles.get(bar.dataKey) : undefined;
     return {
       type: "bar" as const,
       id: bar.dataKey,
       name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
       yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
       stack: bar.stackId,
-      data: ctx.data.map((row) => seriesValue(row[bar.dataKey])),
+      data: ctx.data.map((row, dataIndex) => {
+        const value = seriesValue(row[bar.dataKey]);
+        return {
+          value,
+          itemStyle: {
+            borderRadius: barItemBorderRadius(bar.variant, roles?.[dataIndex], r, false, value),
+          },
+        };
+      }),
       itemStyle: {
         color,
-        borderRadius: barBorderRadius(r, false),
       },
       label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
       ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianColumnFocus(color)),
@@ -153,9 +162,6 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   });
 
   const grid = resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush));
-  if (yAxes.some((y) => y.orientation === "right") && !ctx.cartesian?.externalBrush) {
-    grid.right = 56;
-  }
 
   const xAxis = applyAxisPartToOption(
     { type: "category", data: categories },

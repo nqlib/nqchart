@@ -14,7 +14,7 @@ metadata:
 
 **Agents:** When the user asks to fix a bug, **search this file first** (domain table, then semantic table). Open the fix note before changing code.
 
-Last updated: 2026-08-12
+Last updated: 2026-10-21
 
 ---
 
@@ -33,6 +33,9 @@ Problem areas → domain overview → individual fix notes.
 | **series-id** | `id duplicates: otd` at setOption; Area+Line same dataKey | [domains/series-id.md](./domains/series-id.md) | [duplicate series ids](./fixes/series-id-duplicates.md) |
 | **api-surface** | TS rejects a prop the runtime already wires; standalone props omit factory fields; **Line cannot dash** | [domains/api-surface.md](./domains/api-surface.md) | [standalone props drop inherited](./fixes/api-surface-standalone-props-drop-inherited.md), [Line variant dashed](./fixes/api-surface-line-variant-dashed.md) |
 | **a11y** | Hidden data table blank; pie cells empty; series keys from config vs row shape | [domains/a11y.md](./domains/a11y.md) | [pie table blank](./fixes/a11y-pie-table-blank.md) |
+| **registration** | ReferenceLine / ReferenceBand draw nothing; a component key the family never registered | [domains/registration.md](./domains/registration.md) | [MarkLine / MarkArea not registered](./fixes/registration-markline-markarea.md) |
+| **reference-marks** | Mark line or band missing; right-axis mark on the left scale; mark above the data is off the plot | [domains/reference-marks.md](./domains/reference-marks.md) | [unregistered, single axis, clipped](./fixes/reference-marks-unregistered-single-axis.md) |
+| **bar-radius** | Negative bar rounded at zero; stacked gain and loss both rounded on the zero line; pill-shaped segment | [domains/bar-radius.md](./domains/bar-radius.md) | [sign-aware corners](./fixes/bar-radius-sign-aware.md) |
 
 <!-- Add rows when new domains appear: animation, tooltip, compile-bar, registry-boundary, … -->
 
@@ -81,7 +84,14 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | Line variant dashed does nothing; rolling mean same colour as parent; no dashed lineStyle; strokeVariant missing | line / composed | [api-surface-line-variant-dashed](./fixes/api-surface-line-variant-dashed.md) |
 | lineStyle.type unset; compile-line lineStyle color only; composed Line variant points only | line / compile-line | [api-surface-line-variant-dashed](./fixes/api-surface-line-variant-dashed.md) |
 | pie a11y table blank; donut sr-only grid of empty cells; a11yTable pie empty | pie / a11y | [a11y-pie-table-blank](./fixes/a11y-pie-table-blank.md) |
+| reference line not drawn; markLine missing; MarkLineComponent not registered; band still blank | reference marks | [reference-marks-unregistered-single-axis](./fixes/reference-marks-unregistered-single-axis.md) |
+| negative bar rounded at zero; square at the far end; stacked gain and loss both rounded on zero; bar looks like a pill | bar / composed | [bar-radius-sign-aware](./fixes/bar-radius-sign-aware.md) |
+| borderRadius top only; stack roles ignore sign; samesign outer segment | bar-radius | [bar-radius-sign-aware](./fixes/bar-radius-sign-aware.md) |
+| all marks on one axis; right yAxisId draws on the left scale; reference series yAxisIndex | reference marks | [reference-marks-unregistered-single-axis](./fixes/reference-marks-unregistered-single-axis.md) |
+| mark above data max off the plot; includeInDomain; axis max function | reference marks | [reference-marks-unregistered-single-axis](./fixes/reference-marks-unregistered-single-axis.md) |
 | deriveSeriesKeysFromConfig Object.keys config slice names; row Alpha empty | pie / chart-a11y | [a11y-pie-table-blank](./fixes/a11y-pie-table-blank.md) |
+| ReferenceLine compiled to a markLine but no family registered MarkLineComponent (seen by secolab, SECO-1289); reference line missing; target line not drawn | bar / line / area / composed / scatter | [registration-markline-markarea](./fixes/registration-markline-markarea.md) |
+| ReferenceBand no band; markArea ignored; MarkAreaComponent; echarts.use MarkLineComponent workaround | cartesian / registration | [registration-markline-markarea](./fixes/registration-markline-markarea.md) |
 | item focus opacity 0.2 on focused mark; emphasis state wrong | item-focus charts | Start [hover-focus domain](./domains/hover-focus.md), then chart-specific fix |
 | `repairScatterHoverFocus` / `repairTreemapHoverFocus` / `repairFunnelHoverFocus` / `repairWaterfallHoverFocus` / `repairRadialHoverFocus` | echarts-core runtime | See scatter, treemap, funnel, waterfall, or radial fix note above |
 
@@ -93,6 +103,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 
 | Path pattern | Domain |
 |--------------|--------|
+| `src/registry/echarts-core/reference-marks.ts` | reference-marks |
+| `src/registry/echarts-core/bar-radius.ts` | bar-radius |
 | `src/registry/echarts-core/scatter-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/treemap-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/funnel-hover-focus.ts` | hover-focus |
@@ -126,6 +138,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/chart-a11y.tsx` | a11y |
 | `src/registry/charts/pie-chart.tsx` | a11y |
 | `scripts/check-api.mjs` | api-surface |
+| `src/registry/charts/*-chart.tsx` (`*_ECHARTS_MODULES`) | registration |
+| `src/registry/echarts-core/reference-marks.ts` | registration |
 | `src/registry/echarts-core/create-cartesian-chart.tsx` (`CartesianChartBaseProps`) | api-surface |
 
 ---

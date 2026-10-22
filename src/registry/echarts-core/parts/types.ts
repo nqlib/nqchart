@@ -109,17 +109,33 @@ export type ReferenceLinePart = {
   labelPosition?: "start" | "middle" | "end";
   variant?: "solid" | "dashed" | "dotted";
   tone?: "neutral" | "accent" | "positive" | "warning" | "critical";
+  /** When true (default), widen an auto axis so this mark stays on the plot. */
+  includeInDomain?: boolean;
 };
 
 export type ReferenceBandPart = {
   type: "referenceBand";
   id: string;
-  y?: [number, number];
+  /** `null` is the axis edge (`"min"` / `"max"`). */
+  y?: [number | null, number | null];
   x?: [string | number, string | number];
   yAxisId?: string;
   label?: string;
   tone?: "neutral" | "accent" | "positive" | "warning" | "critical";
   opacity?: number;
+  /** When true (default), widen an auto axis so this band stays on the plot. */
+  includeInDomain?: boolean;
+};
+
+export type RangeAreaPart = {
+  type: "rangeArea";
+  id: string;
+  lowKey: string;
+  highKey: string;
+  yAxisId?: string;
+  tone?: "neutral" | "accent" | "positive" | "warning" | "critical";
+  opacity?: number;
+  label?: string;
 };
 
 export type RadarSeriesPart = {
@@ -313,6 +329,7 @@ export type ChartPart =
   | ScatterSeriesPart
   | ReferenceLinePart
   | ReferenceBandPart
+  | RangeAreaPart
   | RadarSeriesPart
   | PolarAngleAxisPart
   | PolarGridPart

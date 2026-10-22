@@ -1,4 +1,5 @@
 import type { EChartsOption } from "echarts";
+import { headlessThemeOf } from "./headless-theme";
 import {
   CHART_ANIMATION,
   CHART_EASING,
@@ -191,9 +192,16 @@ function normalizeSeries(option: EChartsOption): SeriesLike[] {
   return (Array.isArray(option.series) ? option.series : [option.series]) as SeriesLike[];
 }
 
-/** Apply intro motion defaults — respects `prefers-reduced-motion`. */
-export function applyChartAnimationToOption(option: EChartsOption): EChartsOption {
-  const reduced = prefersReducedMotion();
+/**
+ * Apply intro motion defaults — respects `prefers-reduced-motion`, and a headless
+ * theme registered for `chartId` with `animation: false` (a print or an image has
+ * no frames, so the option carries no tweens and no per-series durations).
+ */
+export function applyChartAnimationToOption(
+  option: EChartsOption,
+  chartId?: string,
+): EChartsOption {
+  const reduced = headlessThemeOf(chartId)?.animation === false || prefersReducedMotion();
   if (reduced) {
     return {
       ...option,
