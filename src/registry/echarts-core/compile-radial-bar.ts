@@ -1,8 +1,20 @@
-import type { EChartsOption } from "echarts";
+import type { CustomSeriesOption, EChartsOption } from "echarts";
 import { getColorsCount } from "./config-colors";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { resolveChartCornerRadius } from "./chart-corner-radius";
-import { HOVER_DIM_OPACITY, RADIAL_BAR_MIN_ANGLE, hoverFocusOrOff, isHoverFocusOn, radialBarSeriesFocus } from "./emphasis-presets";
+import { resolveChartSignature } from "./chart-signature";
+import { layoutOutsideLabels, sectorPath, type PieSlice } from "./pie-sector-geometry";
+import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
+import {
+  HOVER_DIM_OPACITY,
+  RADIAL_BAR_MIN_ANGLE,
+  customFocusChild,
+  customFocusGroup,
+  focusTiming,
+  hoverFocusOrOff,
+  isHoverFocusOn,
+  itemFocus,
+  radialBarSeriesFocus,
+} from "./emphasis-presets";
 import type { CompileContext, RadialBarPart } from "./parts/types";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
@@ -29,19 +41,10 @@ const CONCENTRIC_SEMI_LABELED_OUTER_RADIUS = "85%";
  */
 const ROSE_LABELED_OUTER_RADIUS = "78%";
 const DEFAULT_BAR_SIZE = 14;
-/**
- * Empty share of each radius-axis category band (ring slot).
- * Paired with a wide annular span so gaps read clearly without skinny arcs.
- */
-const CONCENTRIC_RING_CATEGORY_GAP = "48%";
 /** Air gap between a ring name and the arc / spoke it labels. */
 const RADIAL_LABEL_MARGIN = 14;
-/** First / second leader segments — keep name clear of the petal tip. */
-const ROSE_LABEL_LINE_LENGTH = 18;
-const ROSE_LABEL_LINE_LENGTH2 = 12;
-const ROSE_LABEL_DISTANCE = 4;
-const ROSE_LABEL_SERIES_ID = "__rose_labels__";
 const RADIAL_TRACK_SERIES_ID = "__radial_track__";
+const ROSE_PETAL_SERIES_ID = "__rose_petals__";
 
 /**
  * Ring-name rotation from +X (ECharts: 0° = 3 o'clock, CCW-positive `rotate`).
@@ -74,6 +77,7 @@ function buildConcentricTrackSeries(
   barSize: number,
   cornerRadius: number,
   trackColor: string,
+  ringGap: string,
 ) {
   return {
     type: "bar" as const,
@@ -85,7 +89,7 @@ function buildConcentricTrackSeries(
     animation: false,
     z: 1,
     barWidth: barSize,
-    barCategoryGap: CONCENTRIC_RING_CATEGORY_GAP,
+    barCategoryGap: ringGap,
     barMinAngle: 0,
     roundCap: true,
     showBackground: true,
@@ -105,96 +109,173 @@ function buildConcentricTrackSeries(
   };
 }
 
-function buildRoseTrackSeries(
-  rowCount: number,
-  categories: string[],
-  barSize: number | undefined,
-  cornerRadius: number,
-  trackColor: string,
-) {
-  return {
-    type: "bar" as const,
-    id: RADIAL_TRACK_SERIES_ID,
-    coordinateSystem: "polar" as const,
-    stack: "petal",
-    silent: true,
-    animation: false,
-    z: 1,
-    ...(barSize != null ? { barWidth: barSize } : {}),
-    barMinAngle: 0,
-    roundCap: true,
-    showBackground: true,
-    backgroundStyle: {
-      color: trackColor,
-      opacity: 0.35,
-      borderRadius: cornerRadius,
-    },
-    tooltip: { show: false },
-    emphasis: { disabled: true },
-    select: { disabled: true },
-    blur: { itemStyle: { opacity: HOVER_DIM_OPACITY } },
-    data: Array.from({ length: rowCount }, (_, i) => ({
-      value: 0,
-      name: categories[i],
-      itemStyle: { color: "transparent", opacity: 0, borderRadius: cornerRadius },
-    })),
-  };
+/** `number` = px; `"NN%"` = percent of `basis`. */
+function resolvePx(value: number | string, basis: number): number {
+  if (typeof value === "number") return Math.max(0, value);
+  const m = /^(-?[\d.]+)%$/.exec(value.trim());
+  if (m?.[1]) return Math.max(0, (Number(m[1]) / 100) * basis);
+  const n = Number.parseFloat(value);
+  return Number.isFinite(n) ? Math.max(0, n) : 0;
 }
 
+/** Smallest petal length as a share of the ring depth, so tiny values stay hoverable. */
+const ROSE_MIN_FRACTION = 0.15;
+
+type RosePetalSpec = {
+  values: number[];
+  items: Array<Record<string, unknown>>;
+  /** ECharts degrees (0° = 3 o'clock, CCW-positive), clockwise sweep over `sweepDeg`. */
+  startAngle: number;
+  sweepDeg: number;
+  center: [string, string];
+  innerRadius: number | string;
+  outerRadius: number | string;
+  /** Value that maps to the full radial depth (max × headroom). */
+  radiusMax: number;
+  gap: number;
+  cornerRadius: number;
+  trackColor: string | null;
+  focusOn: boolean;
+  /** Category names for outside labels; `null` = labels off. */
+  labels: string[] | null;
+  labelColor: string;
+  lineColor: string;
+};
+
 /**
- * Leader-line labels for the rose variant.
- *
- * Polar bar has no `labelLine`, so names ride one silent pie over the petals.
- * A *single* pie (equal slices ↔ category bands) is required for ECharts'
- * `avoidLabelOverlap` / `labelLayout` — per-petal pies cannot collide with
- * each other. Leaders start at the polar outer envelope with an intentional
- * air gap (`length` / `length2` / `distanceToLabelLine`), not flush on the fill.
+ * Rose petals as one custom series with the NQChart signature: equal-angle
+ * sectors, radius ∝ value, an even seam between neighbours and circular
+ * fillets (`pie-sector-geometry`). Tracks (full-depth sectors) ride in the same
+ * group, silent, and dim with their petal.
  */
-function buildRoseLabelSeries(
-  categories: string[],
-  startAngle: number,
-  center: [string, string],
-  outerRadius: string | number,
-  labelColor: string,
-  lineColor: string,
-) {
-  return {
-    type: "pie" as const,
-    id: ROSE_LABEL_SERIES_ID,
-    center,
-    radius: outerRadius,
-    startAngle,
-    clockwise: true,
-    silent: true,
-    animation: false,
-    z: 12,
-    avoidLabelOverlap: true,
-    minShowLabelAngle: 0,
-    itemStyle: { color: "transparent", borderWidth: 0 },
-    emphasis: { disabled: true },
-    tooltip: { show: false },
-    label: {
-      show: true,
-      formatter: "{b}",
-      color: labelColor,
-      ...CHART_TYPOGRAPHY.sliceLabel,
-      overflow: "none" as const,
-      distanceToLabelLine: ROSE_LABEL_DISTANCE,
-    },
-    labelLine: {
-      show: true,
-      length: ROSE_LABEL_LINE_LENGTH,
-      length2: ROSE_LABEL_LINE_LENGTH2,
-      lineStyle: { color: lineColor, width: 1 },
-    },
-    // Shift colliding names rather than stacking on the petal.
-    labelLayout: {
-      hideOverlap: true,
-      moveOverlap: "shiftY" as const,
-    },
-    // Uniform values → equal slices → mid-angles match the category bands.
-    data: categories.map((name) => ({ name, value: 1 })),
+function buildRosePetalSeries(spec: RosePetalSpec): CustomSeriesOption {
+  const { values, items, focusOn } = spec;
+  const states = customFocusChild(focusOn);
+  const n = values.length;
+
+  type Frame = {
+    petals: PieSlice[];
+    tracks: string[];
+    labels: ReturnType<typeof layoutOutsideLabels>;
   };
+  let cached: { key: string; frame: Frame } | null = null;
+  const frameFor = (w: number, h: number): Frame => {
+    const key = `${w}x${h}`;
+    if (cached?.key === key) return cached.frame;
+    const halfMin = Math.min(w, h) / 2;
+    const cx = resolvePx(spec.center[0], w);
+    const cy = resolvePx(spec.center[1], h);
+    const rIn = resolvePx(spec.innerRadius, halfMin);
+    const rOut = Math.max(resolvePx(spec.outerRadius, halfMin), rIn);
+    const depth = rOut - rIn;
+    // ECharts degrees → radians clockwise from 12 o'clock.
+    const a0 = ((90 - spec.startAngle) * Math.PI) / 180;
+    const span = ((spec.sweepDeg * Math.PI) / 180) / Math.max(n, 1);
+    const petals: PieSlice[] = [];
+    const tracks: string[] = [];
+    for (let i = 0; i < n; i++) {
+      const start = a0 + i * span;
+      const end = start + span;
+      const frac = Math.min(1, Math.max(ROSE_MIN_FRACTION, values[i]! / spec.radiusMax));
+      const R = rIn + depth * frac;
+      const geo = {
+        cx,
+        cy,
+        start,
+        end,
+        innerRadius: rIn,
+        gap: spec.gap,
+        cornerRadius: spec.cornerRadius,
+      };
+      const shape = sectorPath({ ...geo, outerRadius: R });
+      const mid = (start + end) / 2;
+      petals.push({
+        ...shape,
+        start,
+        end,
+        outerRadius: R,
+        midAngle: mid,
+        centroid: { x: cx, y: cy },
+        labelAnchor: { x: cx, y: cy },
+      });
+      tracks.push(spec.trackColor ? sectorPath({ ...geo, outerRadius: rOut }).path : "");
+    }
+    // Leader lines start on each petal's own rim — not on the outer envelope —
+    // and labels spread per side so they never overlap (same layout as pie).
+    const labels = spec.labels
+      ? layoutOutsideLabels(petals, cx, cy, { height: h, lineHeight: 16 })
+      : petals.map(() => null);
+    const frame = { petals, tracks, labels };
+    cached = { key, frame };
+    return frame;
+  };
+
+  return {
+    type: "custom",
+    id: ROSE_PETAL_SERIES_ID,
+    coordinateSystem: "none",
+    // Same focus contract as the pie rose: hovered petal stays, siblings dim.
+    ...hoverFocusOrOff(focusOn, itemFocus({ dimLabel: true, family: "radial" })),
+    blur: { itemStyle: { opacity: HOVER_DIM_OPACITY } },
+    ...focusTiming("radial"),
+    data: items,
+    renderItem(params, api) {
+      const idx = params.dataIndex;
+      const w = api.getWidth();
+      const h = api.getHeight();
+      if (idx < 0 || idx >= n || w <= 0 || h <= 0) return;
+      const frame = frameFor(w, h);
+      const petal = frame.petals[idx];
+      if (!petal?.path) return;
+      // Legend isolate dims through the item's `itemStyle.opacity`.
+      const opacity = Number((api.style() as { opacity?: number }).opacity ?? 1);
+      const children: Record<string, unknown>[] = [];
+      const track = frame.tracks[idx];
+      if (spec.trackColor && track) {
+        children.push({
+          type: "path",
+          silent: true,
+          shape: { pathData: track },
+          style: { fill: spec.trackColor, opacity: 0.35 * opacity },
+          ...states,
+        });
+      }
+      children.push({
+        type: "path",
+        shape: { pathData: petal.path },
+        style: { fill: (items[idx] as { itemStyle: { color: string } }).itemStyle.color, opacity },
+        ...states,
+      });
+      const label = frame.labels[idx];
+      if (label && spec.labels) {
+        children.push(
+          {
+            type: "polyline",
+            silent: true,
+            shape: { points: label.line.map((p) => [p.x, p.y]) },
+            style: { stroke: spec.lineColor, lineWidth: 1, fill: "none", opacity },
+            ...states,
+          },
+          {
+            type: "text",
+            silent: true,
+            x: label.x,
+            y: label.y,
+            style: {
+              text: spec.labels[idx],
+              fill: spec.labelColor,
+              opacity,
+              ...CHART_TYPOGRAPHY.sliceLabel,
+              textAlign: label.align,
+              textVerticalAlign: "middle",
+            },
+            ...states,
+          },
+        );
+      }
+      return { type: "group", ...customFocusGroup(focusOn), children };
+    },
+  } as CustomSeriesOption;
 }
 
 function getNameKey(ctx: CompileContext): string {
@@ -258,7 +339,10 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
   const showLabels = radial?.showLabels ?? true;
   const innerRadius = ctx.radial?.radialInnerRadius ?? DEFAULT_INNER_RADIUS;
   const outerRadius = concentricOuterRadius(semi, showLabels, ctx.radial?.radialOuterRadius);
-  const cornerRadius = radial?.cornerRadius ?? resolveChartCornerRadius(ctx.chartId);
+  const signature = resolveChartSignature(ctx.chartId);
+  const cornerRadius = radial?.cornerRadius ?? signature.radius.mark;
+  // Empty share of each ring slot — the signature's bar category gap.
+  const ringGap = signature.bar.categoryGap;
   const barSize = radial?.barSize ?? DEFAULT_BAR_SIZE;
   const showBackground = radial?.showBackground ?? true;
   const labelFontSize = ringLabelFontSize(barSize);
@@ -294,7 +378,7 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
       data: numericValues.map((v, j) => (j === i ? v : null)),
       barWidth: barSize,
       // Match track — gap between ring bands so arcs (and names) don't touch.
-      barCategoryGap: CONCENTRIC_RING_CATEGORY_GAP,
+      barCategoryGap: ringGap,
       barMinAngle: RADIAL_BAR_MIN_ANGLE,
       roundCap: true,
       showBackground: false,
@@ -359,7 +443,7 @@ export function compileRadialBarOption(ctx: CompileContext): EChartsOption {
     series: [
       // Track first so its zero values sit at the stack base; rings paint on top.
       ...(showBackground
-        ? [buildConcentricTrackSeries(ringSeries.length, barSize, cornerRadius, trackColor)]
+        ? [buildConcentricTrackSeries(ringSeries.length, barSize, cornerRadius, trackColor, ringGap)]
         : []),
       ...ringSeries,
     ],
@@ -374,7 +458,7 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
   const valueKey = radial?.dataKey ?? "value";
   const nameKey = getNameKey(ctx);
   const semi = ctx.radial?.radialVariant === "semi";
-  const { startAngle, endAngle, center } = variantAngles(semi, ctx.radial?.radialStartAngle);
+  const { startAngle, center } = variantAngles(semi, ctx.radial?.radialStartAngle);
 
   const showLabels = radial?.showLabels ?? true;
   const innerRadius = ctx.radial?.radialInnerRadius ?? 0;
@@ -383,8 +467,8 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
   const outerRadius =
     ctx.radial?.radialOuterRadius ??
     (showLabels ? ROSE_LABELED_OUTER_RADIUS : DEFAULT_OUTER_RADIUS);
-  const cornerRadius = radial?.cornerRadius ?? resolveChartCornerRadius(ctx.chartId);
-  const barSize = radial?.barSize;
+  const signature = resolveChartSignature(ctx.chartId);
+  const cornerRadius = radial?.cornerRadius ?? signature.radius.surface;
   const showBackground = radial?.showBackground ?? false;
 
   const chrome = resolveCanvasChartChrome(ctx.chartId);
@@ -397,79 +481,40 @@ export function compileRoseBarOption(ctx: CompileContext): EChartsOption {
 
   const numericValues = ctx.data.map((row) => Number(row[valueKey] ?? 0));
   const radiusMax = Math.max(...numericValues, 1) * 1.05;
+  const focusOn = isHoverFocusOn(ctx);
 
-  // One bar series per petal + `focus: "series"` — same flicker-free pattern as the
-  // concentric variant (see compileRadialBarOption). A shared stack lets each
-  // single-value series fill its own angular band without grouping.
-  const petalFocus = hoverFocusOrOff(isHoverFocusOn(ctx), radialBarSeriesFocus());
-  const petalSeries = ctx.data.map((row, i) => {
+  const items = ctx.data.map((row, i) => {
     const configKey = configKeyFromRow(row, nameKey);
-    const color = itemColor(configKey, ctx);
-
     return {
-      type: "bar" as const,
-      coordinateSystem: "polar" as const,
       name: categories[i],
-      stack: "petal",
-      z: 11,
-      data: numericValues.map((v, j) => (j === i ? v : null)),
-      ...(barSize != null ? { barWidth: barSize } : {}),
-      barMinAngle: RADIAL_BAR_MIN_ANGLE,
-      roundCap: true,
-      showBackground: false,
-      itemStyle: {
-        color,
-        borderRadius: cornerRadius,
-      },
-      ...petalFocus,
+      value: numericValues[i],
+      itemStyle: { color: itemColor(configKey, ctx) },
+      [NQ_SERIES_KEY]: configKey,
+      [NQ_DATUM]: row,
     };
+  });
+
+  const petals = buildRosePetalSeries({
+    values: numericValues,
+    items,
+    startAngle,
+    sweepDeg: semi ? 180 : 360,
+    center,
+    innerRadius,
+    outerRadius,
+    radiusMax,
+    gap: signature.gap.seam,
+    cornerRadius,
+    trackColor: showBackground ? trackColor : null,
+    focusOn,
+    labels: showLabels ? categories.filter((c): c is string => c != null) : null,
+    labelColor: chrome.foreground,
+    lineColor: chrome.border,
   });
 
   const base: EChartsOption = {
     tooltip: { trigger: "item" },
-    polar: {
-      center,
-      radius: innerRadius === 0 ? outerRadius : [innerRadius, outerRadius],
-    },
-    angleAxis: {
-      type: "category",
-      data: categories,
-      startAngle,
-      endAngle,
-      clockwise: true,
-      axisLine: { show: false },
-      axisTick: { show: false },
-      // Names come from the leader-line series below, not the axis.
-      axisLabel: { show: false },
-      splitLine: { show: false },
-    },
-    radiusAxis: {
-      type: "value",
-      min: 0,
-      max: radiusMax,
-      axisLine: { show: false },
-      axisTick: { show: false },
-      axisLabel: { show: false },
-      splitLine: { show: false },
-    },
-    series: [
-      ...(showBackground
-        ? [buildRoseTrackSeries(petalSeries.length, categories, barSize, cornerRadius, trackColor)]
-        : []),
-      ...petalSeries,
-      ...(showLabels
-        ? [
-            buildRoseLabelSeries(
-              categories,
-              startAngle,
-              center,
-              outerRadius,
-              chrome.foreground,
-              chrome.border,
-            ),
-          ]
-        : []),
-    ],
+    series: [petals],
   };
 
   return applyChartUiToOption(ctx, base);

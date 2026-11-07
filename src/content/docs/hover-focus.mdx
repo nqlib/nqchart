@@ -8,42 +8,46 @@ uniformly; individual charts do not invent their own hover animation.
 
 ## The contract
 
-On hover:
+On hover — and on keyboard focus, and on legend isolate:
 
 - The **focused mark group** stays at **full opacity**.
-- **Every other mark dims to `0.2` opacity** (`HOVER_DIM_OPACITY`).
+- **Every other mark dims to `0.2` opacity** (`FOCUS.dim`, also exported as
+  `HOVER_DIM_OPACITY`).
+- The change **fades over 120 ms** (`FOCUS.durationMs`, `cubicOut`) — one timing for
+  every chart. Geometry never moves on focus (`animationDurationUpdate: 0`).
 - **Nothing else changes** — no scale, no shadow "pop", no size jump. The focus
   mechanism is *opacity only*.
 
 That's it. Whether it's a bar, a pie slice, or a radar polygon, the hovered thing
 stays bright and the rest fade back. The single source of truth is
-[`emphasis-presets.ts`](https://github.com/nqlib/nqchart/blob/main/src/registry/echarts-core/emphasis-presets.ts).
+[`emphasis-presets.ts`](https://github.com/nqlib/nqchart/blob/main/src/registry/echarts-core/emphasis-presets.ts)
+(`FOCUS`, the presets) and
+[`hover-focus-repair.ts`](https://github.com/nqlib/nqchart/blob/main/src/registry/echarts-core/hover-focus-repair.ts)
+(`focusMark` / `clearFocus`, the one entry point for pointer and keyboard).
 
-## Two mappings, one contract
+## Every family
 
-The contract is implemented two ways, chosen by **geometry** — never by taste:
+| Family | Mapping | Pointer & keyboard focus | Keyboard nav (with `onMarkClick`) |
+| --- | --- | --- | --- |
+| Bar, line, area, composed | Index focus | ECharts native | ← → categories, ↑ ↓ series |
+| Monospace bar | Index focus | ECharts native | ← → categories, ↑ ↓ series |
+| Waterfall | Index focus | NQChart repair (value bars) | ← → columns |
+| Pie, donut | Item focus | NQChart repair | arrows walk slices |
+| Funnel (classic) | Item focus | NQChart repair | arrows walk stages |
+| Funnel pipe / rounded / cone / segmented | Item focus (custom series) | ECharts native | arrows walk stages |
+| Treemap | Item focus | NQChart repair (hovered tile stays normal) | arrows walk leaf tiles |
+| Scatter | Item focus (per row) | NQChart repair | arrows walk points |
+| Radar | Item focus (per polygon) | ECharts native | arrows walk polygons |
+| Heatmap, calendar | Item focus | ECharts native | arrows walk cells |
+| Tile column | Item focus (custom series) | ECharts native | arrows walk columns |
+| Radial bar, rose | Series focus | NQChart repair (whole ring / petal) | arrows walk rings / petals |
+| Gauge, target | — | Tooltip only | — |
+| Sparkline | — | Tooltip only | — |
 
-| Mapping | Charts | ECharts config |
-| --- | --- | --- |
-| **Index focus** | bar, line, area, composed, waterfall | `focus: "self"`, `blurScope: "coordinateSystem"` (axis tooltip) |
-| **Item focus** | pie, funnel, radar, heatmap, treemap, calendar, scatter | `focus: "self"`, `blurScope: "series"` (item tooltip) |
-| **Series focus** | radial bar, rose | one series per ring/petal + `focus: "series"` |
-
-- **Index focus** — charts share a category axis. Hovering a category keeps that
-  whole column bright and dims the rest. Driven by the axis tooltip.
-- **Item focus** — single-series charts. Hovering one segment keeps it bright and
-  dims its siblings. Driven by the item tooltip. Scatter compiles every `<Scatter />`
-  into **one** ECharts series and copies `itemFocus()` onto **each data row** (Symbol
-  ignores series-level emphasis when rows are object-shaped).
-- **Series focus** — polar bars. Each ring (or petal) is its **own series**, so
-  `focus: "series"` highlights the hovered ring and dims the others. This is the
-  official ECharts polar-bar pattern; doing it per data-item (`focus: "self"`)
-  instead thrashes the dim across the gaps between rings (flicker), so polar bars
-  must be modeled as one-series-per-ring. State changes are instant
-  (`stateAnimation.duration: 0`) to avoid interpolating gradient fills.
-
-All three produce the *identical visual result*: one thing bright, everything else
-at `0.2`.
+"NQChart repair" families disable ECharts' own high-down (it races on adjacent marks)
+and sync every mark of the family on each hover; keyboard focus goes through the same
+repair, so it looks identical to hovering. Legend isolate (`<Legend isClickable />`)
+dims to the same `0.2`.
 
 ## Why the blur shapes differ (they don't change the look)
 
@@ -69,13 +73,10 @@ Two cases are **tooltip-only** — they show the tooltip on hover but do not dim
 - **Sparkline** — decorative; emphasis disabled (its gradient area fill also can't be
   interpolated in a state transition).
 
-Radial bar / rose used to be tooltip-only for two reasons — gradient
-`itemStyle.color` can't be interpolated in an emphasis tween (throws
-`Cannot read properties of undefined (reading 'length')`), and per-item focus
-flickered across the ring gaps. **Series focus solves both**: modeling each ring as
-its own series means `focus: "series"` never hit-tests per item (no gap flicker), and
-`stateAnimation.duration: 0` skips the tween entirely (no gradient interpolation). So
-polar bars now follow the full dim-to-`0.2` contract — see "Series focus" above.
+Radial bar / rose used to be tooltip-only: per-item focus flickered across the ring
+gaps. **Series focus solves it** — modeling each ring as its own series means
+`focus: "series"` never hit-tests per item. The 120 ms fade only interpolates
+opacity, so gradient ring fills fade safely too.
 
 ## Flicker control
 
@@ -88,7 +89,7 @@ offset from the cursor, and uses `transitionDuration: 0`. See
 
 The contract is **on by default**. Existing apps that omit the prop keep today’s dim.
 
-Pass `hoverFocus={false}` on any `NQ*Chart` root to keep the tooltip and skip sibling fade. Legend isolate (`<Legend isClickable />`) and the brush are separate switches.
+Pass `hoverFocus={false}` on any `NQ*Chart` root to keep the tooltip and skip sibling fade — for the pointer **and** for keyboard focus (arrow keys still move the tooltip). Legend isolate (`<Legend isClickable />`) and the brush are separate switches.
 
 ```tsx
 <NQAreaChart hoverFocus={false} data={data} config={config} xDataKey="period">
@@ -103,7 +104,12 @@ Sparkline and single-arc gauge stay tooltip-only either way — they have no sib
 
 1. Pick the mapping by geometry: shared category axis → `cartesianColumnFocus` /
    `cartesianLineFocus`; per-point item charts (pie, scatter) → `itemFocus`; polar rings → `radialBarSeriesFocus`.
-2. Do **not** add `scale`, `shadowBlur` (unless it's a `*-glow` variant), or any
+   Every preset carries the `FOCUS` timing; never hand-write `stateAnimation`.
+2. If ECharts' own high-down is wrong for the family (flicker, vanish, stale bright
+   marks), add an adapter in `hover-focus-repair.ts` rather than a new module. Only if
+   the 120 ms fade itself brings a regression back, list the family in
+   `FOCUS_INSTANT_FAMILIES` and cite the fix note.
+3. Do **not** add `scale`, `shadowBlur` (unless it's a `*-glow` variant), or any
    other hover transform. If a chart "needs" something different, the contract
    changes here first — in this doc and `emphasis-presets.ts` — for **all** charts,
    not just one.

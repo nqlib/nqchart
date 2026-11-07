@@ -1,7 +1,8 @@
 "use client";
 
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
-import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
+import { ChartInstanceProvider } from "@/registry/echarts-core/chart-instance-context";
+import { MarkNavPlotShell } from "@/registry/echarts-core/mark-nav-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { getEcharts } from "@/registry/echarts-core/echarts-init";
 import { RadarChart } from "echarts/charts";
@@ -105,23 +106,26 @@ export function NQRadarChart<
   const displayData = isLoading ? (getLoadingData(6) as unknown as TData[]) : data;
   return (
     <PartRegistryProvider>
-      <ChartContainer config={config} className={className} isLoading={isLoading}>
-        <ChartPlotShell
-          isLoading={isLoading}
-          loadingVariant="radar"
-          canvas={
-            <RadarChartCanvas
-              data={displayData}
-              onMarkClick={onMarkClick}
-              onChartReady={onChartReady}
-              chartRef={chartRef}
-              hoverFocus={hoverFocus}
-            />
-          }
-        >
-          {children}
-        </ChartPlotShell>
-      </ChartContainer>
+      <ChartInstanceProvider>
+        <ChartContainer config={config} className={className} isLoading={isLoading}>
+          <MarkNavPlotShell
+            onMarkClick={onMarkClick}
+            isLoading={isLoading}
+            loadingVariant="radar"
+            canvas={
+              <RadarChartCanvas
+                data={displayData}
+                onMarkClick={onMarkClick}
+                onChartReady={onChartReady}
+                chartRef={chartRef}
+                hoverFocus={hoverFocus}
+              />
+            }
+          >
+            {children}
+          </MarkNavPlotShell>
+        </ChartContainer>
+      </ChartInstanceProvider>
     </PartRegistryProvider>
   );
 }

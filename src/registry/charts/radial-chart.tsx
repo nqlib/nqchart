@@ -1,10 +1,11 @@
 "use client";
 
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
-import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
+import { ChartInstanceProvider } from "@/registry/echarts-core/chart-instance-context";
+import { MarkNavPlotShell } from "@/registry/echarts-core/mark-nav-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { getEcharts } from "@/registry/echarts-core/echarts-init";
-import { BarChart, GaugeChart, PieChart } from "echarts/charts";
+import { BarChart, CustomChart, GaugeChart, PieChart } from "echarts/charts";
 import { PolarComponent } from "echarts/components";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileRadialOption } from "@/registry/echarts-core/compile-radial";
@@ -29,7 +30,8 @@ import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import type { EChartsType } from "echarts/core";
 import { type ReactNode, type Ref, useEffect, useMemo, useRef, useState } from "react";
 
-const RADIAL_ECHARTS_MODULES = [GaugeChart, BarChart, PieChart, PolarComponent];
+// CustomChart draws the rose petals with the signature sector geometry.
+const RADIAL_ECHARTS_MODULES = [GaugeChart, BarChart, PieChart, CustomChart, PolarComponent];
 getEcharts(RADIAL_ECHARTS_MODULES);
 
 /** Bucket CSS px so ResizeObserver does not recompile on every pixel. */
@@ -184,31 +186,34 @@ export function NQRadialChart<
 
   return (
     <PartRegistryProvider>
-      <ChartContainer config={config} className={className} segmentKeys={segmentKeys} isLoading={isLoading}>
-        <ChartPlotShell
-          isLoading={isLoading}
-          loadingVariant="radial"
-          canvas={
-            <RadialChartCanvas
-              data={displayData}
-              nameKey={resolvedNameKey}
-              variant={variant}
-              layout={layout}
-              innerRadius={innerRadius}
-              outerRadius={outerRadius}
-              startAngle={startAngle}
-              min={min}
-              max={max}
-              onMarkClick={onMarkClick}
-              onChartReady={onChartReady}
-              chartRef={chartRef}
-              hoverFocus={hoverFocus}
-            />
-          }
-        >
-          {children}
-        </ChartPlotShell>
-      </ChartContainer>
+      <ChartInstanceProvider>
+        <ChartContainer config={config} className={className} segmentKeys={segmentKeys} isLoading={isLoading}>
+          <MarkNavPlotShell
+            onMarkClick={onMarkClick}
+            isLoading={isLoading}
+            loadingVariant="radial"
+            canvas={
+              <RadialChartCanvas
+                data={displayData}
+                nameKey={resolvedNameKey}
+                variant={variant}
+                layout={layout}
+                innerRadius={innerRadius}
+                outerRadius={outerRadius}
+                startAngle={startAngle}
+                min={min}
+                max={max}
+                onMarkClick={onMarkClick}
+                onChartReady={onChartReady}
+                chartRef={chartRef}
+                hoverFocus={hoverFocus}
+              />
+            }
+          >
+            {children}
+          </MarkNavPlotShell>
+        </ChartContainer>
+      </ChartInstanceProvider>
     </PartRegistryProvider>
   );
 }

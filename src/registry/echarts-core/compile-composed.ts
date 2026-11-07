@@ -2,7 +2,15 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { cartesianColumnFocus, cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
-import { barItemBorderRadius, groupStackRoles, resolveBarRadius } from "./bar-radius";
+import { barLayoutGaps } from "./bar-item-style";
+import {
+  barItemBorderRadius,
+  groupStackRoles,
+  resolveBarJoinRadius,
+  resolveBarRadius,
+  resolveStackSeam,
+  stackSegmentGapStyle,
+} from "./bar-radius";
 import {
   applyAxisPartToOption,
   buildValueYAxes,
@@ -10,18 +18,20 @@ import {
 } from "./cartesian-axes";
 import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
 import { resolveCartesianGrid } from "./chart-grid";
+import { resolveChartSignature } from "./chart-signature";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { buildAreaSeries } from "./compile-area";
 import type {
   BarSeriesPart,
   CompileContext,
+  ConnectorPart,
   LineSeriesPart,
   WhiskersPart,
   XAxisPart,
   YAxisPart,
 } from "./parts/types";
 import { uniquifySeriesIds } from "./series-identity";
-import { seriesLabelOption } from "./series-labels";
+import { barLabelPosition, seriesLabelOption } from "./series-labels";
 
 export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const gapColor = resolveCanvasGapColor(ctx.chartId);
@@ -30,6 +40,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const bars = ctx.parts.filter((p): p is BarSeriesPart => p.type === "bar");
   const lines = ctx.parts.filter((p): p is LineSeriesPart => p.type === "line");
   const whiskers = ctx.parts.filter((p): p is WhiskersPart => p.type === "whiskers");
+  const connectors = ctx.parts.filter((p): p is ConnectorPart => p.type === "connector");
   const yAxes = ctx.parts.filter((p): p is YAxisPart => p.type === "yAxis");
   const xAxisPart = ctx.parts.find((p): p is XAxisPart => p.type === "xAxis");
   const hasGrid = ctx.parts.some((p) => p.type === "grid");
@@ -38,8 +49,14 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const yAxisList = buildValueYAxes({ yAxes, hasGrid });
   const stackRoles = groupStackRoles(bars, ctx.data);
 
+  // Composed charts are always category-x / value-y: bars are vertical.
+  const horizontal = false;
+  const { seam } = resolveStackSeam(ctx.chartId);
+  const gaps = barLayoutGaps(ctx.chartId);
+
   const barSeries = bars.map((bar) => {
     const r = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
+    const join = resolveBarJoinRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
     const color = ctx.resolveColor(bar.dataKey, 0);
     const roles = bar.stackId ? stackRoles.get(bar.dataKey) : undefined;
     return {
@@ -50,24 +67,30 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       stack: bar.stackId,
       data: ctx.data.map((row, dataIndex) => {
         const value = seriesValue(row[bar.dataKey]);
+        const role = roles?.[dataIndex];
         return {
           value,
           itemStyle: {
-            borderRadius: barItemBorderRadius(bar.variant, roles?.[dataIndex], r, false, value),
+            borderRadius: barItemBorderRadius(bar.variant, role, r, horizontal, value, join),
+            ...(role != null ? stackSegmentGapStyle(role, seam, gapColor, horizontal, value) : {}),
           },
+          // Value labels sit at the bar's outer end, which flips for negatives.
+          ...(bar.showLabels ? { label: { position: barLabelPosition(value, horizontal) } } : {}),
         };
       }),
       itemStyle: {
         color,
       },
-      label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
-      ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianColumnFocus(color)),
+      ...gaps,
+      label: seriesLabelOption(bar.showLabels, bar.labelFormatter, ctx.chartId),
+      ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianColumnFocus(color, "composed")),
     };
   });
 
   const lineSeries = lines.map((line) => {
     const color = ctx.resolveColor(line.dataKey, 0);
-    const markersOnly = line.variant === "points";
+    const dots = line.variant === "dots";
+    const markersOnly = line.variant === "points" || dots;
     return {
       type: "line" as const,
       id: line.dataKey,
@@ -80,9 +103,13 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       itemStyle: { color },
       lineStyle: { color, width: markersOnly ? 0 : 2, type: lineStyleType(line.variant) },
       showSymbol: true,
-      symbol: markersOnly ? "rect" : LINE_MARKER.symbol,
-      symbolSize: markersOnly ? [16, 3] : LINE_MARKER.symbolSize,
-      label: seriesLabelOption(line.showLabels, line.labelFormatter),
+      symbol: dots ? "circle" : markersOnly ? "rect" : LINE_MARKER.symbol,
+      symbolSize: dots
+        ? resolveChartSignature(ctx.chartId).symbol.point
+        : markersOnly
+          ? [16, 3]
+          : LINE_MARKER.symbolSize,
+      label: seriesLabelOption(line.showLabels, line.labelFormatter, ctx.chartId),
       ...hoverFocusOrOff(
         isHoverFocusOn(ctx),
         cartesianLineFocus({
@@ -90,6 +117,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
           lineWidth: markersOnly ? 0 : 3,
           borderColor: gapColor,
           borderWidth: markersOnly ? 0 : 2,
+          family: "composed",
         }),
       ),
     };
@@ -161,6 +189,42 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     };
   });
 
+  const connectorSeries = connectors.map((c) => {
+    const color = ctx.resolveColor(c.dataKey, 0);
+    return {
+      type: "custom" as const,
+      id: c.dataKey,
+      name: ctx.config[c.dataKey]?.label?.toString() ?? "Connector",
+      clip: true,
+      encode: { x: 0, y: [1, 2] },
+      data: ctx.data.map((row, index) => [
+        index,
+        seriesValue(row[c.fromKey]),
+        seriesValue(row[c.toKey]),
+      ]),
+      renderItem: (_params: unknown, api: unknown) => {
+        const a = api as {
+          value: (dim: number) => unknown;
+          coord: (point: [number, number]) => number[];
+        };
+        const from = a.value(1);
+        const to = a.value(2);
+        if (from == null || to == null) return { type: "group", children: [] };
+        const cat = Number(a.value(0));
+        const p1 = a.coord([cat, Number(from)]);
+        const p2 = a.coord([cat, Number(to)]);
+        return {
+          type: "line",
+          silent: true,
+          shape: { x1: p1[0]!, y1: p1[1]!, x2: p2[0]!, y2: p2[1]! },
+          style: { stroke: color, fill: "none", lineWidth: 2, lineCap: "round" },
+        };
+      },
+      z: 1,
+      tooltip: { show: false },
+    };
+  });
+
   const grid = resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush));
 
   const xAxis = applyAxisPartToOption(
@@ -184,6 +248,7 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       ...lineSeries,
       ...areaSeries,
       ...whiskerSeries,
+      ...connectorSeries,
     ]) as EChartsOption["series"],
   };
 

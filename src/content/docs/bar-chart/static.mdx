@@ -123,7 +123,7 @@ const chartConfig = {
 </NQBarChart>
 ```
 
-Bar, line, and composed **basic** previews share the same twelve-month `desktop` / `mobile` dataset, color tokens, and **3px** rounded bar tops (`barRadius` on the chart root — nqui `--radius-sm` at 16px root).
+Bar, line, and composed **basic** previews share the same twelve-month `desktop` / `mobile` dataset, color tokens, and **3px** rounded bar ends (`barRadius` on the chart root — nqui `--radius-sm` at 16px root). The end on the zero line stays square. Gaps are fixed by the chart signature: **28%** between categories and **8%** between bars of one category (a histogram uses none). A stacked bar keeps the same widths and puts a 2px seam (`--chart-gap`) between segments; segments round their outer end and the corners facing a seam.
 
 ### Loading State
 
@@ -197,16 +197,10 @@ The root container. It owns the data, the shared selection state, the loading sk
     The orientation of the bars. `"vertical"` displays bars vertically, `"horizontal"` displays bars horizontally — in which case the `<YAxis />` shows categories and the `<XAxis />` shows values.
   </ApiRow>
   <ApiRow name="barRadius" type="number" default="3">
-    The default corner radius for every `<Bar />`, in pixels. Each `<Bar />` may override it locally with its own `radius` prop.
+    The default corner radius for every `<Bar />`, in pixels. Omit it to follow `--radius-sm` (3px at nqui's default `--radius`). Each `<Bar />` may override it locally with its own `radius` prop.
   </ApiRow>
   <ApiRow name="animationType" type='"none" | "left-to-right" | "right-to-left" | "center-out" | "edges-in"' default='"left-to-right"'>
     Order in which bars grow into view, inherited by every `<Bar />`. Each bar grows from its baseline (bottom for vertical layout, left for horizontal). `"none"` disables it — devices with the OS reduce-motion preference fall back to `"none"` automatically.
-  </ApiRow>
-  <ApiRow name="barGap" type="number">
-    The gap between bars in the same category (when using multiple series).
-  </ApiRow>
-  <ApiRow name="barCategoryGap" type="number">
-    The gap between different categories of bars.
   </ApiRow>
   <ApiRow name="backgroundVariant" type="BackgroundVariant">
     Background pattern variant to display behind the chart.

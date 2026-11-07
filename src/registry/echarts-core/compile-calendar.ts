@@ -1,6 +1,8 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { itemFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
+import { resolveChartSignature } from "./chart-signature";
+import { resolveCanvasGapColor } from "./resolve-chart-chrome";
 import type { CompileContext, CalendarPart } from "./parts/types";
 import type { CalendarCell } from "@/registry/lib/chart-recipes";
 
@@ -57,6 +59,7 @@ export function compileCalendarOption(ctx: CompileContext): EChartsOption {
   const colorStops = Math.min(Math.max(themeColors.length, 3), 4);
 
   const data = cells.map((c) => [c.date, c.value]);
+  const { radius, gap } = resolveChartSignature(ctx.chartId);
 
   const base: EChartsOption = {
     tooltip: {
@@ -101,10 +104,8 @@ export function compileCalendarOption(ctx: CompileContext): EChartsOption {
         show: !isSingleMonthRange(range),
       },
       splitLine: { show: true },
-      itemStyle: {
-        borderWidth: 0.5,
-        borderColor: "transparent",
-      },
+      // Empty-day backdrop only; the seam between value cells lives on the series.
+      itemStyle: { borderWidth: 0, borderColor: "transparent" },
     },
     visualMap: {
       min,
@@ -130,8 +131,15 @@ export function compileCalendarOption(ctx: CompileContext): EChartsOption {
         coordinateSystem: "calendar",
         calendarIndex: 0,
         data,
+        // Allowed painted seam: calendar cells have no geometric gap, so a border in
+        // the canvas colour opens the `gap.seam`. Set here, nowhere else.
+        itemStyle: {
+          borderColor: resolveCanvasGapColor(ctx.chartId),
+          borderWidth: gap.seam,
+          borderRadius: radius.mark,
+        },
         label: { show: false },
-        ...hoverFocusOrOff(isHoverFocusOn(ctx), itemFocus()),
+        ...hoverFocusOrOff(isHoverFocusOn(ctx), itemFocus({ family: "calendar" })),
       },
     ],
   };

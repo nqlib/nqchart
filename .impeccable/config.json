@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "inter",
+        "createdAt": "2026-10-22T02:50:33.681Z",
+        "reason": "Pre-existing headless theme test fixture: fontFamily is the value under assertion, not UI chrome."
+      }
+    ]
+  }
+}

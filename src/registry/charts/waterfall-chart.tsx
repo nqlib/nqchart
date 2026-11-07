@@ -25,6 +25,7 @@ import {
   withMarkPointerCursor,
 } from "@/registry/echarts-core/use-chart-interaction";
 import { useKeyboardMarkNav } from "@/registry/echarts-core/use-keyboard-mark-nav";
+import { waterfallValuesSeriesIndex } from "@/registry/echarts-core/hover-focus-repair";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import { NQChartLegend } from "@/registry/ui/legend";
 import { ChartTooltip } from "@/registry/ui/tooltip";
@@ -45,6 +46,8 @@ type NQWaterfallChartProps<
   className?: string;
   nameKey?: string;
   valueKey?: string;
+  /** Corner radius in px for every column. Default: the signature `radius.mark` (`--radius-sm`). */
+  barRadius?: number;
   isLoading?: boolean;
   showBrush?: boolean;
   brushFormatLabel?: (value: unknown, index: number) => string;
@@ -67,6 +70,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
   indexOffset = 0,
   nameKey,
   valueKey,
+  barRadius,
   externalBrush,
   onPlotRect,
   onMarkClick,
@@ -79,6 +83,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
   indexOffset?: number;
   nameKey: string;
   valueKey: string;
+  barRadius?: number;
   externalBrush?: boolean;
   onPlotRect?: (insets: ChartPlotInsets) => void;
   onMarkClick?: (event: NQMarkEvent) => void;
@@ -90,7 +95,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
     data,
     nameKey,
     valueKey,
-    cartesian: { externalBrush },
+    cartesian: { externalBrush, barRadius },
     hoverFocus,
   });
   const runtimeRef = useChartInstanceRef();
@@ -130,6 +135,7 @@ export function NQWaterfallChart<
   className,
   nameKey = "name",
   valueKey = "value",
+  barRadius,
   isLoading,
   showBrush = true,
   hoverFocus = true,
@@ -175,7 +181,7 @@ export function NQWaterfallChart<
               <NQChartBrush
                 data={displayData}
                 compile={compileWaterfallOption}
-                rootFields={{ nameKey, valueKey, cartesian: { externalBrush: true } }}
+                rootFields={{ nameKey, valueKey, cartesian: { externalBrush: true, barRadius } }}
                 xDataKey={nameKey}
                 formatLabel={brushFormatLabel}
                 plotAlign={plotAlign}
@@ -216,6 +222,7 @@ export function NQWaterfallChart<
                 indexOffset={brushStartIndex}
                 nameKey={nameKey}
                 valueKey={valueKey}
+                barRadius={barRadius}
                 externalBrush={externalBrush}
                 onPlotRect={setPlotAlign}
                 onMarkClick={onMarkClick}
@@ -279,6 +286,8 @@ function WaterfallPlotBody({
     valueKey,
     onMarkClick,
     chartInstanceRef,
+    // Series 0 is the silent stack placeholder — focus the painted value bars.
+    resolveSeriesIndex: waterfallValuesSeriesIndex,
   });
 
   return (

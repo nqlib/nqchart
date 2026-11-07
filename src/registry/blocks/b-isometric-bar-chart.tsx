@@ -4,7 +4,7 @@ import * as React from "react";
 import { motion } from "motion/react";
 import {
   DURATION_DRAMATIC_MS,
-  DURATION_STANDARD_MS,
+  DURATION_QUICK_MS,
   EASE_OUT,
 } from "@/globals/constants/motion";
 import { type ChartConfig, ChartContainer } from "@/registry/ui/chart";
@@ -40,6 +40,8 @@ const MARGIN = { top: 28, right: 36, left: 8, bottom: 36 };
 const VIEW_W = 640;
 const VIEW_H = 280;
 const Y_MAX = 57;
+/** Per-bar delay of the grow-in. Only the first mount staggers; hover never waits. */
+const INTRO_STAGGER_S = 0.08;
 
 type ShapeProps = {
   x: number;
@@ -51,9 +53,10 @@ type ShapeProps = {
   maxValue: number;
   idPrefix: string;
   hoveredIndex: number | null;
+  introDone: boolean;
 };
 
-function IsoBar({ x, y, width, height, index, payload, maxValue, idPrefix, hoveredIndex }: ShapeProps) {
+function IsoBar({ x, y, width, height, index, payload, maxValue, idPrefix, hoveredIndex, introDone }: ShapeProps) {
   if (height <= 0) return null;
 
   const isHovered = hoveredIndex === index;
@@ -81,12 +84,14 @@ function IsoBar({ x, y, width, height, index, payload, maxValue, idPrefix, hover
         scaleX: isHovered ? 1.06 : 1,
       }}
       transition={{
-        duration:
-          (isHovered || dimmed ? DURATION_STANDARD_MS : DURATION_DRAMATIC_MS) / 1000,
-        delay: hoveredIndex === null ? index * 0.08 : 0,
+        duration: (introDone ? DURATION_QUICK_MS : DURATION_DRAMATIC_MS) / 1000,
+        delay: introDone ? 0 : index * INTRO_STAGGER_S,
         ease: EASE_OUT,
       }}
-      style={{ transformBox: "fill-box", transformOrigin: "50% 100%" }}
+      // Visual only: the hit layer above owns the pointer. If these faces took
+      // events, moving left would land on the previous bar's side face first and
+      // never reach its band's hit rect (focus lagged until the far-left gap).
+      style={{ transformBox: "fill-box", transformOrigin: "50% 100%", pointerEvents: "none" }}
     >
       <polygon points={sidePoints} fill={rightFill} />
       <polygon points={topPoints} fill={topFill} />
@@ -166,6 +171,13 @@ function layoutBars(data: typeof chartData) {
 export function NQIsometricBarChart() {
   const idPrefix = React.useId().replace(/:/g, "");
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
+  const [introDone, setIntroDone] = React.useState(false);
+
+  React.useEffect(() => {
+    const ms = (chartData.length * INTRO_STAGGER_S * 1000) + DURATION_DRAMATIC_MS;
+    const t = window.setTimeout(() => setIntroDone(true), ms);
+    return () => window.clearTimeout(t);
+  }, []);
 
   const maxValue = React.useMemo(
     () => chartData.reduce((m, d) => (d.revenue > m ? d.revenue : m), 0),
@@ -174,7 +186,6 @@ export function NQIsometricBarChart() {
   const total = chartData.reduce((sum, d) => sum + d.revenue, 0);
   const peak = chartData.find((d) => d.revenue === maxValue)!;
   const bars = layoutBars(chartData);
-  const innerH = VIEW_H - MARGIN.top - MARGIN.bottom;
   const band = (VIEW_W - MARGIN.left - MARGIN.right) / chartData.length;
   const hover = hoveredIndex != null ? chartData[hoveredIndex] : null;
 
@@ -238,22 +249,14 @@ export function NQIsometricBarChart() {
               );
             })}
             {bars.map((bar) => (
-              <g key={bar.payload.month} className="cursor-pointer">
-                <rect
-                  x={MARGIN.left + bar.index * band}
-                  y={MARGIN.top}
-                  width={band}
-                  height={innerH}
-                  fill="transparent"
-                  onMouseEnter={() => setHoveredIndex(bar.index)}
-                />
-                <IsoBar
-                  {...bar}
-                  maxValue={maxValue}
-                  idPrefix={idPrefix}
-                  hoveredIndex={hoveredIndex}
-                />
-              </g>
+              <IsoBar
+                key={bar.payload.month}
+                {...bar}
+                maxValue={maxValue}
+                idPrefix={idPrefix}
+                hoveredIndex={hoveredIndex}
+                introDone={introDone}
+              />
             ))}
             {chartData.map((row, index) => {
               const band = (VIEW_W - MARGIN.left - MARGIN.right) / chartData.length;
@@ -270,6 +273,19 @@ export function NQIsometricBarChart() {
                 </text>
               );
             })}
+            {/* Hit layer last, so it sits above every face: one full band per bar. */}
+            {bars.map((bar) => (
+              <rect
+                key={`hit-${bar.payload.month}`}
+                className="cursor-pointer"
+                x={MARGIN.left + bar.index * band}
+                y={0}
+                width={band}
+                height={VIEW_H}
+                fill="transparent"
+                onPointerEnter={() => setHoveredIndex(bar.index)}
+              />
+            ))}
           </svg>
         </div>
       </ChartContainer>

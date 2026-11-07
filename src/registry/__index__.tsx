@@ -313,6 +313,24 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "sankey-chart": {
+    name: "sankey-chart",
+    description: "Sankey flow chart (ECharts engine)",
+    type: "registry:component",
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend"],
+    files: [{
+      path: "@/registry/charts/sankey-chart.tsx",
+      type: "registry:component",
+      target: "components/nqchart/charts/sankey-chart.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/charts/sankey-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "sankey-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "waterfall-chart": {
     name: "waterfall-chart",
     description: "Waterfall chart (ECharts engine)",
@@ -362,6 +380,42 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import("@/registry/charts/sparkline-chart.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "sparkline-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "kpi-card": {
+    name: "kpi-card",
+    description: "KPI card — value, direction-aware delta, target progress and sparkline",
+    type: "registry:component",
+    registryDependencies: ["@nqchart/chart","@nqchart/tooltip","@nqchart/legend","@nqchart/sparkline-chart"],
+    files: [{
+      path: "@/registry/charts/kpi-card.tsx",
+      type: "registry:component",
+      target: "components/nqchart/charts/kpi-card.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/charts/kpi-card.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "kpi-card"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "small-multiples": {
+    name: "small-multiples",
+    description: "Small multiples — one chart per facet with a shared y-domain and legend",
+    type: "registry:component",
+    registryDependencies: ["@nqchart/chart"],
+    files: [{
+      path: "@/registry/charts/small-multiples.tsx",
+      type: "registry:component",
+      target: "components/nqchart/charts/small-multiples.tsx"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/charts/small-multiples.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "small-multiples"
       return { default: mod.default || mod[exportName] }
     }),
     categories: undefined,
@@ -673,6 +727,60 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "ex-isometric-grouped-bar-chart": {
+    name: "ex-isometric-grouped-bar-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/bar-chart"],
+    files: [{
+      path: "@/registry/examples/ex-isometric-grouped-bar-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-isometric-grouped-bar-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-isometric-grouped-bar-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-isometric-stacked-bar-chart": {
+    name: "ex-isometric-stacked-bar-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/bar-chart"],
+    files: [{
+      path: "@/registry/examples/ex-isometric-stacked-bar-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-isometric-stacked-bar-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-isometric-stacked-bar-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-isometric-area-chart": {
+    name: "ex-isometric-area-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/area-chart"],
+    files: [{
+      path: "@/registry/examples/ex-isometric-area-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-isometric-area-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-isometric-area-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "ex-composed-chart": {
     name: "ex-composed-chart",
     description: "",
@@ -740,6 +848,24 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-pie-chart.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-pie-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-pie-rose-chart": {
+    name: "ex-pie-rose-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/pie-chart"],
+    files: [{
+      path: "@/registry/examples/ex-pie-rose-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-pie-rose-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-pie-rose-chart"
       return { default: mod.default || mod[exportName] }
     }),
     categories: undefined,
@@ -974,6 +1100,132 @@ export const Index: Record<string, any> = {
     component: React.lazy(async () => {
       const mod = await import("@/registry/examples/ex-heatmap-team-workload-chart.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-heatmap-team-workload-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-variance-chart": {
+    name: "ex-variance-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/composed-chart","@nqchart/chart-recipes"],
+    files: [{
+      path: "@/registry/examples/ex-variance-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-variance-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-variance-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-cohort-retention-chart": {
+    name: "ex-cohort-retention-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/heatmap-chart","@nqchart/chart-recipes"],
+    files: [{
+      path: "@/registry/examples/ex-cohort-retention-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-cohort-retention-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-cohort-retention-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-forecast-chart": {
+    name: "ex-forecast-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/composed-chart","@nqchart/chart-recipes"],
+    files: [{
+      path: "@/registry/examples/ex-forecast-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-forecast-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-forecast-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-dumbbell-chart": {
+    name: "ex-dumbbell-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/composed-chart","@nqchart/chart-recipes"],
+    files: [{
+      path: "@/registry/examples/ex-dumbbell-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-dumbbell-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-dumbbell-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-kpi-card": {
+    name: "ex-kpi-card",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/kpi-card"],
+    files: [{
+      path: "@/registry/examples/ex-kpi-card.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-kpi-card.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-kpi-card"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-small-multiples-chart": {
+    name: "ex-small-multiples-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/small-multiples","@nqchart/line-chart"],
+    files: [{
+      path: "@/registry/examples/ex-small-multiples-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-small-multiples-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-small-multiples-chart"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-sankey-chart": {
+    name: "ex-sankey-chart",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/sankey-chart"],
+    files: [{
+      path: "@/registry/examples/ex-sankey-chart.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-sankey-chart.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-sankey-chart"
       return { default: mod.default || mod[exportName] }
     }),
     categories: undefined,

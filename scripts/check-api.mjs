@@ -31,6 +31,7 @@ const required = [
   "registry/charts/scatter-chart.d.ts",
   "registry/charts/waterfall-chart.d.ts",
   "registry/charts/funnel-chart.d.ts",
+  "registry/charts/sankey-chart.d.ts",
   "registry/echarts-core/nq-mark-event.d.ts",
   "registry/echarts-core/chart-handle.d.ts",
   "registry/echarts-core/use-chart-brush.d.ts",
@@ -56,6 +57,7 @@ import { NQPieChart, Pie } from "../dist/types/registry/charts/pie-chart";
 import { NQScatterChart, Scatter } from "../dist/types/registry/charts/scatter-chart";
 import { NQWaterfallChart } from "../dist/types/registry/charts/waterfall-chart";
 import { NQFunnelChart } from "../dist/types/registry/charts/funnel-chart";
+import { NQSankeyChart, Tooltip as SankeyTooltip } from "../dist/types/registry/charts/sankey-chart";
 import type { NQMarkEvent } from "../dist/types/registry/echarts-core/nq-mark-event";
 import type { ChartHandle } from "../dist/types/registry/echarts-core/chart-handle";
 import type { ChartBrushRange } from "../dist/types/registry/echarts-core/use-chart-brush";
@@ -224,6 +226,25 @@ export const funnel = (
     {null}
   </NQFunnelChart>
 );
+
+export const sankey = (
+  <NQSankeyChart
+    config={{ a: { label: "A" } }}
+    data={[{ from: "a", to: "b", n: 3 }]}
+    sourceKey="from"
+    targetKey="to"
+    valueKey="n"
+    orient="vertical"
+    nodeAlign="left"
+    linkColor="gradient"
+    formatValue={(v: number) => String(v)}
+    onMarkClick={onMarkClick}
+    onChartReady={onChartReady}
+    chartRef={chartRef}
+  >
+    <SankeyTooltip />
+  </NQSankeyChart>
+);
 `;
 
 rmSync(probeDir, { recursive: true, force: true });
@@ -265,4 +286,4 @@ if (result.status !== 0) {
   process.exit(result.status ?? 1);
 }
 
-console.info("check:api — ok (interaction props accepted on bar/line/area/composed/pie/scatter/waterfall/funnel; headless renderToSvg + compileComposedOption type-check)");
+console.info("check:api — ok (interaction props accepted on bar/line/area/composed/pie/scatter/waterfall/funnel/sankey; headless renderToSvg + compileComposedOption type-check)");

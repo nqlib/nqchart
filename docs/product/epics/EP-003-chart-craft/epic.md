@@ -32,6 +32,7 @@ aligned with nqui, and a brush footer that does not fight intro animations.
 |----|-------|--------|------|
 | ST-009 | Funnel horizontal + pipe + sort | done | 007, 008 |
 | ST-023 | hoverFocus opt-out on every chart root | done | 017 |
+| ST-027 | Chart signature — one shape language, one focus mode, rose pie | in-progress | 020 |
 
 Hover/motion work landed as continuous craft + `fixed/` notes rather than numbered plans;
 treat those fix notes as the story archive for regressions. ST-023 is the public opt-out.

@@ -6,11 +6,14 @@ import type { BarSeriesOption, EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { cartesianColumnFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { barVariantFill } from "./bar-pattern";
+import { barLayoutGaps } from "./bar-item-style";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import {
   barItemBorderRadius,
   groupStackRoles,
+  resolveBarJoinRadius,
   resolveBarRadius,
+  resolveStackSeam,
   stackSegmentGapStyle,
   type StackCornerRole,
 } from "./bar-radius";
@@ -28,13 +31,15 @@ import {
   buildValueYAxes,
   resolveYAxisIndex,
 } from "./cartesian-axes";
-import { seriesLabelOption } from "./series-labels";
+import { barLabelPosition, seriesLabelOption } from "./series-labels";
 
 type BarPointItemStyle = {
   color: unknown;
   borderRadius: [number, number, number, number];
-  borderWidth?: number | [number, number, number, number];
-  borderColor?: string;
+  shadowColor?: string;
+  shadowBlur?: number;
+  shadowOffsetX?: number;
+  shadowOffsetY?: number;
 };
 
 function buildBarDataPoints(
@@ -49,6 +54,13 @@ function buildBarDataPoints(
   const r = isHistogram
     ? (bar.radius != null ? bar.radius : 0)
     : resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
+  const join = isHistogram
+    ? r
+    : resolveBarJoinRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
+  // A histogram's bars touch by design: no seams.
+  const { seam, gapColor } = isHistogram
+    ? { seam: 0, gapColor: "" }
+    : resolveStackSeam(ctx.chartId);
   const strokeColor = ctx.resolveColor(bar.dataKey, 0);
   const fillColor = resolveAreaFillColor(ctx.config, bar.dataKey, ctx.resolveColor, 0, ctx.chartId);
   const color = barVariantFill(bar.variant, strokeColor, horizontal, fillColor);
@@ -58,8 +70,8 @@ function buildBarDataPoints(
   return rows.map((row, dataIndex) => {
     const value = seriesValue(row[bar.dataKey]);
     const role = roles?.[dataIndex];
-    const borderRadius = barItemBorderRadius(bar.variant, role, r, horizontal, value);
-    const gapStyle = role != null ? stackSegmentGapStyle(role, horizontal) : {};
+    const borderRadius = barItemBorderRadius(bar.variant, role, r, horizontal, value, join);
+    const gapStyle = role != null ? stackSegmentGapStyle(role, seam, gapColor, horizontal, value) : {};
 
     return {
       value,
@@ -68,9 +80,12 @@ function buildBarDataPoints(
         borderRadius,
         ...gapStyle,
       } as BarPointItemStyle,
+      // Value labels sit at the bar's outer end, which flips for negatives.
+      ...(bar.showLabels ? { label: { position: barLabelPosition(value, horizontal) } } : {}),
     };
   });
 }
+
 
 export function compileBarOption(ctx: CompileContext): EChartsOption {
   const xKey = getXKey(ctx);
@@ -128,9 +143,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
   const histogramLayout = isHistogram
     ? { barCategoryGap: 0, barGap: 0, barWidth: "100%" as const }
     : {};
-  const stackedLayout = stack
-    ? { barGap: 0, barCategoryGap: "20%" as const, barWidth: "55%" as const }
-    : {};
+  const sharedGaps = isHistogram ? {} : barLayoutGaps(ctx.chartId);
 
   const series = bars.map((bar) => {
     if (bar.variant === "monospace") {
@@ -149,10 +162,10 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
         yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
         data: buildBarDataPoints(bar, ctx, rows, stack, horizontal, stackRoles, isHistogram) as BarSeriesOption["data"],
         stack: bar.stackId ?? stack,
-        label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
+        label: seriesLabelOption(bar.showLabels, bar.labelFormatter, ctx.chartId),
         ...columnFocus,
         ...histogramLayout,
-        ...stackedLayout,
+        ...sharedGaps,
       };
     }
 
@@ -163,10 +176,10 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
       yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
       data: buildBarDataPoints(bar, ctx, rows, stack, horizontal, stackRoles, isHistogram) as BarSeriesOption["data"],
       stack: bar.stackId ?? stack,
-      label: seriesLabelOption(bar.showLabels, bar.labelFormatter),
+      label: seriesLabelOption(bar.showLabels, bar.labelFormatter, ctx.chartId),
       ...columnFocus,
       ...histogramLayout,
-      ...stackedLayout,
+      ...sharedGaps,
     };
   });
 
@@ -177,6 +190,8 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
       horizontal ? (hasMonospace ? 32 : 4) : gridBottomWithZoom(hasBrush, hasMonospace ? 32 : 4),
       horizontal,
     ),
+    // 11px label + 6px gap above a bar that reaches the axis max.
+    ...(hasMonospace ? { top: 28 } : {}),
     ...(hasHoverTrace && !horizontal ? { left: 56 } : {}),
   };
   const dataZoom = buildCategoryDataZoom(hasBrush, {

@@ -195,7 +195,7 @@ The root container bridging raw financial rows → cumulative stack-friendly rec
     Extra classes forwarded to `<ChartContainer />`.
   </ApiRow>
   <ApiRow name="barRadius" type="number" default="3">
-    Corner rounding for waterfall rectangles.
+    Corner radius in px for every column. Omit it to follow `--radius-sm`. Start and total columns keep the zero line square; steps that float round both ends. Columns use the same 28% / 8% gaps as bar charts.
   </ApiRow>
   <ApiRow name="backgroundVariant" type="BackgroundVariant">
     Draws `<ChartBackground />` underneath the chart (same pattern as bar and scatter charts).

@@ -28,7 +28,10 @@ metadata:
 
 - A value above zero rounds the end away from zero (top, or the right end when horizontal).
 - A value below zero rounds the opposite end. Zero has no radius.
-- In a stack, the positive segments and the negative segments are separate. Only the outermost non-zero segment of each sign is rounded, at its outer end.
+- In a stack, the positive segments and the negative segments are separate. Corners on the zero line are **always square**.
+- Since plan 020 (2026-11): the outermost non-zero segment of each sign rounds its outer end with `radius.mark`; every corner that faces a seam between two segments rounds with `radius.join` (`resolveBarJoinRadius`). Stack roles: `only`, `baseTop`, `baseBottom`, `middle`, `top`, `bottom`.
+- Stack seams (`stackSegmentGapStyle`) are a zero-blur `shadowColor` in the canvas background, offset one `gap.seam` toward zero — painted on the end of the segment below only. **Not** `borderWidth`: a centered border shrinks every bar ~4px at the zero line and trims outer ends. Segments on the zero line and lone segments get no shadow.
+- Radius source is the signature (`resolveChartSignature(...).radius.mark`); `barRadius` and part `radius` override it everywhere, including waterfall.
 
 ## Fix notes
 

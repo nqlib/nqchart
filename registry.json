@@ -310,6 +310,26 @@
       ]
     },
     {
+      "name": "sankey-chart",
+      "description": "Sankey flow chart (ECharts engine)",
+      "registryDependencies": [
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/sankey-chart.tsx",
+          "type": "registry:component",
+          "target": "components/nqchart/charts/sankey-chart.tsx"
+        }
+      ]
+    },
+    {
       "name": "waterfall-chart",
       "description": "Waterfall chart (ECharts engine)",
       "registryDependencies": [
@@ -366,6 +386,42 @@
           "path": "src/registry/charts/sparkline-chart.tsx",
           "type": "registry:component",
           "target": "components/nqchart/charts/sparkline-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kpi-card",
+      "description": "KPI card — value, direction-aware delta, target progress and sparkline",
+      "registryDependencies": [
+        "@nqchart/chart",
+        "@nqchart/tooltip",
+        "@nqchart/legend",
+        "@nqchart/sparkline-chart"
+      ],
+      "dependencies": [
+        "echarts"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/kpi-card.tsx",
+          "type": "registry:component",
+          "target": "components/nqchart/charts/kpi-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "small-multiples",
+      "description": "Small multiples — one chart per facet with a shared y-domain and legend",
+      "registryDependencies": [
+        "@nqchart/chart"
+      ],
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/charts/small-multiples.tsx",
+          "type": "registry:component",
+          "target": "components/nqchart/charts/small-multiples.tsx"
         }
       ]
     },
@@ -590,6 +646,45 @@
       ]
     },
     {
+      "name": "ex-isometric-grouped-bar-chart",
+      "registryDependencies": [
+        "@nqchart/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-isometric-grouped-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-isometric-stacked-bar-chart",
+      "registryDependencies": [
+        "@nqchart/bar-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-isometric-stacked-bar-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-isometric-area-chart",
+      "registryDependencies": [
+        "@nqchart/area-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-isometric-area-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
       "name": "ex-composed-chart",
       "registryDependencies": [
         "@nqchart/composed-chart"
@@ -638,6 +733,19 @@
       "files": [
         {
           "path": "src/registry/examples/ex-pie-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-pie-rose-chart",
+      "registryDependencies": [
+        "@nqchart/pie-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-pie-rose-chart.tsx",
           "type": "registry:block"
         }
       ]
@@ -819,6 +927,102 @@
       "files": [
         {
           "path": "src/registry/examples/ex-heatmap-team-workload-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-variance-chart",
+      "registryDependencies": [
+        "@nqchart/composed-chart",
+        "@nqchart/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-variance-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-cohort-retention-chart",
+      "registryDependencies": [
+        "@nqchart/heatmap-chart",
+        "@nqchart/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-cohort-retention-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-forecast-chart",
+      "registryDependencies": [
+        "@nqchart/composed-chart",
+        "@nqchart/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-forecast-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-dumbbell-chart",
+      "registryDependencies": [
+        "@nqchart/composed-chart",
+        "@nqchart/chart-recipes"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-dumbbell-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-kpi-card",
+      "registryDependencies": [
+        "@nqchart/kpi-card"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-kpi-card.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-small-multiples-chart",
+      "registryDependencies": [
+        "@nqchart/small-multiples",
+        "@nqchart/line-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-small-multiples-chart.tsx",
+          "type": "registry:block"
+        }
+      ]
+    },
+    {
+      "name": "ex-sankey-chart",
+      "registryDependencies": [
+        "@nqchart/sankey-chart"
+      ],
+      "type": "registry:block",
+      "files": [
+        {
+          "path": "src/registry/examples/ex-sankey-chart.tsx",
           "type": "registry:block"
         }
       ]

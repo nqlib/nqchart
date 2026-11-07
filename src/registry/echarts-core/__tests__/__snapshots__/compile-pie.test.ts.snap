@@ -13,7 +13,7 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
   "series": [
     {
       "animation": true,
-      "animationDelay": [Function],
+      "animationDelay": 0,
       "animationDuration": 700,
       "animationDurationUpdate": 0,
       "animationEasing": "cubic-bezier(0.16,1,0.3,1)",
@@ -22,10 +22,8 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
         "itemStyle": {
           "opacity": 0.2,
         },
-        "label": {
-          "opacity": 0.2,
-        },
       },
+      "coordinateSystem": "none",
       "data": [
         {
           "__nq_datum": {
@@ -54,36 +52,20 @@ exports[`compilePieOption > matches snapshot for a representative context 1`] = 
       ],
       "emphasis": {
         "blurScope": "series",
-        "disabled": true,
+        "disabled": false,
         "focus": "self",
         "itemStyle": {
           "opacity": 1,
         },
         "scale": false,
       },
-      "label": {
-        "color": "#737373",
-        "fontSize": 12,
-        "fontWeight": 400,
-        "formatter": "{b}",
-        "show": true,
-      },
-      "labelLine": {
-        "length": 10,
-        "length2": 8,
-        "lineStyle": {
-          "color": "#e5e5e5",
-        },
-        "show": true,
-      },
-      "radius": [
-        0,
-        "70%",
-      ],
+      "id": "nq-pie",
+      "renderItem": [Function],
       "stateAnimation": {
-        "duration": 0,
+        "duration": 120,
+        "easing": "cubicOut",
       },
-      "type": "pie",
+      "type": "custom",
     },
   ],
   "textStyle": {

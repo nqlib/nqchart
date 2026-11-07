@@ -24,7 +24,7 @@ const VARIANT_CLASS = {
   "frosted-glass": "bg-background/70 backdrop-blur-sm",
 } as const;
 
-function escapeHtml(value: unknown) {
+export function escapeHtml(value: unknown) {
   return String(value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -55,7 +55,7 @@ function formatValue(value: unknown): string {
   return escapeHtml(value);
 }
 
-function tooltipShell(
+export function tooltipShell(
   inner: string,
   tooltip: TooltipPart | undefined,
   chartId: string,

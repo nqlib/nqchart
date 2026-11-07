@@ -14,7 +14,7 @@ metadata:
 
 **Agents:** When the user asks to fix a bug, **search this file first** (domain table, then semantic table). Open the fix note before changing code.
 
-Last updated: 2026-10-21
+Last updated: 2026-11-06
 
 ---
 
@@ -24,7 +24,8 @@ Problem areas → domain overview → individual fix notes.
 
 | Domain | Symptoms (short) | Domain doc | Fix notes |
 |--------|------------------|------------|-----------|
-| **hover-focus** | Hover dims wrong mark; flicker; tile/point vanishes; stale bright siblings; `__highByOuter`; **intro clip + stuck axisPointer** | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [pie blur / flicker](./fixes/hover-focus-pie-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md), [intro axisPointer clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
+| **hover-focus** | Hover dims wrong mark; **custom series never dims**; flicker; tile/point vanishes; stale bright siblings; `__highByOuter`; **intro clip + stuck axisPointer** | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [pie blur / flicker](./fixes/hover-focus-pie-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md), [intro axisPointer clip](./fixes/hover-focus-intro-axis-pointer-clip.md), [custom series element focus](./fixes/hover-focus-custom-series-element-focus.md), [isometric hit layer](./fixes/hover-focus-isometric-hit-layer.md) |
+| **performance** | Dashboard slow to load; theme switch freezes; style recalc thrash; lag grows with chart count | [domains/performance.md](./domains/performance.md) | [color probe style thrash](./fixes/performance-color-probe-style-thrash.md) |
 | **labels** | Floating leader lines; truncated / missing rose names; labelLine stubs; radial ring names upside-down; polar clip; gauge tick pile-up; **vertical pipe funnel names clipped** | [domains/labels.md](./domains/labels.md) | [rose leader clip](./fixes/labels-rose-leader-clip.md), [radial ring orientation / clip](./fixes/labels-radial-ring-orientation-clip.md), [gauge axis overlap](./fixes/labels-gauge-axis-overlap.md), [funnel pipe vertical clip](./fixes/labels-funnel-pipe-vertical-clip.md) |
 | **cartesian-stack** | Percent stack empty plot; series off-scale above yAxis.max 100; chrome paints, bands missing | [domains/cartesian-stack.md](./domains/cartesian-stack.md) | [area percent empty](./fixes/cartesian-stack-area-percent-empty.md) |
 | **brush** | Footer slider splits bar groups; handle mid-cluster; range framing | [domains/brush.md](./domains/brush.md) | [band-edge handles](./fixes/brush-band-edge-handles.md) |
@@ -47,6 +48,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 
 | Triggers (any match) | Chart / area | Fix note |
 |----------------------|--------------|----------|
+| dashboard laggy; many charts slow; theme toggle freezes; getComputedStyle / style recalc in profile; cssColorToCanvasRgb hot | all ECharts | [performance-color-probe-style-thrash](./fixes/performance-color-probe-style-thrash.md) |
+| 3D / isometric bar hover lags moving left; must move far left to focus; bars settle one by one | isometric bar block | [hover-focus-isometric-hit-layer](./fixes/hover-focus-isometric-hit-layer.md) |
 | scatter hover dims hovered dot; mobile dot stays dim; all points blur; red dot opacity 0.2 when hovered | scatter | [hover-focus-scatter-symbol-blur](./fixes/hover-focus-scatter-symbol-blur.md) |
 | scatter stale focus; previous dots stay bright; multiple dots emphasized | scatter | [hover-focus-scatter-symbol-blur](./fixes/hover-focus-scatter-symbol-blur.md) |
 | treemap flicker on hover; layout sliding; animationDurationUpdate | treemap | [hover-focus-treemap-flicker-vanish](./fixes/hover-focus-treemap-flicker-vanish.md) |

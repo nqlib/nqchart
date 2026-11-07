@@ -2,6 +2,8 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { itemFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { buildHeatmapDataZoom } from "./category-data-zoom";
+import { resolveChartSignature } from "./chart-signature";
+import { resolveCanvasGapColor } from "./resolve-chart-chrome";
 import type { CompileContext, HeatmapPart } from "./parts/types";
 import type { HeatmapCell } from "@/registry/lib/chart-recipes";
 
@@ -28,6 +30,8 @@ export function compileHeatmapOption(ctx: CompileContext): EChartsOption {
   const themeColors =
     ctx.config[colorKey]?.colors?.light ?? ctx.config[colorKey]?.colors?.dark ?? [];
   const colorStops = Math.min(Math.max(themeColors.length, 3), 4);
+
+  const { radius, gap } = resolveChartSignature(ctx.chartId);
 
   const base: EChartsOption = {
     tooltip: { position: "top" },
@@ -67,8 +71,15 @@ export function compileHeatmapOption(ctx: CompileContext): EChartsOption {
         // click without one maps to an empty `seriesKey` and gets dropped.
         id: colorKey,
         data,
+        // Allowed painted seam: a heatmap has no geometric gap, so a border in the
+        // canvas colour opens the `gap.seam` between cells. Set here, nowhere else.
+        itemStyle: {
+          borderColor: resolveCanvasGapColor(ctx.chartId),
+          borderWidth: gap.seam,
+          borderRadius: radius.mark,
+        },
         label: { show: false },
-        ...hoverFocusOrOff(isHoverFocusOn(ctx), itemFocus()),
+        ...hoverFocusOrOff(isHoverFocusOn(ctx), itemFocus({ family: "heatmap" })),
       },
     ],
   };

@@ -54,7 +54,7 @@ describe("hoverFocus opt-out", () => {
     expect(offSeries.emphasis?.focus).toBeUndefined();
   });
 
-  it("item focus (pie): on keeps native emphasis disabled (runtime repair)", () => {
+  it("item focus (pie): on uses element-level custom focus (no runtime repair)", () => {
     const on = compilePieOption(
       makeCtx({
         parts: [piePart],
@@ -65,7 +65,10 @@ describe("hoverFocus opt-out", () => {
       }),
     );
     const series = (on.series as EmphasisSeries[])[0]!;
-    expect(series.emphasis?.disabled).toBe(true);
+    // Signature pie is a custom series: ECharts focus comes from the renderItem
+    // element (customFocusGroup); the series preset keeps native emphasis on.
+    expect(series.emphasis?.disabled).toBe(false);
+    expect(series.emphasis?.focus).toBe("self");
   });
 
   it("item focus (pie): false disables emphasis and drops focus", () => {

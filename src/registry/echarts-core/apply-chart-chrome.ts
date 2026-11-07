@@ -245,23 +245,12 @@ function themeSpecialSeries(series: EChartsOption["series"], chrome: ChartChrome
       const label = (s.label as AxisLike | undefined) ?? {};
       const labelLine = (s.labelLine as AxisLike | undefined) ?? {};
       const labelLineStyle = (labelLine.lineStyle as Record<string, unknown> | undefined) ?? {};
-      const itemStyle = (s.itemStyle as Record<string, unknown> | undefined) ?? {};
       const position = label.position ?? "inside";
       const labelColor =
         position === "inside" ? (label.color ?? "#fafafa") : (label.color ?? chrome.muted);
-      const data = Array.isArray(s.data)
-        ? (s.data as AxisLike[]).map((row) => {
-            const rowStyle = (row.itemStyle as Record<string, unknown> | undefined) ?? {};
-            return {
-              ...row,
-              itemStyle: { borderColor: chrome.background, ...rowStyle },
-            };
-          })
-        : s.data;
+      // Gap colour is set once, in the funnel compiler — not re-injected here.
       return {
         ...s,
-        data,
-        itemStyle: { borderColor: chrome.background, ...itemStyle },
         label: { color: labelColor, ...label },
         labelLine: labelLine.show
           ? {
@@ -269,13 +258,6 @@ function themeSpecialSeries(series: EChartsOption["series"], chrome: ChartChrome
               lineStyle: mergeLineStyle(labelLineStyle, chrome.border),
             }
           : labelLine,
-      };
-    }
-    if (s.type === "treemap") {
-      const itemStyle = (s.itemStyle as Record<string, unknown> | undefined) ?? {};
-      return {
-        ...s,
-        itemStyle: { borderColor: chrome.background, ...itemStyle },
       };
     }
     if (s.type !== "gauge") return entry;

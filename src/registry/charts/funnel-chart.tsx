@@ -18,7 +18,9 @@ import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileFunnelOption } from "@/registry/echarts-core/compile-funnel";
 import type {
+  FunnelConeStyle,
   FunnelConnection,
+  FunnelLabel,
   FunnelOrient,
   FunnelSort,
   FunnelTaper,
@@ -38,7 +40,14 @@ import { useState } from "react";
 const FUNNEL_ECHARTS_MODULES = [FunnelChart, CustomChart];
 getEcharts(FUNNEL_ECHARTS_MODULES);
 
-export type { FunnelConnection, FunnelOrient, FunnelSort, FunnelTaper };
+export type {
+  FunnelConeStyle,
+  FunnelConnection,
+  FunnelLabel,
+  FunnelOrient,
+  FunnelSort,
+  FunnelTaper,
+};
 
 type NQFunnelChartProps<
   TData extends Record<string, unknown>,
@@ -50,27 +59,81 @@ type NQFunnelChartProps<
   className?: string;
   stageKey?: string;
   valueKey?: string;
+  /**
+   * Optional field used only for stage *width*. Label still shows `valueKey`.
+   * Stage silhouette — not a quantitative funnel. Omit to size by `valueKey`.
+   */
+  sizeKey?: string;
+  /** Inside label format. Default `"name-value"`. */
+  label?: FunnelLabel;
   isLoading?: boolean;
   /** Pixel gap between stages — overrides the `connection` preset when set. */
   stageGap?: number;
-  /** How stages connect visually (`pipe` = smooth S-curve ribbon). */
+  /**
+   * How stages connect visually. `pipe` = continuous S-curve ribbon;
+   * `rounded` = curved trapezoid (continuous taper + rim curves + gaps;
+   * custom path, default gap 8). Default stays sharp unless `cornerRadius > 0`.
+   */
   connection?: FunnelConnection;
-  /** How gradually stage widths taper top → bottom (native funnel only). */
+  /**
+   * Width floor for the value→width scale. Soft (22%) flattens Operate ratios —
+   * prefer default/steep with tapered rounded stages.
+   */
   taper?: FunnelTaper;
   /**
-   * Flow direction. Native funnel defaults `vertical`; pipe defaults
+   * Flow direction. Native / rounded default `vertical`; pipe defaults
    * `horizontal` when unset. Pipe supports both.
    */
   orient?: FunnelOrient;
   /**
-   * Native funnel stage order. Default `none` keeps `data` array order.
+   * Native / rounded stage order. Default `none` keeps `data` array order.
    * Unused for `pipe`.
    */
   sort?: FunnelSort;
   /** Pipe mode: half-width of the S-curve level-change zone in px. */
   turnRadius?: number;
-  /** Pipe mode: draw stage name + value above the ribbon. */
+  /**
+   * Draw inside / pipe / rounded labels. Default true.
+   */
   showLabels?: boolean;
+  /**
+   * Corner softness in px. Independent of `sideCurve`.
+   * - `connection="rounded"`: default 11 when unset.
+   * - Native (`default` / `seamless` / `segmented`): set > 0 to get real rounded
+   *   stages via custom path (ECharts funnel `borderRadius` is visually weak).
+   * Designers can use `cornerRadius` alone for soft trapezoids.
+   */
+  cornerRadius?: number;
+  /**
+   * Side-wall bow for soft/custom stages (0 = straight, 1 = max). Default 0.
+   * Opt-in after widths are honest — ~0.15–0.25 for a subtle bow. Does not
+   * replace `cornerRadius`; set both when you want radius + curve. Side-only —
+   * does not break shared-edge chord/sagitta matching.
+   */
+  sideCurve?: number;
+  /**
+   * Rim curvature (0–0.2): each horizontal edge dips by `rimDepth × edgeWidth`.
+   * Default 0.03 for `connection="rounded"`, else 0 (flat rims).
+   */
+  rimDepth?: number;
+  /**
+   * Radius (px) of every stage corner facing a gap. Only the funnel's outer
+   * corners (top of the first stage, bottom of the last) use `cornerRadius`.
+   * Default 3, clamped to `cornerRadius`.
+   */
+  innerCornerRadius?: number;
+  /**
+   * `connection="cone"` only: rim ellipse height / width — how far above the
+   * funnel the viewer sits (0 = side view, max 0.5). Default 0.18.
+   */
+  coneTilt?: number;
+  /**
+   * `connection="cone"` only: `"hollow"` (default) shows the dark funnel opening
+   * on the first stage; `"solid"` gives every slice a lit top face.
+   */
+  coneStyle?: FunnelConeStyle;
+  /** Format the numeric inside-label value (still uses `valueKey`). */
+  formatValue?: (value: number) => string;
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
@@ -87,6 +150,8 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   data,
   stageKey,
   valueKey,
+  sizeKey,
+  label,
   stageGap,
   connection,
   taper,
@@ -94,6 +159,13 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   sort,
   turnRadius,
   showLabels,
+  cornerRadius,
+  sideCurve,
+  rimDepth,
+  innerCornerRadius,
+  coneTilt,
+  coneStyle,
+  formatValue,
   onMarkClick,
   onChartReady,
   chartRef,
@@ -102,6 +174,8 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   data: TData[];
   stageKey?: string;
   valueKey?: string;
+  sizeKey?: string;
+  label?: FunnelLabel;
   stageGap?: number;
   connection?: FunnelConnection;
   taper?: FunnelTaper;
@@ -109,6 +183,13 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
   sort?: FunnelSort;
   turnRadius?: number;
   showLabels?: boolean;
+  cornerRadius?: number;
+  sideCurve?: number;
+  rimDepth?: number;
+  innerCornerRadius?: number;
+  coneTilt?: number;
+  coneStyle?: FunnelConeStyle;
+  formatValue?: (value: number) => string;
   onMarkClick?: (event: NQMarkEvent) => void;
   onChartReady?: (instance: EChartsType) => void;
   chartRef?: Ref<ChartHandle | null>;
@@ -120,6 +201,8 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
     funnel: {
       stageKey,
       valueKey,
+      sizeKey,
+      label,
       stageGap,
       funnelConnection: connection,
       funnelTaper: taper,
@@ -127,6 +210,13 @@ function FunnelChartCanvas<TData extends Record<string, unknown>>({
       sort,
       turnRadius,
       showLabels,
+      cornerRadius,
+      sideCurve,
+      rimDepth,
+      innerCornerRadius,
+      coneTilt,
+      coneStyle,
+      formatValue,
     },
   });
   const runtimeRef = useChartInstanceRef();
@@ -164,6 +254,8 @@ export function NQFunnelChart<
   className,
   stageKey = "stage",
   valueKey = "value",
+  sizeKey,
+  label,
   isLoading,
   stageGap,
   connection,
@@ -172,6 +264,13 @@ export function NQFunnelChart<
   sort,
   turnRadius,
   showLabels,
+  cornerRadius,
+  sideCurve,
+  rimDepth,
+  innerCornerRadius,
+  coneTilt,
+  coneStyle,
+  formatValue,
   onMarkClick,
   onChartReady,
   chartRef,
@@ -223,6 +322,8 @@ export function NQFunnelChart<
                 data={displayData}
                 stageKey={stageKey}
                 valueKey={valueKey}
+                sizeKey={sizeKey}
+                label={label}
                 stageGap={stageGap}
                 connection={connection}
                 taper={taper}
@@ -230,6 +331,13 @@ export function NQFunnelChart<
                 sort={sort}
                 turnRadius={turnRadius}
                 showLabels={showLabels}
+                cornerRadius={cornerRadius}
+                sideCurve={sideCurve}
+                rimDepth={rimDepth}
+                innerCornerRadius={innerCornerRadius}
+                coneTilt={coneTilt}
+                coneStyle={coneStyle}
+                formatValue={formatValue}
                 onMarkClick={onMarkClick}
                 onChartReady={onChartReady}
                 chartRef={chartRef}
@@ -317,10 +425,41 @@ type StagesProps = {
   sort?: FunnelSort;
   turnRadius?: number;
   showLabels?: boolean;
+  /**
+   * Corner softness (px). Works on native + rounded. Default unset → 11 when
+   * `connection="rounded"`, else 0. Independent of `sideCurve`.
+   */
+  cornerRadius?: number;
+  /**
+   * Side-wall bow (0–1, default 0). Opt-in; pair with `cornerRadius` for a soft bow.
+   */
+  sideCurve?: number;
+  /** Rim depth as a fraction of edge width (0–0.2). Default 0.03 for rounded. */
+  rimDepth?: number;
+  /** Radius (px) of corners facing a gap. Default 3, clamped to `cornerRadius`. */
+  innerCornerRadius?: number;
+  /** Cone rim ellipse height / width (0–0.5). Default 0.18. */
+  coneTilt?: number;
+  /** Cone top-face look. Default `"hollow"`. */
+  coneStyle?: FunnelConeStyle;
 };
 
 export function Stages(_props: StagesProps = {}) {
-  const { connection, taper, stageGap, orient, sort, turnRadius, showLabels } = _props;
+  const {
+    connection,
+    taper,
+    stageGap,
+    orient,
+    sort,
+    turnRadius,
+    showLabels,
+    cornerRadius,
+    sideCurve,
+    rimDepth,
+    innerCornerRadius,
+    coneTilt,
+    coneStyle,
+  } = _props;
   const id = usePartId();
   useRegisterPart({
     type: "funnelStyle",
@@ -332,6 +471,12 @@ export function Stages(_props: StagesProps = {}) {
     sort,
     turnRadius,
     showLabels,
+    cornerRadius,
+    sideCurve,
+    rimDepth,
+    innerCornerRadius,
+    coneTilt,
+    coneStyle,
   });
   return null;
 }

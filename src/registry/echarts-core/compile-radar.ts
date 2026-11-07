@@ -48,7 +48,7 @@ export function compileRadarOption(ctx: CompileContext): EChartsOption {
       symbolSize: 4,
       ...hoverFocusOrOff(
         isHoverFocusOn(ctx),
-        itemFocus({ blurLine: true, ...(glowing ? { shadowBlur: 14 } : {}) }),
+        itemFocus({ blurLine: true, family: "radar", ...(glowing ? { shadowBlur: 14 } : {}) }),
       ),
     };
   });

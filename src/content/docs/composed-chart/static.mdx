@@ -129,7 +129,7 @@ const chartConfig = {
 </NQComposedChart>
 ```
 
-The basic preview matches [bar](/docs/bar-chart) and [line](/docs/line-chart): twelve months, `desktop` bars, `mobile` line, same emerald/rose tokens, and the same default **3px** top corner radius on bars (`barRadius` / `DEFAULT_BAR_RADIUS`, nqui `--radius-sm`).
+The basic preview matches [bar](/docs/bar-chart) and [line](/docs/line-chart): twelve months, `desktop` bars, `mobile` line, same emerald/rose tokens, and the same default **3px** corner radius on the outer end of bars (`barRadius`, nqui `--radius-sm`), the same **28%** / **8%** category and bar gaps, and the same 2px seam between stacked segments.
 
 ### Loading State
 
@@ -187,12 +187,6 @@ The root container. It owns the data, the shared selection state, the loading sk
   <ApiRow name="animationType" type='"none" | "left-to-right" | "right-to-left" | "center-out" | "edges-in"' default='"left-to-right"'>
     Default intro inherited by every `<Bar />` and `<Line />` — lines wipe in along this direction, bars grow up from their baseline staggered in this order. `"none"` disables it; devices with the OS reduce-motion preference fall back to `"none"` automatically.
   </ApiRow>
-  <ApiRow name="barGap" type="number">
-    The gap between bars sharing the same category.
-  </ApiRow>
-  <ApiRow name="barCategoryGap" type="number">
-    The gap between different categories of bars.
-  </ApiRow>
   <ApiRow name="defaultSelectedDataKey" type="string | null" default="null">
     The data key that should be selected by default.
   </ApiRow>
@@ -249,7 +243,7 @@ A single bar series. Each `<Bar />` is self-contained and generates its own grad
     The visual style of the bar fill. Applies to this bar only.
   </ApiRow>
   <ApiRow name="radius" type="number" default="3">
-    The corner radius of the bar in pixels.
+    The corner radius of the bar in pixels. Falls back to the chart's `barRadius`, then `--radius-sm`.
   </ApiRow>
   <ApiRow name="animationType" type='"none" | "left-to-right" | "right-to-left" | "center-out" | "edges-in"'>
     The grow-in order for this bar series. Falls back to the chart's `animationType` when omitted.

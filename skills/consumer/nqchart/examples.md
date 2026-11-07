@@ -72,6 +72,10 @@ Dedicated `.tsx` files — best starting points for primitives.
 | `ex-composed-chart` | Bar + line |
 | `ex-loading-state-composed-chart` | Skeleton |
 | `ex-pareto-chart` | `prepareParetoData` |
+| `ex-variance-chart` | `prepareVarianceRows` |
+| `ex-cohort-retention-chart` | `prepareCohortCells` |
+| `ex-forecast-chart` | `prepareForecastSeries` |
+| `ex-dumbbell-chart` | `prepareDumbbellRows` |
 | `ex-loading-state-pareto-chart` | Pareto skeleton |
 | `ex-boxplot-chart` | `prepareBoxPlotRow` |
 

@@ -59,6 +59,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/docs/sankey-chart",
+        destination: "/docs/sankey-chart/static",
+        permanent: true,
+      },
+      {
         source: "/docs/waterfall-chart",
         destination: "/docs/waterfall-chart/static",
         permanent: true,

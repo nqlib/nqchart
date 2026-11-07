@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { compileBarOption } from "../compile-bar";
 import type { BarSeriesPart } from "../parts/types";
+import { resolveChartSignature } from "../chart-signature";
 import { makeCtx } from "./make-ctx";
 
 const revenueBar: BarSeriesPart = {
@@ -10,6 +11,25 @@ const revenueBar: BarSeriesPart = {
 };
 
 describe("compileBarOption", () => {
+  it("leaves room above a monospace bar so the top label is not clipped", () => {
+    const option = compileBarOption(
+      makeCtx({
+        parts: [{ ...revenueBar, variant: "monospace" }],
+        xDataKey: "month",
+        data: [
+          { month: "Jan", revenue: 100 },
+          { month: "Aug", revenue: 950 },
+        ],
+      }),
+    );
+
+    const grid = option.grid as { top?: number };
+    const series = option.series as Array<{ type?: string; clip?: boolean }>;
+    expect(grid.top).toBeGreaterThanOrEqual(28);
+    expect(series[0]?.type).toBe("custom");
+    expect(series[0]?.clip).toBe(false);
+  });
+
   it("builds vertical unstacked bars", () => {
     const option = compileBarOption(
       makeCtx({
@@ -175,7 +195,7 @@ describe("compileBarOption", () => {
     ]);
   });
 
-  it("rounds only the outer end of each same-sign stack", () => {
+  it("rounds the outer end and each seam of a same-sign stack, never the zero line", () => {
     const option = compileBarOption(
       makeCtx({
         parts: [
@@ -193,12 +213,78 @@ describe("compileBarOption", () => {
     const series = option.series as Array<{
       data: Array<{ itemStyle: { borderRadius: number[] } }>;
     }>;
+    // gain: on zero, seam above. more: outer top, seam below. Mirrored for the negative stack.
     expect(series.map((s) => s.data[0]?.itemStyle.borderRadius)).toEqual([
-      [0, 0, 0, 0],
       [4, 4, 0, 0],
-      [0, 0, 0, 0],
+      [4, 4, 4, 4],
       [0, 0, 4, 4],
+      [4, 4, 4, 4],
     ]);
+  });
+
+  it("paints a seam shadow toward zero on segments that are not on the zero line", () => {
+    const option = compileBarOption(
+      makeCtx({
+        parts: [
+          { type: "bar", id: "a", dataKey: "a", stackId: "s" },
+          { type: "bar", id: "b", dataKey: "b", stackId: "s" },
+          { type: "bar", id: "c", dataKey: "c", stackId: "s" },
+        ],
+        xDataKey: "x",
+        data: [{ x: "Jan", a: 5, b: 3, c: -2 }],
+      }),
+    );
+    const series = option.series as Array<{
+      data: Array<{ itemStyle: { shadowOffsetY?: number; shadowBlur?: number; borderWidth?: number } }>;
+    }>;
+    const seam = resolveChartSignature("test-chart").gap.seam;
+    expect(series[0]?.data[0]?.itemStyle.shadowOffsetY).toBeUndefined();
+    expect(series[1]?.data[0]?.itemStyle.shadowOffsetY).toBe(seam);
+    expect(series[1]?.data[0]?.itemStyle.shadowBlur).toBe(0);
+    // A lone negative segment is on the zero line: no seam.
+    expect(series[2]?.data[0]?.itemStyle.shadowOffsetY).toBeUndefined();
+    // A border would shrink the bar on every edge.
+    expect(series[1]?.data[0]?.itemStyle.borderWidth).toBeUndefined();
+  });
+
+  it("uses the signature gaps for grouped and stacked bars, and none for a histogram", () => {
+    const sig = resolveChartSignature("test-chart").bar;
+    const parts = [{ type: "bar" as const, id: "a", dataKey: "a" }];
+    const data = [{ x: "Jan", a: 1 }];
+    type Layout = { barCategoryGap?: unknown; barGap?: unknown; barWidth?: unknown };
+    const layout = (cartesian?: Record<string, unknown>) =>
+      (compileBarOption(makeCtx({ parts, data, xDataKey: "x", cartesian })).series as Layout[])[0]!;
+    for (const l of [layout(), layout({ stackType: "stacked" })]) {
+      expect(l.barCategoryGap).toBe(sig.categoryGap);
+      expect(l.barGap).toBe(sig.groupGap);
+      expect(l.barWidth).toBeUndefined();
+    }
+    expect(layout({ variant: "histogram" })).toMatchObject({
+      barCategoryGap: 0,
+      barGap: 0,
+      barWidth: "100%",
+    });
   });
 });
 
+
+describe("bar value labels follow the bar's outer end", () => {
+  it("puts negative labels below (vertical) / left (horizontal)", async () => {
+    const { barLabelPosition } = await import("../series-labels");
+    expect(barLabelPosition(5, false)).toBe("top");
+    expect(barLabelPosition(-5, false)).toBe("bottom");
+    expect(barLabelPosition(5, true)).toBe("right");
+    expect(barLabelPosition(-5, true)).toBe("left");
+    expect(barLabelPosition(null, false)).toBe("top");
+  });
+});
+
+describe("series value labels skip missing points", () => {
+  it("returns an empty label for null so stacked neighbours don't print 0", async () => {
+    const { seriesLabelOption } = await import("../series-labels");
+    const opt = seriesLabelOption(true, (v) => `${Number(v)}`) as { formatter: (p: { value?: unknown }) => string };
+    expect(opt.formatter({ value: null })).toBe("");
+    expect(opt.formatter({ value: "-" })).toBe("");
+    expect(opt.formatter({ value: 8 })).toBe("8");
+  });
+});

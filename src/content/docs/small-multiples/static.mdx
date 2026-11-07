@@ -1,0 +1,111 @@
+---
+title: Small Multiples
+description: One chart per facet in a responsive grid, on a shared y-domain with one legend
+links:
+  github: https://github.com/ctesibius/nqchart/blob/main/src/registry/charts/small-multiples.tsx
+---
+
+<ComponentPreview title="Revenue by region" name="ex-small-multiples-chart" />
+
+## Installation
+
+<CliBlock commands={["@nqchart/small-multiples"]} />
+
+Small multiples wraps any NQChart. Install the chart you render inside each facet too, for example `@nqchart/line-chart`.
+
+## Usage
+
+```tsx
+import { NQSmallMultiples } from "@/components/nqchart/charts/small-multiples";
+import { NQLineChart, Line, XAxis, YAxis } from "@/components/nqchart/charts/line-chart";
+
+<NQSmallMultiples
+  data={rows} // { region, month, revenue, plan }[]
+  facetKey="region"
+  valueKeys={["revenue", "plan"]}
+  config={chartConfig}
+  legend
+>
+  {(facetRows, facet) => (
+    <NQLineChart data={facetRows} config={chartConfig} xDataKey="month" className="h-full w-full" showBrush={false}>
+      <XAxis dataKey="month" />
+      <YAxis domain={facet.domain} />
+      <Line dataKey="plan" variant="dashed" />
+      <Line dataKey="revenue" />
+    </NQLineChart>
+  )}
+</NQSmallMultiples>
+```
+
+### Why a render prop
+
+The shared domain has to land on the `<YAxis />` **inside** each chart, not on the chart root. A cloned `chart` element could only reach that axis by walking and rewriting its children. A render prop hands you `rows` and `facet.domain`, and you place them yourself: plain, typed, and the same for every chart family.
+
+### Shared scale
+
+With `sharedYDomain` on (the default), the component scans `valueKeys` across **all** rows. It anchors the range at zero (turn off with `includeZero={false}`) and rounds it out to tick-friendly values. Every facet gets the same `facet.domain`, so equal heights mean equal values. Leave `valueKeys` out and every numeric field except `facetKey` counts. For stacked bars, pass a domain worked out from the stack totals to `<YAxis />` yourself.
+
+### Layout
+
+- Without `columns`, the grid fits as many facets as `minFacetWidth` (220px) allows.
+- With `columns`, that is the **maximum**. Narrow containers wrap to fewer columns instead of squeezing facets.
+- Every facet has the same height (`facetHeight`, 160px), with a small muted title above it.
+- The gap is `8 × --chart-gap` (16px), so it follows the signature theme.
+- Each facet is its own chart, so hover focus stays inside the facet you are pointing at.
+
+### Legend
+
+Leave `<Legend />` out of each facet. Pass `config` and `legend` to draw one legend above the grid instead. `legend` takes `true` for every key in `config`, or an array of keys.
+
+## API Reference
+
+<ApiHeading>NQSmallMultiples</ApiHeading>
+
+<ApiTable>
+  <ApiRow name="data" type="TData[]" required>
+    All rows, for every facet.
+  </ApiRow>
+  <ApiRow name="facetKey" type="keyof TData & string" required>
+    Field that splits rows into facets. Facets keep the order they first appear in.
+  </ApiRow>
+  <ApiRow name="children" type="(rows: TData[], facet: SmallMultipleFacet) => ReactNode" required>
+    Renders one chart. `facet` is `{ key, index, rows, domain }`. Pass `facet.domain` to `<YAxis domain />`.
+  </ApiRow>
+  <ApiRow name="sharedYDomain" type="boolean" default="true">
+    Gives every facet the same y-domain. When off, `facet.domain` is `undefined` and each chart scales itself.
+  </ApiRow>
+  <ApiRow name="valueKeys" type="(keyof TData & string)[]">
+    Fields scanned for the shared domain. Defaults to every numeric field except `facetKey`.
+  </ApiRow>
+  <ApiRow name="includeZero" type="boolean" default="true">
+    Keeps 0 inside the shared domain. Turn off for lines that sit far from zero.
+  </ApiRow>
+  <ApiRow name="columns" type="number">
+    Maximum number of columns. Leave it out to fit as many as `minFacetWidth` allows.
+  </ApiRow>
+  <ApiRow name="minFacetWidth" type="number" default="220">
+    Narrowest a facet gets, in px, before the grid wraps.
+  </ApiRow>
+  <ApiRow name="facetHeight" type="number | string" default="160">
+    Height of each facet's chart area, in px or any CSS length.
+  </ApiRow>
+  <ApiRow name="facetLabel" type="(facet: SmallMultipleFacet) => ReactNode">
+    Facet title. Defaults to the facet key.
+  </ApiRow>
+  <ApiRow name="config" type="ChartConfig">
+    Series labels and colours for the shared legend.
+  </ApiRow>
+  <ApiRow name="legend" type="boolean | string[]" default="false">
+    Shows one legend above the grid. `true` lists every `config` key; an array picks keys.
+  </ApiRow>
+  <ApiRow name="gap" type="string" default='"calc(var(--chart-gap, 2px) * 8)"'>
+    Space between facets, as a CSS length.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Classes on the root.
+  </ApiRow>
+</ApiTable>
+
+### Helpers
+
+Pure and exported: `groupByFacet(data, facetKey)`, `computeSharedDomain(data, valueKeys, { includeZero, nice })`, `niceDomain(min, max)`, `inferValueKeys(data, facetKey)`, and `smallMultiplesGridTemplate(columns, minFacetWidth, gap)`.

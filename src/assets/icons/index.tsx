@@ -477,6 +477,32 @@ export function FunnelChartIcon({
   );
 }
 
+export function SankeyChartIcon({
+  fill = "currentColor",
+  secondaryfill: secondaryfillProp,
+  width = "1em",
+  height = "1em",
+  ...props
+}: IconProps) {
+  const secondaryfill = secondaryfillProp || fill;
+
+  return (
+    <svg
+      height={height}
+      width={width}
+      viewBox="0 0 18 18"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path d="M4 3h1C9 3 9 4 13 4v5C9 9 9 9.5 5 9.5H4V3Z" fill={secondaryfill} fillOpacity="0.35" />
+      <path d="M4 11h1C9 11 9 10 13 10v4.5C9 14.5 9 15 5 15H4V11Z" fill={secondaryfill} fillOpacity="0.55" />
+      <rect x="2" y="2.5" width="2" height="7.5" rx="0.75" fill={fill} />
+      <rect x="2" y="10.75" width="2" height="4.75" rx="0.75" fill={fill} />
+      <rect x="13" y="3.5" width="2" height="11.5" rx="0.75" fill={fill} />
+    </svg>
+  );
+}
+
 export function WaterfallChartIcon({
   fill = "currentColor",
   secondaryfill: secondaryfillProp,
@@ -540,6 +566,60 @@ export function SparklineChartIcon({
         fill="none"
       />
       <circle cx="16" cy="4.5" r="1.25" fill={fill} />
+    </svg>
+  );
+}
+
+export function KpiCardIcon({
+  fill = "currentColor",
+  secondaryfill: secondaryfillProp,
+  width = "1em",
+  height = "1em",
+  ...props
+}: IconProps) {
+  const secondaryfill = secondaryfillProp || fill;
+
+  return (
+    <svg
+      height={height}
+      width={width}
+      viewBox="0 0 18 18"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect x="1.5" y="2.5" width="15" height="13" rx="2.5" fill="none" stroke={secondaryfill} strokeOpacity="0.45" strokeWidth="1.25" />
+      <rect x="4" y="5" width="4" height="1.5" rx="0.75" fill={secondaryfill} fillOpacity="0.55" />
+      <rect x="4" y="8" width="6.5" height="2.5" rx="1" fill={fill} />
+      <path d="M4 13L7 11.75L9.5 12.5L14 10.5" stroke={fill} strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </svg>
+  );
+}
+
+export function SmallMultiplesIcon({
+  fill = "currentColor",
+  secondaryfill: secondaryfillProp,
+  width = "1em",
+  height = "1em",
+  ...props
+}: IconProps) {
+  const secondaryfill = secondaryfillProp || fill;
+
+  return (
+    <svg
+      height={height}
+      width={width}
+      viewBox="0 0 18 18"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect x="1.5" y="1.5" width="6.5" height="6.5" rx="1.5" fill={secondaryfill} fillOpacity="0.3" />
+      <rect x="10" y="1.5" width="6.5" height="6.5" rx="1.5" fill={secondaryfill} fillOpacity="0.3" />
+      <rect x="1.5" y="10" width="6.5" height="6.5" rx="1.5" fill={secondaryfill} fillOpacity="0.3" />
+      <rect x="10" y="10" width="6.5" height="6.5" rx="1.5" fill={secondaryfill} fillOpacity="0.3" />
+      <path d="M2.75 6.25L4.5 4.5L6.75 5.25" stroke={fill} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M11.25 6.5L13 5L15.25 3.5" stroke={fill} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M2.75 14.75L4.5 14L6.75 14.25" stroke={fill} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M11.25 15L13 13.25L15.25 12.5" stroke={fill} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </svg>
   );
 }

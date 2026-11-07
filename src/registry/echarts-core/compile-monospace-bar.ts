@@ -1,5 +1,8 @@
 import type { CustomSeriesOption, CustomSeriesRenderItemAPI, CustomSeriesRenderItemParams } from "echarts";
 import { NQ_MONOSPACE_SERIES_ID, CHART_ANIMATION } from "./chart-animation-tokens";
+import { resolveBarRadius, signedBarBorderRadius } from "./bar-radius";
+import { clampRadius } from "./chart-signature";
+import { CHART_FONT_FAMILY_MONO, CHART_FONT_SIZE, CHART_FONT_WEIGHT } from "./chart-typography-tokens";
 import type { BarSeriesPart, CompileContext } from "./parts/types";
 
 /** [categoryIndex, value, foldScale, showLabel] */
@@ -20,6 +23,7 @@ function renderMonospaceBarItem(
   api: CustomSeriesRenderItemAPI,
   color: string,
   categories: string[],
+  radius: number,
 ) {
   const categoryIndex = params.dataIndex;
   const category = categories[categoryIndex];
@@ -60,7 +64,7 @@ function renderMonospaceBarItem(
       {
         type: "rect",
         id: `nq-ms-bar-${categoryIndex}`,
-        shape: { x: barX, y, width: visualWidth, height, r: 0 },
+        shape: { x: barX, y, width: visualWidth, height, r: signedBarBorderRadius(value, clampRadius(radius, Math.min(visualWidth, height)), false) },
         style: api.style({ fill: color }),
         silent: true,
         z2: 1,
@@ -72,7 +76,7 @@ function renderMonospaceBarItem(
         style: {
           text: String(value),
           fill: color,
-          font: "11px ui-monospace, SFMono-Regular, Menlo, monospace",
+          font: `${CHART_FONT_WEIGHT.normal} ${CHART_FONT_SIZE.small}px ${CHART_FONT_FAMILY_MONO}`,
           textAlign: "center",
           textVerticalAlign: "bottom",
           opacity: showLabel ? 1 : 0,
@@ -91,6 +95,7 @@ export function buildMonospaceCustomSeries(
   rows: Record<string, unknown>[],
 ): CustomSeriesOption {
   const color = ctx.resolveColor(bar.dataKey, 0);
+  const radius = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
   const xKey =
     ctx.xDataKey ??
     ctx.parts.find((p) => p.type === "xAxis")?.dataKey ??
@@ -110,13 +115,14 @@ export function buildMonospaceCustomSeries(
     id: NQ_MONOSPACE_SERIES_ID,
     name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
     nqMonospace: true,
-    clip: true,
+    // The value sits above the bar. Clipping to the grid cuts the tallest label.
+    clip: false,
     coordinateSystem: "cartesian2d",
     dimensions: ["x", "value", "foldScale", "showLabel"],
     data,
     encode: { x: 0, y: 1 },
     renderItem(params, api) {
-      return renderMonospaceBarItem(params, api, color, categories);
+      return renderMonospaceBarItem(params, api, color, categories, radius);
     },
   } as CustomSeriesOption;
 }

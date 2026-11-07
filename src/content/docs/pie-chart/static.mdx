@@ -82,17 +82,12 @@ links:
 
 ## Usage
 
-The pie chart is composible. `<NQPieChart>` is the container, and you compose only the parts you need — `<Legend>`, `<Tooltip>`, `<Background>`, and one `<Pie>` — as its children. The `<Pie>` carries its own shape props (`innerRadius`, `paddingAngle`, `cornerRadius`, …), its `isClickable` flag, and `glowingSectors`, so a single chart can mix any combination of those.
+The pie chart is composable. `<NQPieChart>` is the container, and you compose only the parts you need — `<Legend>`, `<Tooltip>`, and one `<Pie>` — as its children. The `<Pie>` carries the shape: `innerRadius` for a donut, `rose` for a Nightingale rose, `sort`, `showLabels`.
+
+Every pie follows the NQChart signature: an even seam between slices (`--chart-gap`, 2px — not the wedge-shaped gap of a pad angle) and rounded slice corners (11px), with labels on two-leg leader lines that never overlap. Set `gap={0}` and `cornerRadius={0}` on `<Pie>` for classic touching wedges.
 
 ```tsx
-import {
-  NQPieChart,
-  Pie,
-  Label,
-  Tooltip,
-  Legend,
-  Background,
-} from "@/components/nqchart/charts/pie-chart";
+import { NQPieChart, Pie, Tooltip, Legend } from "@/components/nqchart/charts/pie-chart";
 ```
 
 ```tsx
@@ -119,36 +114,41 @@ const chartConfig = {
 ```
 
 ```tsx
-<NQPieChart data={data} dataKey="visitors" nameKey="browser" config={chartConfig}>
+<NQPieChart data={data} nameKey="browser" config={chartConfig}>
   <Legend isClickable />
   <Tooltip />
-  <Pie isClickable innerRadius={60} paddingAngle={4} cornerRadius={8}>
-    <Label />
-  </Pie>
+  <Pie dataKey="visitors" nameKey="browser" innerRadius="40%" />
 </NQPieChart>
 ```
 
 ### Interactive Selection
 
-Add `isClickable` to the `<Pie>` (and to `<Legend>`) to make sectors selectable. Use the `onSelectionChange` callback on `<NQPieChart>` to handle selection events:
+Add `isClickable` to `<Legend>` to isolate a slice from the legend (the others fade to `0.2`); `selected` / `onSelectChange` make it controlled. Use `onMarkClick` on `<NQPieChart>` to react to a slice click:
 
 ```tsx
 <NQPieChart
   data={data}
-  dataKey="visitors"
   nameKey="browser"
   config={chartConfig}
-  onSelectionChange={(selection) => {
-    if (selection) {
-      console.log("Selected:", selection.dataKey, "Value:", selection.value);
-    } else {
-      console.log("Deselected");
-    }
-  }}
+  onMarkClick={(event) => console.log("Clicked:", event.seriesKey, event.datum)}
 >
-  <Legend isClickable />
+  <Legend isClickable onSelectChange={(key) => console.log("Isolated:", key)} />
   <Tooltip />
-  <Pie isClickable />
+  <Pie dataKey="visitors" nameKey="browser" />
+</NQPieChart>
+```
+
+### Rose
+
+`<Pie rose="radius">` draws a Nightingale rose: each slice's angle **and** length follow its value, sorted largest first and running clockwise from 12 o'clock. Slices use the NQChart signature — an even seam between slices (`--chart-gap`, 2px) and rounded corners (the surface radius, 11px) — and the drawn shape is fitted to the card. `rose="area"` gives every slice the same angle and varies only the length. For equal-angle petals on a polar axis, see the radial chart's `radialLayout="rose"`.
+
+<ComponentPreview title="Rose" name="ex-pie-rose-chart" />
+
+```tsx
+<NQPieChart data={data} nameKey="channel" config={config}>
+  <Legend />
+  <Tooltip />
+  <Pie dataKey="visits" nameKey="channel" rose="radius" />
 </NQPieChart>
 ```
 
@@ -168,17 +168,14 @@ The root container. It owns the data, the shared selection state, and the loadin
   <ApiRow name="data" type="TData[]" required>
     Data used to display the chart. An array of objects where each object represents a sector (`TData extends Record<string, unknown>`).
   </ApiRow>
-  <ApiRow name="dataKey" type="keyof TData & string" required>
-    The key from your data objects to use for sector values (typically numeric values that determine sector size).
-  </ApiRow>
-  <ApiRow name="nameKey" type="keyof TData & string" required>
+  <ApiRow name="nameKey" type="keyof TData & string">
     The key from your data objects to use for sector names (typically string values used for labels and legend).
   </ApiRow>
   <ApiRow name="config" type="ChartConfig" required>
     Configuration object that defines the chart's sectors. Each key should match a value from your `nameKey` field, with corresponding colors.
   </ApiRow>
   <ApiRow name="children" type="ReactNode" required>
-    The composed chart parts — `<Legend />`, `<Tooltip />`, `<Background />`, and one `<Pie />`.
+    The composed chart parts — `<Legend />`, `<Tooltip />`, and one `<Pie />`.
   </ApiRow>
   <ApiRow name="className" type="string">
     Additional CSS classes to apply to the chart container.
@@ -186,67 +183,45 @@ The root container. It owns the data, the shared selection state, and the loadin
   <ApiRow name="hoverFocus" type="boolean" default="true">
     Hover dim: focused slice full opacity, siblings at `0.2`. `false` keeps the tooltip and disables sibling fade. See [Hover Focus](/docs/hover-focus).
   </ApiRow>
-  <ApiRow name="defaultSelectedSector" type="string | null" default="null">
-    The sector name that should be selected by default.
-  </ApiRow>
-  <ApiRow name="onSelectionChange" type="(selection: { dataKey: string; value: number } | null) => void">
-    Callback fired when a sector is selected or deselected — by clicking a clickable `<Pie />` sector or `<Legend />` entry. Receives an object with `dataKey` (sector name) and `value` (sector value), or `null` when deselected.
+  <ApiRow name="onMarkClick" type="(event: NQMarkEvent) => void">
+    Fired when a slice is clicked, with the slice key and its source row. Also turns on arrow-key navigation across slices.
   </ApiRow>
   <ApiRow name="isLoading" type="boolean" default="false">
     Shows a loading placeholder animation when data is being fetched.
-  </ApiRow>
-  <ApiRow name="chartProps" type="ComponentProps<typeof PieChart>">
-    Additional ECharts options merged into the compiled `option` by NQChart. Read the <Link href="https://echarts.apache.org/en/option.html#series-pie" _blank>ECharts PieChart documentation</Link> for available props.
   </ApiRow>
 </ApiTable>
 
 <ApiHeading>Pie</ApiHeading>
 
-The pie series. Self-contained — it generates its own radial color gradients and glow filters, so any number of pies can live on one page without style collisions. Compose a `<Label />` inside it to draw labels on each sector.
+The pie series. Slices run clockwise from 12 o'clock and use the NQChart signature geometry — an even seam and rounded corners.
 
 <ApiTable>
-  <ApiRow name="innerRadius" type="number | string" default="0">
-    The inner radius of the pie. Set to a value greater than 0 to create a donut chart. Can be a number (pixels) or percentage string.
+  <ApiRow name="dataKey" type="string" default='"value"'>
+    The field holding each slice's value.
   </ApiRow>
-  <ApiRow name="outerRadius" type="number | string" default='"80%"'>
-    The outer radius of the pie. Can be a number (pixels) or percentage string.
+  <ApiRow name="nameKey" type="string">
+    The field naming each slice (matches a `config` key). Defaults to the root `nameKey`.
   </ApiRow>
-  <ApiRow name="cornerRadius" type="number" default="0">
-    The border radius for the corners of each sector in pixels.
+  <ApiRow name="innerRadius" type="number | string" default='0 (rose: "12%")'>
+    Hole radius — px, or `"NN%"` of half the shorter side. Greater than 0 makes a donut.
   </ApiRow>
-  <ApiRow name="paddingAngle" type="number" default="0">
-    The angle of padding between sectors in degrees. Use a negative value to create overlapping sectors.
+  <ApiRow name="outerRadius" type="number | string" default='"70%" (rose: "92%")'>
+    Rim radius — px, or `"NN%"` of half the shorter side. A rose without labels is fitted to the card when this is unset.
   </ApiRow>
-  <ApiRow name="startAngle" type="number" default="0">
-    The starting angle of the pie in degrees (0 is 3 o'clock, 90 is 12 o'clock).
+  <ApiRow name="showLabels" type="boolean" default="true (rose: false)">
+    Slice names outside the rim on two-leg leader lines, spread so they never overlap. Slices under 3° skip their label; the tooltip still names them.
   </ApiRow>
-  <ApiRow name="endAngle" type="number" default="360">
-    The ending angle of the pie in degrees. Set to less than 360 for a partial pie.
+  <ApiRow name="rose" type='"radius" | "area"'>
+    Draw a Nightingale rose. `"radius"` — slice angle and length both follow the value; `"area"` — equal angles, length follows the value.
   </ApiRow>
-  <ApiRow name="isClickable" type="boolean" default="false">
-    Enables interactive clicking on sectors to select/deselect them. When a sector is selected, the others dim.
+  <ApiRow name="sort" type='"descending" | "ascending" | "none"' default='"none" (rose: "descending")'>
+    Slice order, clockwise from 12 o'clock.
   </ApiRow>
-  <ApiRow name="glowingSectors" type="string[]" default="[]">
-    Array of sector names (values from your `nameKey` field) that should have a glowing effect applied. Creates a smooth outer glow around the specified sectors.
+  <ApiRow name="gap" type="number" default="--chart-gap (2)">
+    The even seam between slices, in pixels. `0` makes slices touch.
   </ApiRow>
-  <ApiRow name="children" type="ReactNode">
-    Optional `<Label />` composition that draws labels on each sector.
-  </ApiRow>
-  <ApiRow name="pieProps" type='Omit<ComponentProps<typeof Pie>, "data" | "dataKey" | "nameKey">'>
-    Escape hatch for raw ECharts series options compiled by NQChart. Read the <Link href="https://echarts.apache.org/en/option.html#series-pie" _blank>ECharts Pie documentation</Link> for available props.
-  </ApiRow>
-</ApiTable>
-
-<ApiHeading>Label</ApiHeading>
-
-Per-sector labels composed inside a `<Pie />`. It renders nothing on its own — the parent `<Pie />` reads its props and draws a label list over the sectors.
-
-<ApiTable>
-  <ApiRow name="dataKey" type="string">
-    The key from your data objects to use for label text. Falls back to the chart's `dataKey` when omitted.
-  </ApiRow>
-  <ApiRow name="labelListProps" type='Omit<ComponentProps<typeof LabelList>, "dataKey">'>
-    Escape hatch for raw ECharts series options compiled by NQChart. Read the <Link href="https://echarts.apache.org/en/option.html#series-pie.label" _blank>ECharts LabelList documentation</Link> for available props.
+  <ApiRow name="cornerRadius" type="number" default="11">
+    Slice corner radius in pixels. Corners shrink to fit thin slices; corners at the hole scale with it. `0` gives sharp wedges.
   </ApiRow>
 </ApiTable>
 
@@ -282,12 +257,3 @@ The sector legend. When `isClickable` is set, each entry toggles selection of it
   </ApiRow>
 </ApiTable>
 
-<ApiHeading>Background</ApiHeading>
-
-An optional decorative pattern drawn behind the pie. Compose it before the `<Pie />` so it sits underneath the sectors.
-
-<ApiTable>
-  <ApiRow name="variant" type="BackgroundVariant" default='"dots"'>
-    The background pattern style.
-  </ApiRow>
-</ApiTable>

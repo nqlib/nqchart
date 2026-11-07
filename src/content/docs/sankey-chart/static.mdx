@@ -1,0 +1,225 @@
+---
+title: Sankey Chart
+description: Flows from source to outcome, sized by volume — node + link focus built in
+image: /og/sankey-chart.png
+links:
+  github: https://github.com/ctesibius/nqchart/blob/main/src/registry/charts/sankey-chart.tsx
+  doc: https://echarts.apache.org/en/option.html#series-sankey
+  api: https://echarts.apache.org/en/option.html#series-sankey
+---
+
+<ComponentPreview title="Basic Chart" name="ex-sankey-chart"  />
+
+## Installation
+
+<CodeTabs>
+  <TabsList variant="underline">
+    <TabsTab value="cli">CLI</TabsTab>
+    <TabsTab value="manual">Manual</TabsTab>
+  </TabsList>
+  <TabsPanel value="cli">
+    <CliBlock commands={["@nqchart/sankey-chart"]} />
+  </TabsPanel>
+  <TabsPanel value="manual">
+    <Steps>
+      <Step>
+        <StepTitle>Install the following dependencies:</StepTitle>
+        <StepContent>
+          <CommandBlock commands={["echarts", "motion"]} />
+        </StepContent>
+      </Step>
+      <Step>
+        <StepTitle>Copy and paste the following code snippets into your project.</StepTitle>
+         <StepDescription>
+          To use the chart, first create the folder `nqchart` and a subfolder called `charts` inside your `components` directory.
+          Then, copy the following base sankey-chart code into a new file in that folder.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="sankey-chart"
+            title="components/nqchart/charts/sankey-chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, Let's add the chart component to your project.</StepTitle>
+        <StepDescription>
+          These Components are required by the chart component to render the chart. Make a folder called `ui` inside the `nqchart` folder and paste the code there.
+
+          Below is main chart component.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="chart"
+            title="components/nqchart/ui/chart.tsx"
+          />
+        </StepContent>
+      </Step>
+       <Step>
+        <StepTitle>Now, We need to add sub components.</StepTitle>
+        <StepDescription>
+          Create a file called `tooltip.tsx` inside the `nqchart/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="tooltip"
+            title="components/nqchart/ui/tooltip.tsx"
+          />
+        </StepContent>
+        <StepDescription>
+          Now, create another file called `legend.tsx` inside the `nqchart/ui` folder and paste the code there.
+        </StepDescription>
+        <StepContent>
+          <ComponentSource
+            name="legend"
+            title="components/nqchart/ui/legend.tsx"
+          />
+        </StepContent>
+      </Step>
+    </Steps>
+  </TabsPanel>
+</CodeTabs>
+
+## Usage
+
+`<NQSankeyChart>` takes one row per **link** — a source, a target and a value. Nodes are derived from the links (first appearance order); pass `nodes` only to pin an order or carry extra fields. `config` is keyed by **node name**: each entry gives the node its colour and display label. Nodes without an entry take the `--chart-1…5` palette.
+
+```tsx
+import { NQSankeyChart, Tooltip } from "@/components/nqchart/charts/sankey-chart";
+```
+
+```tsx
+const flows = [
+  { source: "organic", target: "landing", visitors: 4200 },
+  { source: "ads", target: "landing", visitors: 3100 },
+  { source: "landing", target: "signup", visitors: 2900 },
+  { source: "landing", target: "bounced", visitors: 4400 },
+  { source: "signup", target: "paid", visitors: 1250 },
+];
+
+const chartConfig = {
+  organic: { label: "Organic search", colors: { light: ["#3b82f6"], dark: ["#60a5fa"] } },
+  ads: { label: "Paid ads", colors: { light: ["#8b5cf6"], dark: ["#a78bfa"] } },
+  landing: { label: "Landing page", colors: { light: ["#0ea5e9"], dark: ["#38bdf8"] } },
+  // …one entry per node
+} satisfies ChartConfig;
+
+<NQSankeyChart data={flows} valueKey="visitors" config={chartConfig}>
+  <Tooltip />
+</NQSankeyChart>
+```
+
+- **Links** take the source node's colour at low opacity; `linkColor="gradient"` blends source → target.
+- **Labels** show the node name and its throughput (`max(inflow, outflow)`), formatted with `formatValue`. Last-column labels sit inside the plot.
+- **Tooltip** — a node shows its throughput; a link shows `Source → Target: value`.
+- **Hover focus** — hovering a node keeps that node and its links; hovering a link keeps it and its two nodes. Everything else dims (nodes to `0.2`, links by the same factor). `hoverFocus={false}` keeps the tooltip and drops the dim. See [Hover Focus](/docs/hover-focus).
+- **Clicks** — `onMarkClick` fires for nodes (`seriesKey` = node name, `datum` = `{ name, value }`) and links (`seriesKey` = source name, `datum` = the link row). Arrow keys walk the nodes when `onMarkClick` is set.
+- **Cycles** are not drawable: a link that would close a loop (or a self-loop, a missing end, a value ≤ 0) is dropped with a development warning.
+
+## API Reference
+
+The chart is composed of a root and an optional tooltip. Every layout option lives on the root.
+
+<ApiHeading>NQSankeyChart</ApiHeading>
+
+Root container. Compiles an ECharts `series-sankey`: nodes with signature corners (`--radius-sm`) and no painted border, a stage-sized gap between nodes, links coloured by their source.
+
+<ApiTable>
+  <ApiRow name="config" type="Record<string, ChartConfig[string]>" required>
+    Keyed by node name. Gives each node its colour and display label (labels, tooltip). Nodes without an entry use the `--chart-N` palette.
+  </ApiRow>
+  <ApiRow name="data" type="TData[]" required>
+    One row per link with `sourceKey`, `targetKey` and a numeric `valueKey`.
+  </ApiRow>
+  <ApiRow name="sourceKey" type="string" default='"source"'>
+    Field holding the link's source node name.
+  </ApiRow>
+  <ApiRow name="targetKey" type="string" default='"target"'>
+    Field holding the link's target node name.
+  </ApiRow>
+  <ApiRow name="valueKey" type="string" default='"value"'>
+    Field holding the link's numeric value (band thickness).
+  </ApiRow>
+  <ApiRow name="nodes" type="{ name: string; [key: string]: unknown }[]">
+    Explicit nodes — order and extra fields (returned in the click `datum`). Omit to derive nodes from the links.
+  </ApiRow>
+  <ApiRow name="orient" type='"horizontal" | "vertical"' default='"horizontal"'>
+    Flow direction: left → right, or top → bottom.
+  </ApiRow>
+  <ApiRow name="nodeAlign" type='"justify" | "left" | "right"' default='"justify"'>
+    Column placement. `justify` puts every sink in the last column; `left` / `right` pack nodes toward the sources / sinks.
+  </ApiRow>
+  <ApiRow name="nodeWidth" type="number" default="12">
+    Node thickness in px. Corner radius clamps to half of it.
+  </ApiRow>
+  <ApiRow name="nodeGap" type="number" default="8">
+    Space between nodes in one column, in px. Defaults to the signature stage gap (4 × `--chart-gap`).
+  </ApiRow>
+  <ApiRow name="showLabels" type="boolean" default="true">
+    Node labels: name plus formatted throughput.
+  </ApiRow>
+  <ApiRow name="linkColor" type='"source" | "gradient"' default='"source"'>
+    Link fill: the source node's colour, or a source → target gradient.
+  </ApiRow>
+  <ApiRow name="formatValue" type="(value: number) => string">
+    Formats values in labels and the tooltip. Default `toLocaleString()`.
+  </ApiRow>
+  <ApiRow name="children" type="ReactNode">
+    `<Tooltip />`.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Additional wrapper classes forwarded to `<ChartContainer />`.
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean" default="false">
+    Shows the loading skeleton.
+  </ApiRow>
+  <ApiRow name="isEmpty" type="boolean">
+    Forces the empty state. Default: `true` when `data` is an empty array.
+  </ApiRow>
+  <ApiRow name="emptyState" type="ReactNode">
+    Content for the empty state.
+  </ApiRow>
+  <ApiRow name="error" type="ReactNode">
+    Renders the error state instead of the chart.
+  </ApiRow>
+  <ApiRow name="hoverFocus" type="boolean" default="true">
+    Node hover keeps the node + its links; link hover keeps the link + its two nodes; the rest dims. `false` keeps the tooltip and disables the dim.
+  </ApiRow>
+  <ApiRow name="onMarkClick" type="(event: NQMarkEvent) => void">
+    Fires on a node or link click (and Enter on a keyboard-focused node).
+  </ApiRow>
+  <ApiRow name="onChartReady" type="(instance: EChartsType) => void">
+    Receives the ECharts instance once mounted.
+  </ApiRow>
+  <ApiRow name="chartRef" type="Ref<ChartHandle | null>">
+    Imperative handle: `getInstance()`, `toDataURL()`.
+  </ApiRow>
+  <ApiRow name="a11yTable" type="boolean" default="true">
+    Visually hidden table of the links (source, target, value) for screen readers.
+  </ApiRow>
+  <ApiRow name="a11yLabel" type="string">
+    Caption read before the table.
+  </ApiRow>
+  <ApiRow name="a11ySummary" type="string">
+    Summary read before the table.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>Tooltip</ApiHeading>
+
+Draws the NQChart tooltip card. Without it the chart keeps a plain native tooltip with the same text.
+
+<ApiTable>
+  <ApiRow name="variant" type='"default" | "frosted-glass"' default='"default"'>
+    Tooltip surface preset.
+  </ApiRow>
+  <ApiRow name="roundness" type='"sm" | "md" | "lg" | "xl"' default='"lg"'>
+    Tooltip radius.
+  </ApiRow>
+  <ApiRow name="hideIndicator" type="boolean" default="false">
+    Hides the colour swatch.
+  </ApiRow>
+  <ApiRow name="hide" type="boolean" default="false">
+    Turns the tooltip off.
+  </ApiRow>
+</ApiTable>

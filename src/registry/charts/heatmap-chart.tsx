@@ -1,7 +1,8 @@
 "use client";
 
 import { type ChartConfig, ChartContainer } from "@/registry/ui/chart";
-import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
+import { ChartInstanceProvider } from "@/registry/echarts-core/chart-instance-context";
+import { MarkNavPlotShell } from "@/registry/echarts-core/mark-nav-plot-shell";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { getEcharts } from "@/registry/echarts-core/echarts-init";
@@ -95,24 +96,27 @@ export function NQHeatmapChart<TConfig extends Record<string, ChartConfig[string
 
   return (
     <PartRegistryProvider>
-      <ChartContainer config={config} className={className} isLoading={isLoading}>
-        <ChartPlotShell
-          isLoading={isLoading}
-          loadingVariant="heatmap"
-          plotRect={plotAlign}
-          canvas={
-            <HeatmapChartCanvas
-              onPlotRect={setPlotAlign}
-              onMarkClick={onMarkClick}
-              onChartReady={onChartReady}
-              chartRef={chartRef}
-              hoverFocus={hoverFocus}
-            />
-          }
-        >
-          {children}
-        </ChartPlotShell>
-      </ChartContainer>
+      <ChartInstanceProvider>
+        <ChartContainer config={config} className={className} isLoading={isLoading}>
+          <MarkNavPlotShell
+            onMarkClick={onMarkClick}
+            isLoading={isLoading}
+            loadingVariant="heatmap"
+            plotRect={plotAlign}
+            canvas={
+              <HeatmapChartCanvas
+                onPlotRect={setPlotAlign}
+                onMarkClick={onMarkClick}
+                onChartReady={onChartReady}
+                chartRef={chartRef}
+                hoverFocus={hoverFocus}
+              />
+            }
+          >
+            {children}
+          </MarkNavPlotShell>
+        </ChartContainer>
+      </ChartInstanceProvider>
     </PartRegistryProvider>
   );
 }

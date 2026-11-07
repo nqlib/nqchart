@@ -53,7 +53,7 @@ function lengthToPx(value: string, rootFontSizePx: number): number | null {
 }
 
 /** Live `--radius` in px for this chart's subtree, or null outside the browser. */
-function readBaseRadiusPx(chartId: string): number | null {
+export function readBaseRadiusPx(chartId: string): number | null {
   const theme = headlessThemeOf(chartId);
   if (theme) return theme.radiusPx;
   if (typeof document === "undefined") return null;

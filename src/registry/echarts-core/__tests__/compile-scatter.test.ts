@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { FOCUS } from "../emphasis-presets";
 import { compileScatterOption } from "../compile-scatter";
 import type { ScatterSeriesPart } from "../parts/types";
 import { makeCtx } from "./make-ctx";
@@ -60,7 +61,7 @@ describe("compileScatterOption", () => {
     expect(series).toHaveLength(1);
     expect(series[0]?.type).toBe("scatter");
     expect(series[0]?.id).toBe("__nq_scatter__");
-    expect(series[0]?.stateAnimation?.duration).toBe(0);
+    expect(series[0]?.stateAnimation?.duration).toBe(FOCUS.durationMs);
     expect(series[0]?.data).toHaveLength(4);
     expect(series[0]?.data?.[0]).toMatchObject({
       name: "Desktop",

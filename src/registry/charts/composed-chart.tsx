@@ -227,7 +227,7 @@ export function Line({
   /** @deprecated use flat `yAxisId` */
   lineProps?: { yAxisId?: string };
   /** `points` — markers only (e.g. box-plot median ticks). `dashed` / `dotted` set stroke dash. */
-  variant?: "points" | "solid" | "dashed" | "dotted";
+  variant?: "points" | "dots" | "solid" | "dashed" | "dotted";
   showInLegend?: boolean;
   showLabels?: boolean;
   labelFormatter?: (value: unknown) => string;
@@ -309,6 +309,23 @@ export function Whiskers({
     dataKey,
     showInLegend,
   });
+  return null;
+}
+
+/** Dumbbell connector — a segment between `fromKey` and `toKey` per category. Pair with two `<Line variant="dots" />`. */
+export function Connector({
+  fromKey,
+  toKey,
+  dataKey = "connector",
+  showInLegend = false,
+}: {
+  fromKey: string;
+  toKey: string;
+  dataKey?: string;
+  showInLegend?: boolean;
+}) {
+  const id = usePartId();
+  useRegisterPart({ type: "connector", id, fromKey, toKey, dataKey, showInLegend });
   return null;
 }
 

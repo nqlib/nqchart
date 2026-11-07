@@ -44,6 +44,11 @@ export type HeadlessTheme = {
   tokens?: Record<string, string>;
   /** The value of `--radius` in px; `null` keeps the build-time default. */
   radiusPx: number | null;
+  /**
+   * The value of `--chart-gap` in px (the signature seam between adjacent
+   * marks). Omit or `null` to keep the default (2px).
+   */
+  chartGapPx?: number | null;
   /** The `--font-sans` stack the chart text uses. */
   fontFamily: string;
   /** `false` compiles a static option (no intro tweens), for a print or an image. */

@@ -117,19 +117,60 @@ const CANVAS_DARK: ChartChromeColors = {
   popoverForeground: "#fafafa", // ≈ --popover-foreground oklch(0.92 0 0)
 };
 
-/** Resolve design tokens to rgb/hex strings ECharts canvas can paint. */
+/** Colors whose computed value depends on where they are used. */
+const CONTEXT_DEPENDENT_COLOR = /var\(|currentcolor|inherit/i;
+const CANVAS_COLOR_CACHE_MAX = 256;
+/** Literal color → computed color. Pure, so it never needs invalidating. */
+const canvasColorCache = new Map<string, string>();
+let sharedColorProbe: HTMLSpanElement | null = null;
+
+function colorProbe(): HTMLSpanElement {
+  if (!sharedColorProbe || !sharedColorProbe.isConnected) {
+    sharedColorProbe = document.createElement("span");
+    sharedColorProbe.setAttribute("aria-hidden", "true");
+    sharedColorProbe.dataset.nqColorProbe = "";
+    sharedColorProbe.style.display = "none";
+    (document.body ?? document.documentElement).appendChild(sharedColorProbe);
+  }
+  return sharedColorProbe;
+}
+
+/**
+ * Resolve design tokens to rgb/hex strings ECharts canvas can paint.
+ *
+ * Performance (plan 022): this used to append and remove a probe `<span>` in the
+ * chart on every call. Each insert dirtied the document's styles, so the
+ * `getComputedStyle` that followed forced a full style recalc. A dashboard
+ * makes ~80 of these calls per chart, which made load and theme switches
+ * quadratic in chart count. Literal colors now go through one hidden probe
+ * and a cache; only context-dependent values still use a probe in the chart.
+ */
 function cssColorToCanvasRgb(color: string, context: Element): string {
   if (!color) return color;
   if (/^#[\da-f]{3,8}$/i.test(color) || /^rgba?\(/i.test(color)) {
     return color;
   }
 
-  const probe = document.createElement("span");
+  if (CONTEXT_DEPENDENT_COLOR.test(color)) {
+    const probe = document.createElement("span");
+    probe.style.color = color;
+    context.appendChild(probe);
+    const rgb = getComputedStyle(probe).color;
+    context.removeChild(probe);
+    return rgb || color;
+  }
+
+  const cached = canvasColorCache.get(color);
+  if (cached !== undefined) return cached;
+
+  const probe = colorProbe();
+  probe.style.color = "";
   probe.style.color = color;
-  context.appendChild(probe);
-  const rgb = getComputedStyle(probe).color;
-  context.removeChild(probe);
-  return rgb || color;
+  // An unparseable color leaves the inline style empty; keep the input as before.
+  const rgb = probe.style.color ? getComputedStyle(probe).color || color : color;
+  if (canvasColorCache.size >= CANVAS_COLOR_CACHE_MAX) canvasColorCache.clear();
+  canvasColorCache.set(color, rgb);
+  return rgb;
 }
 
 /** Seam color between ECharts marks (treemap gaps, funnel borders, point halos). */

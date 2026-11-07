@@ -19,6 +19,7 @@ Canonical catalog for registry primitives, examples, and blocks. Full detail als
 | treemap-chart | `NQTreemapChart` | |
 | waterfall-chart | `NQWaterfallChart` | Bridge math |
 | funnel-chart | `NQFunnelChart` | Stage layout |
+| sankey-chart | `NQSankeyChart` | Flow links (source → target), adjacency focus |
 | sparkline-chart | `NQSparklineChart` | Compact domain |
 
 ## Library (`registry:lib`)

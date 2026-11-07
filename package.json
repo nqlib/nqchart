@@ -219,6 +219,11 @@
       "import": "./dist/radial-chart.mjs",
       "require": "./dist/radial-chart.cjs"
     },
+    "./sankey-chart": {
+      "types": "./dist/types/registry/charts/sankey-chart.d.ts",
+      "import": "./dist/sankey-chart.mjs",
+      "require": "./dist/sankey-chart.cjs"
+    },
     "./scatter-chart": {
       "types": "./dist/types/registry/charts/scatter-chart.d.ts",
       "import": "./dist/scatter-chart.mjs",
@@ -228,6 +233,21 @@
       "types": "./dist/types/registry/charts/sparkline-chart.d.ts",
       "import": "./dist/sparkline-chart.mjs",
       "require": "./dist/sparkline-chart.cjs"
+    },
+    "./kpi-card": {
+      "types": "./dist/types/registry/charts/kpi-card.d.ts",
+      "import": "./dist/kpi-card.mjs",
+      "require": "./dist/kpi-card.cjs"
+    },
+    "./small-multiples": {
+      "types": "./dist/types/registry/charts/small-multiples.d.ts",
+      "import": "./dist/small-multiples.mjs",
+      "require": "./dist/small-multiples.cjs"
+    },
+    "./tile-column-chart": {
+      "types": "./dist/types/registry/charts/tile-column-chart.d.ts",
+      "import": "./dist/tile-column-chart.mjs",
+      "require": "./dist/tile-column-chart.cjs"
     },
     "./treemap-chart": {
       "types": "./dist/types/registry/charts/treemap-chart.d.ts",

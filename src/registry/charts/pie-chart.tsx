@@ -13,8 +13,9 @@ import {
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { getEcharts } from "@/registry/echarts-core/echarts-init";
-import { PieChart } from "echarts/charts";
+import { CustomChart, PieChart } from "echarts/charts";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
+import type { PieRose, PieSort } from "@/registry/echarts-core/parts/types";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compilePieOption } from "@/registry/echarts-core/compile-pie";
 import { segmentKeysFromData } from "@/registry/echarts-core/segment-keys";
@@ -37,7 +38,10 @@ import {
 import { type ReactNode, type Ref, useMemo, useState } from "react";
 import type { EChartsType } from "echarts/core";
 
-const PIE_ECHARTS_MODULES = [PieChart];
+export type { PieRose, PieSort };
+
+// CustomChart draws the rose (`<Pie rose>`) with the signature geometry.
+const PIE_ECHARTS_MODULES = [PieChart, CustomChart];
 getEcharts(PIE_ECHARTS_MODULES);
 
 type NQPieChartProps<
@@ -240,15 +244,45 @@ export function Pie({
   innerRadius,
   outerRadius,
   showLabels,
+  rose,
+  sort,
+  gap,
+  cornerRadius,
 }: {
   dataKey?: string;
   nameKey?: string;
+  /** px, or `"NN%"` of half the shorter side. Rose default `"12%"`. */
   innerRadius?: number | string;
+  /** px, or `"NN%"` of half the shorter side. Pie default `"70%"`, rose `"92%"`. */
   outerRadius?: number | string;
+  /** Slice name labels. Pie default true; rose default false. */
   showLabels?: boolean;
+  /**
+   * Nightingale rose with the NQChart signature (even seams, rounded slices).
+   * `"radius"` — angle and length ∝ value; `"area"` — equal angles, length ∝ value.
+   */
+  rose?: PieRose;
+  /** Slice order. Default `"none"` (data order); rose defaults to `"descending"`. */
+  sort?: PieSort;
+  /** Rose: seam between slices in px. Default `--chart-gap` (2px). */
+  gap?: number;
+  /** Rose: slice corner radius in px. Default the signature surface radius (11px). */
+  cornerRadius?: number;
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "pie", id, dataKey, nameKey, innerRadius, outerRadius, showLabels });
+  useRegisterPart({
+    type: "pie",
+    id,
+    dataKey,
+    nameKey,
+    innerRadius,
+    outerRadius,
+    showLabels,
+    rose,
+    sort,
+    gap,
+    cornerRadius,
+  });
   return null;
 }
 

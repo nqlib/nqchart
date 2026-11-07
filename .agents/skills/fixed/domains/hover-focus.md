@@ -63,3 +63,13 @@ NQChart hover contract: **one mark at full opacity, all others at `0.2`**. Spec:
 - Confirm mapping in `emphasis-presets.ts` (index / item / series focus) is correct for geometry.
 - Prefer compile-time presets first; add runtime repair only when ECharts state machine is wrong (scatter, treemap).
 - Do **not** re-enable treemap `enterEmphasis` on hovered tile without checking bg/content fill behavior.
+
+## 2026-11 — consolidated repair (plan 020 Phase A)
+
+- The six per-family repair modules (`pie-` / `funnel-` / `treemap-` / `waterfall-` / `scatter-` / `radial-hover-focus.ts`) are now thin deprecated shims. The logic lives in **`hover-focus-repair.ts`**: per-family adapters, one scheduler with a pending guard (cancelled on reset, so scatter can no longer re-blur after the pointer leaves), and `focusMark` / `clearFocus` shared by pointer and keyboard.
+- One timing: `FOCUS` in `emphasis-presets.ts` (dim 0.2, 120 ms cubicOut fade, no geometry tween). A family falls back to 0 ms only via `FOCUS_INSTANT_FAMILIES`, citing the fix note that forced it.
+- Custom series need element-level focus — see [custom series element focus](../fixes/hover-focus-custom-series-element-focus.md).
+
+## Isometric (SVG) block
+
+- [isometric hit layer](../fixes/hover-focus-isometric-hit-layer.md) — hit rects must sit above the faces.

@@ -76,13 +76,15 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 |------|--------|
 | `layout` | `"vertical"` \| `"horizontal"` |
 | `stackType` | `"default"` \| `"stacked"` \| `"percent"` |
-| `barRadius` | Default corner radius (px) for all `<Bar />` children |
+| `barRadius` | Default corner radius (px) for all `<Bar />` children; omit to follow `--radius-sm` (3px). The zero-line end stays square |
 | `variant` (root) | `"default"` \| `"histogram"` — touching bins, square corners |
 | `onHoverTraceChange` | Callback when `<Bar variant="hover-trace" />` focus changes |
 
 **Children:** `Bar`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`
 
 **Bar child:** `dataKey`, `variant`, `radius`, `stackId`, `yAxisId`, `showLabels`, `labelFormatter`
+
+**Signature look (every bar):** 28% gap between categories, 8% between bars of a category (histogram: none). Stacked segments get a 2px seam (`--chart-gap`) and round their outer end plus the corners facing a seam; the zero-line end stays square. Same rules in composed and waterfall.
 
 | `Bar` variant | Effect |
 |---------------|--------|
@@ -171,6 +173,8 @@ Import from `@nqlib/nqchart/composed-chart`. See `ex-mark-click-budget-chart` fo
 
 **Children:** `RadialBar`, `Tooltip`, `Legend` (optional)
 
+**Gauge / radial look:** round-capped arcs; ring/petal corners 3px (`cornerRadius`).
+
 **Gauge pattern:** `variant="semi"`, `{ series: "score", value: 72 }`, `nameKey="series"`, `chartConfig.score`, `<RadialBar dataKey="value" />`. Multi-arc target: `prepareGaugeRows({ score: 72, target: 80 })`.
 
 ---
@@ -187,7 +191,19 @@ Import from `@nqlib/nqchart/composed-chart`. See `ex-mark-click-budget-chart` fo
 > No `Background` — pie has no x/y axes, so there is no plot area to contain a
 > pattern. Background is cartesian-only (see "Chart background" below).
 
-**Pie child:** `dataKey`, `innerRadius` (donut), padding/overlap props
+**Pie child:** `dataKey`, `nameKey`, `innerRadius` (donut), `outerRadius` (px or `"NN%"`), `showLabels`, `sort` (`"descending" | "ascending" | "none"`)
+
+**Signature look (every pie):** even 2px seam between slices (`gap`, from `--chart-gap`) and 11px rounded corners (`cornerRadius`); labels sit outside on two-leg leader lines that never overlap (slices under 3° skip theirs). `gap={0} cornerRadius={0}` restores touching wedges.
+
+**Rose:** `<Pie rose="radius" />` — slice angle and length both follow the value (`rose="area"`: equal angles, length only). Largest first, clockwise from 12 o'clock, fitted to the card. Labels off by default. Not the same as the radial chart's `radialLayout="rose"` (equal-angle polar petals).
+
+```tsx
+<NQPieChart data={rows} nameKey="channel" config={config}>
+  <Legend />
+  <Tooltip />
+  <Pie dataKey="visits" nameKey="channel" rose="radius" />
+</NQPieChart>
+```
 
 ---
 
@@ -212,6 +228,8 @@ Dedicated grid heatmap — prefer over scatter for intensity matrices.
 
 **Heatmap child:** `dataKey`, `data` (cells from `prepareHeatmapCells`), `xLabels`, `yLabels`, `min`, `max`
 
+Cells use the signature: `radius.mark` corners and a `gap.seam` seam (a canvas-colour border — the one painted-seam exception, since ECharts heatmaps have no geometric gap). Not configurable per chart; theme via `--radius` / `--chart-gap`.
+
 **Examples:** `ex-heatmap-chart`, `ex-heatmap-weekly-chart`, `ex-heatmap-correlation-chart`
 
 ---
@@ -223,6 +241,8 @@ GitHub-style calendar heat for date ranges.
 **Children:** `Calendar`, `Tooltip`, `Legend`
 
 **Calendar child:** `dataKey`, `data` (cells from `prepareCalendarWorkloadCells`), `range`, `min`, `max`, `cellSize`, `orient`
+
+Day cells use the same signature as heatmap: `radius.mark` corners and a `gap.seam` seam.
 
 **Examples:** `ex-calendar-workload-chart`, `ex-workload-dashboard-chart`
 
@@ -244,6 +264,8 @@ Dedicated module — not composable Bar.
 
 Data rows use waterfall-specific `type` / value fields (see `ex-waterfall-chart`).
 
+**Root:** `barRadius` (px; default `--radius-sm`). Start / total columns keep the zero line square; floating steps round both ends. Same 28% / 8% gaps as bars.
+
 ---
 
 ## Funnel (`NQFunnelChart`)
@@ -253,9 +275,11 @@ Data rows use waterfall-specific `type` / value fields (see `ex-waterfall-chart`
 Stage rows with ordered values (see `ex-funnel-chart`).
 
 - `orient="horizontal"` — native left→right trapezoid funnel
-- `sort` — native funnel only; default `"none"` keeps `data` order (use `"descending"` to rank by value)
+- `sort` — native / rounded; default `"none"` keeps `data` order (use `"descending"` to rank by value)
 - `connection="pipe"` — S-curve joins **between levels only** (square outer ends); `turnRadius` optional; defaults horizontal, supports `orient="vertical"`
-- Also on `<Stages />`: `connection`, `orient`, `sort`, `taper`, `stageGap`, `turnRadius`
+- `connection="rounded"` — curved trapezoid (continuous taper, rim curves, gaps); true fillet corners: `cornerRadius` (px, default 11) on the funnel's outer corners only (top of first stage, bottom of last), `innerCornerRadius` (px, default 3, clamped to `cornerRadius`) on every corner facing a gap so the silhouette flows between layers; rim curvature `rimDepth` (fraction of edge width, default 0.03, 0 = flat); optional inward wall bow `sideCurve` (0–1); gaps via `stageGap` (default 8, shared by `segmented`, `rounded`, `cone`; `segmented` is a real gap, no painted border)
+- `connection="cone"` — 3D cone slices: elliptical rims (`coneTilt` = rim height / width, default 0.18, max 0.5), walls tangent to both rims, shaded fronts; `coneStyle="hollow"` (default, dark opening on the first stage) or `"solid"` (lit top faces); vertical only; gaps via `stageGap` (default 8)
+- Also on `<Stages />`: `connection`, `orient`, `sort`, `taper`, `stageGap`, `turnRadius`, `cornerRadius`, `sideCurve`, `rimDepth`, `innerCornerRadius`, `coneTilt`, `coneStyle`
 
 ```tsx
 <NQFunnelChart data={rows} config={config} connection="pipe">
@@ -267,9 +291,34 @@ Stage rows with ordered values (see `ex-funnel-chart`).
   <Stages connection="pipe" orient="vertical" turnRadius={6} />
   <Tooltip />
 </NQFunnelChart>
+
+<NQFunnelChart data={rows} config={config} connection="rounded" cornerRadius={11} stageGap={8}>
+  <Stages connection="rounded" cornerRadius={11} stageGap={8} />
+  <Tooltip />
+</NQFunnelChart>
 ```
 
 See `ex-horizontal-funnel-chart`, `ex-pipe-funnel-chart`, `ex-vertical-pipe-funnel-chart`.
+
+---
+
+## Sankey (`NQSankeyChart`)
+
+**Children:** `Tooltip`
+
+Flows from source to outcome. `data` = one row per **link** (`sourceKey` / `targetKey` / `valueKey`, defaults `"source"` / `"target"` / `"value"`); nodes are derived from the links unless you pass `nodes`. `config` is keyed by **node name** (colour + display label); nodes without an entry take the `--chart-1…5` palette. See `ex-sankey-chart`.
+
+- Root props: `orient` (`"horizontal"` default | `"vertical"`), `nodeAlign` (`"justify"` default | `"left"` | `"right"`), `nodeWidth` (px, default 12), `nodeGap` (px, default 8 = signature stage gap), `showLabels` (default true — name + throughput), `linkColor` (`"source"` default | `"gradient"`), `formatValue`, `hoverFocus`, `onMarkClick`, loading / empty / error, a11y table
+- Node throughput = `max(inflow, outflow)`; tooltip: node → throughput, link → `Source → Target: value`
+- Hover a node → it + its links stay; hover a link → it + its two nodes; the rest dims (`hoverFocus={false}` to opt out)
+- Links must form a DAG: cycles, self-loops, empty ends and values ≤ 0 are dropped (dev warning)
+- Node keys become CSS variables — use slug names (`"paidAds"`) and put display text in `config[key].label`
+
+```tsx
+<NQSankeyChart data={flows} valueKey="visitors" config={config} formatValue={(v) => compact.format(v)}>
+  <Tooltip />
+</NQSankeyChart>
+```
 
 ---
 
@@ -277,7 +326,7 @@ See `ex-horizontal-funnel-chart`, `ex-pipe-funnel-chart`, `ex-vertical-pipe-funn
 
 **Children:** `Tooltip`, `Legend`
 
-Hierarchical `data` on root; see `ex-treemap-chart`.
+Hierarchical `data` on root; see `ex-treemap-chart`. Tiles are separated by real space (`gap.seam`, same at every level — no painted border) with `radius.mark` corners; theme via `--chart-gap` / `--radius`.
 
 ---
 
@@ -288,6 +337,26 @@ Minimal chrome — no full axes.
 **Children:** `Sparkline`, `Fill`, `ReferenceBand`, `Tooltip`
 
 Small height (`h-12`–`h-16`), `data` with value field.
+
+---
+
+## KPI card (`NQKpiCard`)
+
+Not a compound root — one component. `@nqchart/kpi-card` (pulls in `sparkline-chart`).
+
+**Props:** `label`, `value`, `formatValue?`, `previousValue?` → delta, `delta?` (override; percent is a fraction), `deltaFormat?: "percent" | "absolute"` (default percent), `higherIsBetter?` (default `true`; `false` for churn/cost), `comparisonLabel?`, `target?` (progress track), `sparkline?: number[]` or `data` + `dataKey`, `color?` (default `var(--chart-1)`), `isLoading?`, `isEmpty?`, `className?`.
+
+Percent delta = `(value − previous) / |previous|`; from `0` it falls back to absolute. Rounds to 0.0% → flat (muted). Lay cards out with `grid-cols-[repeat(auto-fit,minmax(10rem,1fr))]`. See `ex-kpi-card`.
+
+---
+
+## Small multiples (`NQSmallMultiples`)
+
+One chart per facet, shared y-domain, one legend. `@nqchart/small-multiples` + the chart you render.
+
+**Children:** render prop `(rows, facet) => ReactNode`; pin the axis with `<YAxis domain={facet.domain} />`.
+
+**Props:** `data`, `facetKey`, `sharedYDomain?` (default `true`), `valueKeys?`, `includeZero?` (default `true`), `columns?` (max; wraps below `minFacetWidth`, default 220), `facetHeight?` (default 160), `facetLabel?`, `config?` + `legend?: boolean | string[]` (omit `<Legend />` inside facets), `gap?`. See `ex-small-multiples-chart`.
 
 ---
 

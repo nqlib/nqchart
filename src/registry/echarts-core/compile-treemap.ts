@@ -1,6 +1,6 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { resolveChartCornerRadius } from "./chart-corner-radius";
+import { resolveChartSignature } from "./chart-signature";
 import { treemapFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import {
   resolveCanvasGapColor,
@@ -9,9 +9,6 @@ import {
 } from "./resolve-chart-chrome";
 import type { CompileContext, TreemapNode, TreemapPart, TreemapStylePart } from "./parts/types";
 import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
-
-const TILE_BORDER = 2;
-const TILE_GAP = 3;
 
 /** Leaf colors + labels only — borders/gaps live on series `levels` (ECharts treemap pattern). */
 function colorizeTree(
@@ -60,11 +57,17 @@ export function compileTreemapOption(ctx: CompileContext): EChartsOption {
     groupLabelColor,
   );
 
+  const { radius, gap } = resolveChartSignature(ctx.chartId);
+  // Leaf tiles use `radius.mark`, not `radius.surface`: ECharts cannot clamp a
+  // radius per tile, and the surface radius turns small leaves into pills.
+  // One seam everywhere: `gapWidth` is real space between siblings at every level,
+  // so no painted border. `borderColor` stays only because ECharts fills the tile
+  // background rect with it (never visible at borderWidth 0).
   const tileBorderStyle = {
     borderColor: gapColor,
-    borderWidth: TILE_BORDER,
-    gapWidth: TILE_GAP,
-    borderRadius: resolveChartCornerRadius(ctx.chartId),
+    borderWidth: 0,
+    gapWidth: gap.seam,
+    borderRadius: radius.mark,
   };
 
   const base: EChartsOption = {
@@ -97,7 +100,7 @@ export function compileTreemapOption(ctx: CompileContext): EChartsOption {
           {
             itemStyle: {
               borderWidth: 0,
-              gapWidth: TILE_GAP + 1,
+              gapWidth: gap.seam,
             },
             upperLabel: { show: false },
           },

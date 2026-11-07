@@ -55,8 +55,8 @@ export type LineSeriesPart = {
   curveType?: "linear" | "monotone" | "step" | "bump";
   yAxisId?: string;
   smooth?: boolean;
-  /** `points` — markers only (box-plot median ticks). `dashed` / `dotted` set stroke dash. */
-  variant?: "solid" | "dashed" | "dotted" | "points" | string;
+  /** `points` — rect tick markers only (box-plot medians). `dots` — round markers only (dumbbell ends). `dashed` / `dotted` set stroke dash. */
+  variant?: "solid" | "dashed" | "dotted" | "points" | "dots" | string;
   showInLegend?: boolean;
   showLabels?: boolean;
   labelFormatter?: (value: unknown) => string;
@@ -70,6 +70,17 @@ export type WhiskersPart = {
   q1Key: string;
   q3Key: string;
   maxKey: string;
+  /** Config / legend key. */
+  dataKey: string;
+  showInLegend?: boolean;
+};
+
+/** Dumbbell connector: a segment between two values per category (composed charts). */
+export type ConnectorPart = {
+  type: "connector";
+  id: string;
+  fromKey: string;
+  toKey: string;
   /** Config / legend key. */
   dataKey: string;
   showInLegend?: boolean;
@@ -156,8 +167,21 @@ export type FunnelPart = {
 };
 
 /** Controls spacing and taper between funnel stages. */
-export type FunnelConnection = "seamless" | "default" | "segmented" | "pipe";
+export type FunnelConnection =
+  | "seamless"
+  | "default"
+  | "segmented"
+  | "pipe"
+  /** Soft capsule / rounded stages (custom series) — not the pipe ribbon. */
+  | "rounded"
+  /** 3D cone slices (custom series): elliptical rims, shaded frustums. */
+  | "cone";
 export type FunnelTaper = "soft" | "default" | "steep";
+/**
+ * Cone (`connection="cone"`) top-face look. `solid` = every slice shows a lit
+ * top face; `hollow` = the first stage shows the dark funnel opening.
+ */
+export type FunnelConeStyle = "solid" | "hollow";
 export type FunnelOrient = "vertical" | "horizontal";
 /** ECharts `series-funnel.sort`. Default `none` keeps `data` array order. */
 export type FunnelSort = "ascending" | "descending" | "none";
@@ -165,16 +189,24 @@ export type FunnelSort = "ascending" | "descending" | "none";
 export type FunnelStylePart = {
   type: "funnelStyle";
   id: string;
-  /** Stage spacing preset — use `stageGap` for exact pixels. `pipe` = smooth S-curve ribbon. */
+  /**
+   * Stage spacing / silhouette preset. `pipe` = continuous S-curve ribbon;
+   * `rounded` = curved trapezoid (continuous taper, rim curves, gaps;
+   * cornerRadius / sideCurve opt-in). Capsule (value-true) bands need
+   * `widthMode: "capsule"` on the geometry options.
+   */
   connection?: FunnelConnection;
-  /** Width taper between top and bottom stages (native funnel only). */
+  /**
+   * Width floor for the value→width scale (`minSize`). Soft (22%) flattens
+   * dynamic range — prefer default/steep for tapered rounded funnels.
+   */
   taper?: FunnelTaper;
   /** Pixel gap override (wins over `connection` gap; ignored for `pipe`). */
   stageGap?: number;
   /** Flow direction. Pipe defaults horizontal when unset; supports vertical too. */
   orient?: FunnelOrient;
   /**
-   * Stage order for native funnel. Default `none` preserves `data` order.
+   * Stage order for native / rounded funnel. Default `none` preserves `data` order.
    * Unused for `pipe` (custom series already follows data order).
    */
   sort?: FunnelSort;
@@ -184,8 +216,40 @@ export type FunnelStylePart = {
    * (capped). Keep small — large values read as shoulders into the prior stage.
    */
   turnRadius?: number;
-  /** Pipe mode: draw stage name + value above the ribbon (default true). */
+  /** Pipe / rounded: draw stage labels (default true). */
   showLabels?: boolean;
+  /**
+   * Corner softness in px. Applies to native trapezoids and `connection="rounded"`.
+   * When > 0 on a non-pipe connection, stages render as custom soft paths
+   * (ECharts `borderRadius` does not visibly round funnel polygons).
+   * Default 14 when `connection="rounded"`, else 0. Independent of `sideCurve`.
+   */
+  cornerRadius?: number;
+  /**
+   * Side-wall bow for soft/custom stages (0 = straight sides, 1 = max).
+   * Default 0 — set `cornerRadius` alone for soft trapezoids; add ~0.15–0.25 for a
+   * subtle bow. Does not affect shared-edge width/sagitta matching.
+   * Ignored for sharp native (cornerRadius 0) and pipe.
+   */
+  sideCurve?: number;
+  /**
+   * Rim curvature for soft/custom stages: each horizontal edge dips by
+   * `rimDepth × edgeWidth` (0 = flat, max 0.2). Proportional, so every rim keeps
+   * the same shape. Default 0.03 for `connection="rounded"`, else 0.
+   */
+  rimDepth?: number;
+  /**
+   * Radius (px) of every stage corner facing a gap; only the funnel's outer
+   * corners use `cornerRadius`. Default 3, clamped to `cornerRadius`.
+   */
+  innerCornerRadius?: number;
+  /**
+   * Cone only: rim ellipse height / width (`ry = coneTilt · rx`) — how far
+   * above the funnel the viewer sits. 0–0.5, default 0.18.
+   */
+  coneTilt?: number;
+  /** Cone only: `"hollow"` (default) shows the funnel opening; `"solid"` lit slices. */
+  coneStyle?: FunnelConeStyle;
 };
 
 export type WaterfallRow = {
@@ -200,6 +264,8 @@ export type WaterfallPart = {
   nameKey?: string;
   valueKey?: string;
   typeKey?: string;
+  /** Corner radius in px; falls back to chart `barRadius`, then the signature `radius.mark`. */
+  radius?: number;
 };
 
 export type TreemapNode = {
@@ -242,14 +308,32 @@ export type RadialBarPart = {
 };
 
 export type BrushPart = { type: "brush"; id: string };
+/** Slice order. Default `none` keeps data order (rose defaults to `descending`). */
+export type PieSort = "descending" | "ascending" | "none";
+/**
+ * Nightingale rose. `radius` — slice angle *and* length ∝ value;
+ * `area` — equal angles, length ∝ value.
+ */
+export type PieRose = "radius" | "area";
+
 export type PieSeriesPart = {
   type: "pie";
   id: string;
   dataKey?: string;
   nameKey?: string;
+  /** px, or `"NN%"` of half the shorter side. Rose default `"12%"`. */
   innerRadius?: number | string;
+  /** px, or `"NN%"` of half the shorter side. Pie default `"70%"`, rose `"92%"`. */
   outerRadius?: number | string;
+  /** Slice name labels. Pie default true; rose default false. */
   showLabels?: boolean;
+  /** Draw a rose (custom signature geometry) instead of a plain pie. */
+  rose?: PieRose;
+  sort?: PieSort;
+  /** Rose: even seam between slices in px. Default the signature seam (`--chart-gap`, 2px). */
+  gap?: number;
+  /** Rose: slice corner radius in px. Default the signature surface radius (11px). */
+  cornerRadius?: number;
 };
 export type HeatmapPart = {
   type: "heatmap";
@@ -261,6 +345,46 @@ export type HeatmapPart = {
   min?: number;
   max?: number;
   enableZoom?: boolean;
+};
+
+/** One column per category; filled tiles stack from the baseline up to the value. */
+export type TileColumnPart = {
+  type: "tileColumn";
+  id: string;
+  dataKey: string;
+  /** Source rows — live on the part, same as heatmap `cells`. */
+  rows?: Array<Record<string, unknown>>;
+  /** Category column key on each row. Default `"date"`. */
+  categoryKey?: string;
+  /** Numeric measure key on each row. Default `"value"`. */
+  valueKey?: string;
+  /**
+   * Band edges low → high. Row count is `bands.length - 1`. When omitted,
+   * `bandCount` (default 8) spans 0 → max value.
+   */
+  bands?: number[];
+  /** Used when `bands` is omitted. Default 8. */
+  bandCount?: number;
+  /**
+   * Config keys for discrete fill steps (bottom → top). When omitted, colors
+   * come from `dataKey` stops via `resolveColor(dataKey, stepIndex)`.
+   */
+  steps?: string[];
+  /** Corner radius of each tile in px. Default: signature `radius.mark`. */
+  cellRadius?: number;
+  /** Gap between tiles in px (inset). Default: signature `gap.seam`. */
+  cellGap?: number;
+  /** Category labels for the x-axis. Default: string of each category value. */
+  xLabels?: string[];
+  /**
+   * Which x indices keep a tick label. Default: first and last only.
+   * Pass every index to show all.
+   */
+  xLabelIndices?: number[];
+  /**
+   * Formatter for y-axis band-edge labels. Default: bare number, `$Nk` when ≥1000.
+   */
+  yTickFormatter?: (band: number) => string;
 };
 
 export type CalendarPart = {
@@ -290,6 +414,32 @@ export type GaugePart = {
   target?: number;
   /** `chartConfig` key for target marker color/label. Default `"target"`. */
   targetKey?: string;
+};
+
+/** Sankey node. Omit `nodes` on the part to derive them from the link rows. */
+export type SankeyNode = { name: string; [key: string]: unknown };
+export type SankeyOrient = "horizontal" | "vertical";
+export type SankeyNodeAlign = "justify" | "left" | "right";
+/** Link fill: the source node's colour, or a source → target gradient. */
+export type SankeyLinkColor = "source" | "gradient";
+
+/** Sankey flow — links are the root `data` rows; everything else lives here. */
+export type SankeyPart = {
+  type: "sankey";
+  id: string;
+  sourceKey?: string;
+  targetKey?: string;
+  valueKey?: string;
+  nodes?: SankeyNode[];
+  orient?: SankeyOrient;
+  nodeAlign?: SankeyNodeAlign;
+  /** Node thickness in px. Default 12. */
+  nodeWidth?: number;
+  /** Space between nodes of one column in px. Default the signature `gap.stage`. */
+  nodeGap?: number;
+  showLabels?: boolean;
+  linkColor?: SankeyLinkColor;
+  formatValue?: (value: number) => string;
 };
 
 export type TooltipPart = {
@@ -325,6 +475,7 @@ export type ChartPart =
   | BarSeriesPart
   | LineSeriesPart
   | WhiskersPart
+  | ConnectorPart
   | AreaSeriesPart
   | ScatterSeriesPart
   | ReferenceLinePart
@@ -343,8 +494,10 @@ export type ChartPart =
   | BrushPart
   | PieSeriesPart
   | HeatmapPart
+  | TileColumnPart
   | CalendarPart
   | GaugePart
+  | SankeyPart
   | TooltipPart
   | LegendPart;
 
@@ -378,18 +531,47 @@ export type RadialCompileConfig = {
 };
 
 /** Funnel stage wiring and visual presets. */
+/** Native trapezoid / pipe inside-label content. */
+export type FunnelLabel = "name-value" | "value";
+
 export type FunnelCompileConfig = {
   stageKey?: string;
   valueKey?: string;
+  /**
+   * Optional field used only for stage *width*. Label still shows `valueKey`.
+   * Stage silhouette — not a quantitative funnel. Omit to size by `valueKey`.
+   */
+  sizeKey?: string;
+  /** Inside label format. Default `"name-value"` (`{b}\\n{c}`). */
+  label?: FunnelLabel;
   /** Funnel stage spacing in px (overrides connection preset gap). */
   stageGap?: number;
   funnelConnection?: FunnelConnection;
   funnelTaper?: FunnelTaper;
   orient?: FunnelOrient;
-  /** Native funnel stage order. Default `none` preserves `data` order. */
+  /** Native / rounded funnel stage order. Default `none` preserves `data` order. */
   sort?: FunnelSort;
   turnRadius?: number;
   showLabels?: boolean;
+  /**
+   * Corner softness (px). Works on native + rounded; custom path when > 0.
+   * Independent of `sideCurve`.
+   */
+  cornerRadius?: number;
+  /**
+   * Side-wall bow for soft stages (0–1, default 0). Opt-in; pair with cornerRadius.
+   */
+  sideCurve?: number;
+  /** Rim depth as a fraction of edge width (0–0.2). Default 0.03 for rounded, else 0. */
+  rimDepth?: number;
+  /** Radius (px) of corners facing a gap. Default 3, clamped to `cornerRadius`. */
+  innerCornerRadius?: number;
+  /** Cone rim ellipse height / width (0–0.5). Default 0.18. */
+  coneTilt?: number;
+  /** Cone top-face look. Default `"hollow"`. */
+  coneStyle?: FunnelConeStyle;
+  /** Format the numeric inside-label value (still uses `valueKey`). */
+  formatValue?: (value: number) => string;
 };
 
 export type CompileContext<TData extends Record<string, unknown> = Record<string, unknown>> = {

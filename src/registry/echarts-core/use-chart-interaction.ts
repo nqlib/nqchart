@@ -11,6 +11,7 @@ import {
 } from "./nq-mark-event";
 import type { NQChartEventHandlers } from "./use-nq-echarts";
 import { useChart } from "@/registry/ui/chart";
+import { useChartInstanceRef } from "./chart-instance-context";
 
 export type ChartInteractionProps = {
   onMarkClick?: (event: NQMarkEvent) => void;
@@ -79,6 +80,9 @@ export function useChartInteraction({
 }) {
   const { chartId, config } = useChart();
   const instanceRef = useRef<EChartsType | null>(null);
+  // Publish the main canvas instance to a surrounding ChartInstanceProvider so the
+  // plot shell's keyboard nav can focus marks (no-op ref without a provider).
+  const contextInstanceRef = useChartInstanceRef();
   const onMarkClickRef = useRef(onMarkClick);
   const onChartReadyRef = useRef(onChartReady);
   const dataRef = useRef(data);
@@ -102,6 +106,7 @@ export function useChartInteraction({
   const handleChartInstance = useCallback(
     (instance: EChartsType | null) => {
       instanceRef.current = instance;
+      contextInstanceRef.current = instance;
       if (instance) {
         onChartReadyRef.current?.(instance);
         assignRef(chartRef, createChartHandle(() => instanceRef.current, chartId));
@@ -109,7 +114,7 @@ export function useChartInteraction({
         assignRef(chartRef, null);
       }
     },
-    [chartId, chartRef],
+    [chartId, chartRef, contextInstanceRef],
   );
 
   const eventHandlers = useMemo<NQChartEventHandlers | undefined>(() => {

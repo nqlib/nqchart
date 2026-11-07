@@ -11,8 +11,11 @@ import {
   ScatterChartIcon,
   TreemapChartIcon,
   FunnelChartIcon,
+  SankeyChartIcon,
   WaterfallChartIcon,
   SparklineChartIcon,
+  KpiCardIcon,
+  SmallMultiplesIcon,
 } from "@/assets/icons";
 
 /** Normalizes fumadocs folder ids across versions (`root:area-chart` and `area-chart`). */
@@ -50,10 +53,16 @@ export function getNavItemIcon(tag?: string) {
       return <TreemapChartIcon />;
     case "funnel-chart":
       return <FunnelChartIcon />;
+    case "sankey-chart":
+      return <SankeyChartIcon />;
     case "waterfall-chart":
       return <WaterfallChartIcon />;
     case "sparkline-chart":
       return <SparklineChartIcon />;
+    case "kpi-card":
+      return <KpiCardIcon />;
+    case "small-multiples":
+      return <SmallMultiplesIcon />;
     default:
       return null;
   }

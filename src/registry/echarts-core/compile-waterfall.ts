@@ -1,7 +1,7 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { barBorderRadius } from "./bar-radius";
-import { resolveChartBarCornerRadius } from "./chart-corner-radius";
+import { barLayoutGaps } from "./bar-item-style";
+import { resolveBarRadius, signedBarBorderRadius } from "./bar-radius";
 import { waterfallColumnFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { resolveCartesianGrid } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
@@ -22,6 +22,9 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
   const values: number[] = [];
   const categories: string[] = [];
   const colors: string[] = [];
+  const floating: boolean[] = [];
+  const signs: number[] = [];
+  const radius = resolveBarRadius(wf?.radius, ctx.cartesian?.barRadius, ctx.chartId);
 
   for (const row of rows) {
     const record = row as Record<string, unknown>;
@@ -33,14 +36,20 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
     if (kind === "start" || kind === "total") {
       placeholders.push(0);
       values.push(value);
+      floating.push(false);
+      signs.push(value);
       running = value;
     } else if (value < 0) {
       placeholders.push(running + value);
       values.push(-value);
+      floating.push(running + value > 0);
+      signs.push(1);
       running += value;
     } else {
       placeholders.push(running);
       values.push(value);
+      floating.push(running > 0);
+      signs.push(1);
       running += value;
     }
     colors.push(ctx.resolveColor(name, 0));
@@ -60,6 +69,7 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
         id: "__wf_placeholder__",
         name: "__wf_placeholder__",
         stack: "wf",
+        ...barLayoutGaps(ctx.chartId),
         silent: true,
         animation: false,
         itemStyle: { color: "rgba(0,0,0,0)", borderColor: "rgba(0,0,0,0)" },
@@ -72,12 +82,17 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
         id: "__wf_values__",
         name: "__wf_values__",
         stack: "wf",
+        ...barLayoutGaps(ctx.chartId),
         ...hoverFocusOrOff(isHoverFocusOn(ctx), waterfallColumnFocus()),
         data: values.map((v, i) => ({
           value: v,
           itemStyle: {
             color: colors[i],
-            borderRadius: barBorderRadius(resolveChartBarCornerRadius(ctx.chartId), false),
+            // A step that floats above the baseline rounds both ends; one that
+            // starts at zero (start, total, a step from 0) keeps the zero line square.
+            borderRadius: floating[i]
+              ? [radius, radius, radius, radius]
+              : signedBarBorderRadius(signs[i], radius, false),
           },
           [NQ_SERIES_KEY]: valueKey,
           [NQ_DATUM]: rows[i] as Record<string, unknown>,

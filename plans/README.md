@@ -45,6 +45,9 @@ self-contained. Related: [`_archive/2026-06-10-improvement-plan.md`](_archive/20
 | 017 | [hoverFocus opt-out on every chart root](017-hover-focus-opt-out.md) | engine / api | M | DONE |
 | 018 | [Headless render: pure compile path, theme registry, SVG in Node](018-headless-render.md) | engine / dist | L | DONE |
 | 019 | [Reference marks per axis, open bands, RangeArea](019-reference-marks-and-range-area.md) | engine / api | M | DONE |
+| 020 | [Chart signature: one shape language + one focus mode (+ rose pie)](020-chart-signature-design-system.md) | engine / design | L | IN-PROGRESS — Phases A + B done |
+| 021 | [Analyst charts: KPI card, Sankey, variance, cohort, forecast, slope, small multiples](021-analyst-charts.md) | engine / api | L | DONE |
+| 022 | [Dashboard performance: many charts on one page](022-dashboard-performance.md) | engine | M | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 

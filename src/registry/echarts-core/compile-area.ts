@@ -90,7 +90,7 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
         width: lineWidth,
       },
       triggerLineEvent: true,
-      label: seriesLabelOption(area.showLabels, area.labelFormatter),
+      label: seriesLabelOption(area.showLabels, area.labelFormatter, ctx.chartId),
       ...LINE_MARKER,
       itemStyle: { color, borderColor: gapColor, borderWidth: 1.5 },
       ...hoverFocusOrOff(
@@ -155,7 +155,7 @@ export function buildAreaSeries(ctx: CompileContext) {
       areaStyle,
       lineStyle: { color, width: lineWidth, type: lineStyleType(area.variant) },
       triggerLineEvent: true,
-      label: seriesLabelOption(area.showLabels, area.labelFormatter),
+      label: seriesLabelOption(area.showLabels, area.labelFormatter, ctx.chartId),
       ...LINE_MARKER,
       itemStyle: { color, borderColor: gapColor, borderWidth: 1.5 },
       ...hoverFocusOrOff(

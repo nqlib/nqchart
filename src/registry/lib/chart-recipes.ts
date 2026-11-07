@@ -278,3 +278,204 @@ export function prepareBoxPlotRow(category: string, samples: number[]): BoxPlotR
     max: sorted[sorted.length - 1]!,
   };
 }
+
+const toFiniteNumber = (value: unknown): number | null => {
+  if (value == null || value === "") return null;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+};
+
+const round1 = (value: number) => Math.round(value * 10) / 10;
+
+export type VarianceRow = {
+  category: string;
+  actual: number | null;
+  plan: number | null;
+  /** `actual − plan`; null when either side is missing. */
+  delta: number | null;
+  /** `delta ÷ |plan| × 100` (1 decimal); null when plan is missing or 0. */
+  deltaPct: number | null;
+  /** Favourable variance (`delta ≥ 0` when `higherIsBetter`, `delta ≤ 0` otherwise); null when no delta. */
+  good: boolean | null;
+};
+
+/**
+ * IBCS-style actual vs plan: one row per category with Δ, Δ% and a good / bad flag.
+ * Split `delta` into two series (favourable / unfavourable) in the example so colours follow config.
+ */
+export function prepareVarianceRows<TData extends Record<string, unknown>>(
+  rows: TData[],
+  options: {
+    categoryKey: string;
+    actualKey: string;
+    planKey: string;
+    /** Set `false` for cost-like measures where under plan is good. Default `true`. */
+    higherIsBetter?: boolean;
+  },
+): VarianceRow[] {
+  const higherIsBetter = options.higherIsBetter ?? true;
+  return rows.map((row) => {
+    const actual = toFiniteNumber(row[options.actualKey]);
+    const plan = toFiniteNumber(row[options.planKey]);
+    const delta = actual != null && plan != null ? actual - plan : null;
+    return {
+      category: String(row[options.categoryKey] ?? ""),
+      actual,
+      plan,
+      delta,
+      deltaPct: delta != null && plan != null && plan !== 0 ? round1((delta / Math.abs(plan)) * 100) : null,
+      good: delta == null ? null : higherIsBetter ? delta >= 0 : delta <= 0,
+    };
+  });
+}
+
+export type CohortCell = HeatmapCell;
+
+/**
+ * Cohort retention triangle for `NQHeatmapChart`.
+ * Long rows (`cohort`, `period`, `value`) become cells; period 0 is the base (100% in `percent` mode).
+ * Cohorts sort ascending (numeric-aware, so `2026-01` precedes `2026-02`); future periods a cohort has not
+ * reached are omitted, never zero. In `percent` mode a cohort without a positive period 0 is dropped.
+ * `yLabels` are oldest first — pass them reversed to the heatmap to put the oldest cohort at the top.
+ */
+export function prepareCohortCells<TData extends Record<string, unknown>>(
+  rows: TData[],
+  options: {
+    cohortKey: string;
+    periodKey: string;
+    valueKey: string;
+    mode?: "percent" | "absolute";
+  },
+): { cells: CohortCell[]; xLabels: string[]; yLabels: string[]; min: number; max: number } {
+  const mode = options.mode ?? "percent";
+  const byCohort = new Map<string, Map<number, number>>();
+  let maxPeriod = -1;
+
+  for (const row of rows) {
+    const cohort = String(row[options.cohortKey] ?? "");
+    const period = toFiniteNumber(row[options.periodKey]);
+    const value = toFiniteNumber(row[options.valueKey]);
+    if (period == null || value == null || period < 0 || !Number.isInteger(period)) continue;
+    const periods = byCohort.get(cohort) ?? new Map<number, number>();
+    periods.set(period, value);
+    byCohort.set(cohort, periods);
+    maxPeriod = Math.max(maxPeriod, period);
+  }
+
+  const cohorts = [...byCohort.keys()]
+    .filter((cohort) => mode === "absolute" || (byCohort.get(cohort)!.get(0) ?? 0) > 0)
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  const xLabels = Array.from({ length: maxPeriod + 1 }, (_, p) => `M${p}`);
+
+  const cells: CohortCell[] = [];
+  cohorts.forEach((cohort, y) => {
+    const periods = byCohort.get(cohort)!;
+    const base = periods.get(0) ?? 0;
+    for (const [period, value] of [...periods.entries()].sort((a, b) => a[0] - b[0])) {
+      cells.push({
+        row: cohort,
+        col: `M${period}`,
+        x: period,
+        y,
+        value: mode === "percent" ? round1((value / base) * 100) : value,
+      });
+    }
+  });
+
+  if (cells.length === 0) return { cells, xLabels: [], yLabels: [], min: 0, max: 0 };
+  const values = cells.map((c) => c.value);
+  return { cells, xLabels, yLabels: cohorts, min: Math.min(...values), max: Math.max(...values) };
+}
+
+export type ForecastRow = {
+  /** Actual value up to and including the last actual point; null after. */
+  actual: number | null;
+  /** Starts at the last actual point (so the lines join), then the forecast; null before. */
+  forecast: number | null;
+  /** Band bounds (pinched to the actual at the join point); null outside the forecast. */
+  lower: number | null;
+  upper: number | null;
+  /** `[lower, upper]`, or null outside the forecast. */
+  band: [number, number] | null;
+  [key: string]: unknown;
+};
+
+/**
+ * Split a time series into actual + forecast + confidence band for line / composed charts.
+ * The last row with a numeric `actualKey` is "today": the forecast line and band start there.
+ * Original row fields are kept; `actual`, `forecast`, `lower`, `upper`, `band` are overwritten.
+ * Use `<RangeArea lowKey="lower" highKey="upper" />` for the band.
+ */
+export function prepareForecastSeries<TData extends Record<string, unknown>>(
+  rows: TData[],
+  options: {
+    dateKey: string;
+    actualKey: string;
+    forecastKey: string;
+    lowerKey: string;
+    upperKey: string;
+  },
+): Array<TData & ForecastRow> {
+  let last = -1;
+  rows.forEach((row, i) => {
+    if (toFiniteNumber(row[options.actualKey]) != null) last = i;
+  });
+
+  return rows.map((row, i) => {
+    const actualValue = toFiniteNumber(row[options.actualKey]);
+    const actual = i <= last ? actualValue : null;
+    let forecast: number | null = null;
+    let lower: number | null = null;
+    let upper: number | null = null;
+
+    if (last >= 0 && i === last) {
+      forecast = actualValue;
+      lower = actualValue;
+      upper = actualValue;
+    } else if (i > last) {
+      forecast = toFiniteNumber(row[options.forecastKey]);
+      lower = toFiniteNumber(row[options.lowerKey]);
+      upper = toFiniteNumber(row[options.upperKey]);
+    }
+
+    return {
+      ...row,
+      actual,
+      forecast,
+      lower,
+      upper,
+      band: lower != null && upper != null ? ([lower, upper] as [number, number]) : null,
+    };
+  });
+}
+
+export type DumbbellRow = {
+  category: string;
+  from: number;
+  to: number;
+  /** `to − from`. */
+  delta: number;
+  direction: "up" | "down" | "flat";
+};
+
+/** Before → after rows for a dumbbell / slope chart, sorted by `delta` descending (ties keep input order). */
+export function prepareDumbbellRows<TData extends Record<string, unknown>>(
+  rows: TData[],
+  options: { categoryKey: string; fromKey: string; toKey: string },
+): DumbbellRow[] {
+  const out: DumbbellRow[] = [];
+  for (const row of rows) {
+    const from = toFiniteNumber(row[options.fromKey]);
+    const to = toFiniteNumber(row[options.toKey]);
+    if (from == null || to == null) continue;
+    const delta = to - from;
+    out.push({
+      category: String(row[options.categoryKey] ?? ""),
+      from,
+      to,
+      delta,
+      direction: delta > 0 ? "up" : delta < 0 ? "down" : "flat",
+    });
+  }
+  return out.sort((a, b) => b.delta - a.delta);
+}

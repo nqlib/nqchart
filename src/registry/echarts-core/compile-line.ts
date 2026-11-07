@@ -38,7 +38,7 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
       itemStyle: { color },
       lineStyle: { color, type: lineStyleType(line.variant) },
       triggerLineEvent: true,
-      label: seriesLabelOption(line.showLabels, line.labelFormatter),
+      label: seriesLabelOption(line.showLabels, line.labelFormatter, ctx.chartId),
       ...LINE_MARKER,
       ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianLineFocus({ color })),
     };
