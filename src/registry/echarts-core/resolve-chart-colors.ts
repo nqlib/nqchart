@@ -1,5 +1,6 @@
 import type { ChartConfig } from "@/registry/ui/chart";
 import { headlessThemeOf, resolveTokenColor } from "./headless-theme";
+import { chartColorVarName } from "./css-safe";
 
 const THEMES = { light: "", dark: ".dark" } as const;
 const CSS_VAR_REF = /^var\(\s*--([a-zA-Z0-9_-]+)\s*\)$/;
@@ -100,7 +101,7 @@ export function createColorResolver(chartId: string, config: ChartConfig) {
         const colors = entry?.colors?.[theme];
         color = colors?.[index] ?? colors?.[0] ?? "#8884d8";
       } else {
-        const value = getComputedStyle(contextEl).getPropertyValue(`--color-${key}-${index}`).trim();
+        const value = getComputedStyle(contextEl).getPropertyValue(chartColorVarName(key, index)).trim();
         if (value) {
           color = value;
         } else {

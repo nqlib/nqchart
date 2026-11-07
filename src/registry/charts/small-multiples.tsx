@@ -2,6 +2,7 @@
 
 import { cn } from "@/registry/lib/cn";
 import { ChartStyle, type ChartConfig, getColorsCount } from "@/registry/ui/chart";
+import { chartColorFill, chartColorVar } from "@/registry/echarts-core/css-safe";
 import { useId, type CSSProperties, type ReactNode } from "react";
 
 // ---------------------------------------------------------------------------
@@ -164,14 +165,7 @@ function SharedLegend({ config, keys }: { config: ChartConfig; keys: string[] })
         if (!item) return null;
         const count = getColorsCount(item);
         const fill: CSSProperties =
-          count <= 1
-            ? { backgroundColor: `var(--color-${key}-0)` }
-            : {
-                background: `linear-gradient(to right, ${Array.from(
-                  { length: count },
-                  (_, i) => `var(--color-${key}-${i}) ${(i / (count - 1)) * 100}%`,
-                ).join(", ")})`,
-              };
+          count <= 1 ? { backgroundColor: chartColorVar(key, 0) } : { background: chartColorFill(key, count) };
         return (
           <div key={key} className="flex items-center gap-1.5">
             <div className="h-2.5 w-2.5 shrink-0 rounded-[3px]" style={fill} />

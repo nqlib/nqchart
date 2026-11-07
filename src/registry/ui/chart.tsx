@@ -1,6 +1,7 @@
 "use client";
 
 import { getColorsCount } from "@/registry/echarts-core/config-colors";
+import { chartColorVarName, safeChartId, safeCssColor } from "@/registry/echarts-core/css-safe";
 import { cn } from "@/registry/lib/cn";
 import * as React from "react";
 
@@ -81,7 +82,10 @@ function ChartContainer({
   ...props
 }: Readonly<ChartContainerProps>) {
   const uniqueId = React.useId();
-  const chartId = `chart-${id ?? uniqueId.replace(/:/g, "")}`;
+  // Safe characters only: the same id is an attribute here and an unquoted
+  // selector in ChartStyle's <style>, so the two must match and neither may
+  // carry markup.
+  const chartId = `chart-${safeChartId(id ?? uniqueId.replace(/:/g, ""))}`;
 
   validateChartConfigColors(config);
 
@@ -161,20 +165,33 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
         const maxCount = getColorsCount(itemConfig);
         const distributedColors = distributeColors(colorsArray, maxCount);
 
-        return distributedColors.map((color, index) => `  --color-${key}-${index}: ${color};`);
+        return distributedColors.flatMap((color, index) => {
+          // Only colour values reach the <style> element: a theme field that
+          // accepts arbitrary strings must not be able to add rules or close
+          // the element.
+          const safe = safeCssColor(color);
+          if (safe == null) {
+            if (process.env.NODE_ENV !== "production") {
+              console.warn(`[NQChart] Ignored colour for "${key}": ${JSON.stringify(color)} is not a CSS colour value.`);
+            }
+            return [];
+          }
+          return [`  ${chartColorVarName(key, index)}: ${safe};`];
+        });
       })
       .filter(Boolean)
       .join("\n");
 
-  const css = Object.entries(THEMES)
-    .map(
-      ([theme, prefix]) =>
-        `${prefix} [data-chart=${id}] {\n${generateCssVars(theme as keyof typeof THEMES)}\n}`,
-    )
-    .join("\n");
-
-  return <style dangerouslySetInnerHTML={{ __html: css }} />;
+  return <style dangerouslySetInnerHTML={{ __html: chartStyleCss(id, generateCssVars) }} />;
 };
+
+/** The ChartStyle sheet: one rule per theme, scoped to `[data-chart=<id>]`. */
+export function chartStyleCss(id: string, varsFor: (theme: keyof typeof THEMES) => string): string {
+  const scope = safeChartId(id);
+  return Object.entries(THEMES)
+    .map(([theme, prefix]) => `${prefix} [data-chart=${scope}] {\n${varsFor(theme as keyof typeof THEMES)}\n}`)
+    .join("\n");
+}
 
 export function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key: string) {
   if (typeof payload !== "object" || payload === null) {

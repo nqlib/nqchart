@@ -52,6 +52,12 @@ description: Release notes and notable changes to NQChart
 
 - With 12 steps or fewer, every step shows its x-axis label.
 
+### Tooltip and colour safety
+
+- **Series names and chart ids from data can no longer inject markup or CSS.** A series name that misses the config gets a neutral tooltip dot instead of being written into the dot's `style` attribute, and the tooltip's `data-chart` is escaped. The chart id is limited to `[A-Za-z0-9_-]`, so the `ChartStyle` selector and the `data-chart` attribute always match.
+- **`ChartStyle` only writes CSS colour values.** A `colors` entry that is not a colour (`;`, braces, `<`, `>`, quotes, `url(`) is dropped, with a warning in development.
+- **Config keys map to safe variable names.** Every `--color-<key>-<n>` now goes through one encoder: ordinary keys are unchanged (`--color-revenue-0`); others are encoded, so a key with a space finally gets its colour.
+
 ### Performance
 
 - **Color resolution.** The canvas color probe is shared and cached. A color lookup no longer forces a style recalculation.

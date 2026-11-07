@@ -1,6 +1,7 @@
 import type { ChartConfig } from "@/registry/ui/chart";
 import { getColorsCount } from "./config-colors";
 import { configKeyFromDisplayName } from "./config-key-from-display-name";
+import { chartColorFill } from "./css-safe";
 import { isAnnotationSeriesId } from "./nq-mark-event";
 import type { TooltipPart } from "./parts/types";
 import type { EChartsOption } from "echarts";
@@ -32,15 +33,16 @@ export function escapeHtml(value: unknown) {
     .replace(/"/g, "&quot;");
 }
 
-function indicatorStyle(dataKey: string, colorsCount: number) {
-  if (colorsCount <= 1) {
-    return `background:var(--color-${dataKey}-0)`;
-  }
-  const stops = Array.from({ length: colorsCount }, (_, i) => {
-    const offset = (i / (colorsCount - 1)) * 100;
-    return `var(--color-${dataKey}-${i}) ${offset}%`;
-  }).join(", ");
-  return `background:linear-gradient(to right,${stops})`;
+/**
+ * The series swatch. Only a key that is in the config has a colour variable;
+ * a series name that missed the config (labels from CRM or grid data) gets a
+ * neutral dot instead of being written into the `style` attribute — the
+ * tooltip is HTML, and that name could carry `"` or `</style>`.
+ */
+function indicatorDot(dataKey: string, inConfig: boolean, colorsCount: number) {
+  const base = "inline-block h-2.5 w-2.5 shrink-0 rounded-[2px] mr-2";
+  if (!inConfig) return `<span class="${base} bg-muted-foreground/50"></span>`;
+  return `<span class="${base}" style="background:${escapeHtml(chartColorFill(dataKey, colorsCount))}"></span>`;
 }
 
 function formatValue(value: unknown): string {
@@ -62,7 +64,7 @@ export function tooltipShell(
 ) {
   const variant = tooltip?.variant ?? "default";
   const roundness = tooltip?.roundness ?? "lg";
-  return `<div class="nq-echarts-tooltip pointer-events-none text-foreground border-border/50 grid min-w-32 gap-1.5 border px-2.5 py-1.5 text-xs shadow-xl ${ROUNDNESS_CLASS[roundness]} ${VARIANT_CLASS[variant]}" data-chart="${chartId}">
+  return `<div class="nq-echarts-tooltip pointer-events-none text-foreground border-border/50 grid min-w-32 gap-1.5 border px-2.5 py-1.5 text-xs shadow-xl ${ROUNDNESS_CLASS[roundness]} ${VARIANT_CLASS[variant]}" data-chart="${escapeHtml(chartId)}">
     ${inner}
   </div>`;
 }
@@ -83,9 +85,7 @@ function formatItemTooltipHtml(
   const hideLabel = tooltip?.hideLabel ?? false;
   const hideIndicator = tooltip?.hideIndicator ?? false;
   const colorsCount = entry ? getColorsCount(entry) : 1;
-  const dot = hideIndicator
-    ? ""
-    : `<span class="inline-block h-2.5 w-2.5 shrink-0 rounded-[2px] mr-2" style="${indicatorStyle(key, colorsCount)}"></span>`;
+  const dot = hideIndicator ? "" : indicatorDot(key, entry != null, colorsCount);
 
   const row = `<div class="flex w-full items-center justify-between gap-4 leading-none">
     <span class="text-muted-foreground flex items-center">${dot}${labelText}</span>
@@ -237,9 +237,7 @@ function formatAxisTooltipHtml(
       const labelText = escapeHtml(entry?.label ?? key);
       const value = formatValue(item.value);
       const colorsCount = entry ? getColorsCount(entry) : 1;
-      const dot = hideIndicator
-        ? ""
-        : `<span class="inline-block h-2.5 w-2.5 shrink-0 rounded-[2px] mr-2" style="${indicatorStyle(key, colorsCount)}"></span>`;
+      const dot = hideIndicator ? "" : indicatorDot(key, entry != null, colorsCount);
 
       return `<div class="flex w-full items-center justify-between gap-4 leading-none">
         <span class="text-muted-foreground flex items-center">${dot}${labelText}</span>

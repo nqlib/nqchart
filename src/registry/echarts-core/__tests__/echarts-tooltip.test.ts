@@ -127,3 +127,41 @@ describe("tooltip chrome follows the formatter", () => {
     expect(t.show).toBe(false);
   });
 });
+
+/**
+ * Series names and chart ids can come from data (CRM fields, grid columns).
+ * The tooltip is HTML, so nothing derived from them may reach a `style`
+ * attribute or the markup unescaped.
+ */
+describe("tooltip markup from data-derived names", () => {
+  const evil = 'x" onmouseover="alert(1)</style><img src=x onerror=alert(1)>';
+  const formatterFor = (chartId = "chart-1") => {
+    const next = applyTooltipToOption(
+      { tooltip: { trigger: "axis" }, series: [{ type: "bar", name: evil }] } as EChartsOption,
+      CONFIG,
+      chartId,
+      tooltipPart,
+    );
+    return (next.tooltip as { formatter: (p: unknown) => string }).formatter;
+  };
+
+  it("gives a series name that missed the config a neutral dot, not a style attribute", () => {
+    const html = formatterFor()([{ seriesName: evil, name: "Jan", value: 3 }]);
+    expect(html).toContain("bg-muted-foreground/50");
+    expect(html).not.toMatch(/style="[^"]*onmouseover/);
+    expect(html).not.toContain("<img");
+    expect(html).not.toContain("</style>");
+    expect(html).not.toContain('onmouseover="');
+  });
+
+  it("escapes the chart id in data-chart", () => {
+    const html = formatterFor('a"><img src=x>')([{ seriesName: "desktop", name: "Jan", value: 3 }]);
+    expect(html).not.toContain("<img");
+    expect(html).toContain('data-chart="a&quot;&gt;&lt;img src=x&gt;"');
+  });
+
+  it("keeps the colour variable for a key that is in the config", () => {
+    const html = formatterFor()([{ seriesName: "desktop", name: "Jan", value: 3 }]);
+    expect(html).toContain('style="background:var(--color-desktop-0)"');
+  });
+});
