@@ -122,7 +122,7 @@ The chart is composed of a root and an optional tooltip. Every layout option liv
 
 <ApiHeading>NQSankeyChart</ApiHeading>
 
-Root container. Compiles an ECharts `series-sankey`: nodes with signature corners (`--radius-sm`) and no painted border, a stage-sized gap between nodes, links coloured by their source.
+Root container. Compiles an ECharts `series-sankey`: nodes with no painted border, a stage-sized gap between nodes, links coloured by their source. A node rounds only the sides that have no links (signature `--radius-sm`). The side where links attach stays square, so a link band meets the node with no notch. Labels have a halo in the canvas colour, so they stay legible over any link colour.
 
 <ApiTable>
   <ApiRow name="config" type="Record<string, ChartConfig[string]>" required>

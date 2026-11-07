@@ -550,7 +550,7 @@ export function NQExampleTreemapChart() {
 
 export function NQExampleWaterfallChart() {
   return (
-    <NQWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} className="h-full w-full p-4">
+    <NQWaterfallChart data={WATERFALL_DATA} config={WATERFALL_CONFIG} showBrush={false} className="h-full w-full p-4">
       <WfGrid /><WfXAxis /><WfYAxis /><Bars /><WfLegend /><WfTooltip />
     </NQWaterfallChart>
   );

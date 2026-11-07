@@ -60,7 +60,13 @@ export function compileWaterfallOption(ctx: CompileContext): EChartsOption {
     grid: resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
     tooltip: { trigger: "axis" },
     legend: { show: false },
-    xAxis: { type: "category", data: categories },
+    // A bridge reads step by step: with few steps every label must show (the
+    // auto interval hid every other one on a four-bar card).
+    xAxis: {
+      type: "category",
+      data: categories,
+      ...(categories.length <= 12 ? { axisLabel: { interval: 0 } } : {}),
+    },
     yAxis: { type: "value", splitLine: { show: hasGrid } },
     ...(dataZoom ? { dataZoom } : {}),
     series: [

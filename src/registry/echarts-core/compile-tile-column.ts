@@ -141,9 +141,13 @@ export function compileTileColumnOption(ctx: CompileContext): EChartsOption {
       const filled = datum.tiles;
       if (filled <= 0) return { type: "group" as const, children: [] };
 
-      // Uniform squares from the baseline: size from column width vs one band
-      // height, then stack with a constant gap. Never stretch tiles to fill
-      // the band — value is encoded by tile COUNT, not aspect.
+      // Uniform squares: size from column width vs one band height. Never
+      // stretch tiles to fill the band — value is encoded by tile COUNT, not
+      // aspect. Each filled band is packed with as many squares as fit, evenly
+      // pitched, so a column's top meets the y tick it stands for. Stacking
+      // one square per band by its own size instead left tall-band columns far
+      // below their labels (90 narrow days on a $0–$4K axis read as ~$300).
+      // Square bands (bandH ≈ side + gap) still draw one tile per band.
       const floor = api.coord([idx, 0]);
       const oneBand = api.coord([idx, 1]);
       if (!floor || !oneBand) return { type: "group" as const, children: [] };
@@ -153,7 +157,6 @@ export function compileTileColumnOption(ctx: CompileContext): EChartsOption {
       const bandH = Math.max(0, floorY - (oneBand[1] ?? 0));
       const side = Math.max(0, Math.min(bandW - cellGap, bandH - cellGap));
       if (side <= 0) return { type: "group" as const, children: [] };
-      const step = side + cellGap;
 
       const children: Array<{
         type: "rect";
@@ -161,26 +164,31 @@ export function compileTileColumnOption(ctx: CompileContext): EChartsOption {
         style: ReturnType<CustomSeriesRenderItemAPI["style"]>;
         z2: number;
       } & ReturnType<typeof customFocusChild>> = [];
+      const perBand = Math.max(1, Math.floor((bandH + 0.5) / (side + cellGap)));
+      const pitch = bandH / perBand;
+      const x = floorX - side / 2;
       for (let tile = 0; tile < filled; tile += 1) {
-        const x = floorX - side / 2;
-        const y = floorY - cellGap / 2 - side - tile * step;
-        children.push({
-          type: "rect",
-          shape: {
-            x,
-            y,
-            width: side,
-            height: side,
-            r: Math.min(cellRadius, side / 2),
-          },
-          style: api.style({
-            fill: datum.colors[Math.min(tile, datum.colors.length - 1)],
-            stroke: "transparent",
-            lineWidth: 0,
-          }),
-          z2: 1,
-          ...customFocusChild(focusOn),
-        });
+        const bandTop = floorY - (tile + 1) * bandH;
+        for (let cell = 0; cell < perBand; cell += 1) {
+          const y = bandTop + (pitch - side) / 2 + cell * pitch;
+          children.push({
+            type: "rect",
+            shape: {
+              x,
+              y,
+              width: side,
+              height: side,
+              r: Math.min(cellRadius, side / 2),
+            },
+            style: api.style({
+              fill: datum.colors[Math.min(tile, datum.colors.length - 1)],
+              stroke: "transparent",
+              lineWidth: 0,
+            }),
+            z2: 1,
+            ...customFocusChild(focusOn),
+          });
+        }
       }
       return { type: "group" as const, ...customFocusGroup(focusOn), children };
     },

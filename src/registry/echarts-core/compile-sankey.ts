@@ -14,7 +14,7 @@ import type {
   SankeyPart,
   TooltipPart,
 } from "./parts/types";
-import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
+import { resolveCanvasChartChrome, resolveCanvasGapColor } from "./resolve-chart-chrome";
 import { resolveCssColorValue } from "./resolve-chart-colors";
 
 /** Link fill opacity at rest — flows read as quiet bands under the nodes. */
@@ -259,6 +259,26 @@ function labelPosition(
   return last ? "left" : "right";
 }
 
+/**
+ * Corner radii `[tl, tr, br, bl]` for a node: round only the sides with no
+ * links attached. A rounded corner where a link band meets the node curves
+ * away from the band and opens a notch between them.
+ */
+export function sankeyNodeCorners(
+  orient: SankeyOrient,
+  r: number,
+  hasIn: boolean,
+  hasOut: boolean,
+): [number, number, number, number] {
+  const inSide = hasIn ? 0 : r;
+  const outSide = hasOut ? 0 : r;
+  // Horizontal: links enter on the left, leave on the right.
+  // Vertical: links enter on the top, leave on the bottom.
+  return orient === "vertical"
+    ? [inSide, inSide, outSide, outSide]
+    : [inSide, outSide, outSide, inSide];
+}
+
 /** Strip rich-text control characters from a label fragment. */
 function richSafe(text: string): string {
   return text.replace(/[{}|]/g, "");
@@ -288,12 +308,24 @@ export function compileSankeyOption(ctx: CompileContext): EChartsOption {
   );
   const focusOn = isHoverFocusOn(ctx);
 
+  const nodeRadius = clampRadius(radius.mark, nodeWidth);
+  const hasIn = new Set(graph.links.map((l) => String(l.target)));
+  const hasOut = new Set(graph.links.map((l) => String(l.source)));
+
   const nodes = graph.nodes.map((node) => {
     const color = colors.get(node.name)!;
     return {
       name: node.name,
       value: node.value,
-      itemStyle: { color },
+      itemStyle: {
+        color,
+        borderRadius: sankeyNodeCorners(
+          orient,
+          nodeRadius,
+          hasIn.has(String(node.name)),
+          hasOut.has(String(node.name)),
+        ),
+      },
       // Explicit, not inherited: an emphasis fill left unset is "lifted" (recoloured).
       emphasis: { itemStyle: { color } },
       label: { position: labelPosition(orient, node.column, graph.maxColumn) },
@@ -321,6 +353,7 @@ export function compileSankeyOption(ctx: CompileContext): EChartsOption {
   };
 
   const vertical = orient === "vertical";
+  const halo = resolveCanvasGapColor(ctx.chartId);
   const labelRoom = showLabels && vertical ? VERTICAL_LABEL_ROOM : 4;
 
   const base: EChartsOption = {
@@ -341,15 +374,18 @@ export function compileSankeyOption(ctx: CompileContext): EChartsOption {
         layoutIterations: 32,
         // Signature: node corners = `radius.mark`, clamped to the node's thickness;
         // no painted border (links meet the node edge directly).
-        itemStyle: {
-          borderRadius: clampRadius(radius.mark, nodeWidth),
-          borderWidth: 0,
-        },
+        // Per-node corners (see `sankeyNodeCorners`); no painted border, so
+        // links meet the node edge directly.
+        itemStyle: { borderWidth: 0 },
         lineStyle: { color: linkColor, opacity: SANKEY_LINK_OPACITY, curveness: 0.5 },
         label: {
           show: showLabels,
           distance: LABEL_DISTANCE,
           color: chrome.foreground,
+          // Labels sit over the flows; a halo in the canvas colour keeps them
+          // legible on any link colour.
+          textBorderColor: halo,
+          textBorderWidth: 3,
           ...CHART_TYPOGRAPHY.markLabel,
           formatter: (raw: unknown) => {
             const p = raw as { name?: string; value?: unknown };
@@ -360,9 +396,16 @@ export function compileSankeyOption(ctx: CompileContext): EChartsOption {
               : `{name|${name}}`;
           },
           rich: {
-            name: { color: chrome.foreground, ...CHART_TYPOGRAPHY.markLabel },
+            name: {
+              color: chrome.foreground,
+              ...CHART_TYPOGRAPHY.markLabel,
+              textBorderColor: halo,
+              textBorderWidth: 3,
+            },
             value: {
               color: chrome.muted,
+              textBorderColor: halo,
+              textBorderWidth: 3,
               fontSize: CHART_FONT_SIZE.small,
               fontWeight: CHART_FONT_WEIGHT.normal,
             },

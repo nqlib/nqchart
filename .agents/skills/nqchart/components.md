@@ -84,7 +84,7 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 
 **Bar child:** `dataKey`, `variant`, `radius`, `stackId`, `yAxisId`, `showLabels`, `labelFormatter`
 
-**Signature look (every bar):** 28% gap between categories, 8% between bars of a category (histogram: none). Stacked segments get a 2px seam (`--chart-gap`) and round their outer end plus the corners facing a seam; the zero-line end stays square. Same rules in composed and waterfall.
+**Signature look (every bar):** 28% gap between categories, 8% between bars of a category (histogram: none). Stacked segments get a 2px seam (`--chart-gap`). Only the outer end of the stack is rounded; seams are flat and the zero-line end stays square. **One corner radius per chart:** `barRadius` on wide bars; on narrow bars 25% of the bar thickness (minimum 2px). A segment's corners are also capped at 30% of its length. The rule applies on every painted frame, including the intro. Same rules in composed and waterfall.
 
 | `Bar` variant | Effect |
 |---------------|--------|
@@ -99,7 +99,7 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 
 **Legend:** `<Legend isClickable selected onSelectChange />` — uncontrolled by default; pass both for controlled (single-select).
 
-**Annotations:** `<ReferenceLine y={n} />` / `<ReferenceBand y={[lo, hi]} />` / `<RangeArea lowKey highKey />` (tones: `neutral` \| `accent` \| `positive` \| `warning` \| `critical`). `ReferenceBand` `y` may be `[number | null, number | null]` — `null` is the axis edge. `includeInDomain` (default `true`) extends an automatic axis; a caller-set `min` or `max` is left alone. Each `yAxisId` gets its own silent series. `RangeArea` fills `highKey - lowKey`, skips a row when either value is null, and stays out of the legend and tooltip.
+**Annotations:** `<ReferenceLine y={n} />` / `<ReferenceBand y={[lo, hi]} />` / `<RangeArea lowKey highKey />` (tones: `neutral` \| `accent` \| `positive` \| `warning` \| `critical`). `ReferenceBand` `y` may be `[number | null, number | null]` — `null` is the axis edge. `includeInDomain` (default `true`) extends an automatic axis; a caller-set `min` or `max` is left alone. Each `yAxisId` gets its own silent series. `RangeArea` fills `highKey - lowKey` (also below zero: a band with a negative `lowKey` draws from `lowKey`), skips a row when either value is null, and stays out of the legend and tooltip.
 
 ### Line-only
 
@@ -226,7 +226,9 @@ Dedicated grid heatmap — prefer over scatter for intensity matrices.
 
 **Children:** `Heatmap`, `Tooltip`, `Legend`
 
-**Heatmap child:** `dataKey`, `data` (cells from `prepareHeatmapCells`), `xLabels`, `yLabels`, `min`, `max`
+**Heatmap child:** `dataKey`, `data` (cells from `prepareHeatmapCells`), `xLabels`, `yLabels`, `min`, `max`, `enableZoom` (default: on only above 12 rows or columns)
+
+Every row and column is labelled; long column labels tilt. The tooltip reads `row × column` and the value.
 
 Cells use the signature: `radius.mark` corners and a `gap.seam` seam (a canvas-colour border — the one painted-seam exception, since ECharts heatmaps have no geometric gap). Not configurable per chart; theme via `--radius` / `--chart-gap`.
 
@@ -311,6 +313,7 @@ Flows from source to outcome. `data` = one row per **link** (`sourceKey` / `targ
 - Root props: `orient` (`"horizontal"` default | `"vertical"`), `nodeAlign` (`"justify"` default | `"left"` | `"right"`), `nodeWidth` (px, default 12), `nodeGap` (px, default 8 = signature stage gap), `showLabels` (default true — name + throughput), `linkColor` (`"source"` default | `"gradient"`), `formatValue`, `hoverFocus`, `onMarkClick`, loading / empty / error, a11y table
 - Node throughput = `max(inflow, outflow)`; tooltip: node → throughput, link → `Source → Target: value`
 - Hover a node → it + its links stay; hover a link → it + its two nodes; the rest dims (`hoverFocus={false}` to opt out)
+- Nodes round only the sides with no links; the side where links attach is square, so a band meets its node with no notch. Labels carry a canvas-colour halo.
 - Links must form a DAG: cycles, self-loops, empty ends and values ≤ 0 are dropped (dev warning)
 - Node keys become CSS variables — use slug names (`"paidAds"`) and put display text in `config[key].label`
 

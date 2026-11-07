@@ -46,7 +46,9 @@ function TreeIndicator({
       <ellipse
         className="text-path"
         cx="50%"
-        cy="calc(100% - 15px)"
+        // WebKit rejects calc() in SVG geometry attributes; offset with a transform instead.
+        cy="100%"
+        transform="translate(0 -15)"
         rx="2"
         ry="2"
         fill="currentColor"
@@ -54,9 +56,10 @@ function TreeIndicator({
       <rect
         className="text-path"
         x="9.5"
-        y="0"
+        // Full height shifted up 15px; the svg viewport clips the part above 0.
+        y="-15"
         width="1"
-        height="calc(100% - 15px)"
+        height="100%"
         fill="currentColor"
       />
       {hasActiveChild && (

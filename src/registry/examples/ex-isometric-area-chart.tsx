@@ -28,8 +28,8 @@ function seriesRibbon(key: "desktop" | "mobile", depth: number) {
   const baseline = plot.y + plot.h;
   const area = [
     ...front.map((p) => `${p.x},${p.y}`),
-    `${front[front.length - 1].x},${baseline}`,
-    `${front[0].x},${baseline}`,
+    `${front[front.length - 1]!.x},${baseline}`,
+    `${front[0]!.x},${baseline}`,
   ].join(" ");
   return { front, area, ribbon: ribbonPoints(front, ISO.dx * depth, ISO.dy * depth), depth };
 }

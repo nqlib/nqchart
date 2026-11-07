@@ -1,7 +1,7 @@
 ---
 id: EP-003
 title: Chart craft — hover, motion, brush
-status: done
+status: in-progress
 target: 2026-Q3
 owner: nqchart
 ---

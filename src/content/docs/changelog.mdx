@@ -3,6 +3,66 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.5.0 — 2026-11-07
+
+### New charts and entries
+
+- **`@nqlib/nqchart/sankey-chart`** — `NQSankeyChart`. One row per link. The chart derives the nodes from the links. See [Sankey](/docs/sankey-chart).
+- **`@nqlib/nqchart/kpi-card`** — `NQKpiCard`. See [KPI card](/docs/kpi-card).
+- **`@nqlib/nqchart/small-multiples`** — `NQSmallMultiples`. See [Small multiples](/docs/small-multiples).
+- **`@nqlib/nqchart/tile-column-chart`** — `NQTileColumnChart`. A column is a stack of equal square tiles.
+- **Composed:** `<Connector>` and `<Line variant="dots">`. Value labels sit at the bar ends.
+- **Recipes:** variance, cohort retention, forecast band, slope and dumbbell. See [Chart recipes](/docs/chart-recipes).
+
+### Signature design system
+
+- **Signature tokens.** Radius, gap, stroke and symbol size come from `--radius` and `--chart-gap`. Every chart family uses them.
+- **Pie, donut and rose** use sector geometry with parallel seams and circular fillets.
+- **Funnel:** `connection="rounded"` and 3D cone funnels with proportional rims.
+- **Focus mode.** One set of focus tokens for every family. Custom series (isometric bar, tile column) dim and focus like the built-in series.
+
+### Bars
+
+- **One corner radius for each chart.** All bars in a chart get the same radius. Wide bars keep `barRadius`. Narrow bars use 25% of the bar thickness, with a minimum of 2px. A segment also limits its corners to 30% of its length, so a thin stack slice stays a rounded rectangle. Charts side by side now have the same corners.
+- **The rule applies before every paint.** `fitBarCornersBeforePaint` runs the rule in the ECharts painter refresh. The intro and update animations now show the final corners. Before, a bar grew with the authored radius and then changed at the end.
+- **Flat stack seams.** Only the outer end of a stack is rounded. The segments meet flat at each seam. The default `join` radius of `barItemBorderRadius` is now `0`. A histogram keeps its own rule.
+- **Horizontal bars:** the plot has 20px on the right, so the last value-axis label is not clipped.
+- The headless `renderToSvg` applies the same corner rule.
+
+### Reference marks
+
+- **`RangeArea` below zero.** The band series stack with `stackStrategy: "all"`. A band with a negative `lowKey` now draws from `lowKey`. Before, ECharts stacked a positive span from zero.
+
+### Heatmap
+
+- **`enableZoom` default.** Zoom is on only when the matrix has more than 12 rows or columns. Set `enableZoom` to override. A small matrix has no sliders, and the grid uses the free space.
+- **Labels.** Every row and column shows its label. Long column labels tilt 35°.
+- **Tooltip.** The tooltip names the cell as `row × column` and shows the value with a precision that fits the value range.
+
+### Sankey
+
+- **Node corners.** A node rounds only the sides that have no links. The side where links attach stays square, so the link band meets the node with no notch.
+- **Label halo.** Node and link labels have a 3px halo in the canvas colour.
+
+### Tile column
+
+- **Tile packing.** Each band holds as many squares as fit, at an even pitch. The top of a column meets the y tick that it shows. Before, a tall band held one tile, and a column stood far below its value.
+
+### Waterfall
+
+- With 12 steps or fewer, every step shows its x-axis label.
+
+### Performance
+
+- **Color resolution.** The canvas color probe is shared and cached. A color lookup no longer forces a style recalculation.
+- **Isometric bar.** The hit layer is above the faces, which removes the hover lag on the left side. The stagger animation does not replay when the pointer leaves.
+
+### Docs site and examples
+
+- The docs sidebar draws its active-item indicator without `calc()` in SVG attributes, which WebKit rejects.
+- The bullet, Pareto and waterfall doc examples have no brush footer.
+- New `/perf-check` page for dashboard performance checks.
+
 ## 0.4.0 — 2026-10-21
 
 ### Headless render

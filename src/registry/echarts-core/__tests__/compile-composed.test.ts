@@ -134,14 +134,14 @@ describe("compileComposedOption — stacked bar corners", () => {
     return (bar(id).data as BarPoint[]).map((p) => p.itemStyle?.borderRadius);
   }
 
-  it("rounds the outer end and the seam of a positive stack, never the zero line", () => {
+  it("rounds only the outer end of a positive stack: seam flat, zero line square", () => {
     expect(radii("a").slice(0, 2)).toEqual([
-      [4, 4, 0, 0],
-      [4, 4, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
     ]);
     expect(radii("b").slice(0, 2)).toEqual([
-      [4, 4, 4, 4],
-      [4, 4, 4, 4],
+      [4, 4, 0, 0],
+      [4, 4, 0, 0],
     ]);
   });
 

@@ -8,6 +8,7 @@ import { maxIntroDurationMs, optionHasAnimatedSeries } from "./apply-chart-anima
 import { applyRolloutIntroReveal } from "./apply-rollout-intro";
 import type { ChartPlotInsets } from "./chart-grid";
 import { clearFocus, focusMark, setHoverFocusEnabled } from "./hover-focus-repair";
+import { fitBarCornersBeforePaint, fitRenderedBarCorners } from "./bar-radius";
 
 const NO_EXTRA: EChartsExtraModules = [];
 
@@ -122,6 +123,9 @@ function setOptionWhenSized(
     if (mode.notMerge) {
       applyRolloutIntroReveal(instance);
     }
+    // Shapes exist now but nothing has painted: fit corners before the first
+    // frame, so even frame one never shows the authored radius.
+    fitRenderedBarCorners(instance);
     onApplied(readPlotInsets(instance));
   };
   apply();
@@ -250,6 +254,7 @@ export function useNQEcharts(
         },
         { lazyUpdate: false },
       );
+      fitRenderedBarCorners(instance);
     }
 
     const pending = pendingOptionRef.current;
@@ -329,9 +334,16 @@ export function useNQEcharts(
     const onClick = (params: unknown) => {
       eventHandlersRef.current?.onSeriesClick?.(params as NQChartSeriesEvent);
     };
+    // Corners scale with each bar's rendered size, applied before every paint
+    // so intro and update tweens never draw the authored radius
+    // (see fitBarCornersBeforePaint).
+    fitBarCornersBeforePaint(instance);
     instance.on("mouseover", onMouseOver);
     instance.on("globalout", onGlobalOut);
     instance.on("click", onClick);
+    // Test seam: an e2e sweep can collect live instances by defining this set
+    // before the page loads. Absent in normal use (one optional-chain check).
+    (globalThis as { __NQ_CHARTS__?: Set<unknown> }).__NQ_CHARTS__?.add(instance);
 
     const ro = new ResizeObserver(() => {
       // ECharts `resize()` runs an update with animation duration 0, which overrides
@@ -364,6 +376,7 @@ export function useNQEcharts(
       instance.off("mouseover", onMouseOver);
       instance.off("globalout", onGlobalOut);
       instance.off("click", onClick);
+      (globalThis as { __NQ_CHARTS__?: Set<unknown> }).__NQ_CHARTS__?.delete(instance);
       ro.disconnect();
       clearIntroTimer();
       instance.dispose();

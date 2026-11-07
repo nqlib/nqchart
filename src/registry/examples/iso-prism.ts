@@ -40,21 +40,21 @@ export function sampleMonotone(points: { x: number; y: number }[], steps = 8) {
   const n = points.length;
   if (n < 2) return points.slice();
   const slope = new Array<number>(n).fill(0);
-  slope[0] = (points[1].y - points[0].y) / (points[1].x - points[0].x);
-  slope[n - 1] = (points[n - 1].y - points[n - 2].y) / (points[n - 1].x - points[n - 2].x);
+  slope[0] = (points[1]!.y - points[0]!.y) / (points[1]!.x - points[0]!.x);
+  slope[n - 1] = (points[n - 1]!.y - points[n - 2]!.y) / (points[n - 1]!.x - points[n - 2]!.x);
   for (let i = 1; i < n - 1; i++) {
-    slope[i] = (points[i + 1].y - points[i - 1].y) / (points[i + 1].x - points[i - 1].x);
+    slope[i] = (points[i + 1]!.y - points[i - 1]!.y) / (points[i + 1]!.x - points[i - 1]!.x);
   }
   for (let i = 0; i < n - 1; i++) {
-    const h = points[i + 1].x - points[i].x;
-    const delta = (points[i + 1].y - points[i].y) / h;
+    const h = points[i + 1]!.x - points[i]!.x;
+    const delta = (points[i + 1]!.y - points[i]!.y) / h;
     if (delta === 0) {
       slope[i] = 0;
       slope[i + 1] = 0;
       continue;
     }
-    const a = slope[i] / delta;
-    const b = slope[i + 1] / delta;
+    const a = slope[i]! / delta;
+    const b = slope[i + 1]! / delta;
     const s = a * a + b * b;
     if (s > 9) {
       const t = 3 / Math.sqrt(s);
@@ -64,22 +64,22 @@ export function sampleMonotone(points: { x: number; y: number }[], steps = 8) {
   }
   const out: { x: number; y: number }[] = [];
   for (let i = 0; i < n - 1; i++) {
-    const h = points[i + 1].x - points[i].x;
+    const h = points[i + 1]!.x - points[i]!.x;
     for (let s = 0; s < steps; s++) {
       const t = s / steps;
       const t2 = t * t;
       const t3 = t2 * t;
       out.push({
-        x: points[i].x + t * h,
+        x: points[i]!.x + t * h,
         y:
-          (2 * t3 - 3 * t2 + 1) * points[i].y +
-          (t3 - 2 * t2 + t) * h * slope[i] +
-          (-2 * t3 + 3 * t2) * points[i + 1].y +
-          (t3 - t2) * h * slope[i + 1],
+          (2 * t3 - 3 * t2 + 1) * points[i]!.y +
+          (t3 - 2 * t2 + t) * h * slope[i]! +
+          (-2 * t3 + 3 * t2) * points[i + 1]!.y +
+          (t3 - t2) * h * slope[i + 1]!,
       });
     }
   }
-  out.push(points[n - 1]);
+  out.push(points[n - 1]!);
   return out;
 }
 

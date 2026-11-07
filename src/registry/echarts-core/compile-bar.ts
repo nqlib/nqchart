@@ -11,7 +11,6 @@ import { resolveAreaFillColor } from "./resolve-chart-colors";
 import {
   barItemBorderRadius,
   groupStackRoles,
-  resolveBarJoinRadius,
   resolveBarRadius,
   resolveStackSeam,
   stackSegmentGapStyle,
@@ -54,9 +53,8 @@ function buildBarDataPoints(
   const r = isHistogram
     ? (bar.radius != null ? bar.radius : 0)
     : resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
-  const join = isHistogram
-    ? r
-    : resolveBarJoinRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
+  // Stack seams are flat: one rounded outer end per stack (see barItemBorderRadius).
+  const join = isHistogram ? r : 0;
   // A histogram's bars touch by design: no seams.
   const { seam, gapColor } = isHistogram
     ? { seam: 0, gapColor: "" }

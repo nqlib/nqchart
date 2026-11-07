@@ -128,7 +128,7 @@ export function Heatmap({
   yLabels,
   min,
   max,
-  enableZoom = true,
+  enableZoom,
 }: {
   dataKey: string;
   data: HeatmapCell[];
@@ -136,7 +136,10 @@ export function Heatmap({
   yLabels?: string[];
   min?: number;
   max?: number;
-  /** Drag-pan and scroll-zoom on both axes (default on). */
+  /**
+   * Drag-pan and scroll-zoom on both axes. Default: on only when the matrix
+   * has more than 12 rows or columns.
+   */
   enableZoom?: boolean;
 }) {
   const id = usePartId();

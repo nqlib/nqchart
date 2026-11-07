@@ -10,6 +10,7 @@ import {
   SANKEY_NODE_WIDTH,
   compileSankeyOption,
   deriveSankeyGraph,
+  sankeyNodeCorners,
 } from "../compile-sankey";
 import type { ChartPart, CompileContext, SankeyPart } from "../parts/types";
 import { makeCtx } from "./make-ctx";
@@ -128,8 +129,16 @@ describe("compileSankeyOption", () => {
     expect(s.nodeWidth).toBe(SANKEY_NODE_WIDTH);
     expect(s.nodeGap).toBe(CHART_SIGNATURE.gap.stage);
     expect(s.draggable).toBe(false);
-    expect(s.itemStyle?.borderRadius).toBe(CHART_SIGNATURE.radius.mark);
+    // Corners are per node (only the link-free sides round); none at series level.
+    expect(s.itemStyle?.borderRadius).toBeUndefined();
     expect(s.itemStyle?.borderWidth).toBe(0);
+    const r = CHART_SIGNATURE.radius.mark;
+    const corners = (name: string) =>
+      (s.data?.find((n) => n.name === name) as { itemStyle?: { borderRadius?: number[] } } | undefined)
+        ?.itemStyle?.borderRadius;
+    expect(corners("Search")).toEqual([r, 0, 0, r]);
+    expect(corners("Landing")).toEqual([0, 0, 0, 0]);
+    expect(corners("Paid")).toEqual([0, r, r, 0]);
     expect(s.data).toHaveLength(6);
     expect(s.links).toHaveLength(5);
     expect(s.links?.[0]?.[NQ_SERIES_KEY]).toBe("Search");
@@ -198,8 +207,13 @@ describe("compileSankeyOption", () => {
     expect(s.orient).toBe("vertical");
     expect(s.nodeWidth).toBe(4);
     expect(s.nodeGap).toBe(20);
-    // Radius clamps to half the node's thickness.
-    expect(s.itemStyle?.borderRadius).toBe(2);
+    // Radius clamps to half the node's thickness; vertical rounds the top of
+    // a source and the bottom of a sink.
+    const corners = (name: string) =>
+      (s.data?.find((n) => n.name === name) as { itemStyle?: { borderRadius?: number[] } } | undefined)
+        ?.itemStyle?.borderRadius;
+    expect(corners("Search")).toEqual([2, 2, 0, 0]);
+    expect(corners("Paid")).toEqual([0, 0, 2, 2]);
     const pos = (name: string) => s.data?.find((n) => n.name === name)?.label?.position;
     expect(pos("Search")).toBe("top");
     expect(pos("Paid")).toBe("bottom");
@@ -232,7 +246,7 @@ describe("compileSankeyOption", () => {
     const chart = echarts.init(null, undefined, { renderer: "svg", ssr: true, width: 600, height: 300 });
     try {
       chart.setOption({ ...rest, animation: false });
-      type El = { shape?: { r?: number }; hoverState?: number };
+      type El = { shape?: { r?: number | number[] }; hoverState?: number };
       const model = (chart as unknown as {
         getModel(): {
           getSeriesByIndex(i: number): {
@@ -242,7 +256,9 @@ describe("compileSankeyOption", () => {
       }).getModel().getSeriesByIndex(0);
       const nodeData = model.getData();
       const edgeData = model.getData("edge");
-      expect(nodeData.getItemGraphicEl(0).shape?.r).toBe(CHART_SIGNATURE.radius.mark);
+      // Node 0 (Search) is a source: rounded on the left, flush on the right.
+      const r = CHART_SIGNATURE.radius.mark;
+      expect(nodeData.getItemGraphicEl(0).shape?.r).toEqual([r, 0, 0, r]);
 
       // Hover "Signup" (node 3): its links Landing→Signup (2) and Signup→Paid (4) stay.
       chart.dispatchAction({ type: "highlight", seriesIndex: 0, dataIndex: 3 });
@@ -267,5 +283,35 @@ describe("compileSankeyOption", () => {
     } finally {
       chart.dispose();
     }
+  });
+});
+
+describe("sankeyNodeCorners", () => {
+  it("rounds only the sides with no links, so bands meet nodes flush", () => {
+    // [tl, tr, br, bl]
+    expect(sankeyNodeCorners("horizontal", 6, false, true)).toEqual([6, 0, 0, 6]);
+    expect(sankeyNodeCorners("horizontal", 6, true, false)).toEqual([0, 6, 6, 0]);
+    expect(sankeyNodeCorners("horizontal", 6, true, true)).toEqual([0, 0, 0, 0]);
+    expect(sankeyNodeCorners("vertical", 6, false, true)).toEqual([6, 6, 0, 0]);
+    expect(sankeyNodeCorners("vertical", 6, true, false)).toEqual([0, 0, 6, 6]);
+  });
+
+  it("applies per node: sources round left, sinks round right, pass-through nodes are square", () => {
+    const option = compileSankeyOption(
+      makeCtx({
+        data: [
+          { source: "a", target: "b", value: 2 },
+          { source: "b", target: "c", value: 2 },
+        ],
+        parts: [{ type: "sankey", id: "s" }],
+      }),
+    );
+    const series = (option.series as Array<{ data: Array<{ name: string; itemStyle: { borderRadius: number[] } }> }>)[0]!;
+    const corners = Object.fromEntries(series.data.map((n) => [n.name, n.itemStyle.borderRadius]));
+    expect(corners.a![1]).toBe(0);
+    expect(corners.a![0]).toBeGreaterThan(0);
+    expect(corners.b).toEqual([0, 0, 0, 0]);
+    expect(corners.c![0]).toBe(0);
+    expect(corners.c![1]).toBeGreaterThan(0);
   });
 });

@@ -123,7 +123,9 @@ const chartConfig = {
 </NQBarChart>
 ```
 
-Bar, line, and composed **basic** previews share the same twelve-month `desktop` / `mobile` dataset, color tokens, and **3px** rounded bar ends (`barRadius` on the chart root — nqui `--radius-sm` at 16px root). The end on the zero line stays square. Gaps are fixed by the chart signature: **28%** between categories and **8%** between bars of one category (a histogram uses none). A stacked bar keeps the same widths and puts a 2px seam (`--chart-gap`) between segments; segments round their outer end and the corners facing a seam.
+Bar, line, and composed **basic** previews share the same twelve-month `desktop` / `mobile` dataset, color tokens, and **3px** rounded bar ends (`barRadius` on the chart root — nqui `--radius-sm` at 16px root). The end on the zero line stays square. Gaps are fixed by the chart signature: **28%** between categories and **8%** between bars of one category (a histogram uses none). A stacked bar keeps the same widths and puts a 2px seam (`--chart-gap`) between segments. Only the outer end of the stack is rounded. The segments meet flat at each seam, so the stack reads as one bar.
+
+All bars in one chart use one corner radius. The radius is `barRadius` while the bars are wide. When the bars are narrow, the radius is 25% of the bar thickness, with a minimum of 2px. A short stack segment also limits its corners to 30% of its length, so a thin slice does not become a pill. The rule applies on every painted frame, so the intro animation shows the final corners.
 
 ### Loading State
 

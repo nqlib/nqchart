@@ -36,6 +36,8 @@ export function NQExampleBulletChart() {
       data={data}
       xDataKey="label"
       layout="horizontal"
+      // One row: a range strip has nothing to select.
+      showBrush={false}
       className="h-full w-full p-4"
     >
       <Grid />
@@ -43,11 +45,13 @@ export function NQExampleBulletChart() {
       <YAxis />
       <Legend />
       <Tooltip />
+      {/* No per-series radius: every mark takes the signature radius, and the
+          stacked bands get the shared join radius at their seams. */}
       <Bar dataKey="poor" stackId="range" />
       <Bar dataKey="satisfactory" stackId="range" />
       <Bar dataKey="good" stackId="range" />
       <Bar dataKey="actual" />
-      <Bar dataKey="target" radius={2} />
+      <Bar dataKey="target" />
     </NQBarChart>
   );
 }

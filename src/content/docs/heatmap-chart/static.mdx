@@ -196,7 +196,12 @@ Registers matrix cells and axis labels with the ECharts compiler. Renders no DOM
   <ApiRow name="max" type="number">
     Visual map maximum. Defaults to the largest cell `value`.
   </ApiRow>
+  <ApiRow name="enableZoom" type="boolean">
+    Drag-pan and scroll-zoom on both axes, with a slider on each axis. Default: on only when the matrix has more than 12 rows or columns. Set `true` or `false` to override.
+  </ApiRow>
 </ApiTable>
+
+Every column and row shows its label. Long column labels tilt 35°. The tooltip names the cell as `row × column` and shows the value with a precision that fits the value range.
 
 <ApiHeading>Tooltip</ApiHeading>
 

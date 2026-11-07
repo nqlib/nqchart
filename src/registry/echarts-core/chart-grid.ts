@@ -121,7 +121,9 @@ export function resolveCartesianGrid(
     // so keep them tight — the plot fills the box and the axes sit near the edges
     // instead of floating in a wide margin.
     left: compact ? (horizontal ? 56 : 8) : horizontal && hasBuiltInBrush ? 72 : 12,
-    right: compact ? 8 : 12,
+    // Horizontal bars put the value axis along the bottom; its last tick
+    // label is centred on the plot's right edge and was clipped ("10(").
+    right: horizontal ? 20 : compact ? 8 : 12,
     top: 14,
     bottom,
     containLabel: true,

@@ -195,7 +195,7 @@ describe("compileBarOption", () => {
     ]);
   });
 
-  it("rounds the outer end and each seam of a same-sign stack, never the zero line", () => {
+  it("rounds only the outer end of each same-sign stack: seams flat, zero line square", () => {
     const option = compileBarOption(
       makeCtx({
         parts: [
@@ -213,12 +213,13 @@ describe("compileBarOption", () => {
     const series = option.series as Array<{
       data: Array<{ itemStyle: { borderRadius: number[] } }>;
     }>;
-    // gain: on zero, seam above. more: outer top, seam below. Mirrored for the negative stack.
+    // gain: on zero, flat seam above → square. more: rounded outer top only.
+    // Mirrored for the negative stack.
     expect(series.map((s) => s.data[0]?.itemStyle.borderRadius)).toEqual([
+      [0, 0, 0, 0],
       [4, 4, 0, 0],
-      [4, 4, 4, 4],
+      [0, 0, 0, 0],
       [0, 0, 4, 4],
-      [4, 4, 4, 4],
     ]);
   });
 

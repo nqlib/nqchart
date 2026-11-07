@@ -6,7 +6,6 @@ import { barLayoutGaps } from "./bar-item-style";
 import {
   barItemBorderRadius,
   groupStackRoles,
-  resolveBarJoinRadius,
   resolveBarRadius,
   resolveStackSeam,
   stackSegmentGapStyle,
@@ -56,7 +55,8 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
 
   const barSeries = bars.map((bar) => {
     const r = resolveBarRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
-    const join = resolveBarJoinRadius(bar.radius, ctx.cartesian?.barRadius, ctx.chartId);
+    // Stack seams are flat: one rounded outer end per stack (see barItemBorderRadius).
+    const join = 0;
     const color = ctx.resolveColor(bar.dataKey, 0);
     const roles = bar.stackId ? stackRoles.get(bar.dataKey) : undefined;
     return {

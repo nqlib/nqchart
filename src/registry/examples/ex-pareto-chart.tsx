@@ -40,6 +40,8 @@ export function NQExampleParetoChart() {
       config={chartConfig}
       data={data}
       xDataKey="cause"
+      // Five causes fit on screen; a range strip has nothing to select.
+      showBrush={false}
       className="h-full w-full p-4"
     >
       <Grid />

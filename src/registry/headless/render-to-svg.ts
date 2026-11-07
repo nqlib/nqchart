@@ -16,6 +16,7 @@ import {
 } from "echarts/components";
 import * as echarts from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
+import { fitRenderedBarCorners } from "@/registry/echarts-core/bar-radius";
 
 /** Modules every headless render needs: the SVG renderer, the cartesian and pie families, reference marks. */
 const HEADLESS_MODULES = [
@@ -76,6 +77,8 @@ export function renderToSvg(option: EChartsOption, opts: RenderToSvgOptions): st
     const { tooltip: _tooltip, ...rest } = option;
     void _tooltip;
     chart.setOption({ ...rest, animation: false });
+    // Same corner rule as the browser's post-render pass.
+    fitRenderedBarCorners(chart);
     return chart.renderToSVGString();
   } finally {
     chart.dispose();
