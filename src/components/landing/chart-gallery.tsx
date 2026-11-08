@@ -36,7 +36,7 @@ const CHARTS: GalleryItem[] = [
 
 export function ChartGallery() {
   return (
-    <section className="w-full">
+    <section id="charts" className="w-full scroll-mt-20">
       <div className="mb-8 flex flex-col gap-2">
         <h2 className="text-xl font-semibold tracking-tight">Every chart, one composable API</h2>
         <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">

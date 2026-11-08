@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { FOCUS } from "../emphasis-presets";
 import { applyChartAnimationToOption } from "../apply-chart-animation";
 import { compilePieOption } from "../compile-pie";
+import { CIRCULAR_LABELED_OUTER_RADIUS } from "../chart-signature";
 import type { PieSeriesPart } from "../parts/types";
 import { makeCtx } from "./make-ctx";
 
@@ -212,5 +213,32 @@ describe("compilePieOption — rose element focus", () => {
     const group = series.renderItem({ dataIndex: 0 }, { getWidth: () => 300, getHeight: () => 300, style: () => ({}) });
     expect(group.focus).toBe("self");
     expect(group.blurScope).toBe("series");
+  });
+});
+
+describe("compilePieOption — default size", () => {
+  it("uses the shared labeled circular radius, the same as radar", () => {
+    type Group = { children?: Array<{ type?: string; shape?: { pathData?: string } }> };
+    const option = compilePieOption(
+      makeCtx({
+        data: [
+          { name: "A", value: 3 },
+          { name: "B", value: 2 },
+          { name: "C", value: 1 },
+        ],
+        parts: [{ ...piePart }],
+      }),
+    );
+    const series = (option.series as Array<{
+      renderItem: (
+        p: { dataIndex: number },
+        api: { getWidth: () => number; getHeight: () => number; style: () => object },
+      ) => Group;
+    }>)[0]!;
+    const group = series.renderItem({ dataIndex: 0 }, { getWidth: () => 400, getHeight: () => 400, style: () => ({}) });
+    const path = group.children!.find((c) => c.type === "path")!.shape!.pathData!;
+    // Largest arc radius in the slice outline is the rim. 65% of half of 400.
+    const radii = [...path.matchAll(/A\s*([\d.]+)/g)].map((m) => Number(m[1]));
+    expect(Math.max(...radii)).toBeCloseTo((Number.parseFloat(CIRCULAR_LABELED_OUTER_RADIUS) / 100) * 200, 1);
   });
 });

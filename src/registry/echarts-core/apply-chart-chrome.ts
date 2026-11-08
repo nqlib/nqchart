@@ -200,8 +200,12 @@ function themeCalendar(calendar: EChartsOption["calendar"], chrome: ChartChromeC
     const dayLabel = (c.dayLabel as AxisLike | undefined) ?? {};
     const monthLabel = (c.monthLabel as AxisLike | undefined) ?? {};
     const yearLabel = (c.yearLabel as AxisLike | undefined) ?? {};
+    const splitLine = (c.splitLine as AxisLike | undefined) ?? {};
+    const splitLineStyle = (splitLine.lineStyle as AxisLike | undefined) ?? {};
     return {
       ...c,
+      // ECharts draws the month outline `#000` by default.
+      splitLine: { ...splitLine, lineStyle: { color: chrome.splitLine, ...splitLineStyle } },
       dayLabel: { color: chrome.muted, ...dayLabel },
       monthLabel: { color: chrome.muted, ...monthLabel },
       yearLabel: { color: chrome.muted, ...yearLabel },

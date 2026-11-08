@@ -9,7 +9,7 @@
  */
 import type { CustomSeriesOption, EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
-import { resolveChartSignature } from "./chart-signature";
+import { CIRCULAR_LABELED_OUTER_RADIUS, resolveChartSignature } from "./chart-signature";
 import {
   customFocusChild,
   customFocusGroup,
@@ -33,7 +33,7 @@ import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
 
 /** Plain pie / donut defaults: room around the rim for leader-line labels. */
 const PIE_DEFAULT_INNER = 0;
-const PIE_DEFAULT_OUTER = "70%";
+const PIE_DEFAULT_OUTER = CIRCULAR_LABELED_OUTER_RADIUS;
 /** Rose defaults: small hub, nearly full-bleed rim (labels are off by default). */
 const ROSE_DEFAULT_INNER = "12%";
 const ROSE_DEFAULT_OUTER = "92%";

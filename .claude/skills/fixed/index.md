@@ -14,7 +14,7 @@ metadata:
 
 **Agents:** When the user asks to fix a bug, **search this file first** (domain table, then semantic table). Open the fix note before changing code.
 
-Last updated: 2026-11-06
+Last updated: 2026-11-07
 
 ---
 
@@ -37,6 +37,7 @@ Problem areas → domain overview → individual fix notes.
 | **registration** | ReferenceLine / ReferenceBand draw nothing; a component key the family never registered | [domains/registration.md](./domains/registration.md) | [MarkLine / MarkArea not registered](./fixes/registration-markline-markarea.md) |
 | **reference-marks** | Mark line or band missing; right-axis mark on the left scale; mark above the data is off the plot | [domains/reference-marks.md](./domains/reference-marks.md) | [unregistered, single axis, clipped](./fixes/reference-marks-unregistered-single-axis.md) |
 | **bar-radius** | Negative bar rounded at zero; stacked gain and loss both rounded on the zero line; pill-shaped segment | [domains/bar-radius.md](./domains/bar-radius.md) | [sign-aware corners](./fixes/bar-radius-sign-aware.md) |
+| **theme** | Calendar empty days white in dark mode; black month outline; ECharts default colour ignores theme | [domains/theme.md](./domains/theme.md) | [calendar empty day white](./fixes/theme-calendar-empty-day-white.md) |
 
 <!-- Add rows when new domains appear: animation, tooltip, compile-bar, registry-boundary, … -->
 
@@ -48,6 +49,7 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 
 | Triggers (any match) | Chart / area | Fix note |
 |----------------------|--------------|----------|
+| calendar white cells dark mode; empty days white; weekend white block; calendar black outline; splitLine #000; itemStyle #fff | calendar / theme | [theme-calendar-empty-day-white](./fixes/theme-calendar-empty-day-white.md) |
 | dashboard laggy; many charts slow; theme toggle freezes; getComputedStyle / style recalc in profile; cssColorToCanvasRgb hot | all ECharts | [performance-color-probe-style-thrash](./fixes/performance-color-probe-style-thrash.md) |
 | 3D / isometric bar hover lags moving left; must move far left to focus; bars settle one by one | isometric bar block | [hover-focus-isometric-hit-layer](./fixes/hover-focus-isometric-hit-layer.md) |
 | scatter hover dims hovered dot; mobile dot stays dim; all points blur; red dot opacity 0.2 when hovered | scatter | [hover-focus-scatter-symbol-blur](./fixes/hover-focus-scatter-symbol-blur.md) |
@@ -120,6 +122,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/compile-treemap.ts` | hover-focus |
 | `src/registry/echarts-core/compile-funnel.ts` | hover-focus, labels, funnel-order |
 | `src/registry/echarts-core/compile-pie.ts` | hover-focus |
+| `src/registry/echarts-core/compile-calendar.ts` | theme |
+| `src/registry/echarts-core/apply-chart-chrome.ts` | theme |
 | `src/registry/echarts-core/funnel-layout.ts` | funnel-order |
 | `src/registry/charts/funnel-chart.tsx` | funnel-order |
 | `src/registry/echarts-core/compile-waterfall.ts` | hover-focus |

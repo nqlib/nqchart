@@ -4,6 +4,7 @@ import { applyChartUiToOption } from "./apply-chart-ui";
 import { itemFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-presets";
 import { radarAreaFill } from "./color-alpha";
 import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
+import { CIRCULAR_LABELED_OUTER_RADIUS } from "./chart-signature";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 import type { ChartPart, CompileContext, RadarSeriesPart } from "./parts/types";
@@ -70,7 +71,7 @@ export function compileRadarOption(ctx: CompileContext): EChartsOption {
       // containers. Pull the web in to leave a label-height margin all round.
       // (Cartesian charts get this for free via `containLabel`; polar has no
       // equivalent, so the radius has to be explicit.)
-      radius: "65%",
+      radius: CIRCULAR_LABELED_OUTER_RADIUS,
       center: ["50%", "50%"],
       axisName: {
         color: chrome.muted,

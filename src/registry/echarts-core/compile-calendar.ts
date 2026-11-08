@@ -105,7 +105,9 @@ export function compileCalendarOption(ctx: CompileContext): EChartsOption {
       },
       splitLine: { show: true },
       // Empty-day backdrop only; the seam between value cells lives on the series.
-      itemStyle: { borderWidth: 0, borderColor: "transparent" },
+      // ECharts paints empty days `#fff` by default — a white block in dark mode.
+      // Transparent lets the canvas show through; the month outline gives the shape.
+      itemStyle: { color: "transparent", borderWidth: 0, borderColor: "transparent" },
     },
     visualMap: {
       min,

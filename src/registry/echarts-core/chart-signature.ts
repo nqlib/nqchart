@@ -72,6 +72,13 @@ function fromBase(baseRadiusPx: number, gapPx: number): ChartSignature {
 /** Build-time defaults (nqui's shipped tokens). Use on module-scope / SSR paths. */
 export const CHART_SIGNATURE: ChartSignature = fromBase(BASE_RADIUS_PX, DEFAULT_GAP_PX);
 
+/**
+ * Default outer radius for a circular plot that draws its labels outside the rim
+ * (pie / donut leader labels, radar axis names). Percent of half the shorter canvas
+ * side. One value so a pie and a radar in the same dashboard read the same size.
+ */
+export const CIRCULAR_LABELED_OUTER_RADIUS = "65%";
+
 /** Live `--chart-gap` in px for this chart, or null when unset / outside the browser. */
 function readGapPx(chartId: string): number | null {
   const theme = headlessThemeOf(chartId);

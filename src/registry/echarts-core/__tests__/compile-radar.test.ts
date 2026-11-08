@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { compileRadarOption } from "../compile-radar";
+import { CIRCULAR_LABELED_OUTER_RADIUS } from "../chart-signature";
 import { makeCtx } from "./make-ctx";
 
 const SKILLS = [
@@ -34,7 +35,7 @@ describe("compileRadarOption", () => {
   it("pulls the web in so axis names have room to render", () => {
     const { radar } = radarOption();
 
-    expect(radar.radius).toBe("65%");
+    expect(radar.radius).toBe(CIRCULAR_LABELED_OUTER_RADIUS);
     expect(radar.center).toEqual(["50%", "50%"]);
   });
 

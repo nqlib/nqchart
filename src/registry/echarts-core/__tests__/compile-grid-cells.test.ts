@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { compileCalendarOption } from "../compile-calendar";
 import { compileHeatmapOption } from "../compile-heatmap";
 import { CHART_SIGNATURE } from "../chart-signature";
+import { resolveCanvasChartChrome } from "../resolve-chart-chrome";
 import { makeCtx } from "./make-ctx";
 
 type CellStyle = { borderColor?: string; borderWidth?: number; borderRadius?: number };
@@ -49,5 +50,30 @@ describe("heatmap / calendar cells", () => {
     expect(style.borderWidth).toBe(CHART_SIGNATURE.gap.seam);
     expect(style.borderRadius).toBe(CHART_SIGNATURE.radius.mark);
     expect((option.calendar as { itemStyle?: CellStyle }).itemStyle?.borderWidth).toBe(0);
+  });
+
+  it("calendar empty days and month outline follow the theme, not ECharts white / black", () => {
+    const option = compileCalendarOption(
+      makeCtx({
+        parts: [
+          {
+            type: "calendar",
+            id: "c",
+            dataKey: "util",
+            range: "2026-06",
+            cells: [{ date: "2026-06-01", value: 10, assignedHours: 4, availableHours: 8 }],
+          },
+        ],
+      }),
+    );
+    const calendar = option.calendar as {
+      itemStyle?: { color?: string };
+      splitLine?: { show?: boolean; lineStyle?: { color?: string } };
+    };
+    expect(calendar.itemStyle?.color).toBe("transparent");
+    expect(calendar.splitLine?.show).toBe(true);
+    expect(calendar.splitLine?.lineStyle?.color).toBe(
+      resolveCanvasChartChrome("test-chart").splitLine,
+    );
   });
 });
