@@ -1,6 +1,6 @@
 {
   "name": "@nqlib/nqchart",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "packageManager": "pnpm@10.12.1",
   "scripts": {
     "postinstall": "fumadocs-mdx",
