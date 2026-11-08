@@ -118,7 +118,7 @@ export function NQExampleWorkloadDashboardChart() {
         ) : null}
       </div>
 
-      <div className="min-h-0 min-w-0 flex-1">
+      <div className="min-h-[260px] min-w-0 flex-1">
         {view === "team" ? (
           <NQHeatmapChart config={WORKLOAD_UTILIZATION_CONFIG} className="h-full w-full">
             <Heatmap

@@ -68,6 +68,31 @@ const nextConfig: NextConfig = {
         destination: "/docs/waterfall-chart/static",
         permanent: true,
       },
+      {
+        source: "/docs/heatmap-chart",
+        destination: "/docs/heatmap-chart/static",
+        permanent: true,
+      },
+      {
+        source: "/docs/calendar-chart",
+        destination: "/docs/calendar-chart/static",
+        permanent: true,
+      },
+      {
+        source: "/docs/sparkline-chart",
+        destination: "/docs/sparkline-chart/static",
+        permanent: true,
+      },
+      {
+        source: "/docs/kpi-card",
+        destination: "/docs/kpi-card/static",
+        permanent: true,
+      },
+      {
+        source: "/docs/small-multiples",
+        destination: "/docs/small-multiples/static",
+        permanent: true,
+      },
       // Some old projects redirects cached on google
       {
         source: "/docs/line-charts",

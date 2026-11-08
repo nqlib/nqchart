@@ -3,6 +3,23 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## Unreleased
+
+### Calendar
+
+- **Empty days follow the theme.** Before, ECharts painted a day with no value white, so dark mode showed white blocks. Empty days are now transparent.
+- **The month outline uses the chart split-line colour.** Before, the outline was the ECharts default black.
+
+### Pie and radar
+
+- **One default size for labeled circular charts.** The pie and donut default `outerRadius` changes from `"70%"` to `"65%"`, the same as the radar. A pie and a radar in one dashboard now have the same size. Set `outerRadius` to keep the old size.
+
+### Docs site
+
+- The calendar workload preview gets a taller panel. The month view no longer squashes its week rows, and the grey band under the preview is gone. On a phone, the chart keeps a 260px minimum height and the panel scrolls.
+- `/docs/calendar-chart`, `/docs/heatmap-chart`, `/docs/sparkline-chart`, `/docs/kpi-card` and `/docs/small-multiples` now redirect to their reference pages. Before, they returned 404.
+- Links with a wrong `/docs/nqchart/` prefix now point to the correct pages. The "Charts gallery" link opens the gallery on the home page.
+
 ## 0.5.0 — 2026-11-07
 
 ### New charts and entries
