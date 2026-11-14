@@ -160,6 +160,24 @@ Bars grow in on first paint with a staggered motion.dev reveal (ECharts’ built
 <NQWaterfallChart animationType="center-out" ...>
 ```
 
+### Direction colors
+
+By default, a step that goes up uses the `increase` color, and a step that goes down uses the `decrease` color. A `start` or `total` row uses the `total` color. Add the keys `increase`, `decrease`, and `total` to `config` to set your own labels and colors. A key that you do not set gets green, red, or grey.
+
+Each step shows a signed label (`+45`, `−15`) at the end that it moves to. Set `connectors` to draw a line from each column to the next column at the running total.
+
+For a cost, an increase is bad. Set `higherIsBetter={false}` to color an increase red and a decrease green.
+
+<ComponentPreview title="higherIsBetter={false}" name="ex-waterfall-cost-bridge"  />
+
+Set `colorBy="category"` to give each column its own category color, as in 0.5.
+
+### Horizontal layout
+
+Set `layout="horizontal"` to draw the steps as rows from top to bottom. Use it for a P&L, a variance bridge, or a chart with many steps or long names. The brush is not available in this layout.
+
+<ComponentPreview title='layout="horizontal"' name="ex-waterfall-horizontal-pnl"  />
+
 ### Glowing Bars
 
 <ComponentPreview title="glowing" name="ex-glowing-waterfall-chart"  />
@@ -195,7 +213,22 @@ The root container bridging raw financial rows → cumulative stack-friendly rec
     Extra classes forwarded to `<ChartContainer />`.
   </ApiRow>
   <ApiRow name="barRadius" type="number" default="3">
-    Corner radius in px for every column. Omit it to follow `--radius-sm`. Start and total columns keep the zero line square; steps that float round both ends. Columns use the same 28% / 8% gaps as bar charts.
+    Corner radius in px for every column. Omit it to follow `--radius-sm`. Each column rounds only the end that it moves to. The start end stays square. Columns use the same 28% / 8% gaps as bar charts.
+  </ApiRow>
+  <ApiRow name="colorBy" type='"direction" | "category"' default='"direction"'>
+    `"direction"` colors each step with the `increase`, `decrease`, or `total` config key. `"category"` gives each column its own category color.
+  </ApiRow>
+  <ApiRow name="higherIsBetter" type="boolean" default="true">
+    `false` swaps the default increase and decrease colors. Use it for a cost bridge.
+  </ApiRow>
+  <ApiRow name="layout" type='"vertical" | "horizontal"' default='"vertical"'>
+    `"horizontal"` draws the steps as rows from top to bottom. It turns off the brush.
+  </ApiRow>
+  <ApiRow name="connectors" type="boolean" default="false">
+    Draws a line from each column to the next column at the running total.
+  </ApiRow>
+  <ApiRow name="showLabels" type="boolean" default="true">
+    Shows a signed label at the end of each step, and the value of each total.
   </ApiRow>
   <ApiRow name="backgroundVariant" type="BackgroundVariant">
     Draws `<ChartBackground />` underneath the chart (same pattern as bar and scatter charts).

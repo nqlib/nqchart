@@ -34,3 +34,4 @@ Setting `max: 100` without normalization leaves raw totals (often ≫ 100) off-s
 ## Fix notes
 
 - [area-percent-empty](../fixes/cartesian-stack-area-percent-empty.md) — percent area sets max 100 but skipped normalize
+- [waterfall-negative-running-total](../fixes/cartesian-stack-waterfall-negative-running-total.md) — samesign stacking drew a step that crosses zero from zero

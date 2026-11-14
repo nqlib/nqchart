@@ -30,3 +30,4 @@ Canvas text and leader lines for chart marks (pie/rose `labelLine`, axis labels,
 - [radial-ring-orientation-clip](../fixes/labels-radial-ring-orientation-clip.md) — concentric ring names vertical/upside-down; semi/full polar clipped
 - [gauge-axis-overlap](../fixes/labels-gauge-axis-overlap.md) — gauge tick labels overlap on small cards; viewport stride thins alternates
 - [funnel-pipe-vertical-clip](../fixes/labels-funnel-pipe-vertical-clip.md) — vertical pipe stage names clipped at left canvas edge
+- [value-label-axis-max-clip](../fixes/labels-value-label-axis-max-clip.md) — `showLabels` label on a mark at the axis max cut by the canvas edge

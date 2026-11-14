@@ -183,6 +183,27 @@ export const waterfall = (
   </NQWaterfallChart>
 );
 
+// Plan 023: direction colors, connectors, signed labels, horizontal layout.
+export const waterfallDirection = (
+  <NQWaterfallChart
+    config={waterfallConfig}
+    data={waterfallData}
+    colorBy="direction"
+    higherIsBetter={false}
+    layout="horizontal"
+    connectors={false}
+    showLabels={false}
+  >
+    {null}
+  </NQWaterfallChart>
+);
+
+export const waterfallCategory = (
+  <NQWaterfallChart config={waterfallConfig} data={waterfallData} colorBy="category">
+    {null}
+  </NQWaterfallChart>
+);
+
 const headlessTheme: HeadlessTheme = {
   isDark: false,
   chrome: {

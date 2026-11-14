@@ -11,6 +11,26 @@ const revenueBar: BarSeriesPart = {
 };
 
 describe("compileBarOption", () => {
+  it("leaves room for value labels at the far end of the value axis", () => {
+    const data = [
+      { month: "Jan", revenue: 100 },
+      { month: "Feb", revenue: 1250 },
+    ];
+    const grid = (horizontal: boolean, showLabels = true) =>
+      compileBarOption(
+        makeCtx({
+          parts: [{ ...revenueBar, showLabels }],
+          xDataKey: "month",
+          data,
+          ...(horizontal ? { cartesian: { layout: "horizontal" } } : {}),
+        }),
+      ).grid as { top: number; right: number };
+    expect(grid(false).top).toBeGreaterThanOrEqual(28);
+    // "1250" at 11px plus the label gap.
+    expect(grid(true).right).toBeGreaterThanOrEqual(36);
+    expect(grid(false, false).top).toBe(14);
+  });
+
   it("leaves room above a monospace bar so the top label is not clipped", () => {
     const option = compileBarOption(
       makeCtx({

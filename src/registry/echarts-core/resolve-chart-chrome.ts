@@ -178,14 +178,17 @@ export function resolveCanvasGapColor(chartId: string): string {
   return resolveCanvasChartChrome(chartId).background;
 }
 
+/** Dark mode for this chart: the headless theme, else the `.dark` class; false in Node. */
+export function isChartDark(chartId: string): boolean {
+  const theme = headlessThemeOf(chartId);
+  if (theme) return theme.isDark;
+  return typeof document !== "undefined" && document.documentElement.classList.contains("dark");
+}
+
 /** Label on saturated series fills (funnel segments, treemap leaves). */
 export function resolveCanvasTileLabelColor(chartId: string): string {
   const chrome = resolveCanvasChartChrome(chartId);
-  const theme = headlessThemeOf(chartId);
-  const isDark = theme
-    ? theme.isDark
-    : typeof document !== "undefined" && document.documentElement.classList.contains("dark");
-  return isDark ? chrome.popoverForeground : "#ffffff";
+  return isChartDark(chartId) ? chrome.popoverForeground : "#ffffff";
 }
 
 /** Label on chart background / group headers (treemap parents). */

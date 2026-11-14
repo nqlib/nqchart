@@ -254,6 +254,18 @@ export const examples: Registry["items"] = [
     files: [{ path: "examples/ex-dumbbell-chart.tsx", type: "registry:block" }],
   },
   {
+    name: "ex-waterfall-horizontal-pnl",
+    registryDependencies: ["@nqchart/waterfall-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-waterfall-horizontal-pnl.tsx", type: "registry:block" }],
+  },
+  {
+    name: "ex-waterfall-cost-bridge",
+    registryDependencies: ["@nqchart/waterfall-chart"],
+    type: "registry:block",
+    files: [{ path: "examples/ex-waterfall-cost-bridge.tsx", type: "registry:block" }],
+  },
+  {
     name: "ex-kpi-card",
     registryDependencies: ["@nqchart/kpi-card"],
     type: "registry:block",

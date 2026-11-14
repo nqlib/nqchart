@@ -16,11 +16,12 @@ import {
   resolveYAxisIndex,
 } from "./cartesian-axes";
 import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
-import { resolveCartesianGrid } from "./chart-grid";
+import { resolveCartesianGrid, withValueLabelRoom } from "./chart-grid";
 import { resolveChartSignature } from "./chart-signature";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { buildAreaSeries } from "./compile-area";
 import type {
+  AreaSeriesPart,
   BarSeriesPart,
   CompileContext,
   ConnectorPart,
@@ -30,7 +31,7 @@ import type {
   YAxisPart,
 } from "./parts/types";
 import { uniquifySeriesIds } from "./series-identity";
-import { barLabelPosition, seriesLabelOption } from "./series-labels";
+import { barLabelPosition, seriesLabelOption, valueLabelTexts } from "./series-labels";
 
 export function compileComposedOption(ctx: CompileContext): EChartsOption {
   const gapColor = resolveCanvasGapColor(ctx.chartId);
@@ -225,7 +226,14 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     };
   });
 
-  const grid = resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush));
+  const labelledSeries = ctx.parts.filter(
+    (p): p is BarSeriesPart | LineSeriesPart | AreaSeriesPart =>
+      p.type === "bar" || p.type === "line" || p.type === "area",
+  );
+  const grid = withValueLabelRoom(
+    resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
+    valueLabelTexts(labelledSeries, ctx.data as Record<string, unknown>[]),
+  );
 
   const xAxis = applyAxisPartToOption(
     { type: "category", data: categories },
