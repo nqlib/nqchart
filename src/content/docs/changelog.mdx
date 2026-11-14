@@ -9,15 +9,6 @@ description: Release notes and notable changes to NQChart
 
 - **The waterfall colors each step by direction by default.** Before, each column used its own category color. Set `colorBy="category"` to keep the 0.5 look.
 
-### Calendar
-
-- **Empty days follow the theme.** Before, ECharts painted a day with no value white, so dark mode showed white blocks. Empty days are now transparent.
-- **The month outline uses the chart split-line colour.** Before, the outline was the ECharts default black.
-
-### Pie and radar
-
-- **One default size for labeled circular charts.** The pie and donut default `outerRadius` changes from `"70%"` to `"65%"`, the same as the radar. A pie and a radar in one dashboard now have the same size. Set `outerRadius` to keep the old size.
-
 ### Waterfall
 
 - **Steps are colored by direction.** An increase, a decrease, and a total each have one color. Set them with the config keys `increase`, `decrease`, and `total`. A key that you do not set gets green, red, or grey, and the legend shows the three entries.
@@ -32,13 +23,22 @@ description: Release notes and notable changes to NQChart
 
 - **Fix: a value label at the axis max was cut.** A bar, line, area, composed, or waterfall chart with `showLabels` now keeps room for the label of its tallest mark. In a horizontal chart, the room is at the right edge. A chart without labels keeps its old plot size.
 
+## 0.5.0 — 2026-11-07
+
+### Calendar
+
+- **Empty days follow the theme.** Before, ECharts painted a day with no value white, so dark mode showed white blocks. Empty days are now transparent.
+- **The month outline uses the chart split-line colour.** Before, the outline was the ECharts default black.
+
+### Pie and radar
+
+- **One default size for labeled circular charts.** The pie and donut default `outerRadius` changes from `"70%"` to `"65%"`, the same as the radar. A pie and a radar in one dashboard now have the same size. Set `outerRadius` to keep the old size.
+
 ### Docs site
 
 - The calendar workload preview gets a taller panel. The month view no longer squashes its week rows, and the grey band under the preview is gone. On a phone, the chart keeps a 260px minimum height and the panel scrolls.
 - `/docs/calendar-chart`, `/docs/heatmap-chart`, `/docs/sparkline-chart`, `/docs/kpi-card` and `/docs/small-multiples` now redirect to their reference pages. Before, they returned 404.
 - Links with a wrong `/docs/nqchart/` prefix now point to the correct pages. The "Charts gallery" link opens the gallery on the home page.
-
-## 0.5.0 — 2026-11-07
 
 ### New charts and entries
 
