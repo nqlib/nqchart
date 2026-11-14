@@ -4,13 +4,24 @@ import { cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-
 import {
   applyAxisPartToOption,
   buildValueYAxes,
+  isLogScale,
+  isTimeScale,
   resolveYAxisIndex,
+  seriesYAxisPart,
 } from "./cartesian-axes";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
 import { resolveCartesianGrid, withValueLabelRoom } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { areaVerticalFill, withAlpha } from "./color-alpha";
-import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
+import {
+  categoryValues,
+  getXKey,
+  logSafeValue,
+  seriesValue,
+  timeSeriesData,
+  LINE_MARKER,
+  lineStyleType,
+} from "./cartesian-series";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import { normalizeStackPercent } from "./stack-percent";
 import type { AreaSeriesPart, CompileContext, XAxisPart, YAxisPart } from "./parts/types";
@@ -59,14 +70,14 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
   const yAxes = ctx.parts.filter((p): p is YAxisPart => p.type === "yAxis");
   const xAxisPart = ctx.parts.find((p): p is XAxisPart => p.type === "xAxis");
   const hasGrid = ctx.parts.some((p) => p.type === "grid");
-  const stack =
-    ctx.cartesian?.stackType === "stacked" || ctx.cartesian?.stackType === "percent"
-      ? "nq-area"
-      : undefined;
-  const hasBrush = ctx.parts.some((p) => p.type === "brush");
+  const time = isTimeScale(xAxisPart);
+  // A log axis cannot show a sum of layers: the areas overlap instead of stacking.
+  const stackType = isLogScale(yAxes[0]) ? undefined : ctx.cartesian?.stackType;
+  const stack = stackType === "stacked" || stackType === "percent" ? "nq-area" : undefined;
+  // The brush footer is a category strip; a time axis has no category bands.
+  const hasBrush = !time && ctx.parts.some((p) => p.type === "brush");
   const areaKeys = areas.map((area) => area.dataKey);
-  const rows =
-    ctx.cartesian?.stackType === "percent" ? normalizeStackPercent(ctx.data, areaKeys) : ctx.data;
+  const rows = stackType === "percent" ? normalizeStackPercent(ctx.data, areaKeys) : ctx.data;
 
   const series = areas.map((area) => {
     const color = ctx.resolveColor(area.dataKey, 0);
@@ -74,15 +85,18 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
     const glowing = isGlowing(area.variant);
     const areaStyle = areaStyleFor(area.variant, fillColor);
     const lineWidth = area.variant === "solid-stroke" ? 2 : 1.5;
+    const log = isLogScale(seriesYAxisPart(area.yAxisId, yAxes));
     return {
       type: "line" as const,
       id: area.dataKey,
       name: ctx.config[area.dataKey]?.label?.toString() ?? area.dataKey,
-      stack: area.stackId ?? stack,
+      stack: log ? undefined : (area.stackId ?? stack),
       yAxisIndex: resolveYAxisIndex(area.yAxisId, yAxes),
       smooth: area.curveType === "monotone" || area.curveType === "bump",
       step: area.curveType === "step" ? ("end" as const) : undefined,
-      data: rows.map((row) => seriesValue(row[area.dataKey])),
+      data: time
+        ? timeSeriesData(rows, xKey, area.dataKey, log)
+        : rows.map((row) => logSafeValue(seriesValue(row[area.dataKey]), log)),
       areaStyle,
       lineStyle: {
         color,
@@ -110,16 +124,17 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
   const yAxisList = buildValueYAxes({
     yAxes,
     hasGrid,
-    percent: ctx.cartesian?.stackType === "percent",
+    percent: stackType === "percent",
   });
   const xAxis = applyAxisPartToOption(
     { type: "category", data: categories, boundaryGap: false },
     xAxisPart,
     "category",
+    { time: true },
   );
 
   const grid = withValueLabelRoom(
-    resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
+    resolveCartesianGrid(ctx.parts, !time && ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
     valueLabelTexts(areas, rows as Record<string, unknown>[]),
     { pointsOnEdge: true },
   );
@@ -147,15 +162,16 @@ export function buildAreaSeries(ctx: CompileContext) {
     const fillColor = resolveAreaFillColor(ctx.config, area.dataKey, ctx.resolveColor, 0, ctx.chartId);
     const areaStyle = areaStyleFor(area.variant, fillColor);
     const lineWidth = area.variant === "solid-stroke" ? 2 : 1.5;
+    const log = isLogScale(seriesYAxisPart(area.yAxisId, yAxes));
     return {
       type: "line" as const,
       id: area.dataKey,
       name: ctx.config[area.dataKey]?.label?.toString() ?? area.dataKey,
-      stack: area.stackId,
+      stack: log ? undefined : area.stackId,
       yAxisIndex: resolveYAxisIndex(area.yAxisId, yAxes),
       smooth: area.curveType === "monotone" || area.curveType === "bump",
       step: area.curveType === "step" ? ("end" as const) : undefined,
-      data: ctx.data.map((row) => seriesValue(row[area.dataKey])),
+      data: ctx.data.map((row) => logSafeValue(seriesValue(row[area.dataKey]), log)),
       areaStyle,
       lineStyle: { color, width: lineWidth, type: lineStyleType(area.variant) },
       triggerLineEvent: true,

@@ -24,7 +24,7 @@ import {
 } from "@/registry/echarts-core/part-registry";
 import { compileScatterOption } from "@/registry/echarts-core/compile-scatter";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
-import type { NQScale } from "@/registry/echarts-core/parts/types";
+import type { NQScale, ScatterDatum } from "@/registry/echarts-core/parts/types";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import {
   useChartInteraction,
@@ -274,6 +274,7 @@ export function XAxis({
   unit,
   tickFormatter,
   scale,
+  domain,
   reversed,
   labelRotate,
   labelInterval,
@@ -282,7 +283,10 @@ export function XAxis({
   name?: string;
   unit?: string;
   tickFormatter?: (value: unknown, index?: number) => string;
+  /** `"log"` for values over many orders of magnitude; `"time"` for dates. */
   scale?: NQScale;
+  /** Fixed `[min, max]` for the x axis. */
+  domain?: [number, number];
   reversed?: boolean;
   labelRotate?: number;
   labelInterval?: number | "auto";
@@ -294,12 +298,13 @@ export function XAxis({
     dataKey: dataKey ?? "x",
     tickFormatter,
     scale,
+    domain,
+    unit,
     reversed,
     labelRotate,
     labelInterval,
   });
   void name;
-  void unit;
   return null;
 }
 
@@ -354,7 +359,8 @@ export function Scatter({
   yAxisId,
 }: {
   dataKey: string;
-  data: Array<Record<string, number>>;
+  /** Points; on a `scale="time"` x axis the x value may be a `Date`, an ISO string, or epoch ms. */
+  data: ScatterDatum[];
   variant?: string;
   yAxisId?: string;
 }) {

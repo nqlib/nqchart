@@ -11,7 +11,29 @@ type TooltipAxisParams = {
   seriesId?: string;
   name?: string;
   value?: unknown;
+  data?: unknown;
+  /** `"xAxis.time"` on a time axis; the value is then `[t, v]`. */
+  axisType?: string;
 };
+
+/**
+ * Datum key for a ready-made tooltip value. A scatter point on a time axis sets
+ * it, because its raw value is `[epochMs, y]`.
+ */
+export const NQ_TOOLTIP_VALUE = "__nq_tooltipValue";
+
+function datumTooltipValue(item: TooltipAxisParams): string | undefined {
+  const data = item.data;
+  if (!data || typeof data !== "object") return undefined;
+  const v = (data as Record<string, unknown>)[NQ_TOOLTIP_VALUE];
+  return typeof v === "string" ? v : undefined;
+}
+
+/** The plotted value of an axis-tooltip row: `v` of `[t, v]` on a time axis. */
+function axisItemValue(item: TooltipAxisParams): unknown {
+  if (item.axisType?.endsWith(".time") && Array.isArray(item.value)) return item.value[1];
+  return item.value;
+}
 
 const ROUNDNESS_CLASS = {
   sm: "rounded-sm",
@@ -86,10 +108,12 @@ function formatItemTooltipHtml(
   const hideIndicator = tooltip?.hideIndicator ?? false;
   const colorsCount = entry ? getColorsCount(entry) : 1;
   const dot = hideIndicator ? "" : indicatorDot(key, entry != null, colorsCount);
+  const ready = datumTooltipValue(item);
+  const valueText = ready != null ? escapeHtml(ready) : formatValue(item.value);
 
   const row = `<div class="flex w-full items-center justify-between gap-4 leading-none">
     <span class="text-muted-foreground flex items-center">${dot}${labelText}</span>
-    <span class="font-mono font-medium tabular-nums">${formatValue(item.value)}</span>
+    <span class="font-mono font-medium tabular-nums">${valueText}</span>
   </div>`;
 
   const labelRow =
@@ -235,7 +259,7 @@ function formatAxisTooltipHtml(
       const key = configKeyFromDisplayName(String(item.seriesName ?? item.seriesId ?? ""), config);
       const entry = config[key];
       const labelText = escapeHtml(entry?.label ?? key);
-      const value = formatValue(item.value);
+      const value = formatValue(axisItemValue(item));
       const colorsCount = entry ? getColorsCount(entry) : 1;
       const dot = hideIndicator ? "" : indicatorDot(key, entry != null, colorsCount);
 

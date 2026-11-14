@@ -145,6 +145,14 @@ Uses the same `desktop` / `mobile` traffic dataset as the [bar](/docs/bar-chart)
 
 Curve, stroke, buffer, and glow previews are being ported from earlier docs. See the API reference for supported `<Line>` props on ECharts.
 
+### Time axis
+
+Set `scale="time"` on `<XAxis />` when the rows have dates at irregular gaps. The chart places each point at its date, so a long gap shows as a long segment. The x value can be a `Date`, an ISO string, or epoch milliseconds. A date-only string such as `"2026-03-01"` is local midnight. A row with an x value that is not a date is a gap. The brush is not available on a time axis.
+
+<ComponentPreview title='scale="time"' name="ex-line-time-axis"  />
+
+Set `scale="log"` on `<YAxis />` for values that span many orders of magnitude. A value of 0 or less has no place on a log axis and shows as a gap. `NQAreaChart` supports the same two scales. On a log axis, area layers do not stack.
+
 ## API Reference
 
 The chart is composed of several parts. The props below are grouped by the component they belong to.

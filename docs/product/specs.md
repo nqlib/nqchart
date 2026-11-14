@@ -45,6 +45,7 @@ Version baseline for this document: **`@nqlib/nqchart@0.3.0`** (BI readiness con
 | S3.6 | `NQComposedChart` accepts `<Bar>`, `<Line>`, and `<Area>`. |
 | S3.7 | `showLabels` / `labelFormatter` on bar, line, area series. |
 | S3.8 | `NQWaterfallChart` colors steps by direction by default (`increase` / `decrease` / `total` config keys; `higherIsBetter={false}` swaps the default good and bad colors; `colorBy="category"` restores per-category colors). Steps show signed labels at the moving end. `connectors` (default off) draws lines at the running total. `layout="horizontal"` draws rows from top to bottom. A running total below zero draws each step from the running total. |
+| S3.9 | Axis scales. `<XAxis scale="time">` places points by date on line, area, and scatter charts; bar and composed keep a category x axis. `<YAxis scale="log">` works on bar, line, area, composed, and scatter; a value of 0 or less is a gap, and series on a log axis do not stack. Scatter `XAxis` and `YAxis` take `scale`, `domain`, `reversed`, `unit`, and `tickFormatter`. |
 
 ## S4 — States, a11y, export
 

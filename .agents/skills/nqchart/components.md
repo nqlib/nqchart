@@ -95,7 +95,13 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 | `"hover-trace"` | Vertical trace line + root `onHoverTraceChange` (see `hover-trace-bar-chart`) |
 | `"histogram"` | Used via root `variant="histogram"` + recipe data |
 
-**YAxis:** `yAxisId`, `orientation`, `domain`, `unit`, `tickFormatter`, `scale` (`linear` \| `log` \| `time` \| `category`), `reversed`, `labelRotate`, `labelInterval`
+**YAxis:** `yAxisId`, `orientation`, `domain`, `unit`, `tickFormatter`, `scale` (`linear` \| `log`), `reversed`, `labelRotate`, `labelInterval`
+
+**Axis scales:**
+- `<XAxis scale="time" />` works on line, area, and scatter. The x value can be a `Date`, an ISO string, or epoch ms. A date-only string is local midnight. Bar and composed keep a category x axis.
+- `<YAxis scale="log" />` works on bar, line, area, composed, and scatter. A value of 0 or less is a gap.
+- On a log axis, `stackType` and `stackId` are ignored. Bars sit side by side and area layers overlap.
+- Examples: `ex-line-time-axis`, `ex-scatter-log-axis`.
 
 **Legend:** `<Legend isClickable selected onSelectChange />` — uncontrolled by default; pass both for controlled (single-select).
 
@@ -217,6 +223,8 @@ Import from `@nqlib/nqchart/composed-chart`. See `ex-mark-click-budget-chart` fo
 **Children:** `Scatter`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`
 
 **Scatter child:** `dataKey` (series name), `xDataKey`, `yDataKey`, custom `shape` for larger markers (“bubble” look)
+
+**Scatter XAxis / YAxis:** `dataKey`, `scale` (`linear` \| `log`, and `time` on x), `domain`, `reversed`, `unit`, `tickFormatter`. On a log axis, a point at 0 or less is not drawn.
 
 ---
 

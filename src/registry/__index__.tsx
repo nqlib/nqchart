@@ -1213,6 +1213,42 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "ex-line-time-axis": {
+    name: "ex-line-time-axis",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/line-chart"],
+    files: [{
+      path: "@/registry/examples/ex-line-time-axis.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-line-time-axis.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-line-time-axis"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-scatter-log-axis": {
+    name: "ex-scatter-log-axis",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/scatter-chart"],
+    files: [{
+      path: "@/registry/examples/ex-scatter-log-axis.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-scatter-log-axis.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-scatter-log-axis"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "ex-kpi-card": {
     name: "ex-kpi-card",
     description: "",

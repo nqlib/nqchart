@@ -171,6 +171,10 @@ Horizontal range bands plus actual and target markers — use `prepareBulletRow(
 
 <ComponentPreview title="bullet" name="ex-bullet-chart"  />
 
+### Log axis
+
+Set `scale="log"` on `<YAxis />` for values that span many orders of magnitude. A log axis cannot show a sum of segments, so a stacked or percent chart draws its bars side by side. A value of 0 or less has no bar. `scale="time"` does not apply to a bar chart: the x axis stays a category axis. For dates at irregular gaps, use [`NQLineChart`](/docs/line-chart/static) with a time axis.
+
 ## API Reference
 
 The chart is composed of several parts. The props below are grouped by the component they belong to.

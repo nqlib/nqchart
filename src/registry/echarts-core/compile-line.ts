@@ -8,9 +8,20 @@ import { cartesianLineFocus, hoverFocusOrOff, isHoverFocusOn } from "./emphasis-
 import {
   applyAxisPartToOption,
   buildValueYAxes,
+  isLogScale,
+  isTimeScale,
   resolveYAxisIndex,
+  seriesYAxisPart,
 } from "./cartesian-axes";
-import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
+import {
+  categoryValues,
+  getXKey,
+  logSafeValue,
+  seriesValue,
+  timeSeriesData,
+  LINE_MARKER,
+  lineStyleType,
+} from "./cartesian-series";
 import { resolveCartesianGrid, withValueLabelRoom } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import type { CompileContext, LineSeriesPart, XAxisPart, YAxisPart } from "./parts/types";
@@ -23,16 +34,21 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
   const yAxes = ctx.parts.filter((p): p is YAxisPart => p.type === "yAxis");
   const xAxisPart = ctx.parts.find((p): p is XAxisPart => p.type === "xAxis");
   const hasGrid = ctx.parts.some((p) => p.type === "grid");
-  const hasBrush = ctx.parts.some((p) => p.type === "brush");
+  const time = isTimeScale(xAxisPart);
+  // The brush footer is a category strip; a time axis has no category bands.
+  const hasBrush = !time && ctx.parts.some((p) => p.type === "brush");
 
   const series = lines.map((line) => {
     const color = ctx.resolveColor(line.dataKey, 0);
+    const log = isLogScale(seriesYAxisPart(line.yAxisId, yAxes));
     return {
       type: "line" as const,
       id: line.dataKey,
       name: ctx.config[line.dataKey]?.label?.toString() ?? line.dataKey,
       yAxisIndex: resolveYAxisIndex(line.yAxisId, yAxes),
-      data: ctx.data.map((row) => seriesValue(row[line.dataKey])),
+      data: time
+        ? timeSeriesData(ctx.data, xKey, line.dataKey, log)
+        : ctx.data.map((row) => logSafeValue(seriesValue(row[line.dataKey]), log)),
       smooth: line.curveType === "monotone",
       step: line.curveType === "step" ? ("end" as const) : undefined,
       itemStyle: { color },
@@ -49,10 +65,11 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
     { type: "category", data: categories },
     xAxisPart,
     "category",
+    { time: true },
   );
 
   const grid = withValueLabelRoom(
-    resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
+    resolveCartesianGrid(ctx.parts, !time && ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
     valueLabelTexts(lines, ctx.data as Record<string, unknown>[]),
   );
 

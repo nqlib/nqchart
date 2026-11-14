@@ -54,7 +54,7 @@ import { NQLineChart, Line } from "../dist/types/registry/charts/line-chart";
 import { NQAreaChart, Area } from "../dist/types/registry/charts/area-chart";
 import { NQComposedChart, Bar as CBar, Line as CLine } from "../dist/types/registry/charts/composed-chart";
 import { NQPieChart, Pie } from "../dist/types/registry/charts/pie-chart";
-import { NQScatterChart, Scatter } from "../dist/types/registry/charts/scatter-chart";
+import { NQScatterChart, Scatter, XAxis as ScatterXAxis, YAxis as ScatterYAxis } from "../dist/types/registry/charts/scatter-chart";
 import { NQWaterfallChart } from "../dist/types/registry/charts/waterfall-chart";
 import { NQFunnelChart } from "../dist/types/registry/charts/funnel-chart";
 import { NQSankeyChart, Tooltip as SankeyTooltip } from "../dist/types/registry/charts/sankey-chart";
@@ -167,6 +167,15 @@ export const scatter = (
     chartRef={chartRef}
   >
     <Scatter dataKey="points" data={[{ x: 1, y: 2 }]} />
+  </NQScatterChart>
+);
+
+// Plan 024: scatter axes take scale / domain / unit; a time x axis takes dates.
+export const scatterAxes = (
+  <NQScatterChart config={scatterConfig}>
+    <ScatterXAxis dataKey="at" scale="time" domain={[0, 1]} unit="day" reversed />
+    <ScatterYAxis dataKey="ms" scale="log" />
+    <Scatter dataKey="points" data={[{ at: "2026-01-01", ms: 2 }, { at: new Date(), ms: 3 }, { at: 0, ms: 4 }]} />
   </NQScatterChart>
 );
 
