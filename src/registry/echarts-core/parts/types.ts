@@ -266,7 +266,20 @@ export type WaterfallPart = {
   typeKey?: string;
   /** Corner radius in px; falls back to chart `barRadius`, then the signature `radius.mark`. */
   radius?: number;
+  /**
+   * `"direction"` (default): config keys `increase` / `decrease` / `total` color
+   * the steps. `"category"`: each column takes its own category color (0.5 look).
+   */
+  colorBy?: WaterfallColorBy;
+  /** `false` swaps the default good / bad colors (a cost bridge). Default `true`. */
+  higherIsBetter?: boolean;
+  /** Step lines between columns at the running total. Default `false`. */
+  connectors?: boolean;
+  /** Signed labels (`+45`, `−15`) at the moving end of each step. Default `true`. */
+  showLabels?: boolean;
 };
+
+export type WaterfallColorBy = "direction" | "category";
 
 export type TreemapNode = {
   name: string;

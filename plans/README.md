@@ -48,6 +48,7 @@ self-contained. Related: [`_archive/2026-06-10-improvement-plan.md`](_archive/20
 | 020 | [Chart signature: one shape language + one focus mode (+ rose pie)](020-chart-signature-design-system.md) | engine / design | L | IN-PROGRESS — Phases A + B done |
 | 021 | [Analyst charts: KPI card, Sankey, variance, cohort, forecast, slope, small multiples](021-analyst-charts.md) | engine / api | L | DONE |
 | 022 | [Dashboard performance: many charts on one page](022-dashboard-performance.md) | engine | M | DONE |
+| 023 | [Waterfall: direction colors, connectors, signed labels, horizontal layout](023-waterfall-direction-and-layout.md) | engine / api | M | DONE |
 
 Executors: update Status to IN-PROGRESS / DONE / BLOCKED (with one-line reason) as you work.
 

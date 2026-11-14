@@ -264,9 +264,17 @@ Dedicated module — not composable Bar.
 
 **Children:** `Tooltip`, `Legend`, `Grid`, `XAxis`, `YAxis`
 
-Data rows use waterfall-specific `type` / value fields (see `ex-waterfall-chart`).
+Data rows use waterfall-specific `type` / value fields (see `ex-waterfall-chart`). A row with `type: "start"` or `"total"` draws from zero. Any other row is a step; the sign of its value sets the direction.
 
-**Root:** `barRadius` (px; default `--radius-sm`). Start / total columns keep the zero line square; floating steps round both ends. Same 28% / 8% gaps as bars.
+**Root:** `barRadius` (px; default `--radius-sm`). Each column rounds only the end it moves to; the start end stays square. Same 28% / 8% gaps as bars.
+
+- `colorBy` — `"direction"` (default) colors steps with the config keys `increase`, `decrease`, `total` (missing keys get green / red / grey, and appear in `<Legend />`). `"category"` gives each column its own config color (the 0.5 look).
+- `higherIsBetter` — `false` swaps the default increase / decrease colors. Use it for a cost bridge.
+- `layout` — `"horizontal"` draws rows top to bottom (P&L, variance bridge, long names). The brush is off in this layout.
+- `connectors` (default `false`) — a line from each column to the next at the running total.
+- `showLabels` (default `true`) — `+45` / `−15` at the moving end; totals show their value.
+
+Examples: `ex-waterfall-cost-bridge` (`higherIsBetter={false}`), `ex-waterfall-horizontal-pnl` (`layout="horizontal"`).
 
 ---
 

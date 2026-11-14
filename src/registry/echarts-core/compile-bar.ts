@@ -16,7 +16,7 @@ import {
   stackSegmentGapStyle,
   type StackCornerRole,
 } from "./bar-radius";
-import { resolveCartesianGrid } from "./chart-grid";
+import { resolveCartesianGrid, withValueLabelRoom } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { buildMonospaceCustomSeries } from "./compile-monospace-bar";
 import {
@@ -30,7 +30,7 @@ import {
   buildValueYAxes,
   resolveYAxisIndex,
 } from "./cartesian-axes";
-import { barLabelPosition, seriesLabelOption } from "./series-labels";
+import { barLabelPosition, seriesLabelOption, valueLabelTexts } from "./series-labels";
 
 type BarPointItemStyle = {
   color: unknown;
@@ -181,7 +181,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
     };
   });
 
-  const grid = {
+  const grid = withValueLabelRoom({
     ...resolveCartesianGrid(
       ctx.parts,
       ctx.cartesian?.externalBrush,
@@ -191,7 +191,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
     // 11px label + 6px gap above a bar that reaches the axis max.
     ...(hasMonospace ? { top: 28 } : {}),
     ...(hasHoverTrace && !horizontal ? { left: 56 } : {}),
-  };
+  }, valueLabelTexts(bars, rows), { horizontal });
   const dataZoom = buildCategoryDataZoom(hasBrush, {
     axisDim: horizontal ? "y" : "x",
     chartVariant: "bar",

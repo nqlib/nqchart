@@ -15,7 +15,7 @@ import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import { getEcharts } from "@/registry/echarts-core/echarts-init";
-import { BarChart } from "echarts/charts";
+import { BarChart, CustomChart } from "echarts/charts";
 import type { NQMarkEvent } from "@/registry/echarts-core/nq-mark-event";
 import { PartRegistryProvider, usePartId, useRegisterPart } from "@/registry/echarts-core/part-registry";
 import { compileWaterfallOption } from "@/registry/echarts-core/compile-waterfall";
@@ -28,12 +28,18 @@ import { useKeyboardMarkNav } from "@/registry/echarts-core/use-keyboard-mark-na
 import { waterfallValuesSeriesIndex } from "@/registry/echarts-core/hover-focus-repair";
 import { useCompiledOption } from "@/registry/echarts-core/use-compiled-option";
 import { NQChartLegend } from "@/registry/ui/legend";
+import type { BarLayout, WaterfallColorBy } from "@/registry/echarts-core/parts/types";
+import {
+  buildWaterfallSteps,
+  directionsInUse,
+  withWaterfallDirectionConfig,
+} from "@/registry/echarts-core/waterfall-steps";
 import { ChartTooltip } from "@/registry/ui/tooltip";
 import type { EChartsType } from "echarts/core";
 import type { ReactNode, Ref } from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-const WATERFALL_ECHARTS_MODULES = [BarChart];
+const WATERFALL_ECHARTS_MODULES = [BarChart, CustomChart];
 getEcharts(WATERFALL_ECHARTS_MODULES);
 
 type NQWaterfallChartProps<
@@ -48,6 +54,20 @@ type NQWaterfallChartProps<
   valueKey?: string;
   /** Corner radius in px for every column. Default: the signature `radius.mark` (`--radius-sm`). */
   barRadius?: number;
+  /**
+   * `"direction"` (default): config keys `increase` / `decrease` / `total` color the
+   * steps; missing keys get green / red / grey. `"category"`: each column takes its own
+   * category color.
+   */
+  colorBy?: WaterfallColorBy;
+  /** `false` swaps the default increase and decrease colors (a cost bridge). Default `true`. */
+  higherIsBetter?: boolean;
+  /** `"horizontal"` draws rows from top to bottom (P&L, variance bridge). Default `"vertical"`. */
+  layout?: BarLayout;
+  /** Step lines between columns at the running total. Default `false`. */
+  connectors?: boolean;
+  /** Signed labels at the moving end of each step. Default `true`. */
+  showLabels?: boolean;
   isLoading?: boolean;
   showBrush?: boolean;
   brushFormatLabel?: (value: unknown, index: number) => string;
@@ -71,6 +91,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
   nameKey,
   valueKey,
   barRadius,
+  layout,
   externalBrush,
   onPlotRect,
   onMarkClick,
@@ -84,6 +105,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
   nameKey: string;
   valueKey: string;
   barRadius?: number;
+  layout?: BarLayout;
   externalBrush?: boolean;
   onPlotRect?: (insets: ChartPlotInsets) => void;
   onMarkClick?: (event: NQMarkEvent) => void;
@@ -95,7 +117,7 @@ function WaterfallChartCanvas<TData extends Record<string, unknown>>({
     data,
     nameKey,
     valueKey,
-    cartesian: { externalBrush, barRadius },
+    cartesian: { externalBrush, barRadius, layout },
     hoverFocus,
   });
   const runtimeRef = useChartInstanceRef();
@@ -136,8 +158,13 @@ export function NQWaterfallChart<
   nameKey = "name",
   valueKey = "value",
   barRadius,
+  colorBy = "direction",
+  higherIsBetter = true,
+  layout = "vertical",
+  connectors = false,
+  showLabels = true,
   isLoading,
-  showBrush = true,
+  showBrush: showBrushProp = true,
   hoverFocus = true,
   brushFormatLabel,
   onBrushChange,
@@ -151,7 +178,22 @@ export function NQWaterfallChart<
   a11yLabel,
   a11ySummary,
 }: NQWaterfallChartProps<TData, TConfig>) {
+  // The brush is a column strip under the x axis; rows have no x category axis.
+  const showBrush = showBrushProp && layout !== "horizontal";
   const displayData = isLoading ? (getLoadingData(5) as unknown as TData[]) : data;
+  const byDirection = colorBy === "direction";
+  // Direction keys join the config so the legend and the tooltip dots get colors.
+  const chartConfig = useMemo(
+    () => (byDirection ? withWaterfallDirectionConfig(config, higherIsBetter) : config),
+    [byDirection, config, higherIsBetter],
+  );
+  const legendKeys = useMemo(
+    () =>
+      byDirection
+        ? directionsInUse(buildWaterfallSteps(data as Record<string, unknown>[], valueKey, "type"))
+        : undefined,
+    [byDirection, data, valueKey],
+  );
   const { visibleData, brushProps, range } = useChartBrush({
     data: displayData,
     minSpan: 1,
@@ -173,7 +215,8 @@ export function NQWaterfallChart<
     <PartRegistryProvider>
       <ChartInstanceProvider>
         <ChartContainer
-          config={config}
+          config={chartConfig}
+          segmentKeys={legendKeys}
           className={className}
           isLoading={isLoading}
           footer={
@@ -181,7 +224,7 @@ export function NQWaterfallChart<
               <NQChartBrush
                 data={displayData}
                 compile={compileWaterfallOption}
-                rootFields={{ nameKey, valueKey, cartesian: { externalBrush: true, barRadius } }}
+                rootFields={{ nameKey, valueKey, cartesian: { externalBrush: true, barRadius, layout } }}
                 xDataKey={nameKey}
                 formatLabel={brushFormatLabel}
                 plotAlign={plotAlign}
@@ -223,6 +266,7 @@ export function NQWaterfallChart<
                 nameKey={nameKey}
                 valueKey={valueKey}
                 barRadius={barRadius}
+                layout={layout}
                 externalBrush={externalBrush}
                 onPlotRect={setPlotAlign}
                 onMarkClick={onMarkClick}
@@ -232,7 +276,14 @@ export function NQWaterfallChart<
               />
             }
           >
-            <RegisterWaterfall nameKey={nameKey} valueKey={valueKey} />
+            <RegisterWaterfall
+              nameKey={nameKey}
+              valueKey={valueKey}
+              colorBy={colorBy}
+              higherIsBetter={higherIsBetter}
+              connectors={connectors}
+              showLabels={showLabels}
+            />
             {children}
           </WaterfallPlotBody>
         </ChartContainer>
@@ -310,12 +361,30 @@ function WaterfallPlotBody({
 function RegisterWaterfall({
   nameKey,
   valueKey,
+  colorBy,
+  higherIsBetter,
+  connectors,
+  showLabels,
 }: {
   nameKey: string;
   valueKey: string;
+  colorBy: WaterfallColorBy;
+  higherIsBetter: boolean;
+  connectors: boolean;
+  showLabels: boolean;
 }) {
   const id = usePartId();
-  useRegisterPart({ type: "waterfall", id, nameKey, valueKey, typeKey: "type" });
+  useRegisterPart({
+    type: "waterfall",
+    id,
+    nameKey,
+    valueKey,
+    typeKey: "type",
+    colorBy,
+    higherIsBetter,
+    connectors,
+    showLabels,
+  });
   return null;
 }
 

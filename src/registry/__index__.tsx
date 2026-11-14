@@ -1177,6 +1177,42 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "ex-waterfall-horizontal-pnl": {
+    name: "ex-waterfall-horizontal-pnl",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/waterfall-chart"],
+    files: [{
+      path: "@/registry/examples/ex-waterfall-horizontal-pnl.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-waterfall-horizontal-pnl.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-waterfall-horizontal-pnl"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "ex-waterfall-cost-bridge": {
+    name: "ex-waterfall-cost-bridge",
+    description: "",
+    type: "registry:block",
+    registryDependencies: ["@nqchart/waterfall-chart"],
+    files: [{
+      path: "@/registry/examples/ex-waterfall-cost-bridge.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/examples/ex-waterfall-cost-bridge.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function') || "ex-waterfall-cost-bridge"
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "ex-kpi-card": {
     name: "ex-kpi-card",
     description: "",

@@ -37,3 +37,24 @@ export function barLabelPosition(value: number | null, horizontal: boolean): str
   if (horizontal) return negative ? "left" : "right";
   return negative ? "bottom" : "top";
 }
+
+type LabelledSeries = {
+  dataKey: string;
+  showLabels?: boolean;
+  labelFormatter?: (value: unknown) => string;
+};
+
+/** Text of every value label the series draw; empty when no series shows labels. */
+export function valueLabelTexts(
+  series: readonly LabelledSeries[],
+  rows: readonly Record<string, unknown>[],
+): string[] {
+  return series.flatMap((s) => {
+    if (!s.showLabels) return [];
+    return rows.flatMap((row) => {
+      const v = row[s.dataKey];
+      if (v == null || v === "-") return [];
+      return [s.labelFormatter ? s.labelFormatter(v) : String(v)];
+    });
+  });
+}

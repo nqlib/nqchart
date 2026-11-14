@@ -14,6 +14,20 @@ description: Release notes and notable changes to NQChart
 
 - **One default size for labeled circular charts.** The pie and donut default `outerRadius` changes from `"70%"` to `"65%"`, the same as the radar. A pie and a radar in one dashboard now have the same size. Set `outerRadius` to keep the old size.
 
+### Waterfall
+
+- **Steps are colored by direction.** An increase, a decrease, and a total each have one color. Set them with the config keys `increase`, `decrease`, and `total`. A key that you do not set gets green, red, or grey, and the legend shows the three entries.
+- **This changes the default look.** Before, each column used its own category color. Set `colorBy="category"` to keep the 0.5 look.
+- **`higherIsBetter`.** Set it to `false` for a cost bridge. An increase is then red and a decrease is green.
+- **Signed labels and connector lines.** Each step shows `+45` or `−15` at the end that it moves to. Turn the labels off with `showLabels={false}`. Set `connectors` to draw a line from each column to the next column at the running total. The lines are off by default.
+- **`layout="horizontal"`.** The steps are rows from top to bottom. Use it for a P&L or a variance bridge. The brush is off in this layout.
+- **Each column rounds only the end that it moves to.** Before, a floating step rounded both ends.
+- **Fix: a running total below zero.** Before, a step that crossed zero was drawn from zero. Now each step starts at the running total.
+
+### Value labels
+
+- **Fix: a value label at the axis max was cut.** A bar, line, area, composed, or waterfall chart with `showLabels` now keeps room for the label of its tallest mark. In a horizontal chart, the room is at the right edge. A chart without labels keeps its old plot size.
+
 ### Docs site
 
 - The calendar workload preview gets a taller panel. The month view no longer squashes its week rows, and the grey band under the preview is gone. On a phone, the chart keeps a 260px minimum height and the panel scrolls.

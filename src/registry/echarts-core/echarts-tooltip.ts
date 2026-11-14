@@ -39,13 +39,13 @@ export function escapeHtml(value: unknown) {
  * neutral dot instead of being written into the `style` attribute — the
  * tooltip is HTML, and that name could carry `"` or `</style>`.
  */
-function indicatorDot(dataKey: string, inConfig: boolean, colorsCount: number) {
+export function indicatorDot(dataKey: string, inConfig: boolean, colorsCount: number) {
   const base = "inline-block h-2.5 w-2.5 shrink-0 rounded-[2px] mr-2";
   if (!inConfig) return `<span class="${base} bg-muted-foreground/50"></span>`;
   return `<span class="${base}" style="background:${escapeHtml(chartColorFill(dataKey, colorsCount))}"></span>`;
 }
 
-function formatValue(value: unknown): string {
+export function formatValue(value: unknown): string {
   if (typeof value === "number") return value.toLocaleString();
   // Radar item tooltips pass the full indicator vector — join, don't take [0].
   if (Array.isArray(value) && value.every((v) => typeof v === "number")) {
