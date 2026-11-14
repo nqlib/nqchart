@@ -139,7 +139,9 @@ A release moves `dev` into `main`, then a tag marks it. The npm publish is a sep
 for the owner.
 
 1. Branch `release/vX.Y.Z` from `origin/dev`.
-2. Bump `version` in `package.json`.
+2. Confirm `version` in `package.json`. Under the nqlib release rules, `dev` already carries the
+   next version and the changelog has its `## X.Y.Z - Unreleased` section. Run the version
+   questionnaire before you change either ([`development/nqlib-release-rules.md`](development/nqlib-release-rules.md) § 5).
 3. Add the release notes to `src/content/docs/changelog.mdx`. Update the current version in
    `src/content/docs/installation.mdx` and the **Latest** section of `README.md`.
 4. Set the plan and story statuses that the release closes to `DONE` / `done`.
@@ -197,6 +199,12 @@ Version rules while the package is `0.x`:
 
 - A bug fix with no API change is a patch (`0.3.2` → `0.3.3`).
 - A new prop, a new entry, or a removed prop is a minor (`0.3.x` → `0.4.0`).
+- A default that a consumer can see changes (a look, a behaviour) is a minor too, listed as
+  breaking.
+
+The full table of major, minor and patch, the next version on `dev` and the version
+questionnaire are in [`development/nqlib-release-rules.md`](development/nqlib-release-rules.md).
+That file is the same in every nqlib repo.
 
 Full publish notes: [`meta/publishing.md`](meta/publishing.md).
 
