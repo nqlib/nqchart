@@ -59,8 +59,9 @@ export function compileGaugeOption(ctx: CompileContext): EChartsOption {
       splitNumber,
       // Layout token in `id` so resize updates replaceSeries (formatters are dropped by JSON.stringify).
       id: `__gauge_dial_s${labelStride}_f${labelFontSize}__`,
-      progress: { show: true, width: 12 },
+      progress: { show: true, width: 12, roundCap: true },
       axisLine: {
+        roundCap: true,
         lineStyle: {
           width: 12,
           color: [[1, colorEnd]],

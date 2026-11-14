@@ -14,7 +14,7 @@ metadata:
 
 **Agents:** When the user asks to fix a bug, **search this file first** (domain table, then semantic table). Open the fix note before changing code.
 
-Last updated: 2026-10-21
+Last updated: 2026-11-07
 
 ---
 
@@ -24,9 +24,10 @@ Problem areas → domain overview → individual fix notes.
 
 | Domain | Symptoms (short) | Domain doc | Fix notes |
 |--------|------------------|------------|-----------|
-| **hover-focus** | Hover dims wrong mark; flicker; tile/point vanishes; stale bright siblings; `__highByOuter`; **intro clip + stuck axisPointer** | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [pie blur / flicker](./fixes/hover-focus-pie-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md), [intro axisPointer clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
-| **labels** | Floating leader lines; truncated / missing rose names; labelLine stubs; radial ring names upside-down; polar clip; gauge tick pile-up; **vertical pipe funnel names clipped** | [domains/labels.md](./domains/labels.md) | [rose leader clip](./fixes/labels-rose-leader-clip.md), [radial ring orientation / clip](./fixes/labels-radial-ring-orientation-clip.md), [gauge axis overlap](./fixes/labels-gauge-axis-overlap.md), [funnel pipe vertical clip](./fixes/labels-funnel-pipe-vertical-clip.md) |
-| **cartesian-stack** | Percent stack empty plot; series off-scale above yAxis.max 100; chrome paints, bands missing | [domains/cartesian-stack.md](./domains/cartesian-stack.md) | [area percent empty](./fixes/cartesian-stack-area-percent-empty.md) |
+| **hover-focus** | Hover dims wrong mark; **custom series never dims**; flicker; tile/point vanishes; stale bright siblings; `__highByOuter`; **intro clip + stuck axisPointer** | [domains/hover-focus.md](./domains/hover-focus.md) | [scatter symbol blur](./fixes/hover-focus-scatter-symbol-blur.md), [treemap flicker / vanish](./fixes/hover-focus-treemap-flicker-vanish.md), [funnel blur / flicker](./fixes/hover-focus-funnel-blur.md), [pie blur / flicker](./fixes/hover-focus-pie-blur.md), [waterfall blur / flicker](./fixes/hover-focus-waterfall-blur.md), [radial blur / flicker](./fixes/hover-focus-radial-blur.md), [intro axisPointer clip](./fixes/hover-focus-intro-axis-pointer-clip.md), [custom series element focus](./fixes/hover-focus-custom-series-element-focus.md), [isometric hit layer](./fixes/hover-focus-isometric-hit-layer.md) |
+| **performance** | Dashboard slow to load; theme switch freezes; style recalc thrash; lag grows with chart count | [domains/performance.md](./domains/performance.md) | [color probe style thrash](./fixes/performance-color-probe-style-thrash.md) |
+| **labels** | Floating leader lines; truncated / missing rose names; labelLine stubs; radial ring names upside-down; polar clip; gauge tick pile-up; **vertical pipe funnel names clipped**; **value label cut at the axis max** | [domains/labels.md](./domains/labels.md) | [rose leader clip](./fixes/labels-rose-leader-clip.md), [radial ring orientation / clip](./fixes/labels-radial-ring-orientation-clip.md), [gauge axis overlap](./fixes/labels-gauge-axis-overlap.md), [funnel pipe vertical clip](./fixes/labels-funnel-pipe-vertical-clip.md), [value label at axis max](./fixes/labels-value-label-axis-max-clip.md) |
+| **cartesian-stack** | Percent stack empty plot; waterfall step below zero drawn from zero; series off-scale above yAxis.max 100; chrome paints, bands missing | [domains/cartesian-stack.md](./domains/cartesian-stack.md) | [area percent empty](./fixes/cartesian-stack-area-percent-empty.md), [waterfall negative running total](./fixes/cartesian-stack-waterfall-negative-running-total.md) |
 | **brush** | Footer slider splits bar groups; handle mid-cluster; range framing | [domains/brush.md](./domains/brush.md) | [band-edge handles](./fixes/brush-band-edge-handles.md) |
 | **funnel-order** | Pipeline stages jump when values cross; hardcoded descending sort | [domains/funnel-order.md](./domains/funnel-order.md) | [sort none / sort prop](./fixes/funnel-order-sort-none.md) |
 | **legend** | Duplicate React keys; two legend rows for one dataKey; Area+Line fill-under-line | [domains/legend.md](./domains/legend.md) | [duplicate dataKey](./fixes/legend-duplicate-datakey.md) |
@@ -36,6 +37,7 @@ Problem areas → domain overview → individual fix notes.
 | **registration** | ReferenceLine / ReferenceBand draw nothing; a component key the family never registered | [domains/registration.md](./domains/registration.md) | [MarkLine / MarkArea not registered](./fixes/registration-markline-markarea.md) |
 | **reference-marks** | Mark line or band missing; right-axis mark on the left scale; mark above the data is off the plot | [domains/reference-marks.md](./domains/reference-marks.md) | [unregistered, single axis, clipped](./fixes/reference-marks-unregistered-single-axis.md) |
 | **bar-radius** | Negative bar rounded at zero; stacked gain and loss both rounded on the zero line; pill-shaped segment | [domains/bar-radius.md](./domains/bar-radius.md) | [sign-aware corners](./fixes/bar-radius-sign-aware.md) |
+| **theme** | Calendar empty days white in dark mode; black month outline; ECharts default colour ignores theme | [domains/theme.md](./domains/theme.md) | [calendar empty day white](./fixes/theme-calendar-empty-day-white.md) |
 
 <!-- Add rows when new domains appear: animation, tooltip, compile-bar, registry-boundary, … -->
 
@@ -47,6 +49,9 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 
 | Triggers (any match) | Chart / area | Fix note |
 |----------------------|--------------|----------|
+| calendar white cells dark mode; empty days white; weekend white block; calendar black outline; splitLine #000; itemStyle #fff | calendar / theme | [theme-calendar-empty-day-white](./fixes/theme-calendar-empty-day-white.md) |
+| dashboard laggy; many charts slow; theme toggle freezes; getComputedStyle / style recalc in profile; cssColorToCanvasRgb hot | all ECharts | [performance-color-probe-style-thrash](./fixes/performance-color-probe-style-thrash.md) |
+| 3D / isometric bar hover lags moving left; must move far left to focus; bars settle one by one | isometric bar block | [hover-focus-isometric-hit-layer](./fixes/hover-focus-isometric-hit-layer.md) |
 | scatter hover dims hovered dot; mobile dot stays dim; all points blur; red dot opacity 0.2 when hovered | scatter | [hover-focus-scatter-symbol-blur](./fixes/hover-focus-scatter-symbol-blur.md) |
 | scatter stale focus; previous dots stay bright; multiple dots emphasized | scatter | [hover-focus-scatter-symbol-blur](./fixes/hover-focus-scatter-symbol-blur.md) |
 | treemap flicker on hover; layout sliding; animationDurationUpdate | treemap | [hover-focus-treemap-flicker-vanish](./fixes/hover-focus-treemap-flicker-vanish.md) |
@@ -68,10 +73,13 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | __gauge_dial_s; resolveGaugeLabelStride; formatGaugeAxisLabel | gauge | [labels-gauge-axis-overlap](./fixes/labels-gauge-axis-overlap.md) |
 | vertical pipe funnel label clipped; Application → pplication; pipe left label band | funnel / pipe | [labels-funnel-pipe-vertical-clip](./fixes/labels-funnel-pipe-vertical-clip.md) |
 | PIPE_LABEL_BAND_V; textAlign right padL | funnel / pipe | [labels-funnel-pipe-vertical-clip](./fixes/labels-funnel-pipe-vertical-clip.md) |
+| showLabels label cut at top; +3 half hidden; tallest bar label clipped; row label cut at right edge | bar / line / area / composed / waterfall | [labels-value-label-axis-max-clip](./fixes/labels-value-label-axis-max-clip.md) |
+| withValueLabelRoom; valueLabelTexts; VALUE_LABEL_TOP_ROOM | chart-grid | [labels-value-label-axis-max-clip](./fixes/labels-value-label-axis-max-clip.md) |
 | hover during intro; area series clipped mid chart; stuck dashed vertical line; axisPointer frozen; animation stopped on hover | area / line intro | [hover-focus-intro-axis-pointer-clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
 | introLock; getZr().silent; updateAxisPointer leave mid-rollout | use-nq-echarts | [hover-focus-intro-axis-pointer-clip](./fixes/hover-focus-intro-axis-pointer-clip.md) |
 | percent area empty; stackType percent no series; yAxis 20/40/60/80 empty plot; expanded area | area | [cartesian-stack-area-percent-empty](./fixes/cartesian-stack-area-percent-empty.md) |
 | normalizeStackPercent missing on area; percent max 100 raw values | area / bar | [cartesian-stack-area-percent-empty](./fixes/cartesian-stack-area-percent-empty.md) |
+| waterfall step crosses zero drawn from 0; negative running total; samesign stack ignores negative placeholder | waterfall | [cartesian-stack-waterfall-negative-running-total](./fixes/cartesian-stack-waterfall-negative-running-total.md) |
 | brush splits green/red; handle mid group; slider between Desktop Mobile; filter mid-cluster | brush / bar | [brush-band-edge-handles](./fixes/brush-band-edge-handles.md) |
 | indexToPlotPercent center; boundaryGap brush left right edges | brush | [brush-band-edge-handles](./fixes/brush-band-edge-handles.md) |
 | funnel stages reorder; On Deck jumps above Opportunities; sort descending hardcoded | funnel | [funnel-order-sort-none](./fixes/funnel-order-sort-none.md) |
@@ -117,24 +125,28 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/compile-treemap.ts` | hover-focus |
 | `src/registry/echarts-core/compile-funnel.ts` | hover-focus, labels, funnel-order |
 | `src/registry/echarts-core/compile-pie.ts` | hover-focus |
+| `src/registry/echarts-core/compile-calendar.ts` | theme |
+| `src/registry/echarts-core/apply-chart-chrome.ts` | theme |
 | `src/registry/echarts-core/funnel-layout.ts` | funnel-order |
 | `src/registry/charts/funnel-chart.tsx` | funnel-order |
-| `src/registry/echarts-core/compile-waterfall.ts` | hover-focus |
+| `src/registry/echarts-core/compile-waterfall.ts` | hover-focus, cartesian-stack, labels |
 | `src/registry/echarts-core/compile-radial-bar.ts` | hover-focus, labels |
 | `src/registry/echarts-core/compile-gauge.ts` | labels |
 | `src/registry/echarts-core/gauge-axis-labels.ts` | labels |
-| `src/registry/echarts-core/compile-area.ts` | cartesian-stack |
-| `src/registry/echarts-core/compile-bar.ts` | cartesian-stack |
+| `src/registry/echarts-core/compile-area.ts` | cartesian-stack, labels |
+| `src/registry/echarts-core/compile-bar.ts` | cartesian-stack, labels |
 | `src/registry/echarts-core/stack-percent.ts` | cartesian-stack |
-| `src/registry/echarts-core/chart-grid.ts` | brush |
+| `src/registry/echarts-core/waterfall-steps.ts` | cartesian-stack |
+| `src/registry/echarts-core/chart-grid.ts` | brush, labels |
+| `src/registry/echarts-core/series-labels.ts` | labels |
 | `src/registry/echarts-core/nq-chart-brush.tsx` | brush |
 | `src/registry/ui/legend.tsx` | legend |
 | `src/registry/echarts-core/series-identity.ts` | series-id |
-| `src/registry/echarts-core/compile-composed.ts` | series-id |
+| `src/registry/echarts-core/compile-composed.ts` | series-id, labels |
 | `src/registry/echarts-core/nq-mark-event.ts` | series-id |
 | `src/registry/echarts-core/legend-focus.ts` | series-id, legend |
 | `src/registry/charts/{line,area,composed}-chart.tsx` (props types) | api-surface |
-| `src/registry/echarts-core/compile-line.ts` | api-surface |
+| `src/registry/echarts-core/compile-line.ts` | api-surface, labels |
 | `src/registry/echarts-core/chart-a11y.tsx` | a11y |
 | `src/registry/charts/pie-chart.tsx` | a11y |
 | `scripts/check-api.mjs` | api-surface |

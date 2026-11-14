@@ -2,6 +2,7 @@ import type { EChartsOption } from "echarts";
 import type { EChartsType } from "echarts/core";
 import { resolveCanvasChartChrome } from "./resolve-chart-chrome";
 import { CHART_TYPOGRAPHY } from "./chart-typography-tokens";
+import { resolveChartSignature } from "./chart-signature";
 
 export const NQ_HOVER_TRACE_GRAPHIC_ID = "nq-hover-trace";
 
@@ -100,7 +101,7 @@ export function buildHoverTraceGraphic(
         {
           type: "rect",
           id: `${NQ_HOVER_TRACE_GRAPHIC_ID}-label-bg`,
-          shape: { x: pillX, y: pillY, width: labelWidth, height: pillHeight, r: 4 },
+          shape: { x: pillX, y: pillY, width: labelWidth, height: pillHeight, r: resolveChartSignature(chartId).radius.mark },
           style: { fill: chrome.foreground },
           transition: ["shape"],
         },

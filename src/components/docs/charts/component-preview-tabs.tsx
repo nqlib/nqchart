@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 export function ComponentPreviewTabs({
   className,
   containerClassName,
+  previewClassName,
   align = "center",
   hideCode = false,
   component,
@@ -20,6 +21,8 @@ export function ComponentPreviewTabs({
   ...props
 }: React.ComponentProps<"div"> & {
   containerClassName?: string;
+  /** Panel height. Overrides the default `h-64 sm:h-90` (set both breakpoints). */
+  previewClassName?: string;
   align?: "center" | "start" | "end";
   hideCode?: boolean;
   component: React.ReactNode;
@@ -74,6 +77,7 @@ export function ComponentPreviewTabs({
               <div
                 className={cn(
                   "flex h-64 w-full justify-center overflow-y-auto data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start sm:h-90",
+                  previewClassName,
                 )}
                 data-align={align}
               >
@@ -88,7 +92,7 @@ export function ComponentPreviewTabs({
             </TabsPanel>
 
             <TabsPanel value="code">
-              <div className="flex h-64 w-full flex-col overflow-hidden sm:h-90">
+              <div className={cn("flex h-64 w-full flex-col overflow-hidden sm:h-90", previewClassName)}>
                 <div className="no-scrollbar relative size-full overflow-y-auto">{source}</div>
               </div>
             </TabsPanel>

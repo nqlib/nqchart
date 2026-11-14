@@ -7,14 +7,14 @@ import {
   resolveYAxisIndex,
 } from "./cartesian-axes";
 import { resolveCanvasGapColor } from "./resolve-chart-chrome";
-import { resolveCartesianGrid } from "./chart-grid";
+import { resolveCartesianGrid, withValueLabelRoom } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import { areaVerticalFill, withAlpha } from "./color-alpha";
 import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
 import { resolveAreaFillColor } from "./resolve-chart-colors";
 import { normalizeStackPercent } from "./stack-percent";
 import type { AreaSeriesPart, CompileContext, XAxisPart, YAxisPart } from "./parts/types";
-import { seriesLabelOption } from "./series-labels";
+import { seriesLabelOption, valueLabelTexts } from "./series-labels";
 
 function isGlowing(variant?: string) {
   return variant?.includes("glow");
@@ -90,7 +90,7 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
         width: lineWidth,
       },
       triggerLineEvent: true,
-      label: seriesLabelOption(area.showLabels, area.labelFormatter),
+      label: seriesLabelOption(area.showLabels, area.labelFormatter, ctx.chartId),
       ...LINE_MARKER,
       itemStyle: { color, borderColor: gapColor, borderWidth: 1.5 },
       ...hoverFocusOrOff(
@@ -118,7 +118,11 @@ export function compileAreaOption(ctx: CompileContext): EChartsOption {
     "category",
   );
 
-  const grid = resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush));
+  const grid = withValueLabelRoom(
+    resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
+    valueLabelTexts(areas, rows as Record<string, unknown>[]),
+    { pointsOnEdge: true },
+  );
 
   const dataZoom = buildCategoryDataZoom(hasBrush, { chartVariant: "area" });
   const base: EChartsOption = {
@@ -155,7 +159,7 @@ export function buildAreaSeries(ctx: CompileContext) {
       areaStyle,
       lineStyle: { color, width: lineWidth, type: lineStyleType(area.variant) },
       triggerLineEvent: true,
-      label: seriesLabelOption(area.showLabels, area.labelFormatter),
+      label: seriesLabelOption(area.showLabels, area.labelFormatter, ctx.chartId),
       ...LINE_MARKER,
       itemStyle: { color, borderColor: gapColor, borderWidth: 1.5 },
       ...hoverFocusOrOff(

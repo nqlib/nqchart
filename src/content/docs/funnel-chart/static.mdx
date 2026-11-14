@@ -220,7 +220,13 @@ Root container. Compiles ECharts `series-funnel` (or a custom pipe series when `
     How gradually native funnel stage sizes taper (`minSize`). Unused for `pipe`.
   </ApiRow>
   <ApiRow name="stageGap" type="number">
-    Pixel gap between stages — overrides the `connection` preset gap. Unused for `pipe`.
+    Pixel gap between stages — overrides the `connection` preset gap (`8` for `segmented`, `rounded`, `cone`; `0` otherwise). Unused for `pipe`.
+  </ApiRow>
+  <ApiRow name="cornerRadius" type="number" default="11">
+    Outer corner radius (px) for `connection="rounded"`; setting it on other non-pipe connections switches to the rounded renderer.
+  </ApiRow>
+  <ApiRow name="innerCornerRadius" type="number" default="3">
+    Radius (px) of corners facing a stage gap (rounded). Clamped to `cornerRadius`.
   </ApiRow>
   <ApiRow name="turnRadius" type="number">
     Pipe mode: half-width of the S-curve level-change zone in px. Omit for half-a-stage-width transitions.

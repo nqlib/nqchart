@@ -1,4 +1,15 @@
 import { withAlpha } from "./color-alpha";
+import { resolveChartSignature } from "./chart-signature";
+
+/**
+ * One gap rule for every grouped, stacked, composed and waterfall bar:
+ * the signature `bar.categoryGap` between categories and `bar.groupGap`
+ * between bars of one category. Histogram opts out (0 / 0 / 100%).
+ */
+export function barLayoutGaps(chartId: string): { barCategoryGap: string; barGap: string } {
+  const { categoryGap, groupGap } = resolveChartSignature(chartId).bar;
+  return { barCategoryGap: categoryGap, barGap: groupGap };
+}
 
 export function barSeriesColor(
   variant: string | undefined,

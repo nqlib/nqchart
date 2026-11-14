@@ -13,6 +13,10 @@ Public doc: `/docs/chart-recipes`
 | `binForHistogram(values, binCount)` | `NQBarChart` | `ex-histogram-chart` |
 | `prepareBulletRow(label, opts)` | `NQBarChart` horizontal | `ex-bullet-chart` |
 | `prepareParetoData(rows, nameKey, valueKey)` | `NQComposedChart` | `ex-pareto-chart` |
+| `prepareVarianceRows(rows, opts)` | `NQComposedChart` | `ex-variance-chart` |
+| `prepareCohortCells(rows, opts)` | `NQHeatmapChart` | `ex-cohort-retention-chart` |
+| `prepareForecastSeries(rows, opts)` | `NQComposedChart` | `ex-forecast-chart` |
+| `prepareDumbbellRows(rows, opts)` | `NQComposedChart` (`Connector`) | `ex-dumbbell-chart` |
 | `prepareBoxPlotRow(category, samples)` | `NQComposedChart` | `ex-boxplot-chart` |
 | `prepareHeatmapCells(rows, cols, matrix)` | `NQHeatmapChart` | `ex-heatmap-chart` |
 | `prepareCalendarWorkloadCells(days)` | `NQCalendarChart` | `ex-calendar-workload-chart` |

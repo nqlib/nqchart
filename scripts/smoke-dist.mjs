@@ -30,7 +30,11 @@ const CHECKS = [
   { entry: "treemap-chart", expect: ["NQTreemapChart", "Tiles"] },
   { entry: "waterfall-chart", expect: ["NQWaterfallChart", "Bars"] },
   { entry: "funnel-chart", expect: ["NQFunnelChart", "Stages"] },
+  { entry: "sankey-chart", expect: ["NQSankeyChart", "Tooltip"] },
   { entry: "sparkline-chart", expect: ["NQSparklineChart", "Sparkline"] },
+  { entry: "kpi-card", expect: ["NQKpiCard", "resolveKpiDelta"] },
+  { entry: "small-multiples", expect: ["NQSmallMultiples", "computeSharedDomain"] },
+  { entry: "tile-column-chart", expect: ["NQTileColumnChart", "Tiles"] },
   { entry: "composed-chart", expect: ["NQComposedChart", "Bar", "Line"] },
   {
     entry: "headless",

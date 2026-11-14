@@ -21,8 +21,10 @@ export { compilePieOption } from "@/registry/echarts-core/compile-pie";
 export { compileRadarOption } from "@/registry/echarts-core/compile-radar";
 export { compileRadialBarOption, compileRoseBarOption } from "@/registry/echarts-core/compile-radial-bar";
 export { compileRadialOption } from "@/registry/echarts-core/compile-radial";
+export { compileSankeyOption, deriveSankeyGraph } from "@/registry/echarts-core/compile-sankey";
 export { compileScatterOption } from "@/registry/echarts-core/compile-scatter";
 export { compileSparklineOption } from "@/registry/echarts-core/compile-sparkline";
+export { compileTileColumnOption } from "@/registry/echarts-core/compile-tile-column";
 export { compileTreemapOption } from "@/registry/echarts-core/compile-treemap";
 export { compileWaterfallOption } from "@/registry/echarts-core/compile-waterfall";
 
@@ -59,6 +61,7 @@ export type {
   ChartPart,
   CompileContext,
   FunnelCompileConfig,
+  FunnelLabel,
   FunnelPart,
   FunnelStylePart,
   GaugePart,
@@ -75,9 +78,15 @@ export type {
   RadialCompileConfig,
   ReferenceBandPart,
   ReferenceLinePart,
+  SankeyLinkColor,
+  SankeyNode,
+  SankeyNodeAlign,
+  SankeyOrient,
+  SankeyPart,
   ScatterSeriesPart,
   SparklinePart,
   StackType,
+  TileColumnPart,
   TooltipPart,
   TreemapPart,
   TreemapStylePart,

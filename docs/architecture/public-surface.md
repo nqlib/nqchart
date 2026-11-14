@@ -15,6 +15,10 @@ migration once (SecoLab ST-289).
 | `@nqlib/nqchart` | `ChartConfig`, shell UI, `useChartBrush`, `NQMarkEvent`, `ChartHandle`, `ReferenceLine` / `ReferenceBand` / `RangeArea` |
 | `@nqlib/nqchart/bar-chart` | `NQBarChart`, `Bar`, axes, legend, tooltip, … |
 | `@nqlib/nqchart/<family>-chart` | Same pattern per primitive |
+| `@nqlib/nqchart/sankey-chart` | `NQSankeyChart`, `Tooltip` (0.5.0) |
+| `@nqlib/nqchart/tile-column-chart` | `NQTileColumnChart` and its parts (0.5.0) |
+| `@nqlib/nqchart/kpi-card` | `NQKpiCard` (0.5.0) |
+| `@nqlib/nqchart/small-multiples` | `NQSmallMultiples` (0.5.0) |
 | `@nqlib/nqchart/recipes` | `binForHistogram`, `prepareParetoData`, … |
 | `@nqlib/nqchart/headless` | Every `compile*Option`, `buildAreaSeries`, `withLegendFocus`, `createColorResolver`, `withHeadlessTheme` / `headlessThemeOf` / `HeadlessTheme`, `printLegend`, `renderToSvg`, `CompileContext` / `ChartPart` / every part type, `ChartConfig`, `CHART_TYPOGRAPHY`, `CHART_FONT_FAMILY_FALLBACK` (0.4.0) |
 

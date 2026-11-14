@@ -7,20 +7,8 @@ import { getEcharts, type EChartsExtraModules } from "./echarts-init";
 import { maxIntroDurationMs, optionHasAnimatedSeries } from "./apply-chart-animation";
 import { applyRolloutIntroReveal } from "./apply-rollout-intro";
 import type { ChartPlotInsets } from "./chart-grid";
-import { resetFunnelHoverFocus, scheduleFunnelHoverFocusRepair } from "./funnel-hover-focus";
-import { resetPieHoverFocus, schedulePieHoverFocusRepair } from "./pie-hover-focus";
-import {
-  isRadialRingSeriesEvent,
-  resetRadialHoverFocus,
-  scheduleRadialHoverFocusRepair,
-} from "./radial-hover-focus";
-import { repairScatterHoverFocus, resetScatterHoverFocus } from "./scatter-hover-focus";
-import { resetTreemapHoverFocus, scheduleTreemapHoverFocusRepair } from "./treemap-hover-focus";
-import {
-  isWaterfallValuesSeriesEvent,
-  resetWaterfallHoverFocus,
-  scheduleWaterfallHoverFocusRepair,
-} from "./waterfall-hover-focus";
+import { clearFocus, focusMark, setHoverFocusEnabled } from "./hover-focus-repair";
+import { fitBarCornersBeforePaint, fitRenderedBarCorners } from "./bar-radius";
 
 const NO_EXTRA: EChartsExtraModules = [];
 
@@ -135,6 +123,9 @@ function setOptionWhenSized(
     if (mode.notMerge) {
       applyRolloutIntroReveal(instance);
     }
+    // Shapes exist now but nothing has painted: fit corners before the first
+    // frame, so even frame one never shows the authored radius.
+    fitRenderedBarCorners(instance);
     onApplied(readPlotInsets(instance));
   };
   apply();
@@ -165,7 +156,13 @@ export function useNQEcharts(
   const hoverFocusRef = useRef(hoverFocus);
   useEffect(() => {
     hoverFocusRef.current = hoverFocus;
-  });
+    const instance = chartRef.current;
+    if (instance) {
+      setHoverFocusEnabled(instance, hoverFocus);
+      // Turning focus off mid-hover must not leave repair blur behind.
+      if (!hoverFocus) clearFocus(instance, "pointer");
+    }
+  }, [hoverFocus]);
 
   // Never put onChartInstance in the init-effect deps — callers often pass an
   // inline lambda (createDefaultCanvas), and plotRect → parent re-render would
@@ -235,6 +232,11 @@ export function useNQEcharts(
 
     // Snap any enter geometry that was cancelled before silent engaged (partial
     // area bands + a frozen vertical cut that looks like a stuck axisPointer).
+    // Zero durations snap exactly like `animation: false` (ECharts sets props
+    // directly when duration is 0) but keep the series animation-enabled — ECharts
+    // only applies `stateAnimation` (the FOCUS fade) to animation-enabled series.
+    // A series compiled with `animation: false` (sparkline gradient, silent
+    // placeholders) keeps it.
     const current = instance.getOption() as EChartsOption;
     const series = Array.isArray(current.series)
       ? current.series
@@ -246,13 +248,13 @@ export function useNQEcharts(
         {
           series: series.map((s) => ({
             ...(typeof s === "object" && s ? s : {}),
-            animation: false,
             animationDuration: 0,
             animationDurationUpdate: 0,
           })),
         },
         { lazyUpdate: false },
       );
+      fitRenderedBarCorners(instance);
     }
 
     const pending = pendingOptionRef.current;
@@ -306,6 +308,7 @@ export function useNQEcharts(
         ? existing
         : echarts.init(el, undefined, { renderer: "canvas" });
     chartRef.current = instance;
+    setHoverFocusEnabled(instance, hoverFocusRef.current !== false);
     onChartInstanceRef.current?.(instance);
 
     const onMouseOver = (params: unknown) => {
@@ -313,26 +316,10 @@ export function useNQEcharts(
         seriesIndex?: number;
         seriesName?: string;
       };
-      if (hoverFocusRef.current !== false) {
-        if (p.seriesIndex != null && isRadialRingSeriesEvent(instance, p)) {
-          scheduleRadialHoverFocusRepair(instance, p.seriesIndex);
-        } else if (p.dataIndex != null && p.seriesIndex != null) {
-          if (p.seriesType === "scatter") {
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                repairScatterHoverFocus(instance, p.seriesIndex!, p.dataIndex!);
-              });
-            });
-          } else if (p.seriesType === "treemap") {
-            scheduleTreemapHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
-          } else if (p.seriesType === "funnel") {
-            scheduleFunnelHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
-          } else if (p.seriesType === "pie") {
-            schedulePieHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
-          } else if (isWaterfallValuesSeriesEvent(p)) {
-            scheduleWaterfallHoverFocusRepair(instance, p.seriesIndex!, p.dataIndex!);
-          }
-        }
+      // One entry point for pointer and keyboard. focusMark is a no-op for families
+      // whose native high-down is correct, and respects `hoverFocus={false}`.
+      if (p.seriesIndex != null && (p.componentType == null || p.componentType === "series")) {
+        focusMark(instance, { seriesIndex: p.seriesIndex, dataIndex: p.dataIndex }, "pointer");
       }
       eventHandlersRef.current?.onSeriesMouseOver?.(params as NQChartSeriesEvent);
     };
@@ -340,20 +327,23 @@ export function useNQEcharts(
       // Multi-chart pages leave append-body tooltips + axisPointers stuck unless
       // we explicitly clear them — ECharts does not always do this on globalout.
       clearHoverChrome(instance);
-      resetScatterHoverFocus(instance);
-      resetTreemapHoverFocus(instance);
-      resetFunnelHoverFocus(instance);
-      resetPieHoverFocus(instance);
-      resetWaterfallHoverFocus(instance);
-      resetRadialHoverFocus(instance);
+      // Cancels a pending repair first, so a late scatter/radial rAF cannot re-blur.
+      clearFocus(instance, "pointer");
       eventHandlersRef.current?.onGlobalOut?.();
     };
     const onClick = (params: unknown) => {
       eventHandlersRef.current?.onSeriesClick?.(params as NQChartSeriesEvent);
     };
+    // Corners scale with each bar's rendered size, applied before every paint
+    // so intro and update tweens never draw the authored radius
+    // (see fitBarCornersBeforePaint).
+    fitBarCornersBeforePaint(instance);
     instance.on("mouseover", onMouseOver);
     instance.on("globalout", onGlobalOut);
     instance.on("click", onClick);
+    // Test seam: an e2e sweep can collect live instances by defining this set
+    // before the page loads. Absent in normal use (one optional-chain check).
+    (globalThis as { __NQ_CHARTS__?: Set<unknown> }).__NQ_CHARTS__?.add(instance);
 
     const ro = new ResizeObserver(() => {
       // ECharts `resize()` runs an update with animation duration 0, which overrides
@@ -386,6 +376,7 @@ export function useNQEcharts(
       instance.off("mouseover", onMouseOver);
       instance.off("globalout", onGlobalOut);
       instance.off("click", onClick);
+      (globalThis as { __NQ_CHARTS__?: Set<unknown> }).__NQ_CHARTS__?.delete(instance);
       ro.disconnect();
       clearIntroTimer();
       instance.dispose();

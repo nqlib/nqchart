@@ -11,10 +11,10 @@ import {
   resolveYAxisIndex,
 } from "./cartesian-axes";
 import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
-import { resolveCartesianGrid } from "./chart-grid";
+import { resolveCartesianGrid, withValueLabelRoom } from "./chart-grid";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
 import type { CompileContext, LineSeriesPart, XAxisPart, YAxisPart } from "./parts/types";
-import { seriesLabelOption } from "./series-labels";
+import { seriesLabelOption, valueLabelTexts } from "./series-labels";
 
 export function compileLineOption(ctx: CompileContext): EChartsOption {
   const xKey = getXKey(ctx);
@@ -38,7 +38,7 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
       itemStyle: { color },
       lineStyle: { color, type: lineStyleType(line.variant) },
       triggerLineEvent: true,
-      label: seriesLabelOption(line.showLabels, line.labelFormatter),
+      label: seriesLabelOption(line.showLabels, line.labelFormatter, ctx.chartId),
       ...LINE_MARKER,
       ...hoverFocusOrOff(isHoverFocusOn(ctx), cartesianLineFocus({ color })),
     };
@@ -51,7 +51,10 @@ export function compileLineOption(ctx: CompileContext): EChartsOption {
     "category",
   );
 
-  const grid = resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush));
+  const grid = withValueLabelRoom(
+    resolveCartesianGrid(ctx.parts, ctx.cartesian?.externalBrush, gridBottomWithZoom(hasBrush)),
+    valueLabelTexts(lines, ctx.data as Record<string, unknown>[]),
+  );
 
   const dataZoom = buildCategoryDataZoom(hasBrush, { chartVariant: "line" });
   const base: EChartsOption = {

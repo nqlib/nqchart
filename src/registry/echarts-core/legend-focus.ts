@@ -19,11 +19,15 @@
  */
 
 import type { EChartsOption } from "echarts";
+import { FOCUS } from "./emphasis-presets";
 import { isAnnotationSeriesId } from "./nq-mark-event";
 import { seriesMatchesLegendKey } from "./series-identity";
 
-/** Low enough to recede, high enough to still read as context. */
-const DIMMED = 0.16;
+/**
+ * Same dim as hover and keyboard focus — one focus mode. Low enough to recede,
+ * high enough to still read as context.
+ */
+const DIMMED = FOCUS.dim;
 
 type Style = Record<string, unknown> | undefined;
 

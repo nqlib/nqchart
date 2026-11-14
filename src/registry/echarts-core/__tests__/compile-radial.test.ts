@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { FOCUS } from "../emphasis-presets";
 import { compileRadialOption } from "../compile-radial";
 import type { GaugePart, RadialBarPart } from "../parts/types";
 import { makeCtx } from "./make-ctx";
@@ -33,7 +34,20 @@ describe("compileRadialOption", () => {
     expect(series[1]?.type).toBe("gauge");
   });
 
-  it("models each ring as its own series with instant series focus", () => {
+  it("rounds both gauge arcs (progress + track)", () => {
+    const option = compileRadialOption(
+      makeCtx({
+        parts: [gaugePart],
+        nameKey: "series",
+        data: [{ series: "score", value: 72 }],
+      }),
+    );
+    const dial = (option.series as Array<{ progress?: { roundCap?: boolean }; axisLine?: { roundCap?: boolean } }>)[0];
+    expect(dial?.progress?.roundCap).toBe(true);
+    expect(dial?.axisLine?.roundCap).toBe(true);
+  });
+
+  it("models each ring as its own series with FOCUS-timed series focus", () => {
     const option = compileRadialOption(
       makeCtx({
         parts: [radialBarPart],
@@ -67,7 +81,7 @@ describe("compileRadialOption", () => {
       expect(ring.emphasis?.disabled).toBe(true);
       expect(ring.emphasis?.itemStyle?.opacity).toBe(1);
       expect(ring.blur?.itemStyle?.opacity).toBe(0.2);
-      expect(ring.stateAnimation?.duration).toBe(0);
+      expect(ring.stateAnimation?.duration).toBe(FOCUS.durationMs);
       expect(ring.animationDurationUpdate).toBe(0);
     }
   });
@@ -158,13 +172,13 @@ describe("compileRadialOption", () => {
     expect(radiusAxis.data).toEqual(["Chrome", "Safari"]);
     // Glyph height stays under the default 14px ring thickness.
     expect(radiusAxis.axisLabel?.fontSize).toBeLessThanOrEqual(10);
-    expect(track?.barCategoryGap).toBe("48%");
+    expect(track?.barCategoryGap).toBe("28%");
     // Names above rings; silent so hover still hits the arcs.
     expect(radiusAxis.silent).toBe(true);
     expect(radiusAxis.z).toBeGreaterThan(Math.max(...rings.map((r) => r.z ?? 0)));
     for (const ring of rings) {
       expect(ring.label?.show).toBe(false);
-      expect(ring.barCategoryGap).toBe("48%");
+      expect(ring.barCategoryGap).toBe("28%");
     }
   });
 
@@ -254,75 +268,99 @@ describe("compileRadialOption", () => {
         }),
       );
 
-    type LabelPie = {
-      id?: string;
+    type RoseChild = {
       type?: string;
-      startAngle?: number;
       silent?: boolean;
-      radius?: string | number | Array<string | number>;
-      avoidLabelOverlap?: boolean;
-      label?: { overflow?: string; distanceToLabelLine?: number };
-      labelLine?: { show?: boolean; length?: number; length2?: number };
-      labelLayout?: { hideOverlap?: boolean; moveOverlap?: string };
-      data?: Array<{ name?: string; value?: number }>;
+      shape?: { pathData?: string; points?: number[][] };
+      style?: { text?: string };
     };
-
+    type RosePetals = {
+      id?: string;
+      renderItem: (
+        p: { dataIndex: number },
+        api: { getWidth: () => number; getHeight: () => number; style: () => object },
+      ) => { focus?: string; children: RoseChild[] } | undefined;
+    };
+    const petalSeries = (option: ReturnType<typeof roseOption>) =>
+      (option.series as RosePetals[]).find((s) => s.id === "__rose_petals__")!;
+    const api = { getWidth: () => 400, getHeight: () => 400, style: () => ({}) };
     const labelSeries = (option: ReturnType<typeof roseOption>) =>
-      (option.series as LabelPie[]).find((s) => s.id === "__rose_labels__");
+      (option.series as Array<{ id?: string }>).find((s) => s.id === "__rose_labels__");
 
-    it("draws names on a silent pie with leader lines", () => {
-      const labels = labelSeries(roseOption())!;
-
-      expect(labels.type).toBe("pie");
-      expect(labels.silent).toBe(true);
-      expect(labels.labelLine?.show).toBe(true);
-      expect(labels.data?.map((d) => d.name)).toEqual(["Chrome", "Safari", "Firefox"]);
-    });
-
-    it("offsets leaders from the petals and enables collision layout", () => {
-      const labels = labelSeries(roseOption())!;
-
-      expect(labels.avoidLabelOverlap).toBe(true);
-      expect(labels.labelLayout?.hideOverlap).toBe(true);
-      expect(labels.labelLayout?.moveOverlap).toBe("shiftY");
-      expect(labels.labelLine?.length).toBeGreaterThanOrEqual(16);
-      expect(labels.label?.distanceToLabelLine).toBeGreaterThan(0);
-    });
-
-    it("aligns the label pie to the petal angular bands", () => {
+    it("draws each name on a leader line inside the petal series (no label pie)", () => {
       const option = roseOption();
-      const labels = labelSeries(option)!;
-      const angleAxis = option.angleAxis as { startAngle?: number };
-
-      expect(new Set(labels.data?.map((d) => d.value)).size).toBe(1);
-      expect(labels.startAngle).toBe(angleAxis.startAngle);
+      expect(labelSeries(option)).toBeUndefined();
+      expect((option.series as unknown[]).length).toBe(1);
+      const el = petalSeries(option).renderItem({ dataIndex: 0 }, api)!;
+      expect(el.children.map((c) => c.type)).toEqual(["path", "polyline", "text"]);
+      expect(el.children.find((c) => c.type === "text")?.style?.text).toBe("Chrome");
     });
 
-    it("insets polar so leaders fit outside the petals", () => {
+    it("starts each leader on its own petal rim, not the outer envelope", () => {
+      const series = petalSeries(roseOption());
+      // Petals differ in length, so their leaders must start at different radii.
+      const starts = [0, 1, 2].map((i) => {
+        const line = series.renderItem({ dataIndex: i }, api)!.children.find((c) => c.type === "polyline")!;
+        const [x, y] = line.shape!.points![0]!;
+        return Math.hypot(x! - 200, y! - 200);
+      });
+      expect(new Set(starts.map((r) => Math.round(r))).size).toBeGreaterThan(1);
+    });
+
+    it("draws petals as one custom series with seamed, filleted sectors", () => {
       const option = roseOption();
-      const polar = option.polar as { radius?: string | number | Array<string | number> };
-      const labels = labelSeries(option)!;
-
-      expect(polar.radius).toBe("78%");
-      expect(labels.radius).toBe("78%");
-      expect(labels.label?.overflow).toBe("none");
-    });
-
-    it("replaces the angleAxis labels rather than doubling them", () => {
-      const axisLabel = (roseOption().angleAxis as { axisLabel?: { show?: boolean } })
-        .axisLabel;
-      expect(axisLabel?.show).toBe(false);
-    });
-
-    it("omits the label series when showLabels is off", () => {
-      expect(labelSeries(roseOption(false))).toBeUndefined();
-    });
-
-    it("uses full radius when labels are off", () => {
-      const polar = roseOption(false).polar as {
-        radius?: string | number | Array<string | number>;
+      const petals = (option.series as Array<Record<string, unknown>>).find(
+        (s) => s.id === "__rose_petals__",
+      ) as {
+        type?: string;
+        data?: Array<{ name?: string }>;
+        renderItem: (
+          p: { dataIndex: number },
+          api: { getWidth: () => number; getHeight: () => number; style: () => object },
+        ) => { focus?: string; children: Array<{ shape?: { pathData?: string } }> } | undefined;
       };
-      expect(polar.radius).toBe("100%");
+      expect(petals.type).toBe("custom");
+      expect(petals.data?.map((d) => d.name)).toEqual(["Chrome", "Safari", "Firefox"]);
+      const api = { getWidth: () => 300, getHeight: () => 300, style: () => ({}) };
+      const el = petals.renderItem({ dataIndex: 0 }, api);
+      expect(el?.focus).toBe("self");
+      expect(el?.children[0]?.shape?.pathData).toContain(" A ");
+      expect(option.polar).toBeUndefined();
+    });
+
+    it("adds a silent track sector per petal when showBackground", () => {
+      const option = compileRadialOption(
+        makeCtx({
+          data: [
+            { browser: "a", visitors: 10 },
+            { browser: "b", visitors: 5 },
+          ],
+          nameKey: "browser",
+          parts: [{ type: "radialBar", id: "rb1", dataKey: "visitors", showBackground: true }],
+          radial: { radialLayout: "rose" },
+        }),
+      );
+      const petals = (option.series as Array<Record<string, unknown>>).find(
+        (s) => s.id === "__rose_petals__",
+      ) as { renderItem: (p: { dataIndex: number }, api: object) => { children: Array<{ silent?: boolean }> } };
+      const el = petals.renderItem(
+        { dataIndex: 0 },
+        { getWidth: () => 300, getHeight: () => 300, style: () => ({}) },
+      );
+      // Track first (silent), then the petal; labels follow when on.
+      expect(el.children.length).toBeGreaterThanOrEqual(2);
+      expect(el.children[0]?.silent).toBe(true);
+    });
+
+    it("draws no labels when showLabels is off", () => {
+      const el = petalSeries(roseOption(false)).renderItem({ dataIndex: 0 }, api)!;
+      expect(el.children.map((c) => c.type)).toEqual(["path"]);
+    });
+
+    it("has no label series and no polar when labels are off", () => {
+      const option = roseOption(false);
+      expect(labelSeries(option)).toBeUndefined();
+      expect(option.polar).toBeUndefined();
     });
   });
 

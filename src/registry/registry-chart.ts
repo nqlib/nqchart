@@ -160,6 +160,20 @@ export const charts: Registry["items"] = [
     ],
   },
   {
+    name: "sankey-chart",
+    description: "Sankey flow chart (ECharts engine)",
+    registryDependencies: CHART_DEPS,
+    dependencies: ["echarts"],
+    type: "registry:component",
+    files: [
+      {
+        path: "charts/sankey-chart.tsx",
+        type: "registry:component",
+        target: TARGET_BASE_PATH + "/sankey-chart.tsx",
+      },
+    ],
+  },
+  {
     name: "waterfall-chart",
     description: "Waterfall chart (ECharts engine)",
     registryDependencies: CHART_DEPS,
@@ -198,6 +212,33 @@ export const charts: Registry["items"] = [
         path: "charts/sparkline-chart.tsx",
         type: "registry:component",
         target: TARGET_BASE_PATH + "/sparkline-chart.tsx",
+      },
+    ],
+  },
+  {
+    name: "kpi-card",
+    description: "KPI card — value, direction-aware delta, target progress and sparkline",
+    registryDependencies: [...CHART_DEPS, "@nqchart/sparkline-chart"],
+    dependencies: ["echarts"],
+    type: "registry:component",
+    files: [
+      {
+        path: "charts/kpi-card.tsx",
+        type: "registry:component",
+        target: TARGET_BASE_PATH + "/kpi-card.tsx",
+      },
+    ],
+  },
+  {
+    name: "small-multiples",
+    description: "Small multiples — one chart per facet with a shared y-domain and legend",
+    registryDependencies: ["@nqchart/chart"],
+    type: "registry:component",
+    files: [
+      {
+        path: "charts/small-multiples.tsx",
+        type: "registry:component",
+        target: TARGET_BASE_PATH + "/small-multiples.tsx",
       },
     ],
   },

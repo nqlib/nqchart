@@ -2,6 +2,7 @@
 
 import { cn } from "@/registry/lib/cn";
 import { getColorsCount, useChart } from "@/registry/ui/chart";
+import { chartColorFill, chartColorVar } from "@/registry/echarts-core/css-safe";
 import { usePartsSnapshot } from "@/registry/echarts-core/part-registry";
 import type { ChartPart } from "@/registry/echarts-core/parts/types";
 import type { CSSProperties } from "react";
@@ -38,13 +39,9 @@ type ChartLegendContentProps = {
 
 function getLegendFillStyle(dataKey: string, colorsCount: number): CSSProperties {
   if (colorsCount <= 1) {
-    return { backgroundColor: `var(--color-${dataKey}-0)` };
+    return { backgroundColor: chartColorVar(dataKey, 0) };
   }
-  const stops = Array.from({ length: colorsCount }, (_, i) => {
-    const offset = (i / (colorsCount - 1)) * 100;
-    return `var(--color-${dataKey}-${i}) ${offset}%`;
-  }).join(", ");
-  return { background: `linear-gradient(to right, ${stops})` };
+  return { background: chartColorFill(dataKey, colorsCount) };
 }
 
 function getLegendOutlineStyle(dataKey: string, colorsCount: number): CSSProperties {
@@ -55,13 +52,9 @@ function getLegendOutlineStyle(dataKey: string, colorsCount: number): CSSPropert
     maskComposite: "exclude",
   };
   if (colorsCount <= 1) {
-    return { backgroundColor: `var(--color-${dataKey}-0)`, ...maskStyle };
+    return { backgroundColor: chartColorVar(dataKey, 0), ...maskStyle };
   }
-  const stops = Array.from({ length: colorsCount }, (_, i) => {
-    const offset = (i / (colorsCount - 1)) * 100;
-    return `var(--color-${dataKey}-${i}) ${offset}%`;
-  }).join(", ");
-  return { background: `linear-gradient(to right, ${stops})`, ...maskStyle };
+  return { background: chartColorFill(dataKey, colorsCount), ...maskStyle };
 }
 
 function LegendIndicator({

@@ -61,6 +61,22 @@ Stack `<Bar dataKey="iqrFloor" showInLegend={false} />` + `<Bar dataKey="iqr" />
 
 ---
 
+## Analyst recipes (plan 021)
+
+```ts
+prepareVarianceRows(rows, { categoryKey, actualKey, planKey, higherIsBetter }); // actual, plan, delta, deltaPct, good
+prepareCohortCells(rows, { cohortKey, periodKey, valueKey, mode: "percent" });  // { cells, xLabels M0…Mn, yLabels, min, max }
+prepareForecastSeries(rows, { dateKey, actualKey, forecastKey, lowerKey, upperKey }); // actual, forecast, lower, upper, band
+prepareDumbbellRows(rows, { categoryKey, fromKey, toKey });                    // from, to, delta, direction (sorted by delta)
+```
+
+- Variance → composed: two stacked `<Bar>` (`favorable` / `unfavorable`, one `stackId`) + `<ReferenceLine y={0} />` — `ex-variance-chart`.
+- Cohort → `<Heatmap>`; pass `yLabels` reversed for oldest on top — `ex-cohort-retention-chart`.
+- Forecast → composed: `<Line>` actual, `<Line variant="dashed">` forecast, `<RangeArea lowKey="lower" highKey="upper">`, `<ReferenceLine x="…" label="Today">` — `ex-forecast-chart`.
+- Dumbbell → composed: `<Connector fromKey toKey>` + two `<Line variant="dots">` (vertical) — `ex-dumbbell-chart`.
+
+---
+
 ## Heatmap → `NQHeatmapChart`
 
 ```ts

@@ -303,6 +303,10 @@ function buildRangeAreaSeries(ctx: CompileContext): EChartsOption["series"] | nu
     const silent = {
       name: "",
       stack,
+      // The span (high − low, always ≥ 0) must stack on `low` whatever its
+      // sign. ECharts' default "samesign" stacks a positive span from zero
+      // when `low` is negative, so a band below zero drew from 0 to the span.
+      stackStrategy: "all" as const,
       yAxisIndex,
       symbol: "none" as const,
       showSymbol: false,

@@ -2,7 +2,7 @@ import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
 import { gridBottomWithZoom } from "./category-data-zoom";
 import { resolveCartesianGrid } from "./chart-grid";
-import { itemFocus, isHoverFocusOn } from "./emphasis-presets";
+import { focusTiming, itemFocus, isHoverFocusOn } from "./emphasis-presets";
 import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
 import type { ChartPart, CompileContext, ScatterSeriesPart } from "./parts/types";
 
@@ -88,7 +88,8 @@ export function compileScatterOption(ctx: CompileContext): EChartsOption {
             id: scatters.length === 1 ? scatters[0]!.dataKey : "__nq_scatter__",
             name: scatters.length === 1 ? scatters[0]!.dataKey : undefined,
             data,
-            stateAnimation: { duration: 0 },
+            // Per-row focus lives on the data objects; the timing is series-level.
+            ...focusTiming("scatter"),
           },
         ]
       : [];

@@ -1,0 +1,114 @@
+---
+title: KPI Card
+description: One metric at a glance — value, direction-aware delta, target progress and an inline sparkline
+links:
+  github: https://github.com/ctesibius/nqchart/blob/main/src/registry/charts/kpi-card.tsx
+---
+
+<ComponentPreview title="KPI row" name="ex-kpi-card" />
+
+## Installation
+
+<CliBlock commands={["@nqchart/kpi-card"]} />
+
+The card embeds `NQSparklineChart`, so the CLI also installs `@nqchart/sparkline-chart`. Copying by hand: add `components/nqchart/charts/kpi-card.tsx` next to `sparkline-chart.tsx`.
+
+## Usage
+
+```tsx
+import { NQKpiCard } from "@/components/nqchart/charts/kpi-card";
+
+const usd = (v: number) =>
+  `$${v.toLocaleString("en-US", { notation: "compact", maximumFractionDigits: 1 })}`;
+
+<NQKpiCard
+  label="Revenue"
+  value={1_284_000}
+  previousValue={1_142_000}
+  formatValue={usd}
+  comparisonLabel="vs last month"
+  sparkline={[920, 980, 1010, 990, 1080, 1142, 1210, 1284]}
+/>
+```
+
+One card surface (border, `rounded-xl`, no shadow) holds the label, the value, a delta pill, and — when given — a target track and a sparkline. Lay several out with CSS grid, for example `grid-cols-[repeat(auto-fit,minmax(10rem,1fr))]`. The card works from about 160px wide; past ~18rem the value steps up a size (container query).
+
+### Delta and colour
+
+- The delta comes from `previousValue`: percent is `(value − previous) / |previous|`. Pass `delta` to set it yourself — a **fraction** for percent (`0.124` = 12.4%).
+- A percent change from `0` has no meaning, so the card shows the absolute change instead.
+- A percent change that rounds to `0.0%` is **flat**: a muted `→` pill.
+- `higherIsBetter` (default `true`) colours up green and down red. Set it to `false` for churn, cost or latency, where going down is good.
+- Colours are emerald / red at 700 (light) and 400 (dark) on a 10% tint. Both pass 4.5:1 contrast on the card. The arrow shows the direction, so colour never carries the meaning alone.
+
+### Target
+
+`target` draws a progress track: `value / target`, clamped to 0–100%, with the share and the formatted target underneath. Track and fill use the signature's `radius.mark` corners (`rounded-sm`).
+
+### States
+
+- `isLoading` shows a pulsing skeleton (no pulse under `prefers-reduced-motion`), with `aria-busy`.
+- `isEmpty`, or a non-finite `value`, shows an em dash and "No data". The card hides the delta and the sparkline.
+
+### Accessibility
+
+The card is a `role="group"` with an `aria-label` that sums it up, for example *"Churn: 2.1%, down 19.2% vs last month (favorable)"*. Screen readers skip the decorative sparkline. The target track is a labelled `progressbar`.
+
+## API Reference
+
+<ApiHeading>NQKpiCard</ApiHeading>
+
+<ApiTable>
+  <ApiRow name="label" type="string" required>
+    Metric name. Shown above the value and used in the accessible summary.
+  </ApiRow>
+  <ApiRow name="value" type="number" required>
+    Current value.
+  </ApiRow>
+  <ApiRow name="formatValue" type="(value: number) => string" default="grouped digits, ≤ 2 decimals">
+    Formats the value, the target, and absolute deltas.
+  </ApiRow>
+  <ApiRow name="previousValue" type="number">
+    Value for the comparison period. The card works out the delta from it.
+  </ApiRow>
+  <ApiRow name="delta" type="number">
+    Sets the delta directly and ignores `previousValue`. A fraction when `deltaFormat="percent"`.
+  </ApiRow>
+  <ApiRow name="deltaFormat" type='"percent" | "absolute"' default='"percent"'>
+    Shows the change as a percentage, or in the value's own units through `formatValue`.
+  </ApiRow>
+  <ApiRow name="higherIsBetter" type="boolean" default="true">
+    `false` flips the colours, so down is green. Flat is always muted.
+  </ApiRow>
+  <ApiRow name="comparisonLabel" type="string">
+    Muted text after the pill, such as `"vs last month"`.
+  </ApiRow>
+  <ApiRow name="target" type="number">
+    Draws a progress track toward the target. Ignored unless it is greater than 0.
+  </ApiRow>
+  <ApiRow name="sparkline" type="number[]">
+    Inline trend values, short for `data` + `dataKey`. Needs at least 2 points.
+  </ApiRow>
+  <ApiRow name="data" type="TData[]">
+    Rows for the embedded sparkline. Use with `dataKey`.
+  </ApiRow>
+  <ApiRow name="dataKey" type="keyof TData & string">
+    Numeric field of `data` that the sparkline plots.
+  </ApiRow>
+  <ApiRow name="color" type="string" default='"var(--chart-1)"'>
+    Colour of the sparkline stroke and the target fill. Theme variables follow dark mode.
+  </ApiRow>
+  <ApiRow name="isLoading" type="boolean" default="false">
+    Shows the skeleton in place of the content.
+  </ApiRow>
+  <ApiRow name="isEmpty" type="boolean" default="false">
+    Shows "No data" in place of the value, delta and sparkline.
+  </ApiRow>
+  <ApiRow name="className" type="string">
+    Classes on the card surface.
+  </ApiRow>
+</ApiTable>
+
+### Helpers
+
+The file also exports the pure logic, so you can reuse it in a table or a tooltip: `resolveKpiDelta`, `kpiDirection`, `kpiTone`, `formatKpiDelta`, `formatKpiNumber`, `kpiProgress`, and `kpiAriaLabel`.

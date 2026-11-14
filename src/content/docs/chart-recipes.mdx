@@ -26,6 +26,10 @@ This runs `shadcn add` and copies `lib/chart-recipes.ts` into your project. Char
 | `prepareTeamWorkloadMatrix(dates, rows)` | `NQHeatmapChart` | [Calendar chart](/docs/calendar-chart/static) → Team workload |
 | `normalizeGaugeValue(value, min?, max?)` | `NQRadialChart` `variant="semi"` | [Radial chart](/docs/radial-chart/static) → Gauge with target |
 | `prepareGaugeRows({ score, target?, … })` | `NQRadialChart` `nameKey="series"` | Same — `series` keys must match `chartConfig` |
+| `prepareVarianceRows(rows, { categoryKey, actualKey, planKey, higherIsBetter? })` | `NQComposedChart` signed bars | [Variance](#variance-actual-vs-plan) |
+| `prepareCohortCells(rows, { cohortKey, periodKey, valueKey, mode? })` | `NQHeatmapChart` | [Cohort retention](#cohort-retention) |
+| `prepareForecastSeries(rows, { dateKey, actualKey, forecastKey, lowerKey, upperKey })` | `NQComposedChart` line + `RangeArea` | [Forecast band](#forecast-band) |
+| `prepareDumbbellRows(rows, { categoryKey, fromKey, toKey })` | `NQComposedChart` `Connector` + dots | [Slope / dumbbell](#slope--dumbbell) |
 
 ## Import
 
@@ -41,10 +45,38 @@ import {
   prepareTeamWorkloadMatrix,
   normalizeGaugeValue,
   prepareGaugeRows,
+  prepareVarianceRows,
+  prepareCohortCells,
+  prepareForecastSeries,
+  prepareDumbbellRows,
 } from "@/lib/chart-recipes";
 ```
 
 Inside this repo, examples use `@/registry/lib/chart-recipes`.
+
+## Variance (actual vs plan)
+
+`prepareVarianceRows()` returns `actual`, `plan`, `delta`, `deltaPct` and `good` per category. `deltaPct` is `null` when the plan is 0 or missing; `good` is `null` when there is no delta. Set `higherIsBetter: false` for cost-like measures. Split `delta` into two keys (`favorable` / `unfavorable`) and stack them under one `stackId` so each bar keeps its slot and the colours follow `chartConfig`; a solid `<ReferenceLine y={0} />` marks the baseline and `showLabels` prints the signed Δ.
+
+<ComponentPreview title="variance" name="ex-variance-chart"  />
+
+## Cohort retention
+
+`prepareCohortCells()` turns long rows (`cohort`, `period`, `value`) into a triangle for `<Heatmap />`. In `percent` mode period 0 is 100; cohorts sort ascending and periods a cohort has not reached are left out, not zero. `xLabels` are `M0…Mn`. A category y-axis draws its first label at the bottom, so pass `[...yLabels].reverse()` to put the oldest cohort on top.
+
+<ComponentPreview title="cohort retention" name="ex-cohort-retention-chart"  />
+
+## Forecast band
+
+`prepareForecastSeries()` splits a series at the last row with an actual value: `actual` stops there, `forecast` starts on the same point so the lines join, and `lower` / `upper` (plus `band: [lower, upper]`) pinch to the actual at the join. Draw `<Line dataKey="actual" />`, `<Line dataKey="forecast" variant="dashed" />`, `<RangeArea lowKey="lower" highKey="upper" />` and a `<ReferenceLine x="…" label="Today" />`.
+
+<ComponentPreview title="forecast" name="ex-forecast-chart"  />
+
+## Slope / dumbbell
+
+`prepareDumbbellRows()` returns `from`, `to`, `delta` and `direction` per category, sorted by `delta` descending (ties keep input order). On `<NQComposedChart />` pair `<Connector fromKey="from" toKey="to" />` with two `<Line variant="dots" />` series — round markers at the signature point size, no line. Composed charts are category-x, so the dumbbell is vertical.
+
+<ComponentPreview title="dumbbell" name="ex-dumbbell-chart"  />
 
 ## When not to add a new chart file
 

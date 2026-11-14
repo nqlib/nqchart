@@ -34,8 +34,11 @@ const CHART_DOCS = new Set([
   "/docs/scatter-chart/static",
   "/docs/treemap-chart/static",
   "/docs/funnel-chart/static",
+  "/docs/sankey-chart/static",
   "/docs/waterfall-chart/static",
   "/docs/sparkline-chart/static",
+  "/docs/kpi-card/static",
+  "/docs/small-multiples/static",
   "/docs/chart-recipes",
 ]);
 

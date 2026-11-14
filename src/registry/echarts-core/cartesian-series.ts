@@ -54,11 +54,11 @@ export const LINE_MARKER = {
 /**
  * Stroke dash from `<Line variant>` / `<Area variant>`.
  *
- * `"points"` is markers-only (composed box-plot medians), not a dash.
+ * `"points"` / `"dots"` are markers-only (composed box-plot medians, dumbbell ends), not a dash.
  * Area's `dashed-stroke` contains `"dashed"` so it stays dashed.
  */
 export function lineStyleType(variant?: string): "solid" | "dashed" | "dotted" {
-  if (!variant || variant === "points" || variant === "solid") return "solid";
+  if (!variant || variant === "points" || variant === "dots" || variant === "solid") return "solid";
   if (variant.includes("dashed")) return "dashed";
   if (variant.includes("dotted")) return "dotted";
   return "solid";

@@ -356,3 +356,30 @@ describe("reference marks", () => {
     expect(resolveColor.mock.calls.map((call) => call[0])).not.toContain("hi");
   });
 });
+
+describe("RangeArea below zero", () => {
+  it("stacks the span on a negative low (stackStrategy all)", async () => {
+    const { compileComposedOption } = await import("../compile-composed");
+    const { makeCtx } = await import("./make-ctx");
+    const option = compileComposedOption(
+      makeCtx({
+        data: [
+          { x: "a", v: -5, lo: -8, hi: -2 },
+          { x: "b", v: -3, lo: -9, hi: 4 },
+        ],
+        parts: [
+          { type: "line", id: "l", dataKey: "v" },
+          { type: "rangeArea", id: "r", lowKey: "lo", highKey: "hi" },
+        ],
+        xDataKey: "x",
+      }),
+    );
+    const range = (option.series as Array<{ id?: string; stackStrategy?: string; data?: unknown[] }>).filter((s) =>
+      String(s.id).includes("-range-"),
+    );
+    expect(range).toHaveLength(2);
+    for (const s of range) expect(s.stackStrategy).toBe("all");
+    expect(range[0]?.data).toEqual([-8, -9]);
+    expect(range[1]?.data).toEqual([6, 13]);
+  });
+});

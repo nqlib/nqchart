@@ -8,6 +8,7 @@ import { BarPreview } from "@/components/docs/svg-previews/bar-preview";
 import { ScatterPreview } from "@/components/docs/svg-previews/scatter-preview";
 import { TreemapPreview } from "@/components/docs/svg-previews/treemap-preview";
 import { FunnelPreview } from "@/components/docs/svg-previews/funnel-preview";
+import { SankeyPreview } from "@/components/docs/svg-previews/sankey-preview";
 import { WaterfallPreview } from "@/components/docs/svg-previews/waterfall-preview";
 import { SparklinePreview } from "@/components/docs/svg-previews/sparkline-preview";
 import { HeatmapPreview } from "@/components/docs/svg-previews/heatmap-preview";
@@ -94,6 +95,12 @@ const CHARTS: Chart[] = [
     description: "Track conversion drop-off across stages.",
     Component: FunnelPreview,
     url: "/docs/funnel-chart",
+  },
+  {
+    name: "Sankey Chart",
+    description: "Follow flows from source to outcome, sized by volume.",
+    Component: SankeyPreview,
+    url: "/docs/sankey-chart",
   },
   {
     name: "Waterfall Chart",

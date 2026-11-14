@@ -162,8 +162,8 @@ The root container. It owns hierarchical data (`TreemapNode[]`), shared tile sel
   <ApiRow name="aspectRatio" type="number" default="4/3">
     Treemap rectangle aspect ratio mapped to ECharts treemap options.
   </ApiRow>
-  <ApiRow name="strokeWidth" type="number" default="2">
-    Pixel stroke separating adjacent tiles (`stroke` stays tied to `--background`).
+  <ApiRow name="gap" type="--chart-gap" default="2px">
+    Space between adjacent tiles at every level — real layout space, not a painted border. Theme it with the `--chart-gap` CSS variable; tile corners follow `--radius`.
   </ApiRow>
   <ApiRow name="backgroundVariant" type="BackgroundVariant">
     Draws `<ChartBackground />` behind the treemap rectangles (same pattern as bar and scatter charts).

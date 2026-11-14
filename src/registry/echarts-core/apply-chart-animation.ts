@@ -1,4 +1,5 @@
 import type { EChartsOption } from "echarts";
+import { focusStateAnimation } from "./emphasis-presets";
 import { headlessThemeOf } from "./headless-theme";
 import {
   CHART_ANIMATION,
@@ -25,23 +26,49 @@ const ROOT_ANIMATION = {
   animationThreshold: CHART_ANIMATION.root.threshold,
 } as const;
 
-function withInstantFocusUpdate(series: SeriesLike): SeriesLike {
-  const emphasis = series.emphasis as { focus?: string; disabled?: boolean } | undefined;
-  if (
+type EmphasisLike = { focus?: string; disabled?: boolean } | undefined;
+
+function hasFocusEmphasis(target: Record<string, unknown>): boolean {
+  const emphasis = target.emphasis as EmphasisLike;
+  return Boolean(
     emphasis?.disabled ||
-    series.blur ||
-    emphasis?.focus === "self" ||
-    emphasis?.focus === "series" ||
-    emphasis?.focus === "adjacency"
-  ) {
-    return {
-      ...series,
-      animationDurationUpdate: 0,
-      animationEasingUpdate: CHART_EASING.update,
-    };
-  }
-  return series;
+      target.blur ||
+      emphasis?.focus === "self" ||
+      emphasis?.focus === "series" ||
+      emphasis?.focus === "adjacency",
+  );
 }
+
+/** Per-item focus (radar polygons, scatter rows) lives on data objects, not the series. */
+function hasItemFocus(series: SeriesLike): boolean {
+  if (!Array.isArray(series.data)) return false;
+  return series.data.some(
+    (d) =>
+      d != null &&
+      typeof d === "object" &&
+      !Array.isArray(d) &&
+      hasFocusEmphasis(d as Record<string, unknown>),
+  );
+}
+
+/**
+ * One focus timing for every family: the {@link FOCUS} state fade and no geometry
+ * tween on hover (`animationDurationUpdate: 0`). Catches series-level AND per-item
+ * focus (radar / scatter). A preset's explicit `stateAnimation` wins — that is how a
+ * family falls back to 0 ms (`FOCUS_INSTANT_FAMILIES`, or a compiler literal).
+ */
+export function withFocusTiming(series: SeriesLike): SeriesLike {
+  if (!hasFocusEmphasis(series) && !hasItemFocus(series)) return series;
+  return {
+    ...series,
+    stateAnimation: (series.stateAnimation as object | undefined) ?? focusStateAnimation(),
+    animationDurationUpdate: 0,
+    animationEasingUpdate: CHART_EASING.update,
+  };
+}
+
+/** @deprecated Renamed to {@link withFocusTiming}. */
+export const withInstantFocusUpdate = withFocusTiming;
 
 function seriesIntroAnimation(series: SeriesLike, seriesIndex: number): SeriesLike {
   if (series.animation === false) return series;
@@ -217,7 +244,7 @@ export function applyChartAnimationToOption(
   }
 
   const processedSeries = seriesList.map((series, index) =>
-    withInstantFocusUpdate(seriesIntroAnimation(series, index)),
+    withFocusTiming(seriesIntroAnimation(series, index)),
   ) as EChartsOption["series"];
 
   const processedList = Array.isArray(processedSeries)

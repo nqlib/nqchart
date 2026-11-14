@@ -121,9 +121,55 @@ export function resolveCartesianGrid(
     // so keep them tight — the plot fills the box and the axes sit near the edges
     // instead of floating in a wide margin.
     left: compact ? (horizontal ? 56 : 8) : horizontal && hasBuiltInBrush ? 72 : 12,
-    right: compact ? 8 : 12,
+    // Horizontal bars put the value axis along the bottom; its last tick
+    // label is centred on the plot's right edge and was clipped ("10(").
+    right: horizontal ? 20 : compact ? 8 : 12,
     top: 14,
     bottom,
     containLabel: true,
+  };
+}
+
+/** 11px value label + ECharts' 5px label gap + air, above a mark at the axis max. */
+export const VALUE_LABEL_TOP_ROOM = 28;
+/** ECharts' default `label.distance` (5px) + air between the label and the canvas edge. */
+const VALUE_LABEL_SIDE_GAP = 9;
+
+/** Canvas width of a value label. Biased high: a label that clips is worse than 4px of air. */
+export function estimateValueLabelWidth(text: string, fontSize: number): number {
+  return Math.ceil(text.length * fontSize * 0.64);
+}
+
+export type ValueLabelRoomOptions = {
+  /** Category axis on y: labels sit right of each row. */
+  horizontal?: boolean;
+  /** Line / area points sit on the plot's left and right edges (`boundaryGap: false`). */
+  pointsOnEdge?: boolean;
+  fontSize?: number;
+};
+
+/**
+ * Reserve canvas room for value labels drawn outside their mark.
+ *
+ * ECharts draws a `top` / `right` label outside the grid rect, and `containLabel`
+ * only measures axis labels. A mark that reaches the axis max (a nice tick such
+ * as 60) then pushes its label past the canvas edge ("+3" cut in half). Raise
+ * the far edge of the value axis so the label always fits.
+ */
+export function withValueLabelRoom<T extends { top: number; right: number }>(
+  grid: T,
+  labels: readonly string[],
+  { horizontal = false, pointsOnEdge = false, fontSize = 11 }: ValueLabelRoomOptions = {},
+): T {
+  if (labels.length === 0) return grid;
+  const widest = Math.max(...labels.map((text) => estimateValueLabelWidth(text, fontSize)));
+  if (horizontal) {
+    return { ...grid, right: Math.max(grid.right, widest + VALUE_LABEL_SIDE_GAP) };
+  }
+  return {
+    ...grid,
+    top: Math.max(grid.top, VALUE_LABEL_TOP_ROOM),
+    // A label centred on the last point spills half its width past the plot.
+    ...(pointsOnEdge ? { right: Math.max(grid.right, Math.ceil(widest / 2) + 4) } : {}),
   };
 }
