@@ -3,7 +3,12 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
-## Unreleased
+## 0.7.0 — 2026-11-14
+
+### Breaking
+
+- **Donut slice corners are smaller.** A slice corner is now at most 25% of the ring depth and 30% of the slice arc, so thin rings no longer draw pill-shaped slices. `cornerRadius` on the `Pie` is now the largest corner a slice can get, not the corner every slice gets. `cornerRadius={0}` still gives square wedges.
+- **A stacked chart on a log axis draws side by side.** A log axis cannot show a sum, so `stackId` and percent stacking are ignored on `scale="log"`. Use a linear axis to keep the stack.
 
 ### Pie and donut
 
