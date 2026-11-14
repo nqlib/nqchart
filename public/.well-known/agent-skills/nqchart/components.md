@@ -193,7 +193,7 @@ Import from `@nqlib/nqchart/composed-chart`. See `ex-mark-click-budget-chart` fo
 
 **Pie child:** `dataKey`, `nameKey`, `innerRadius` (donut), `outerRadius` (px or `"NN%"`), `showLabels`, `sort` (`"descending" | "ascending" | "none"`)
 
-**Signature look (every pie):** even 2px seam between slices (`gap`, from `--chart-gap`) and 11px rounded corners (`cornerRadius`); labels sit outside on two-leg leader lines that never overlap (slices under 3° skip theirs). `gap={0} cornerRadius={0}` restores touching wedges.
+**Signature look (every pie):** even 2px seam between slices (`gap`, from `--chart-gap`) and 11px rounded corners (`cornerRadius`), capped at 25% of the ring depth and 30% of the slice arc so a thin donut never rounds into pills; labels sit outside on two-leg leader lines that never overlap (slices under 3° skip theirs). `gap={0} cornerRadius={0}` restores touching wedges.
 
 **Rose:** `<Pie rose="radius" />` — slice angle and length both follow the value (`rose="area"`: equal angles, length only). Largest first, clockwise from 12 o'clock, fitted to the card. Labels off by default. Not the same as the radial chart's `radialLayout="rose"` (equal-angle polar petals).
 

@@ -17,6 +17,8 @@
  * Angles run clockwise from 12 o'clock, in radians.
  */
 
+import { BAR_RADIUS_LENGTH_RATIO, chartCornerCap } from "./bar-radius";
+
 export type Pt = { x: number; y: number };
 
 export type SectorSpec = {
@@ -293,6 +295,10 @@ export function buildPieSlices(values: number[], opts: PieLayoutOptions): PieSli
   );
   const sliceAngle = (i: number) => angles[i]!;
 
+  // The bar corner rule, with the ring depth as the thickness: a thin donut
+  // ring gets small corners, so its slices never round into pills.
+  const ringCap = chartCornerCap(depth, Math.max(0, opts.cornerRadius));
+
   const slices: PieSlice[] = [];
   let a = 0;
   for (let i = 0; i < n; i++) {
@@ -300,6 +306,12 @@ export function buildPieSlices(values: number[], opts: PieLayoutOptions): PieSli
     const end = a + sliceAngle(i);
     a = end;
     const R = radiusOf(i);
+    // Length guard per slice: the rim arc and the slice's own depth (rose).
+    const arc = Math.max(0, (end - start) * R - opts.gap);
+    const cornerRadius = Math.min(
+      ringCap,
+      Math.min(arc, R - rIn) * BAR_RADIUS_LENGTH_RATIO,
+    );
     const shape = sectorPath({
       cx: opts.cx,
       cy: opts.cy,
@@ -308,9 +320,9 @@ export function buildPieSlices(values: number[], opts: PieLayoutOptions): PieSli
       innerRadius: rIn,
       outerRadius: R,
       gap: opts.gap,
-      cornerRadius: opts.cornerRadius,
+      cornerRadius,
       // Hub corners scale with the hub so a small hole never gets hooked corners.
-      innerCornerRadius: Math.min(opts.cornerRadius, rIn * HUB_CORNER_FRACTION),
+      innerCornerRadius: Math.min(cornerRadius, rIn * HUB_CORNER_FRACTION),
     });
     const mid = (start + end) / 2;
     const dir = radial(mid);
