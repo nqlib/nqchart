@@ -60,6 +60,7 @@ const { Chart: AreaChartInner } = createCartesianChart<
   loadingVariant: "area",
   defaultLoadingPoints: 12,
   echartsModules: AREA_ECHARTS_MODULES,
+  supportsTimeAxis: true,
   defaults: { stackType: "default", isLoading: false, showBrush: true },
   getRootFields: ({ stackType }, xKey) => ({
     xDataKey: xKey,

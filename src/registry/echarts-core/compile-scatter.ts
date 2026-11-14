@@ -1,31 +1,32 @@
 import type { EChartsOption } from "echarts";
 import { applyChartUiToOption } from "./apply-chart-ui";
+import { applyAxisPartToOption, isLogScale, isTimeScale } from "./cartesian-axes";
+import { timeValue } from "./cartesian-series";
 import { gridBottomWithZoom } from "./category-data-zoom";
 import { resolveCartesianGrid } from "./chart-grid";
 import { focusTiming, itemFocus, isHoverFocusOn } from "./emphasis-presets";
+import { NQ_TOOLTIP_VALUE } from "./echarts-tooltip";
 import { NQ_DATUM, NQ_SERIES_KEY } from "./nq-mark-event";
-import type { ChartPart, CompileContext, ScatterSeriesPart } from "./parts/types";
-
-function getAxisKey(ctx: CompileContext, axis: "xAxis" | "yAxis", fallback: string) {
-  const part = ctx.parts.find((p): p is Extract<ChartPart, { type: typeof axis }> => p.type === axis);
-  return part?.dataKey ?? fallback;
-}
+import type { CompileContext, ScatterDatum, ScatterSeriesPart, XAxisPart, YAxisPart } from "./parts/types";
 
 /** Object-shaped scatter rows set `hasItemOption`; Symbol.js reads blur/focus per item, not series. */
 function scatterDataPoint(opts: {
   label: string;
   seriesKey: string;
-  datum: Record<string, number>;
+  datum: ScatterDatum;
   x: number;
   y: number;
   color: string;
   symbolSize: number;
   glowing: boolean;
   hoverFocus: boolean;
+  /** Tooltip text when the raw value is not readable (`[epochMs, y]`). */
+  tooltipValue?: string;
 }) {
   const base = {
     name: opts.label,
     value: [opts.x, opts.y] as [number, number],
+    ...(opts.tooltipValue != null ? { [NQ_TOOLTIP_VALUE]: opts.tooltipValue } : {}),
     symbolSize: opts.symbolSize,
     itemStyle: { color: opts.color },
     [NQ_SERIES_KEY]: opts.seriesKey,
@@ -52,8 +53,24 @@ function scatterDataPoint(opts: {
 export function compileScatterOption(ctx: CompileContext): EChartsOption {
   const scatters = ctx.parts.filter((p): p is ScatterSeriesPart => p.type === "scatter");
   const hasGrid = ctx.parts.some((p) => p.type === "grid");
-  const xKey = getAxisKey(ctx, "xAxis", "x");
-  const yKey = getAxisKey(ctx, "yAxis", "y");
+  const xAxisPart = ctx.parts.find((p): p is XAxisPart => p.type === "xAxis");
+  const yAxisPart = ctx.parts.find((p): p is YAxisPart => p.type === "yAxis");
+  const xKey = xAxisPart?.dataKey ?? "x";
+  const yKey = yAxisPart?.dataKey ?? "y";
+  const timeX = isTimeScale(xAxisPart);
+  const logX = !timeX && isLogScale(xAxisPart);
+  const logY = isLogScale(yAxisPart);
+
+  /** Plot position of one point, or `null` when the scale has no place for it. */
+  const position = (p: ScatterDatum): { x: number; y: number; raw: unknown } | null => {
+    const rawX: unknown = p[xKey] ?? p.x;
+    const x = timeX ? timeValue(rawX) : Number(rawX ?? 0);
+    const y = Number(p[yKey] ?? p.y ?? 0);
+    if (x == null || !Number.isFinite(x) || !Number.isFinite(y)) return null;
+    // A log axis has no place for 0 or a negative value.
+    if ((logX && x <= 0) || (logY && y <= 0)) return null;
+    return { x, y, raw: rawX };
+  };
 
   // One ECharts series for all `<Scatter />` parts. Focus/blur live on each data row
   // because SymbolDraw ignores series-level emphasis when `hasItemOption` is true.
@@ -64,19 +81,24 @@ export function compileScatterOption(ctx: CompileContext): EChartsOption {
     const points = scatter.points ?? [];
     const glowing = scatter.variant?.includes("glow") ?? false;
     const symbolSize = scatter.variant === "bubble" ? 14 : 8;
-    return points.map((p) =>
-      scatterDataPoint({
-        label,
-        seriesKey: scatter.dataKey,
-        datum: p,
-        x: Number(p[xKey] ?? p.x ?? 0),
-        y: Number(p[yKey] ?? p.y ?? 0),
-        color,
-        symbolSize,
-        glowing,
-        hoverFocus: isHoverFocusOn(ctx),
-      }),
-    );
+    return points.flatMap((p) => {
+      const at = position(p);
+      if (!at) return [];
+      return [
+        scatterDataPoint({
+          label,
+          seriesKey: scatter.dataKey,
+          datum: p,
+          x: at.x,
+          y: at.y,
+          color,
+          symbolSize,
+          glowing,
+          hoverFocus: isHoverFocusOn(ctx),
+          ...(timeX ? { tooltipValue: `${String(at.raw)} · ${at.y.toLocaleString()}` } : {}),
+        }),
+      ];
+    });
   });
 
   const series =
@@ -103,8 +125,14 @@ export function compileScatterOption(ctx: CompileContext): EChartsOption {
     // Same `<Grid />` contract as bar/area/line/composed: horizontal value guides only.
     // Value×value plots used to enable both axes, which read as a graph-paper lattice
     // and looked like a decorative Background on the catalog page.
-    xAxis: { type: "value", splitLine: { show: false } },
-    yAxis: { type: "value", splitLine: { show: hasGrid } },
+    xAxis: applyAxisPartToOption({ type: "value", splitLine: { show: false } }, xAxisPart, "value", {
+      time: true,
+    }) as EChartsOption["xAxis"],
+    yAxis: applyAxisPartToOption(
+      { type: "value", splitLine: { show: hasGrid } },
+      yAxisPart,
+      "value",
+    ) as EChartsOption["yAxis"],
     series,
   };
 

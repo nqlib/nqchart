@@ -13,9 +13,18 @@ import {
 import {
   applyAxisPartToOption,
   buildValueYAxes,
+  isLogScale,
   resolveYAxisIndex,
+  seriesYAxisPart,
 } from "./cartesian-axes";
-import { categoryValues, getXKey, seriesValue, LINE_MARKER, lineStyleType } from "./cartesian-series";
+import {
+  categoryValues,
+  getXKey,
+  logSafeValue,
+  seriesValue,
+  LINE_MARKER,
+  lineStyleType,
+} from "./cartesian-series";
 import { resolveCartesianGrid, withValueLabelRoom } from "./chart-grid";
 import { resolveChartSignature } from "./chart-signature";
 import { buildCategoryDataZoom, gridBottomWithZoom } from "./category-data-zoom";
@@ -59,15 +68,18 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
     // Stack seams are flat: one rounded outer end per stack (see barItemBorderRadius).
     const join = 0;
     const color = ctx.resolveColor(bar.dataKey, 0);
-    const roles = bar.stackId ? stackRoles.get(bar.dataKey) : undefined;
+    // A log axis cannot show a sum of segments: bars on it sit side by side.
+    const log = isLogScale(seriesYAxisPart(bar.yAxisId, yAxes));
+    const stack = log ? undefined : bar.stackId;
+    const roles = stack ? stackRoles.get(bar.dataKey) : undefined;
     return {
       type: "bar" as const,
       id: bar.dataKey,
       name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
       yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
-      stack: bar.stackId,
+      stack,
       data: ctx.data.map((row, dataIndex) => {
-        const value = seriesValue(row[bar.dataKey]);
+        const value = logSafeValue(seriesValue(row[bar.dataKey]), log);
         const role = roles?.[dataIndex];
         return {
           value,
@@ -97,7 +109,9 @@ export function compileComposedOption(ctx: CompileContext): EChartsOption {
       id: line.dataKey,
       name: ctx.config[line.dataKey]?.label?.toString() ?? line.dataKey,
       yAxisIndex: resolveYAxisIndex(line.yAxisId, yAxes),
-      data: ctx.data.map((row) => seriesValue(row[line.dataKey])),
+      data: ctx.data.map((row) =>
+        logSafeValue(seriesValue(row[line.dataKey]), isLogScale(seriesYAxisPart(line.yAxisId, yAxes))),
+      ),
       smooth: !markersOnly && line.curveType === "monotone",
       showLine: !markersOnly,
       triggerLineEvent: true,

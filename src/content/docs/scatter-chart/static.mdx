@@ -180,6 +180,12 @@ Two metrics per point on `<NQScatterChart />` — see `ex-bubble-chart`.
 
 <ComponentPreview className="mb-0" title="loading" name="ex-loading-state-bubble-chart"  />
 
+### Log axis
+
+Set `scale="log"` on `<XAxis />` or `<YAxis />` when the values span many orders of magnitude. Each power of ten then gets the same width. A point with a value of 0 or less has no place on a log axis, and the chart does not draw it. `domain`, `reversed`, and `tickFormatter` work on both axes. Set `scale="time"` on `<XAxis />` to place points by date.
+
+<ComponentPreview title='scale="log"' name="ex-scatter-log-axis"  />
+
 ### Heatmap
 
 For categorical row × column matrices, use the dedicated [`NQHeatmapChart`](/docs/heatmap-chart/static) primitive with `prepareHeatmapCells()` instead of scatter cell hacks.
@@ -234,7 +240,7 @@ A single scatter series. Each `<Scatter />` is self-contained with its own point
     The series key. Must exist in the chart `config`.
   </ApiRow>
   <ApiRow name="data" type="TPoint[]" required>
-    Array of point objects. Each point should include the keys referenced by `<XAxis dataKey="…" />` and `<YAxis dataKey="…" />` — typically `{ x, y }`.
+    Array of point objects. Each point should include the keys referenced by `<XAxis dataKey="…" />` and `<YAxis dataKey="…" />` — typically `{ x, y }`. On a `scale="time"` x axis, the x value can be a `Date`, an ISO string, or epoch milliseconds.
   </ApiRow>
   <ApiRow name="isClickable" type="boolean" default="false">
     Lets this series be selected by clicking it. When any series is selected, unselected series become semi-transparent.
@@ -247,6 +253,31 @@ A single scatter series. Each `<Scatter />` is self-contained with its own point
   </ApiRow>
   <ApiRow name="scatterProps" type="ComponentProps<typeof Scatter>">
     Escape hatch for raw ECharts series options compiled by NQChart.
+  </ApiRow>
+</ApiTable>
+
+<ApiHeading>XAxis / YAxis</ApiHeading>
+
+The value axes. Both axes take the same props, except `scale="time"`, which is for `<XAxis />` only.
+
+<ApiTable>
+  <ApiRow name="dataKey" type="string" default='"x" / "y"'>
+    The point key that this axis reads.
+  </ApiRow>
+  <ApiRow name="scale" type='"linear" | "log" | "time"' default='"linear"'>
+    `"log"` gives each power of ten the same width. A point at 0 or less is not drawn. `"time"` (x only) places points by date.
+  </ApiRow>
+  <ApiRow name="domain" type="[number, number]">
+    A fixed `[min, max]` for the axis.
+  </ApiRow>
+  <ApiRow name="reversed" type="boolean" default="false">
+    Draws the axis from the high value to the low value.
+  </ApiRow>
+  <ApiRow name="unit" type="string">
+    The axis name, drawn at the end of the axis.
+  </ApiRow>
+  <ApiRow name="tickFormatter" type="(value: unknown, index?: number) => string">
+    Formats each tick label.
   </ApiRow>
 </ApiTable>
 

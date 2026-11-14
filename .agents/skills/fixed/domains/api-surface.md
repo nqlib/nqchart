@@ -19,6 +19,7 @@ Public props types and `dist/types/` must admit what the factory already wires.
 
 - [standalone props drop inherited](../fixes/api-surface-standalone-props-drop-inherited.md)
 - [Line variant dashed](../fixes/api-surface-line-variant-dashed.md)
+- [axis scale time / log](../fixes/api-surface-axis-scale-time-log.md) — time axis in 1970; a 0 collapses a log axis; scatter ignores `scale`
 
 ## When investigating
 
