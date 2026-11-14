@@ -3,6 +3,12 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## Unreleased
+
+### Pie and donut
+
+- **Slice corners follow the bar corner rule.** A slice corner is now at most 25% of the ring depth and 30% of the slice arc. Before, a thin donut ring used the full `--radius-xl` corner, and each slice became a pill. A full pie keeps its corners.
+
 ## 0.6.0 — 2026-11-14
 
 ### Breaking
