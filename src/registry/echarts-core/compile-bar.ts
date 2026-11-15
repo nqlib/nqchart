@@ -22,13 +22,15 @@ import { buildMonospaceCustomSeries } from "./compile-monospace-bar";
 import {
   hoverTraceSeriesId,
 } from "./hover-trace-bar";
-import { categoryValues, getXKey, seriesValue } from "./cartesian-series";
+import { categoryValues, getXKey, logSafeValue, seriesValue } from "./cartesian-series";
 import { normalizeStackPercent } from "./stack-percent";
 import type { BarSeriesPart, CompileContext, XAxisPart, YAxisPart } from "./parts/types";
 import {
   applyAxisPartToOption,
   buildValueYAxes,
+  isLogScale,
   resolveYAxisIndex,
+  seriesYAxisPart,
 } from "./cartesian-axes";
 import { barLabelPosition, seriesLabelOption, valueLabelTexts } from "./series-labels";
 
@@ -45,10 +47,11 @@ function buildBarDataPoints(
   bar: BarSeriesPart,
   ctx: CompileContext,
   rows: Record<string, unknown>[],
-  stack: string | undefined,
+  effectiveStack: string | undefined,
   horizontal: boolean,
   stackRoles: Map<string, StackCornerRole[]>,
   isHistogram: boolean,
+  log: boolean,
 ) {
   const r = isHistogram
     ? (bar.radius != null ? bar.radius : 0)
@@ -62,11 +65,10 @@ function buildBarDataPoints(
   const strokeColor = ctx.resolveColor(bar.dataKey, 0);
   const fillColor = resolveAreaFillColor(ctx.config, bar.dataKey, ctx.resolveColor, 0, ctx.chartId);
   const color = barVariantFill(bar.variant, strokeColor, horizontal, fillColor);
-  const effectiveStack = bar.stackId ?? stack;
   const roles = effectiveStack ? stackRoles.get(bar.dataKey) : undefined;
 
   return rows.map((row, dataIndex) => {
-    const value = seriesValue(row[bar.dataKey]);
+    const value = logSafeValue(seriesValue(row[bar.dataKey]), log);
     const role = roles?.[dataIndex];
     const borderRadius = barItemBorderRadius(bar.variant, role, r, horizontal, value, join);
     const gapStyle = role != null ? stackSegmentGapStyle(role, seam, gapColor, horizontal, value) : {};
@@ -94,13 +96,13 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
   const hasGrid = ctx.parts.some((p) => p.type === "grid");
   const hasBrush = ctx.parts.some((p) => p.type === "brush");
   const horizontal = ctx.cartesian?.layout === "horizontal";
-  const stack =
-    ctx.cartesian?.stackType === "stacked" || ctx.cartesian?.stackType === "percent"
-      ? "nq-stack"
-      : undefined;
+  // A log axis cannot show a sum of segments: bars on it sit side by side.
+  const stackType = isLogScale(yAxes[0]) ? undefined : ctx.cartesian?.stackType;
+  const stack = stackType === "stacked" || stackType === "percent" ? "nq-stack" : undefined;
   const barKeys = bars.map((bar) => bar.dataKey);
-  const rows =
-    ctx.cartesian?.stackType === "percent" ? normalizeStackPercent(ctx.data, barKeys) : ctx.data;
+  const rows = stackType === "percent" ? normalizeStackPercent(ctx.data, barKeys) : ctx.data;
+  const isLogBar = (bar: BarSeriesPart) => isLogScale(seriesYAxisPart(bar.yAxisId, yAxes));
+  const barStack = (bar: BarSeriesPart) => (isLogBar(bar) ? undefined : (bar.stackId ?? stack));
 
   const hasMonospace = bars.some((bar) => bar.variant === "monospace");
   const hasHoverTrace = bars.some((bar) => bar.variant === "hover-trace");
@@ -130,7 +132,7 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
   const valueAxes = buildValueYAxes({
     yAxes,
     hasGrid,
-    percent: ctx.cartesian?.stackType === "percent",
+    percent: stackType === "percent",
   });
   const valueAxis = valueAxes[0] ?? {
     type: "value" as const,
@@ -158,8 +160,8 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
         name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
         triggerEvent: true,
         yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
-        data: buildBarDataPoints(bar, ctx, rows, stack, horizontal, stackRoles, isHistogram) as BarSeriesOption["data"],
-        stack: bar.stackId ?? stack,
+        data: buildBarDataPoints(bar, ctx, rows, barStack(bar), horizontal, stackRoles, isHistogram, isLogBar(bar)) as BarSeriesOption["data"],
+        stack: barStack(bar),
         label: seriesLabelOption(bar.showLabels, bar.labelFormatter, ctx.chartId),
         ...columnFocus,
         ...histogramLayout,
@@ -172,8 +174,8 @@ export function compileBarOption(ctx: CompileContext): EChartsOption {
       id: bar.dataKey,
       name: ctx.config[bar.dataKey]?.label?.toString() ?? bar.dataKey,
       yAxisIndex: resolveYAxisIndex(bar.yAxisId, yAxes),
-      data: buildBarDataPoints(bar, ctx, rows, stack, horizontal, stackRoles, isHistogram) as BarSeriesOption["data"],
-      stack: bar.stackId ?? stack,
+      data: buildBarDataPoints(bar, ctx, rows, barStack(bar), horizontal, stackRoles, isHistogram, isLogBar(bar)) as BarSeriesOption["data"],
+      stack: barStack(bar),
       label: seriesLabelOption(bar.showLabels, bar.labelFormatter, ctx.chartId),
       ...columnFocus,
       ...histogramLayout,

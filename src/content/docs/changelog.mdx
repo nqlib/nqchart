@@ -3,6 +3,25 @@ title: Changelog
 description: Release notes and notable changes to NQChart
 ---
 
+## 0.7.0 — 2026-11-14
+
+### Breaking
+
+- **Donut slice corners are smaller.** A slice corner is now at most 25% of the ring depth and 30% of the slice arc, so thin rings no longer draw pill-shaped slices. `cornerRadius` on the `Pie` is now the largest corner a slice can get, not the corner every slice gets. `cornerRadius={0}` still gives square wedges.
+- **A stacked chart on a log axis draws side by side.** A log axis cannot show a sum, so `stackId` and percent stacking are ignored on `scale="log"`. Use a linear axis to keep the stack.
+
+### Pie and donut
+
+- **Slice corners follow the bar corner rule.** A slice corner is now at most 25% of the ring depth and 30% of the slice arc. Before, a thin donut ring used the full `--radius-xl` corner, and each slice became a pill. A full pie keeps its corners.
+
+### Axis scales
+
+- **Fix: `scale="time"` put every point in 1970.** On a line or area chart, the points are now placed at their dates. The x value can be a `Date`, an ISO string, or epoch milliseconds. A date-only string is local midnight. The brush is off on a time axis.
+- **Fix: one 0 value broke a log axis.** Bars `0, 10, 1000` on `scale="log"` gave an axis from 1 to 10, and the tall bar went off the plot. A value of 0 or less is now a gap.
+- **A log axis does not stack.** A stacked or percent bar or area chart on a log axis draws its series side by side, because a log axis cannot show a sum.
+- **Scatter axes.** `NQScatterChart` now uses `scale`, `domain`, `reversed`, `unit`, and `tickFormatter` on both axes. Before, both axes were always linear. `XAxis` gets the `domain` prop, and `Scatter` `data` accepts dates for a time x axis.
+- **`scale="time"` on a bar or composed chart keeps the category axis.** Before, the axis type changed and the bars lost their places.
+
 ## 0.6.0 — 2026-11-14
 
 ### Breaking

@@ -63,3 +63,54 @@ export function lineStyleType(variant?: string): "solid" | "dashed" | "dotted" {
   if (variant.includes("dotted")) return "dotted";
   return "solid";
 }
+
+/**
+ * Epoch ms for a time-axis x value: a `Date`, a number (epoch ms), or a string.
+ * A date-only string (`2026-03-01`) is local midnight, not UTC midnight: ECharts
+ * labels a time axis in local time, so UTC midnight reads as the previous day
+ * west of Greenwich. `null` when the value does not parse.
+ */
+export function timeValue(raw: unknown): number | null {
+  if (raw instanceof Date) {
+    const t = raw.getTime();
+    return Number.isFinite(t) ? t : null;
+  }
+  if (typeof raw === "number") return Number.isFinite(raw) ? raw : null;
+  if (typeof raw !== "string" || raw.trim() === "") return null;
+  const day = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw.trim());
+  if (day) return new Date(Number(day[1]), Number(day[2]) - 1, Number(day[3])).getTime();
+  const t = Date.parse(raw);
+  return Number.isFinite(t) ? t : null;
+}
+
+/**
+ * On a log axis, 0 and negative values have no position. They become a gap so
+ * they do not collapse the axis extent (one 0 turned a 1–1000 axis into 1–10).
+ */
+export function logSafeValue(value: number | null, log: boolean): number | null {
+  return log && value != null && value <= 0 ? null : value;
+}
+
+/** A point on a time x axis. `name` keeps the row's own x text for the tooltip heading. */
+export type TimePoint = { name: string; value: [number, number | null] };
+
+/**
+ * Series data for a time x axis: one `{ name, value: [t, v] }` per row.
+ * A row whose x does not parse stays in place as `null`, so `dataIndex` still
+ * matches `ctx.data` for clicks and selection.
+ */
+export function timeSeriesData(
+  rows: readonly Record<string, unknown>[],
+  xKey: string,
+  valueKey: string,
+  log = false,
+): Array<TimePoint | null> {
+  return rows.map((row) => {
+    const t = timeValue(row[xKey]);
+    if (t == null) return null;
+    return {
+      name: String(row[xKey] ?? ""),
+      value: [t, logSafeValue(seriesValue(row[valueKey]), log)],
+    };
+  });
+}

@@ -13,7 +13,8 @@ export type XAxisPart = {
   hide?: boolean;
   tickFormatter?: (value: unknown, index?: number) => string;
   domain?: [number, number];
-  ticks?: number[];
+  /** Axis name (scatter x axis). */
+  unit?: string;
   scale?: NQScale;
   reversed?: boolean;
   labelRotate?: number;
@@ -99,11 +100,14 @@ export type AreaSeriesPart = {
   labelFormatter?: (value: unknown) => string;
 };
 
+/** One scatter point. The x value may be a date (`Date`, ISO string, or epoch ms) on a time axis. */
+export type ScatterDatum = Record<string, number | string | Date>;
+
 export type ScatterSeriesPart = {
   type: "scatter";
   id: string;
   dataKey: string;
-  points?: Array<Record<string, number>>;
+  points?: ScatterDatum[];
   xKey?: string;
   yKey?: string;
   variant?: string;

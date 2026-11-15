@@ -2,7 +2,7 @@
  * Shared cartesian axis option builders — dual Y, tick formatters, scale, dense labels.
  */
 
-import type { XAXisComponentOption, YAXisComponentOption } from "echarts";
+import type { YAXisComponentOption } from "echarts";
 import type { XAxisPart, YAxisPart } from "./parts/types";
 
 export type NQScale = "linear" | "log" | "time" | "category";
@@ -13,15 +13,37 @@ export type AxisLabelOpts = {
   interval?: number | "auto";
 };
 
-function echartsAxisType(
+/**
+ * ECharts axis type for an axis part's `scale`.
+ *
+ * A category axis is `category` or, when the chart can place points by time,
+ * `time`. A value axis is `value` or `log`. Any other pairing has no meaning
+ * (`log` on a category axis, `time` on a bar's category axis) and keeps the
+ * axis's own type.
+ */
+export function axisTypeFor(
   scale: NQScale | undefined,
-  fallback: "category" | "value",
+  role: "category" | "value",
+  opts: { time?: boolean } = {},
 ): "category" | "value" | "log" | "time" {
-  if (!scale || scale === "linear") return fallback === "category" ? "category" : "value";
-  if (scale === "category") return "category";
-  if (scale === "log") return "log";
-  if (scale === "time") return "time";
-  return fallback;
+  if (scale === "time" && opts.time) return "time";
+  if (role === "category") return "category";
+  return scale === "log" ? "log" : "value";
+}
+
+/** True when the part asks for a log scale. */
+export function isLogScale(part: { scale?: NQScale } | undefined): boolean {
+  return part?.scale === "log";
+}
+
+/** True when the x axis part asks for a time scale. */
+export function isTimeScale(part: { scale?: NQScale } | undefined): boolean {
+  return part?.scale === "time";
+}
+
+/** The y axis part that a series with `yAxisId` plots on. */
+export function seriesYAxisPart(yAxisId: string | undefined, yAxes: YAxisPart[]): YAxisPart | undefined {
+  return yAxes[resolveYAxisIndex(yAxisId, yAxes)];
 }
 
 export function buildAxisLabel(
@@ -82,11 +104,10 @@ export function buildValueYAxes(opts: {
   }
 
   return yAxes.map((ya, i) => {
-    const scale = ya.scale ?? "linear";
-    const type = echartsAxisType(scale, "value");
+    const type = axisTypeFor(ya.scale, "value");
     const label = buildAxisLabel(ya);
     const percentLabel =
-      percent && i === 0
+      percent && i === 0 && type !== "log"
         ? { formatter: "{value}%" as const }
         : undefined;
 
@@ -95,7 +116,7 @@ export function buildValueYAxes(opts: {
       name: ya.unit ?? "",
       position: (ya.orientation === "right" ? "right" : "left") as "left" | "right",
       min: ya.domain?.[0],
-      max: percent && i === 0 ? 100 : ya.domain?.[1],
+      max: percent && i === 0 && type !== "log" ? 100 : ya.domain?.[1],
       inverse: ya.reversed ?? false,
       splitLine: {
         show: i === 0 && hasGrid,
@@ -109,48 +130,23 @@ export function buildValueYAxes(opts: {
   });
 }
 
-export function buildCategoryAxis(opts: {
-  categories: unknown[];
-  xAxis?: XAxisPart;
-  boundaryGap?: boolean;
-  hideOverlap?: boolean;
-}): XAXisComponentOption {
-  const { categories, xAxis, boundaryGap, hideOverlap = true } = opts;
-  const scale = xAxis?.scale ?? "category";
-  const type = echartsAxisType(scale, "category");
-  const label = buildAxisLabel(xAxis, {
-    interval: xAxis?.labelInterval ?? 0,
-  });
-
-  return {
-    type: type === "value" || type === "log" || type === "time" ? type : "category",
-    data: type === "category" || !xAxis?.scale || xAxis.scale === "category" || xAxis.scale === "linear"
-      ? (categories as string[])
-      : undefined,
-    inverse: xAxis?.reversed ?? false,
-    boundaryGap,
-    axisLine: { show: true },
-    axisTick: { show: false },
-    axisLabel: {
-      hideOverlap,
-      ...label,
-    },
-    min: xAxis?.domain?.[0],
-    max: xAxis?.domain?.[1],
-  } as XAXisComponentOption;
-}
-
 /** Merge tickFormatter / scale onto an existing category or value axis option. */
 export function applyAxisPartToOption(
   axis: Record<string, unknown>,
   part: XAxisPart | YAxisPart | undefined,
   role: "category" | "value",
+  opts: { time?: boolean } = {},
 ): Record<string, unknown> {
   if (!part) return axis;
   const label = buildAxisLabel(part);
   const next = { ...axis };
   if (part.scale && part.scale !== "linear") {
-    next.type = echartsAxisType(part.scale, role === "category" ? "category" : "value");
+    next.type = axisTypeFor(part.scale, role, opts);
+    // A time axis places points by their own x; a category list would be ignored.
+    if (next.type === "time") {
+      delete next.data;
+      next.boundaryGap = false;
+    }
   }
   if ("reversed" in part && part.reversed != null) {
     next.inverse = part.reversed;

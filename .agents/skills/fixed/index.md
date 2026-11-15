@@ -32,7 +32,7 @@ Problem areas → domain overview → individual fix notes.
 | **funnel-order** | Pipeline stages jump when values cross; hardcoded descending sort | [domains/funnel-order.md](./domains/funnel-order.md) | [sort none / sort prop](./fixes/funnel-order-sort-none.md) |
 | **legend** | Duplicate React keys; two legend rows for one dataKey; Area+Line fill-under-line | [domains/legend.md](./domains/legend.md) | [duplicate dataKey](./fixes/legend-duplicate-datakey.md) |
 | **series-id** | `id duplicates: otd` at setOption; Area+Line same dataKey | [domains/series-id.md](./domains/series-id.md) | [duplicate series ids](./fixes/series-id-duplicates.md) |
-| **api-surface** | TS rejects a prop the runtime already wires; standalone props omit factory fields; **Line cannot dash** | [domains/api-surface.md](./domains/api-surface.md) | [standalone props drop inherited](./fixes/api-surface-standalone-props-drop-inherited.md), [Line variant dashed](./fixes/api-surface-line-variant-dashed.md) |
+| **api-surface** | TS rejects a prop the runtime already wires; standalone props omit factory fields; **Line cannot dash**; **time axis in 1970; log axis collapsed by a 0** | [domains/api-surface.md](./domains/api-surface.md) | [standalone props drop inherited](./fixes/api-surface-standalone-props-drop-inherited.md), [Line variant dashed](./fixes/api-surface-line-variant-dashed.md), [axis scale time / log](./fixes/api-surface-axis-scale-time-log.md) |
 | **a11y** | Hidden data table blank; pie cells empty; series keys from config vs row shape | [domains/a11y.md](./domains/a11y.md) | [pie table blank](./fixes/a11y-pie-table-blank.md) |
 | **registration** | ReferenceLine / ReferenceBand draw nothing; a component key the family never registered | [domains/registration.md](./domains/registration.md) | [MarkLine / MarkArea not registered](./fixes/registration-markline-markarea.md) |
 | **reference-marks** | Mark line or band missing; right-axis mark on the left scale; mark above the data is off the plot | [domains/reference-marks.md](./domains/reference-marks.md) | [unregistered, single axis, clipped](./fixes/reference-marks-unregistered-single-axis.md) |
@@ -91,6 +91,8 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | check:api; CartesianChartBaseProps; dist/types probe fails onMarkClick | api / types | [api-surface-standalone-props-drop-inherited](./fixes/api-surface-standalone-props-drop-inherited.md) |
 | Line variant dashed does nothing; rolling mean same colour as parent; no dashed lineStyle; strokeVariant missing | line / composed | [api-surface-line-variant-dashed](./fixes/api-surface-line-variant-dashed.md) |
 | lineStyle.type unset; compile-line lineStyle color only; composed Line variant points only | line / compile-line | [api-surface-line-variant-dashed](./fixes/api-surface-line-variant-dashed.md) |
+| scale time 1970; points at epoch; time axis milliseconds; log axis 1 to 10; zero breaks log; scatter scale ignored; scatter domain reversed do nothing | line / area / bar / scatter | [api-surface-axis-scale-time-log](./fixes/api-surface-axis-scale-time-log.md) |
+| axisTypeFor; timeValue; logSafeValue; timeSeriesData; NQ_TOOLTIP_VALUE | cartesian-axes | [api-surface-axis-scale-time-log](./fixes/api-surface-axis-scale-time-log.md) |
 | pie a11y table blank; donut sr-only grid of empty cells; a11yTable pie empty | pie / a11y | [a11y-pie-table-blank](./fixes/a11y-pie-table-blank.md) |
 | reference line not drawn; markLine missing; MarkLineComponent not registered; band still blank | reference marks | [reference-marks-unregistered-single-axis](./fixes/reference-marks-unregistered-single-axis.md) |
 | negative bar rounded at zero; square at the far end; stacked gain and loss both rounded on zero; bar looks like a pill | bar / composed | [bar-radius-sign-aware](./fixes/bar-radius-sign-aware.md) |
@@ -121,7 +123,9 @@ Natural-language / trigger phrases → fix note. Scan this when the domain is ob
 | `src/registry/echarts-core/radial-hover-focus.ts` | hover-focus |
 | `src/registry/echarts-core/emphasis-presets.ts` | hover-focus |
 | `src/registry/echarts-core/use-nq-echarts.ts` (mouseover / globalout) | hover-focus |
-| `src/registry/echarts-core/compile-scatter.ts` | hover-focus |
+| `src/registry/echarts-core/compile-scatter.ts` | hover-focus, api-surface |
+| `src/registry/echarts-core/cartesian-axes.ts` | api-surface |
+| `src/registry/echarts-core/cartesian-series.ts` | api-surface |
 | `src/registry/echarts-core/compile-treemap.ts` | hover-focus |
 | `src/registry/echarts-core/compile-funnel.ts` | hover-focus, labels, funnel-order |
 | `src/registry/echarts-core/compile-pie.ts` | hover-focus |

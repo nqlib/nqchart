@@ -95,7 +95,13 @@ Import `useChartBrush` / `ChartBrushRange` / `ChartHandle` / `NQMarkEvent` from 
 | `"hover-trace"` | Vertical trace line + root `onHoverTraceChange` (see `hover-trace-bar-chart`) |
 | `"histogram"` | Used via root `variant="histogram"` + recipe data |
 
-**YAxis:** `yAxisId`, `orientation`, `domain`, `unit`, `tickFormatter`, `scale` (`linear` \| `log` \| `time` \| `category`), `reversed`, `labelRotate`, `labelInterval`
+**YAxis:** `yAxisId`, `orientation`, `domain`, `unit`, `tickFormatter`, `scale` (`linear` \| `log`), `reversed`, `labelRotate`, `labelInterval`
+
+**Axis scales:**
+- `<XAxis scale="time" />` works on line, area, and scatter. The x value can be a `Date`, an ISO string, or epoch ms. A date-only string is local midnight. Bar and composed keep a category x axis.
+- `<YAxis scale="log" />` works on bar, line, area, composed, and scatter. A value of 0 or less is a gap.
+- On a log axis, `stackType` and `stackId` are ignored. Bars sit side by side and area layers overlap.
+- Examples: `ex-line-time-axis`, `ex-scatter-log-axis`.
 
 **Legend:** `<Legend isClickable selected onSelectChange />` — uncontrolled by default; pass both for controlled (single-select).
 
@@ -193,7 +199,7 @@ Import from `@nqlib/nqchart/composed-chart`. See `ex-mark-click-budget-chart` fo
 
 **Pie child:** `dataKey`, `nameKey`, `innerRadius` (donut), `outerRadius` (px or `"NN%"`), `showLabels`, `sort` (`"descending" | "ascending" | "none"`)
 
-**Signature look (every pie):** even 2px seam between slices (`gap`, from `--chart-gap`) and 11px rounded corners (`cornerRadius`); labels sit outside on two-leg leader lines that never overlap (slices under 3° skip theirs). `gap={0} cornerRadius={0}` restores touching wedges.
+**Signature look (every pie):** even 2px seam between slices (`gap`, from `--chart-gap`) and 11px rounded corners (`cornerRadius`), capped at 25% of the ring depth and 30% of the slice arc so a thin donut never rounds into pills; labels sit outside on two-leg leader lines that never overlap (slices under 3° skip theirs). `gap={0} cornerRadius={0}` restores touching wedges.
 
 **Rose:** `<Pie rose="radius" />` — slice angle and length both follow the value (`rose="area"`: equal angles, length only). Largest first, clockwise from 12 o'clock, fitted to the card. Labels off by default. Not the same as the radial chart's `radialLayout="rose"` (equal-angle polar petals).
 
@@ -217,6 +223,8 @@ Import from `@nqlib/nqchart/composed-chart`. See `ex-mark-click-budget-chart` fo
 **Children:** `Scatter`, `XAxis`, `YAxis`, `Grid`, `Tooltip`, `Legend`
 
 **Scatter child:** `dataKey` (series name), `xDataKey`, `yDataKey`, custom `shape` for larger markers (“bubble” look)
+
+**Scatter XAxis / YAxis:** `dataKey`, `scale` (`linear` \| `log`, and `time` on x), `domain`, `reversed`, `unit`, `tickFormatter`. On a log axis, a point at 0 or less is not drawn.
 
 ---
 

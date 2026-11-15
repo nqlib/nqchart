@@ -58,6 +58,7 @@ const { Chart: LineChartInner } = createCartesianChart<
   loadingVariant: "line",
   defaultLoadingPoints: 12,
   echartsModules: LINE_ECHARTS_MODULES,
+  supportsTimeAxis: true,
   getRootFields: (_props, xKey) => ({
     xDataKey: xKey,
     cartesian: { externalBrush: true },

@@ -132,6 +132,25 @@ describe("buildPieSlices", () => {
     expect(s[0]!.innerCorner).toBeLessThanOrEqual(3 + 1e-9);
   });
 
+  it("thin donut ring: rim corners follow the bar rule (25% of the ring depth)", () => {
+    // Ring depth 28px: 11px corners would round each slice into a pill.
+    const s = buildPieSlices(values, { ...opts, innerRadius: 62, outerRadius: 90 });
+    for (const slice of s) expect(slice.outerCorner).toBeLessThanOrEqual(7 + 1e-9);
+    expect(s[0]!.outerCorner).toBeCloseTo(7, 6);
+  });
+
+  it("deep ring keeps the authored corner", () => {
+    const s = buildPieSlices(values, { ...opts, innerRadius: 0 });
+    expect(s[0]!.outerCorner).toBe(11);
+  });
+
+  it("narrow slice: corner stays under 30% of its rim arc", () => {
+    const s = buildPieSlices([1000, 3], { ...opts, innerRadius: 0, outerRadius: 100 });
+    const sliver = s[1]!;
+    const arc = (sliver.end - sliver.start) * 100 - opts.gap;
+    expect(sliver.outerCorner).toBeLessThanOrEqual(arc * 0.3 + 1e-9);
+  });
+
   it("bounds cover the drawn rim", () => {
     const s = buildPieSlices([1], { ...opts, innerRadius: 0 });
     const b = slicesBounds(s, 0, 0, 0);

@@ -1,12 +1,12 @@
 "use client";
 
 import { type ChartConfig, ChartContainer, getLoadingData } from "@/registry/ui/chart";
-import { NQChartBrush } from "@/registry/echarts-core/nq-chart-brush";
+import { NQChartBrush, type NQChartBrushProps } from "@/registry/echarts-core/nq-chart-brush";
 import type { ChartPlotInsets } from "@/registry/echarts-core/chart-grid";
 import { ChartPlotShell } from "@/registry/echarts-core/chart-plot-shell";
 import { EChartsHost } from "@/registry/echarts-core/echarts-host";
 import type { EChartsExtraModules } from "@/registry/echarts-core/echarts-init";
-import { PartRegistryProvider } from "@/registry/echarts-core/part-registry";
+import { PartRegistryProvider, usePartsSnapshot } from "@/registry/echarts-core/part-registry";
 import { useChartBrush, type ChartBrushRange } from "@/registry/echarts-core/use-chart-brush";
 import { useCompiledOption, type CompileRootFields } from "@/registry/echarts-core/use-compiled-option";
 import type { CompileContext } from "@/registry/echarts-core/parts/types";
@@ -107,7 +107,20 @@ type CreateCartesianChartConfig<
   usePlotRectState?: () => CartesianPlotRectState;
   getLoadingPoints?: (props: TChartProps) => number;
   echartsModules?: EChartsExtraModules;
+  /**
+   * The family draws `<XAxis scale="time">` as a time axis (line, area). The
+   * footer brush then hides: its handles sit on category bands, which do not
+   * line up with dates.
+   */
+  supportsTimeAxis?: boolean;
 };
+
+/** The footer brush, or nothing when the x axis is a time axis. */
+function CategoryBrushFooter<TData extends Record<string, unknown>>(props: NQChartBrushProps<TData>) {
+  const parts = usePartsSnapshot();
+  const time = parts.some((p) => p.type === "xAxis" && p.scale === "time");
+  return time ? null : <NQChartBrush {...props} />;
+}
 
 function useDefaultPlotRectState(): CartesianPlotRectState {
   const [plotAlign, setPlotAlign] = useState<ChartPlotInsets | null>(null);
@@ -198,6 +211,7 @@ export function createCartesianChart<
     usePlotRectState = useDefaultPlotRectState,
     getLoadingPoints,
     echartsModules,
+    supportsTimeAxis = false,
   } = config;
 
   const Canvas =
@@ -207,6 +221,8 @@ export function createCartesianChart<
       : (() => {
           throw new Error(`${displayName}: getCompileRoot is required when Canvas is omitted`);
         }) as React.ComponentType<TCanvasProps>);
+
+  const BrushFooter = supportsTimeAxis ? CategoryBrushFooter : NQChartBrush;
 
   function CartesianChart(props: TChartProps) {
     const merged = { ...defaults, ...props } as TChartProps;
@@ -290,7 +306,7 @@ export function createCartesianChart<
             isLoading={isLoading}
             footer={
               showBrush && !isLoading ? (
-                <NQChartBrush
+                <BrushFooter
                   data={displayData}
                   compile={compile}
                   rootFields={brushRootFields}
